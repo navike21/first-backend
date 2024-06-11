@@ -1,0 +1,6 @@
+export const SUCCESS = 'success'
+export const WARNING = 'warning'
+export const ERROR = 'error'
+export const NOT_FOUND = 'not found'
+export const INVALID = 'invalid'
+export const FORBIDDEN = 'forbidden'

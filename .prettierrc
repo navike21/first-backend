@@ -5,6 +5,7 @@
   "useTabs": false,
   "trailingComma": "none",
   "bracketSpacing": true,
+  "semi": false,
   "jsxBracketSameLine": false,
-  "semi": true
+  "arrowParens": "avoid"
 }
