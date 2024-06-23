@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Hello World!';
+    const PORT = process.env.NEST_PORT;
+    return PORT;
   }
 }
