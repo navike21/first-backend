@@ -1,7 +1,0 @@
-export const ENG = 'en'
-export const ESP = 'es'
-export const POR = 'pt'
-export const FRA = 'fr'
-export const DEU = 'de'
-export const ITA = 'it'
-export const JPN = 'jp'
