@@ -16,18 +16,20 @@ export class ProjectsService {
   }
 
   findAll() {
-    return `This action returns all projects`;
+    return this.projectsModule.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} project`;
+    return this.projectsModule.findById(id);
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+    return this.projectsModule.findByIdAndUpdate(id, updateProjectDto, {
+      new: true,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} project`;
+    return this.projectsModule.findByIdAndDelete(id);
   }
 }
