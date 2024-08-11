@@ -1,1 +1,7 @@
-export * from './mainRouter'
+import { Router } from 'express'
+
+const router = Router()
+
+export default (): Router => {
+  return router
+}
