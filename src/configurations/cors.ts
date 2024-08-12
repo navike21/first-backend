@@ -1,6 +1,6 @@
 import cors from 'cors'
-import { URL_ORIGINS } from '../constants'
 import { app } from './app'
+import { URL_ORIGINS } from '../common'
 
 export function corsConfig(): void {
   app.use(

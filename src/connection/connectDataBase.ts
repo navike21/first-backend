@@ -1,5 +1,5 @@
 import { MongoClient, ServerApiVersion } from 'mongodb'
-import { MONGO_URI } from '../constants'
+import { ENVIRONMENT, MONGO_URI } from '../common'
 
 export const clientDB = new MongoClient(MONGO_URI, {
   serverApi: {
@@ -9,6 +9,8 @@ export const clientDB = new MongoClient(MONGO_URI, {
   }
 })
 
+export const dataBase = clientDB.db(ENVIRONMENT)
+
 export async function connectDataBase() {
   try {
     await clientDB.connect()
@@ -16,7 +18,5 @@ export async function connectDataBase() {
     console.log('Connected to the database')
   } catch (error) {
     console.error('Error connecting to the database', error)
-  } finally {
-    await clientDB.close()
   }
 }
