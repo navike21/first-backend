@@ -2,7 +2,7 @@ import express from 'express'
 import { connectDataBase } from './connection'
 import { app, corsConfig } from './configurations'
 import routers from './routers'
-import { PORT } from './common'
+import { PORT, validateRequest } from './common'
 
 app.use(express.json())
 
@@ -16,5 +16,7 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+app.use(validateRequest)
 
 app.use('/', routers())

@@ -1,4 +1,4 @@
-export const messageSchemaEn = {
+export const schemaMessageEn = {
   documentId: {
     isString: 'The ID document must be a string',
     minLength: 'The ID document must be at least 8 characters long',

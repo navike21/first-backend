@@ -33,7 +33,6 @@ export const UserSchema = (lang: TLanguage) => {
     password: {
       isString: isStringPassword = '',
       minLength: minLengthPassword = '',
-      maxLength: maxLengthPassword = '',
       isRequired: isRequiredPassword = ''
     },
     phone: {

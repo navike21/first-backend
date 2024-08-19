@@ -1,0 +1,38 @@
+export interface IMessages {
+  success: ISuccessMessages
+  error: IErrorMessages
+  warning: IWarningMessages
+}
+
+export interface ISuccessMessages {
+  created: string
+  updated: string
+  deleted: string
+  retrieved: string
+  list: string
+  found: string
+}
+
+export interface IErrorMessages {
+  creationFailed: string
+  updateFailed: string
+  deletionFailed: string
+  retrievalFailed: string
+  listFailed: string
+  searchFailed: string
+  validationFailed: string
+  duplicate: string
+  connectionError: string
+  databaseError: string
+  unexpectedError: string
+  queryFailed: string
+}
+
+export interface IWarningMessages {
+  notFound: string
+  notUpdated: string
+  notDeleted: string
+  notRetrieved: string
+  notListed: string
+  notFoundSearch: string
+}
