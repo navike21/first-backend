@@ -1,6 +1,6 @@
-import { TMessageUserSchema } from '../../types'
+import { TUserSchemaMessage } from '../../types'
 
-export const messageSchemaDe: TMessageUserSchema = {
+export const schemaMessageDe: TUserSchemaMessage = {
   documentId: {
     isString: 'Die Identifikationsnummer muss eine Zeichenkette sein',
     minLength: 'Die Identifikationsnummer muss mindestens 8 Zeichen haben',

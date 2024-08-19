@@ -1,6 +1,4 @@
-import { IUser } from './user'
-
-type ValidationMessages = {
+export interface IValidationSchema {
   isString?: string
   isEmail?: string
   isDate?: string
@@ -11,8 +9,5 @@ type ValidationMessages = {
   isNumber?: string
   isBoolean?: string
   isUrl?: string
-}
-
-export type TMessageUserSchema = {
-  [K in keyof IUser]: ValidationMessages
+  isObject?: string
 }

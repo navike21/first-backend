@@ -22,7 +22,7 @@ export async function createUser({ body }: TRequest, res: TResponse) {
       await userCollection
     ).insertOne({ ...informationDefault, ...body }, { serializeFunctions: true })
     res.status(201).send(result)
-  } catch (error: any) {
+  } catch (error) {
     const { errorResponse, message } = error as MongoServerError
     res.status(500).send({ message, errorResponse })
   }

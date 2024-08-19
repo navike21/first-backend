@@ -1,22 +1,22 @@
 import { DE, EN, ES, FR, IT, JP, KO, PT } from '../../../common'
 import {
-  messageSchemaDe,
-  messageSchemaEn,
-  messageSchemaEs,
-  messageSchemaFr,
-  messageSchemaIt,
-  messageSchemaJp,
-  messageSchemaKo,
-  messageSchemaPt
+  schemaMessageDe,
+  schemaMessageEn,
+  schemaMessageEs,
+  schemaMessageFr,
+  schemaMessageIt,
+  schemaMessageJp,
+  schemaMessageKo,
+  schemaMessagePt
 } from './userSchema'
 
 export const userMessageSchema = {
-  [DE]: messageSchemaDe,
-  [EN]: messageSchemaEn,
-  [ES]: messageSchemaEs,
-  [FR]: messageSchemaFr,
-  [IT]: messageSchemaIt,
-  [JP]: messageSchemaJp,
-  [KO]: messageSchemaKo,
-  [PT]: messageSchemaPt
+  [DE]: schemaMessageDe,
+  [EN]: schemaMessageEn,
+  [ES]: schemaMessageEs,
+  [FR]: schemaMessageFr,
+  [IT]: schemaMessageIt,
+  [JP]: schemaMessageJp,
+  [KO]: schemaMessageKo,
+  [PT]: schemaMessagePt
 }

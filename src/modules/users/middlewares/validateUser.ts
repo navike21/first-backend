@@ -1,5 +1,5 @@
 import { ValidationError } from 'joi'
-import { EN, TLanguage, TNext, TRequest, TResponse } from '../../../common'
+import { EN, IRequest, TLanguage, TNext, TRequest, TResponse } from '../../../common'
 import { UserSchema } from '../schemas'
 
 export async function validateUser(
@@ -11,7 +11,9 @@ export async function validateUser(
     const lang = (headers['accept-language'] as TLanguage) ?? EN
     const schema = UserSchema(lang)
 
-    await schema.validateAsync(body, {
+    const { data } = body as IRequest
+
+    await schema.validateAsync(data, {
       abortEarly: false
     })
     next()
