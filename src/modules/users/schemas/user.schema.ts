@@ -10,7 +10,11 @@ export const UserSchema = (lang: TLanguage) => {
       maxLength: maxLengthDocumentId = '',
       isRequired: isRequiredDocumentId = ''
     },
-    email: { isString: isStringEmail = '', isEmail: isEmailEmail = '' },
+    email: {
+      isString: isStringEmail = '',
+      isEmail: isEmailEmail = '',
+      isRequired: isRequiredEmail = ''
+    },
     fatherLastName: {
       isString: isStringFatherLastName = '',
       minLength: minLengthFatherLastName = '',
@@ -47,18 +51,21 @@ export const UserSchema = (lang: TLanguage) => {
       'string.base': isStringDocumentId,
       'string.min': minLengthDocumentId,
       'string.max': maxLengthDocumentId,
-      'any.required': isRequiredDocumentId
+      'any.required': isRequiredDocumentId,
+      'string.empty': isRequiredDocumentId
     }),
     email: joi.string().email().required().messages({
       'string.base': isStringEmail,
       'string.email': isEmailEmail,
-      'any.required': isRequiredDocumentId
+      'any.required': isRequiredEmail,
+      'string.empty': isRequiredEmail
     }),
     fatherLastName: joi.string().min(2).max(50).required().messages({
       'string.base': isStringFatherLastName,
       'string.min': minLengthFatherLastName,
       'string.max': maxLengthFatherLastName,
-      'any.required': isRequiredFatherLastName
+      'any.required': isRequiredFatherLastName,
+      'string.empty': isRequiredFatherLastName
     }),
     image: joi.string().uri().messages({
       'string.base': isStringImage,
@@ -68,18 +75,21 @@ export const UserSchema = (lang: TLanguage) => {
       'string.base': isStringMotherLastName,
       'string.min': minLengthMotherLastName,
       'string.max': maxLengthMotherLastName,
-      'any.required': isRequiredMotherLastName
+      'any.required': isRequiredMotherLastName,
+      'string.empty': isRequiredMotherLastName
     }),
     name: joi.string().min(2).max(50).required().messages({
       'string.base': isStringName,
       'string.min': minLengthName,
       'string.max': maxLengthName,
-      'any.required': isRequiredName
+      'any.required': isRequiredName,
+      'string.empty': isRequiredName
     }),
     password: joi.string().min(8).required().messages({
       'string.base': isStringPassword,
       'string.min': minLengthPassword,
-      'any.required': isRequiredPassword
+      'any.required': isRequiredPassword,
+      'string.empty': isRequiredPassword
     }),
     phone: joi.string().min(7).max(15).messages({
       'string.base': isStringPhone,
