@@ -1,18 +1,13 @@
-import { ErrorDescription } from 'mongodb'
-import { ICustomError, TResponse } from '../types'
+import { ICustomRequest, TResponse } from '../types'
 
-interface IError {
-  message: string
-  details?: string | ErrorDescription
-}
+type TErrorHandler = (error: ICustomRequest, response: TResponse) => void
 
-type TErrorHandler = (error: ICustomError, res: TResponse) => void
+export const handleErrors: TErrorHandler = (error, response) => {
+  const { message, statusCode = 500, details, meta } = error
 
-export const handleErrors: TErrorHandler = (error, res) => {
-  const { message, statusCode = 500, details } = error
-
-  res.status(statusCode).send({
+  response.status(statusCode).send({
     message,
-    details
-  } as IError)
+    details,
+    meta
+  })
 }

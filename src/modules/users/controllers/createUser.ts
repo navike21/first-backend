@@ -1,6 +1,7 @@
 import {
   getInfoHeaders,
   handleErrors,
+  handleSuccess,
   IRequest,
   TRequest,
   TResponse
@@ -43,12 +44,16 @@ export const createUser = async ({ body, headers }: TRequest, response: TRespons
       ...data
     })
     .then(() => {
-      response.status(201).send({ message: created })
+      handleSuccess(
+        {
+          message: created,
+          statusCode: 201
+        },
+        response
+      )
     })
     .catch(error => {
       const { code, errorResponse } = error as MongoServerError
-
-      console.log('Error:', errorResponse)
 
       if (code === 11000) {
         handleErrors(

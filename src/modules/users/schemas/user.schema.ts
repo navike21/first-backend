@@ -1,8 +1,8 @@
 import joi from 'joi'
-import { TLanguage } from '../../../common'
+import { EN, TLanguage } from '../../../common'
 import { userMessageSchema } from '../language'
 
-export const UserSchema = (lang: TLanguage) => {
+export const UserSchema = (lang: TLanguage = EN) => {
   const {
     documentId: {
       isString: isStringDocumentId = '',

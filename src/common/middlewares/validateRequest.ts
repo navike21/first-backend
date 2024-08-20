@@ -1,13 +1,17 @@
 import { Request, Response, NextFunction } from 'express'
 import { RequestSchema } from '../schemas'
 import { ValidationError } from 'joi'
-import { getInfoHeaders } from '../utils'
+import { getInfoHeaders, handleErrors } from '../utils'
 
 export async function validateRequest(
-  { body, headers }: Request,
-  res: Response,
+  { body, headers, method }: Request,
+  response: Response,
   next: NextFunction
 ) {
+  if (method === 'GET') {
+    return next()
+  }
+
   try {
     const { lang } = getInfoHeaders(headers)
     const schema = RequestSchema(lang)
@@ -18,7 +22,13 @@ export async function validateRequest(
     next()
   } catch (error) {
     const { details, message } = error as ValidationError
-
-    res.status(400).send({ message: message, details })
+    handleErrors(
+      {
+        message,
+        statusCode: 400,
+        details
+      },
+      response
+    )
   }
 }
