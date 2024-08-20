@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { TLanguage } from '../types'
-import { EN } from '../constants'
 import { RequestSchema } from '../schemas'
 import { ValidationError } from 'joi'
+import { getInfoHeaders } from '../utils'
 
 export async function validateRequest(
   { body, headers }: Request,
@@ -10,7 +9,7 @@ export async function validateRequest(
   next: NextFunction
 ) {
   try {
-    const lang = (headers['accept-language'] as TLanguage) ?? EN
+    const { lang } = getInfoHeaders(headers)
     const schema = RequestSchema(lang)
 
     await schema.validateAsync(body, {

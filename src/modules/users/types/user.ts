@@ -9,4 +9,6 @@ export interface IUser {
   phone: string
   dateOfBirth: Date | string
   role?: string[]
+  createdAt?: Date
+  updatedAt?: Date | string
 }
