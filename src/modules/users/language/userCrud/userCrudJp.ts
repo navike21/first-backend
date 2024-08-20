@@ -29,6 +29,7 @@ export const userCrudJp: IMessages = {
     notDeleted: 'ユーザーが削除されませんでした',
     notRetrieved: 'ユーザーが取得されませんでした',
     notListed: 'ユーザーを一覧表示できませんでした',
-    notFoundSearch: '検索でユーザーが見つかりませんでした'
+    notFoundSearch: '検索でユーザーが見つかりませんでした',
+    notMore: 'リストするユーザーがもうありません'
   }
 }

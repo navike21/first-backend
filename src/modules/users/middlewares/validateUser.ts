@@ -1,10 +1,17 @@
 import { ValidationError } from 'joi'
-import { getInfoHeaders, IRequest, TNext, TRequest, TResponse } from '../../../common'
+import {
+  getInfoHeaders,
+  handleErrors,
+  IRequest,
+  TNext,
+  TRequest,
+  TResponse
+} from '../../../common'
 import { UserSchema } from '../schemas'
 
 export async function validateUser(
   { body, headers }: TRequest,
-  res: TResponse,
+  response: TResponse,
   next: TNext
 ) {
   try {
@@ -20,6 +27,13 @@ export async function validateUser(
   } catch (error) {
     const { details, message } = error as ValidationError
 
-    res.status(400).send({ message: message, details })
+    handleErrors(
+      {
+        message,
+        statusCode: 400,
+        details
+      },
+      response
+    )
   }
 }

@@ -1,8 +1,9 @@
 import Joi from 'joi'
 import { TLanguage } from '../types'
 import { requestMessageSchema } from '../languages'
+import { EN } from '../constants'
 
-export const RequestSchema = (lang: TLanguage) => {
+export const RequestSchema = (lang: TLanguage = EN) => {
   const {
     data: { isObject = '', isRequired = '' }
   } = requestMessageSchema[lang]
@@ -11,6 +12,10 @@ export const RequestSchema = (lang: TLanguage) => {
     data: Joi.object().required().messages({
       'any.required': isRequired,
       'object.base': isObject
-    })
+    }),
+    meta: Joi.object({
+      page: Joi.number().integer().positive().optional(),
+      limit: Joi.number().integer().positive().optional()
+    }).optional()
   })
 }

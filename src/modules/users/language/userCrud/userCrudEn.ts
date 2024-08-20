@@ -29,6 +29,7 @@ export const userCrudEn: IMessages = {
     notDeleted: 'User not deleted',
     notRetrieved: 'User not retrieved',
     notListed: 'Users not listed',
-    notFoundSearch: 'User not found'
+    notFoundSearch: 'User not found',
+    notMore: 'No more users to list'
   }
 }

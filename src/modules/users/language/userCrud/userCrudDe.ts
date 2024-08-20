@@ -29,6 +29,7 @@ export const userCrudDe: IMessages = {
     notDeleted: 'Benutzer nicht gelöscht',
     notRetrieved: 'Benutzer nicht abgerufen',
     notListed: 'Benutzer konnten nicht aufgelistet werden',
-    notFoundSearch: 'Benutzer in der Suche nicht gefunden'
+    notFoundSearch: 'Benutzer in der Suche nicht gefunden',
+    notMore: 'Keine weiter Benutzer zum Auflisten'
   }
 }
