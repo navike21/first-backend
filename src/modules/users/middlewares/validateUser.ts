@@ -31,7 +31,7 @@ export async function validateUser(
       {
         message,
         statusCode: 400,
-        details
+        data: details
       },
       response
     )

@@ -26,7 +26,7 @@ export async function validateRequest(
       {
         message,
         statusCode: 400,
-        details
+        data: details
       },
       response
     )
