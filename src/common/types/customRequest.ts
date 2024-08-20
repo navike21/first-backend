@@ -3,6 +3,6 @@ import { IMeta } from './requestSchema'
 export interface ICustomRequest {
   statusCode: number
   message: string
-  details?: unknown
+  data?: unknown
   meta?: IMeta
 }

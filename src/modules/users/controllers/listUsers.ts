@@ -48,7 +48,7 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
         handleSuccess(
           {
             message: list,
-            details: dataParsed,
+            data: dataParsed,
             meta,
             statusCode: 200
           },

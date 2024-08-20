@@ -60,7 +60,7 @@ export const createUser = async ({ body, headers }: TRequest, response: TRespons
           {
             message: duplicate,
             statusCode: 400,
-            details: errorResponse
+            data: errorResponse
           },
           response
         )
