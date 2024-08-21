@@ -9,6 +9,7 @@ export interface IMeta {
 export interface IRequest {
   data: object
   meta?: IMeta
+  filters?: object
 }
 
 export type TRequestSchemaMessage = {

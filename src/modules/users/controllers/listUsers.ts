@@ -1,4 +1,4 @@
-import { WithId } from 'mongodb'
+import { Document, Filter, WithId } from 'mongodb'
 import {
   getInfoHeaders,
   handleErrors,
@@ -11,9 +11,18 @@ import { userMessageCrud } from '../language'
 import { IUser } from '../types'
 import { userCollection } from './config'
 
+type FiltersUsers = {
+  documentId?: string
+  email?: string
+  createdAt?: string
+  fatherLastName?: string
+  motherLastName?: string
+  name?: string
+}
+
 export const listUsers = async ({ headers, body }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
-  const { meta: { page = 1, limit = 10 } = {} } = body as IRequest
+  const { meta: { page = 1, limit = 10 } = {}, filters = {} } = body as IRequest
 
   const {
     success: { list },
@@ -25,8 +34,30 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
 
   const collection = await userCollection
 
-  const dataPromise = collection.find().skip(skip).limit(limit).toArray()
-  const countPromise = collection.countDocuments()
+  const {
+    documentId = '',
+    email = '',
+    createdAt = '',
+    fatherLastName = '',
+    motherLastName = '',
+    name = ''
+  } = filters as FiltersUsers
+
+  const query: Filter<Document> = {
+    ...(documentId && { documentId: documentId }),
+    ...(email && { email: email }),
+    ...(createdAt && { createdAt: { $gte: new Date(createdAt) } }),
+    ...(fatherLastName && {
+      fatherLastName: { $regex: new RegExp(fatherLastName, 'i') }
+    }),
+    ...(motherLastName && {
+      motherLastName: { $regex: new RegExp(motherLastName, 'i') }
+    }),
+    ...(name && { name: { $regex: new RegExp(name, 'i') } })
+  }
+
+  const dataPromise = collection.find(query).skip(skip).limit(limit).toArray()
+  const countPromise = collection.countDocuments(query)
 
   Promise.all([dataPromise, countPromise])
     .then(([data, total]) => {
