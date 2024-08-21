@@ -25,7 +25,7 @@ export async function validateRequest(
     handleErrors(
       {
         message,
-        statusCode: 400,
+        statusCode: 402,
         data: details
       },
       response
