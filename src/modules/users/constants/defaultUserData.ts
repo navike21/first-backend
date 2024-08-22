@@ -17,7 +17,7 @@ export const defaultUserData: IUser = {
   state: ECollectionState.ACTIVE,
   userConfig: {
     language: '',
-    themeBrowser: '',
+    themeBrowser: 'auto',
     alias: ''
   }
 }
