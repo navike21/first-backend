@@ -6,25 +6,10 @@ import {
   TRequest,
   TResponse
 } from '../../../common'
-import { IUser } from '../types'
 import { userCollection } from './config'
 import { userMessageCrud } from '../language'
 import { MongoServerError } from 'mongodb'
-
-const dataDefault: IUser = {
-  documentId: '',
-  email: '',
-  fatherLastName: '',
-  image: '',
-  motherLastName: '',
-  name: '',
-  password: '',
-  phone: '',
-  dateOfBirth: '',
-  role: [],
-  createdAt: new Date(),
-  updatedAt: ''
-}
+import { defaultUserData } from '../constants'
 
 export const createUser = async ({ body, headers }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
@@ -40,7 +25,7 @@ export const createUser = async ({ body, headers }: TRequest, response: TRespons
     await userCollection
   )
     .insertOne({
-      ...dataDefault,
+      ...defaultUserData,
       ...data
     })
     .then(() => {
