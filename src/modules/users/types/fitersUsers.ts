@@ -6,6 +6,10 @@ export type TFiltersUsers = {
   createdAt?: string
   fatherLastName?: string
   motherLastName?: string
-  name?: string
+  names?: string
   state?: ECollectionState
+}
+
+export type TSortUsers = {
+  [k in keyof TFiltersUsers]?: 1 | -1
 }

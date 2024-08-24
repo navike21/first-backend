@@ -17,6 +17,7 @@ export const RequestSchema = (lang: TLanguage = EN) => {
       page: Joi.number().integer().positive().optional(),
       limit: Joi.number().integer().positive().optional()
     }).optional(),
-    filters: Joi.object().optional()
+    filters: Joi.object().optional(),
+    sort: Joi.object().optional()
   })
 }

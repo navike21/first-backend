@@ -1,4 +1,4 @@
-import { Document, Filter, WithId } from 'mongodb'
+import { Document, Filter, Sort, WithId } from 'mongodb'
 import {
   getInfoHeaders,
   handleErrors,
@@ -8,12 +8,16 @@ import {
   TResponse
 } from '../../../common'
 import { userMessageCrud } from '../language'
-import { IUser, TFiltersUsers } from '../types'
+import { IUser, TFiltersUsers, TSortUsers } from '../types'
 import { userCollection } from './config'
 
 export const listUsers = async ({ headers, body }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
-  const { meta: { page = 1, limit = 10 } = {}, filters = {} } = body as IRequest
+  const {
+    meta: { page = 1, limit = 10 } = {},
+    filters = {},
+    sort = {}
+  } = body as IRequest
 
   const {
     success: { list },
@@ -31,8 +35,15 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     createdAt = '',
     fatherLastName = '',
     motherLastName = '',
-    name = ''
+    names = ''
   } = filters as TFiltersUsers
+
+  const {
+    createdAt: createdAtSort = '',
+    fatherLastName: fatherLastNameSort = '',
+    motherLastName: motherLastNameSort = '',
+    names: namesSort = ''
+  } = sort as TSortUsers
 
   const query: Filter<Document> =
     Object.keys(filters).length > 0
@@ -46,13 +57,23 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
           ...(motherLastName && {
             motherLastName: { $regex: new RegExp(motherLastName, 'i') }
           }),
-          ...(name && { names: { $regex: new RegExp(name, 'i') } })
+          ...(names && { names: { $regex: new RegExp(names, 'i') } })
+        }
+      : {}
+
+  const sortQuery: Sort =
+    Object.keys(sort).length > 0
+      ? {
+          ...(createdAtSort && { createdAt: createdAtSort }),
+          ...(fatherLastNameSort && { fatherLastName: fatherLastNameSort }),
+          ...(motherLastNameSort && { motherLastName: motherLastNameSort }),
+          ...(namesSort && { names: namesSort })
         }
       : {}
 
   try {
     const [data, total] = await Promise.all([
-      collection.find(query).skip(skip).limit(limit).toArray(),
+      collection.find(query).sort(sortQuery).skip(skip).limit(limit).toArray(),
       collection.countDocuments(query)
     ])
 

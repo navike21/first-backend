@@ -10,6 +10,7 @@ export interface IRequest {
   data: object
   meta?: IMeta
   filters?: object
+  sort?: object
 }
 
 export type TRequestSchemaMessage = {
