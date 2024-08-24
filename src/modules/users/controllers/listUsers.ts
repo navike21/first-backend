@@ -38,13 +38,6 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     names = ''
   } = filters as TFiltersUsers
 
-  const {
-    createdAt: createdAtSort = '',
-    fatherLastName: fatherLastNameSort = '',
-    motherLastName: motherLastNameSort = '',
-    names: namesSort = ''
-  } = sort as TSortUsers
-
   const query: Filter<Document> =
     Object.keys(filters).length > 0
       ? {
@@ -61,19 +54,14 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
         }
       : {}
 
-  const sortQuery: Sort =
-    Object.keys(sort).length > 0
-      ? {
-          ...(createdAtSort && { createdAt: createdAtSort }),
-          ...(fatherLastNameSort && { fatherLastName: fatherLastNameSort }),
-          ...(motherLastNameSort && { motherLastName: motherLastNameSort }),
-          ...(namesSort && { names: namesSort })
-        }
-      : {}
-
   try {
     const [data, total] = await Promise.all([
-      collection.find(query).sort(sortQuery).skip(skip).limit(limit).toArray(),
+      collection
+        .find(query)
+        .sort(sort as Sort)
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
       collection.countDocuments(query)
     ])
 
@@ -100,6 +88,7 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
         response
       )
     }
+
     if (dataParsed.length === 0 && page > 1) {
       handleErrors(
         {
@@ -110,6 +99,7 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
         response
       )
     }
+
     if (meta.totalPages === 0) {
       handleErrors(
         {
