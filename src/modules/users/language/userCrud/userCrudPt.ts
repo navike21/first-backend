@@ -30,6 +30,7 @@ export const userCrudPt: IMessages = {
     notRetrieved: 'Usuário não recuperado',
     notListed: 'Usuários não puderam ser listados',
     notFoundSearch: 'Usuário não encontrado na pesquisa',
-    notMore: 'Não há mais usuários para listar'
+    notMore: 'Não há mais usuários para listar',
+    isEmpty: 'Não há usuários para listar no momento'
   }
 }

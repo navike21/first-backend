@@ -28,17 +28,11 @@ export const schemaMessageKo: TUserSchemaMessage = {
     maxLength: '어머니의 성은 최대 50자여야 합니다',
     isRequired: '어머니의 성은 필수 항목입니다'
   },
-  name: {
+  names: {
     isString: '이름은 문자열이어야 합니다',
     minLength: '이름은 최소 2자여야 합니다',
     maxLength: '이름은 최대 50자여야 합니다',
     isRequired: '이름은 필수 항목입니다'
-  },
-  password: {
-    isString: '비밀번호는 문자열이어야 합니다',
-    minLength: '비밀번호는 최소 8자여야 합니다',
-    maxLength: '비밀번호는 최대 12자여야 합니다',
-    isRequired: '비밀번호는 필수 항목입니다'
   },
   phone: {
     isString: '전화번호는 문자열이어야 합니다',

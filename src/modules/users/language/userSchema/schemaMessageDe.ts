@@ -28,17 +28,11 @@ export const schemaMessageDe: TUserSchemaMessage = {
     maxLength: 'Der Nachname der Mutter darf höchstens 50 Zeichen haben',
     isRequired: 'Der Nachname der Mutter ist erforderlich'
   },
-  name: {
+  names: {
     isString: 'Der Name muss eine Zeichenkette sein',
     minLength: 'Der Name muss mindestens 2 Zeichen haben',
     maxLength: 'Der Name darf höchstens 50 Zeichen haben',
     isRequired: 'Der Name ist erforderlich'
-  },
-  password: {
-    isString: 'Das Passwort muss eine Zeichenkette sein',
-    minLength: 'Das Passwort muss mindestens 8 Zeichen haben',
-    maxLength: 'Das Passwort darf höchstens 12 Zeichen haben',
-    isRequired: 'Das Passwort ist erforderlich'
   },
   phone: {
     isString: 'Die Telefonnummer muss eine Zeichenkette sein',

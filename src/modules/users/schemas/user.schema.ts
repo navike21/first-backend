@@ -28,16 +28,11 @@ export const UserSchema = (lang: TLanguage = EN) => {
       maxLength: maxLengthMotherLastName = '',
       isRequired: isRequiredMotherLastName = ''
     },
-    name: {
+    names: {
       isString: isStringName = '',
       minLength: minLengthName = '',
       maxLength: maxLengthName = '',
       isRequired: isRequiredName = ''
-    },
-    password: {
-      isString: isStringPassword = '',
-      minLength: minLengthPassword = '',
-      isRequired: isRequiredPassword = ''
     },
     phone: {
       isString: isStringPhone = '',
@@ -78,18 +73,12 @@ export const UserSchema = (lang: TLanguage = EN) => {
       'any.required': isRequiredMotherLastName,
       'string.empty': isRequiredMotherLastName
     }),
-    name: joi.string().min(2).max(50).required().messages({
+    names: joi.string().min(2).max(50).required().messages({
       'string.base': isStringName,
       'string.min': minLengthName,
       'string.max': maxLengthName,
       'any.required': isRequiredName,
       'string.empty': isRequiredName
-    }),
-    password: joi.string().min(8).required().messages({
-      'string.base': isStringPassword,
-      'string.min': minLengthPassword,
-      'any.required': isRequiredPassword,
-      'string.empty': isRequiredPassword
     }),
     phone: joi.string().min(7).max(15).messages({
       'string.base': isStringPhone,

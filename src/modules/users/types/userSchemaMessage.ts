@@ -1,6 +1,6 @@
 import { IValidationSchema } from '../../../common'
-import { IUser } from './user'
+import { TUserOmitted } from './user'
 
 export type TUserSchemaMessage = {
-  [K in keyof IUser]: IValidationSchema
+  [K in keyof TUserOmitted]: IValidationSchema
 }

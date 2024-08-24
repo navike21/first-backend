@@ -30,6 +30,7 @@ export const userCrudEs: IMessages = {
     notRetrieved: 'El usuario no fue recuperado',
     notListed: 'No se pudieron listar los usuarios',
     notFoundSearch: 'No se encontró el usuario',
-    notMore: 'No hay más usuarios para listar'
+    notMore: 'No hay más usuarios para listar',
+    isEmpty: 'No hay usuarios para listar en este momento'
   }
 }

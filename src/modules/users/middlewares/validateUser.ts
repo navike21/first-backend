@@ -26,7 +26,6 @@ export async function validateUser(
     next()
   } catch (error) {
     const { details, message } = error as ValidationError
-
     handleErrors(
       {
         message,

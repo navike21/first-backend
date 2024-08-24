@@ -30,6 +30,7 @@ export const userCrudDe: IMessages = {
     notRetrieved: 'Benutzer nicht abgerufen',
     notListed: 'Benutzer konnten nicht aufgelistet werden',
     notFoundSearch: 'Benutzer in der Suche nicht gefunden',
-    notMore: 'Keine weiter Benutzer zum Auflisten'
+    notMore: 'Keine weiter Benutzer zum Auflisten',
+    isEmpty: 'Keine Benutzer zum Auflisten vorhanden'
   }
 }
