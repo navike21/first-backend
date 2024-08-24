@@ -30,6 +30,7 @@ export const userCrudJp: IMessages = {
     notRetrieved: 'ユーザーが取得されませんでした',
     notListed: 'ユーザーを一覧表示できませんでした',
     notFoundSearch: '検索でユーザーが見つかりませんでした',
-    notMore: 'リストするユーザーがもうありません'
+    notMore: 'リストするユーザーがもうありません',
+    isEmpty: 'この時点でリストするユーザーはありません'
   }
 }

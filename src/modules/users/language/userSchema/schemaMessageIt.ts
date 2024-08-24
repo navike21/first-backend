@@ -28,17 +28,11 @@ export const schemaMessageIt: TUserSchemaMessage = {
     maxLength: 'Il cognome della madre deve contenere al massimo 50 caratteri',
     isRequired: 'Il cognome della madre è obbligatorio'
   },
-  name: {
+  names: {
     isString: 'Il nome deve essere una stringa',
     minLength: 'Il nome deve contenere almeno 2 caratteri',
     maxLength: 'Il nome deve contenere al massimo 50 caratteri',
     isRequired: 'Il nome è obbligatorio'
-  },
-  password: {
-    isString: 'La password deve essere una stringa',
-    minLength: 'La password deve contenere almeno 8 caratteri',
-    maxLength: 'La password deve contenere al massimo 12 caratteri',
-    isRequired: 'La password è obbligatoria'
   },
   phone: {
     isString: 'Il telefono deve essere una stringa',

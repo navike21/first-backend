@@ -28,17 +28,11 @@ export const schemaMessageJp: TUserSchemaMessage = {
     maxLength: '母親の姓は最大50文字でなければなりません',
     isRequired: '母親の姓は必須です'
   },
-  name: {
+  names: {
     isString: '名前は文字列でなければなりません',
     minLength: '名前は少なくとも2文字でなければなりません',
     maxLength: '名前は最大50文字でなければなりません',
     isRequired: '名前は必須です'
-  },
-  password: {
-    isString: 'パスワードは文字列でなければなりません',
-    minLength: 'パスワードは少なくとも8文字でなければなりません',
-    maxLength: 'パスワードは最大12文字でなければなりません',
-    isRequired: 'パスワードは必須です'
   },
   phone: {
     isString: '電話番号は文字列でなければなりません',

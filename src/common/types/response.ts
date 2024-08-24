@@ -1,7 +1,7 @@
-import { EStatus } from '../enums'
+import { EOperationStatus } from '../enums'
 
 export interface IResponse {
-  status: EStatus
+  status: EOperationStatus
   message: string
   data?: object
 }

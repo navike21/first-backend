@@ -21,24 +21,25 @@ export const createUser = async ({ body, headers }: TRequest, response: TRespons
 
   const { data } = body as IRequest
 
-  await (
-    await userCollection
-  )
-    .insertOne({
+  try {
+    await (
+      await userCollection
+    ).insertOne({
       ...defaultUserData,
       ...data
     })
-    .then(() => {
-      handleSuccess(
-        {
-          message: created,
-          statusCode: 201
-        },
-        response
-      )
-    })
-    .catch(error => {
-      const { code, errorResponse } = error as MongoServerError
+
+    handleSuccess(
+      {
+        message: created,
+        statusCode: 201,
+        data
+      },
+      response
+    )
+  } catch (error) {
+    if (error instanceof MongoServerError) {
+      const { code, errorResponse } = error
 
       if (code === 11000) {
         handleErrors(
@@ -58,8 +59,7 @@ export const createUser = async ({ body, headers }: TRequest, response: TRespons
           response
         )
       }
-    })
-    .catch(() => {
+    } else {
       handleErrors(
         {
           message: unexpectedError,
@@ -67,5 +67,6 @@ export const createUser = async ({ body, headers }: TRequest, response: TRespons
         },
         response
       )
-    })
+    }
+  }
 }

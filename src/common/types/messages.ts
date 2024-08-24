@@ -36,4 +36,5 @@ export interface IWarningMessages {
   notListed: string
   notFoundSearch: string
   notMore: string
+  isEmpty: string
 }

@@ -8,17 +8,8 @@ import {
   TResponse
 } from '../../../common'
 import { userMessageCrud } from '../language'
-import { IUser } from '../types'
+import { IUser, TFiltersUsers } from '../types'
 import { userCollection } from './config'
-
-type FiltersUsers = {
-  documentId?: string
-  email?: string
-  createdAt?: string
-  fatherLastName?: string
-  motherLastName?: string
-  name?: string
-}
 
 export const listUsers = async ({ headers, body }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
@@ -26,7 +17,7 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
 
   const {
     success: { list },
-    warning: { notMore },
+    warning: { notMore, isEmpty },
     error: { unexpectedError }
   } = userMessageCrud[lang]
 
@@ -41,68 +32,80 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     fatherLastName = '',
     motherLastName = '',
     name = ''
-  } = filters as FiltersUsers
+  } = filters as TFiltersUsers
 
-  const query: Filter<Document> = {
-    ...(documentId && { documentId: documentId }),
-    ...(email && { email: email }),
-    ...(createdAt && { createdAt: { $gte: new Date(createdAt) } }),
-    ...(fatherLastName && {
-      fatherLastName: { $regex: new RegExp(fatherLastName, 'i') }
-    }),
-    ...(motherLastName && {
-      motherLastName: { $regex: new RegExp(motherLastName, 'i') }
-    }),
-    ...(name && { name: { $regex: new RegExp(name, 'i') } })
-  }
+  const query: Filter<Document> =
+    Object.keys(filters).length > 0
+      ? {
+          ...(documentId && { documentId: documentId }),
+          ...(email && { email: email }),
+          ...(createdAt && { createdAt: { $gte: new Date(createdAt) } }),
+          ...(fatherLastName && {
+            fatherLastName: { $regex: new RegExp(fatherLastName, 'i') }
+          }),
+          ...(motherLastName && {
+            motherLastName: { $regex: new RegExp(motherLastName, 'i') }
+          }),
+          ...(name && { names: { $regex: new RegExp(name, 'i') } })
+        }
+      : {}
 
-  const dataPromise = collection.find(query).skip(skip).limit(limit).toArray()
-  const countPromise = collection.countDocuments(query)
+  try {
+    const [data, total] = await Promise.all([
+      collection.find(query).skip(skip).limit(limit).toArray(),
+      collection.countDocuments(query)
+    ])
 
-  Promise.all([dataPromise, countPromise])
-    .then(([data, total]) => {
-      const dataStructuredUser = data as WithId<IUser>[]
-      const dataParsed = dataStructuredUser.map(
-        ({ _id, password, updatedAt, ...rest }) => ({
-          ...rest
-        })
-      )
+    const dataStructuredUser = data as WithId<IUser>[]
+    const dataParsed = dataStructuredUser.map(({ _id, updatedAt, config, ...rest }) => ({
+      ...rest
+    }))
 
-      const meta = {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      }
+    const meta = {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit)
+    }
 
-      if (dataParsed.length > 0) {
-        handleSuccess(
-          {
-            message: list,
-            data: dataParsed,
-            meta,
-            statusCode: 200
-          },
-          response
-        )
-      } else {
-        handleErrors(
-          {
-            message: notMore,
-            statusCode: 404,
-            meta
-          },
-          response
-        )
-      }
-    })
-    .catch(() => {
-      handleErrors(
+    if (dataParsed.length > 0) {
+      handleSuccess(
         {
-          message: unexpectedError,
-          statusCode: 500
+          message: list,
+          data: dataParsed,
+          meta,
+          statusCode: 200
         },
         response
       )
-    })
+    }
+    if (dataParsed.length === 0 && page > 1) {
+      handleErrors(
+        {
+          message: notMore,
+          statusCode: 404,
+          meta
+        },
+        response
+      )
+    }
+    if (meta.totalPages === 0) {
+      handleErrors(
+        {
+          message: isEmpty,
+          statusCode: 404,
+          meta
+        },
+        response
+      )
+    }
+  } catch (error) {
+    handleErrors(
+      {
+        message: unexpectedError,
+        statusCode: 500
+      },
+      response
+    )
+  }
 }

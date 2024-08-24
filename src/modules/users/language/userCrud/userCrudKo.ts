@@ -30,6 +30,7 @@ export const userCrudKo: IMessages = {
     notRetrieved: '사용자가 검색되지 않았습니다',
     notListed: '사용자를 나열할 수 없습니다',
     notFoundSearch: '검색에서 사용자를 찾을 수 없습니다',
-    notMore: '더 이상 나열할 사용자가 없습니다'
+    notMore: '더 이상 나열할 사용자가 없습니다',
+    isEmpty: '이 시점에 나열할 사용자가 없습니다'
   }
 }
