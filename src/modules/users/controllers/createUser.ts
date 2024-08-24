@@ -13,13 +13,12 @@ import { defaultUserData } from '../constants'
 
 export const createUser = async ({ body, headers }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
+  const { data } = body as IRequest
 
   const {
     success: { created },
     error: { creationFailed, unexpectedError, duplicate }
   } = userMessageCrud[lang]
-
-  const { data } = body as IRequest
 
   try {
     await (

@@ -8,7 +8,7 @@ import {
   TResponse
 } from '../../../common'
 import { userMessageCrud } from '../language'
-import { IUser, TFiltersUsers, TSortUsers } from '../types'
+import { IUser, TFiltersUsers } from '../types'
 import { userCollection } from './config'
 
 export const listUsers = async ({ headers, body }: TRequest, response: TResponse) => {
