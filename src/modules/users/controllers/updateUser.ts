@@ -22,7 +22,7 @@ export const updateUser = async (
   const {
     success: { updated },
     warning: { notUpdated },
-    error: { validationFailed, duplicate, unexpectedError }
+    error: { validationFailed, unexpectedError }
   } = userMessageCrud[lang]
 
   if (!idUser) {
@@ -37,6 +37,8 @@ export const updateUser = async (
 
   try {
     const currentData = await (await userCollection).findOne({ public_id: idUser })
+    delete currentData?.lastModified
+
     const result = await (
       await userCollection
     ).updateMany(
@@ -72,13 +74,13 @@ export const updateUser = async (
     )
   } catch (error) {
     if (error instanceof MongoServerError) {
-      const { code, errorResponse } = error
+      const { errorResponse } = error
 
       if (Object.keys(errorResponse).length > 0) {
         handleErrors(
           {
             message: notUpdated,
-            data: { code },
+            data: { errorResponse },
             statusCode: 500
           },
           response
