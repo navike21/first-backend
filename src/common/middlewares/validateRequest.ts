@@ -8,7 +8,7 @@ export async function validateRequest(
   response: Response,
   next: NextFunction
 ) {
-  if (method === 'GET') {
+  if (method === 'GET' || method === 'DELETE') {
     return next()
   }
 
