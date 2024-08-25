@@ -23,5 +23,5 @@ export const defaultUserData: IUser = {
   phone: '',
   public_id: generateId(),
   state: ECollectionState.ACTIVE,
-  updatedAt: ''
+  lastModified: ''
 }

@@ -14,7 +14,7 @@ export interface IUser {
   phone: string
   public_id: string
   state: ECollectionState
-  updatedAt: Date | string
+  lastModified: Date | string
 }
 
 export interface IUserAuth {
@@ -31,5 +31,5 @@ export interface IUserConfig {
 
 export type TUserOmitted = Omit<
   IUser,
-  'public_id' | 'createdAt' | 'updatedAt' | 'state' | 'config' | 'auth'
+  'public_id' | 'createdAt' | 'lastModified' | 'state' | 'config' | 'auth'
 >

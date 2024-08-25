@@ -1,5 +1,6 @@
 import { Document, Filter, Sort, WithId } from 'mongodb'
 import {
+  ECollectionState,
   getInfoHeaders,
   handleErrors,
   handleSuccess,
@@ -50,9 +51,12 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
           ...(motherLastName && {
             motherLastName: { $regex: new RegExp(motherLastName, 'i') }
           }),
-          ...(names && { names: { $regex: new RegExp(names, 'i') } })
+          ...(names && { names: { $regex: new RegExp(names, 'i') } }),
+          state: ECollectionState.ACTIVE
         }
-      : {}
+      : {
+          state: ECollectionState.ACTIVE
+        }
 
   try {
     const [data, total] = await Promise.all([
@@ -66,9 +70,11 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     ])
 
     const dataStructuredUser = data as WithId<IUser>[]
-    const dataParsed = dataStructuredUser.map(({ _id, updatedAt, config, ...rest }) => ({
-      ...rest
-    }))
+    const dataParsed = dataStructuredUser.map(
+      ({ _id, lastModified, config, ...rest }) => ({
+        ...rest
+      })
+    )
 
     const meta = {
       page,

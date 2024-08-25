@@ -1,5 +1,6 @@
 import { MongoServerError } from 'mongodb'
 import {
+  ECollectionState,
   getInfoHeaders,
   handleErrors,
   handleSuccess,
@@ -7,20 +8,17 @@ import {
   TRequest,
   TResponse
 } from '../../../common'
-import { defaultUserData } from '../constants'
 import { userMessageCrud } from '../language'
 import { userCollection } from './config'
 
-export const updateUser = async (
+export const deleteUser = async (
   { body, headers, params }: TRequest,
   response: TResponse
 ) => {
   const { lang } = getInfoHeaders(headers)
   const { idUser } = params
-  const { data } = body as IRequest
-
   const {
-    success: { updated },
+    success: { deleted },
     warning: { notUpdated },
     error: { validationFailed, duplicate, unexpectedError }
   } = userMessageCrud[lang]
@@ -36,17 +34,15 @@ export const updateUser = async (
   }
 
   try {
-    const currentData = await (await userCollection).findOne({ public_id: idUser })
+    // const currentData = await (await userCollection).findOne({ public_id: idUser })
     const result = await (
       await userCollection
     ).updateMany(
       { public_id: idUser },
       {
         $set: {
-          ...defaultUserData,
-          ...currentData,
-          ...data,
-          public_id: idUser
+          // ...currentData,
+          state: ECollectionState.DELETED
         },
         $currentDate: { lastModified: true }
       }
@@ -64,9 +60,8 @@ export const updateUser = async (
 
     handleSuccess(
       {
-        message: updated,
-        statusCode: 200,
-        data: { ...data, public_id: idUser }
+        message: deleted,
+        statusCode: 200
       },
       response
     )
