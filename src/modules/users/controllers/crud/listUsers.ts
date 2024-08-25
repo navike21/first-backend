@@ -7,10 +7,10 @@ import {
   IRequest,
   TRequest,
   TResponse
-} from '../../../common'
-import { userMessageCrud } from '../language'
-import { IUser, TFiltersUsers } from '../types'
-import { userCollection } from './config'
+} from '../../../../common'
+import { userMessageCrud } from '../../language'
+import { IUser, TFiltersUsers } from '../../types'
+import { userCollection } from '../config'
 
 export const listUsers = async ({ headers, body }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
@@ -20,13 +20,13 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     sort = {}
   } = body as IRequest
 
+  const skip = (page - 1) * limit
+
   const {
     success: { list },
     warning: { notMore, isEmpty },
     error: { unexpectedError }
   } = userMessageCrud[lang]
-
-  const skip = (page - 1) * limit
 
   const collection = await userCollection
 
