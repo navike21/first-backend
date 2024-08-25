@@ -4,7 +4,6 @@ import {
   getInfoHeaders,
   handleErrors,
   handleSuccess,
-  IRequest,
   TRequest,
   TResponse
 } from '../../../common'
@@ -20,7 +19,7 @@ export const deleteUser = async (
   const {
     success: { deleted },
     warning: { notUpdated },
-    error: { validationFailed, duplicate, unexpectedError }
+    error: { validationFailed, unexpectedError }
   } = userMessageCrud[lang]
 
   if (!idUser) {
@@ -34,14 +33,12 @@ export const deleteUser = async (
   }
 
   try {
-    // const currentData = await (await userCollection).findOne({ public_id: idUser })
     const result = await (
       await userCollection
     ).updateMany(
       { public_id: idUser },
       {
         $set: {
-          // ...currentData,
           state: ECollectionState.DELETED
         },
         $currentDate: { lastModified: true }

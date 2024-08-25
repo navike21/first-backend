@@ -1,7 +1,7 @@
 import { ECollectionState, EUserStatus, generateId } from '../../../common'
 import { IUser } from '../types'
 
-export const defaultUserData: IUser = {
+export const defaultUserData: Omit<IUser, 'lastModified'> = {
   auth: {
     password: '',
     status: EUserStatus.OFFLINE
@@ -22,6 +22,5 @@ export const defaultUserData: IUser = {
   names: '',
   phone: '',
   public_id: generateId(),
-  state: ECollectionState.ACTIVE,
-  lastModified: ''
+  state: ECollectionState.ACTIVE
 }
