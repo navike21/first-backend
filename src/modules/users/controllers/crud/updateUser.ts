@@ -1,23 +1,26 @@
 import { MongoServerError } from 'mongodb'
 import {
-  ECollectionState,
   getInfoHeaders,
   handleErrors,
   handleSuccess,
+  IRequest,
   TRequest,
   TResponse
-} from '../../../common'
-import { userMessageCrud } from '../language'
-import { userCollection } from './config'
+} from '../../../../common'
+import { defaultUserData } from '../../constants'
+import { userMessageCrud } from '../../language'
+import { userCollection } from '../config'
 
-export const deleteUser = async (
+export const updateUser = async (
   { body, headers, params }: TRequest,
   response: TResponse
 ) => {
   const { lang } = getInfoHeaders(headers)
   const { idUser } = params
+  const { data } = body as IRequest
+
   const {
-    success: { deleted },
+    success: { updated },
     warning: { notUpdated },
     error: { validationFailed, unexpectedError }
   } = userMessageCrud[lang]
@@ -33,13 +36,19 @@ export const deleteUser = async (
   }
 
   try {
+    const currentData = await (await userCollection).findOne({ public_id: idUser })
+    delete currentData?.lastModified
+
     const result = await (
       await userCollection
     ).updateMany(
       { public_id: idUser },
       {
         $set: {
-          state: ECollectionState.DELETED
+          ...defaultUserData,
+          ...currentData,
+          ...data,
+          public_id: idUser
         },
         $currentDate: { lastModified: true }
       }
@@ -57,20 +66,21 @@ export const deleteUser = async (
 
     handleSuccess(
       {
-        message: deleted,
-        statusCode: 200
+        message: updated,
+        statusCode: 200,
+        data: { ...data, public_id: idUser }
       },
       response
     )
   } catch (error) {
     if (error instanceof MongoServerError) {
-      const { code, errorResponse } = error
+      const { errorResponse } = error
 
       if (Object.keys(errorResponse).length > 0) {
         handleErrors(
           {
             message: notUpdated,
-            data: { code },
+            data: { errorResponse },
             statusCode: 500
           },
           response
