@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Importar funciones de caseConversion.sh
-source ./scripts/caseConversion.sh
+source ./src/scripts/caseConversion.sh
 
 # Importar funciones para crear controllers y router
-source ./scripts/createControllers.sh
-source ./scripts/createRouter.sh
-source ./scripts/createSchema.sh
-source ./scripts/createMiddleware.sh
+source ./src/scripts/createControllers.sh
+source ./src/scripts/createRouter.sh
+source ./src/scripts/createSchema.sh
+source ./src/scripts/createMiddleware.sh
 
 # Solicitar el nombre del módulo en singular
 read -p "📋 Enter the module name (singular): " singularName
