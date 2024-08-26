@@ -5,11 +5,11 @@ import {
   IRequest,
   TRequest,
   TResponse
-} from '../../../common'
-import { userCollection } from './config'
-import { userMessageCrud } from '../language'
+} from '../../../../common'
+import { userCollection } from '../config'
+import { userMessageCrud } from '../../language'
 import { MongoServerError } from 'mongodb'
-import { defaultUserData } from '../constants'
+import { defaultUserData } from '../../constants'
 
 export const createUser = async ({ body, headers }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
