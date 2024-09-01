@@ -1,4 +1,4 @@
-import { ECollectionState, EUserStatus } from '../../../common'
+import { ECollectionState, EThemeBrowser, EUserStatus } from '../../../common'
 
 export interface IUser {
   auth: IUserAuth
@@ -12,7 +12,7 @@ export interface IUser {
   motherLastName: string
   names: string
   phone: string
-  public_id: string
+  publicId: string
   state: ECollectionState
   lastModified: Date | string
 }
@@ -25,11 +25,11 @@ export interface IUserAuth {
 export interface IUserConfig {
   language: string
   role: string[]
-  themeBrowser: 'light' | 'dark' | 'auto'
+  themeBrowser: EThemeBrowser
   userAlias: string
 }
 
 export type TUserOmitted = Omit<
   IUser,
-  'public_id' | 'createdAt' | 'lastModified' | 'state' | 'config' | 'auth'
+  'publicId' | 'createdAt' | 'lastModified' | 'state' | 'config' | 'auth'
 >

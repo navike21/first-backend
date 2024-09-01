@@ -36,19 +36,19 @@ export const updateUser = async (
   }
 
   try {
-    const currentData = await (await userCollection).findOne({ public_id: idUser })
+    const currentData = await (await userCollection).findOne({ publicId: idUser })
     delete currentData?.lastModified
 
     const result = await (
       await userCollection
     ).updateMany(
-      { public_id: idUser },
+      { publicId: idUser },
       {
         $set: {
           ...defaultUserData,
           ...currentData,
           ...data,
-          public_id: idUser
+          publicId: idUser
         },
         $currentDate: { lastModified: true }
       }
@@ -68,7 +68,7 @@ export const updateUser = async (
       {
         message: updated,
         statusCode: 200,
-        data: { ...data, public_id: idUser }
+        data: { ...data, publicId: idUser }
       },
       response
     )

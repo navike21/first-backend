@@ -36,7 +36,7 @@ export const deleteUser = async (
     const result = await (
       await userCollection
     ).updateMany(
-      { public_id: idUser },
+      { publicId: idUser },
       {
         $set: {
           state: ECollectionState.DELETED
