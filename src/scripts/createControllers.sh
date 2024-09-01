@@ -20,7 +20,7 @@ createControllers() {
   echo "const initializeDB = async () => {" >> "$configFile"
   echo "  const collection = dataBase.collection($pluralNameScreamingSnake)" >> "$configFile"
   echo "" >> "$configFile"
-  echo "  await collection.createIndex({ public_id: 1 }, { unique: true })" >> "$configFile"
+  echo "  await collection.createIndex({ publicId: 1 }, { unique: true })" >> "$configFile"
   echo "" >> "$configFile"
   echo "  return collection" >> "$configFile"
   echo "}" >> "$configFile"
