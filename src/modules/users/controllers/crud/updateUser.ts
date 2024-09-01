@@ -8,7 +8,7 @@ import {
   TResponse
 } from '../../../../common'
 import { defaultUserData } from '../../constants'
-import { userMessageCrud } from '../../language'
+import { userCrudMessage } from '../../language'
 import { userCollection } from '../config'
 
 export const updateUser = async (
@@ -23,7 +23,7 @@ export const updateUser = async (
     success: { updated },
     warning: { notUpdated },
     error: { validationFailed, unexpectedError }
-  } = userMessageCrud[lang]
+  } = userCrudMessage[lang]
 
   if (!idUser) {
     return handleErrors(

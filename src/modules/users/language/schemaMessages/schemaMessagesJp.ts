@@ -1,6 +1,6 @@
 import { TUserSchemaMessage } from '../../types'
 
-export const schemaMessageJp: TUserSchemaMessage = {
+export const schemaMessagesJp: TUserSchemaMessage = {
   documentId: {
     isString: '身分証明書は文字列でなければなりません',
     minLength: '身分証明書は少なくとも8文字でなければなりません',

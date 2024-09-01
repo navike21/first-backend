@@ -1,6 +1,6 @@
 import { IMessages } from '../../../../common'
 
-export const userCrudKo: IMessages = {
+export const crudMessagesKo: IMessages = {
   success: {
     created: '사용자가 성공적으로 생성되었습니다',
     updated: '사용자가 성공적으로 업데이트되었습니다',
