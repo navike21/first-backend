@@ -1,6 +1,6 @@
 import joi from 'joi'
 import { EN, TLanguage } from '../../../common'
-import { userMessageSchema } from '../language'
+import { userSchemaMessage } from '../language'
 
 export const UserSchema = (lang: TLanguage = EN) => {
   const {
@@ -39,7 +39,7 @@ export const UserSchema = (lang: TLanguage = EN) => {
       minLength: minLengthPhone = '',
       maxLength: maxLengthPhone = ''
     }
-  } = userMessageSchema[lang]
+  } = userSchemaMessage[lang]
 
   return joi.object({
     documentId: joi.string().min(8).max(8).required().messages({
