@@ -1,6 +1,6 @@
 import { IMessages } from '../../../../common'
 
-export const userCrudFr: IMessages = {
+export const crudMessagesFr: IMessages = {
   success: {
     created: 'Utilisateur créé avec succès',
     updated: 'Utilisateur mis à jour avec succès',

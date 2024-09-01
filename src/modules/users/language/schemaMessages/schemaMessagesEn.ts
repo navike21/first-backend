@@ -1,6 +1,6 @@
 import { TUserSchemaMessage } from '../../types'
 
-export const schemaMessageEn: TUserSchemaMessage = {
+export const schemaMessagesEn: TUserSchemaMessage = {
   documentId: {
     isString: 'The ID document must be a string',
     minLength: 'The ID document must be at least 8 characters long',

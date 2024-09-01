@@ -1,6 +1,6 @@
 import { IMessages } from '../../../../common'
 
-export const userCrudJp: IMessages = {
+export const crudMessagesJp: IMessages = {
   success: {
     created: 'ユーザーが正常に作成されました',
     updated: 'ユーザーが正常に更新されました',

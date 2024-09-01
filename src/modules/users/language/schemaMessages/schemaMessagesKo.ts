@@ -1,6 +1,6 @@
 import { TUserSchemaMessage } from '../../types'
 
-export const schemaMessageKo: TUserSchemaMessage = {
+export const schemaMessagesKo: TUserSchemaMessage = {
   documentId: {
     isString: '신분증은 문자열이어야 합니다',
     minLength: '신분증은 최소 8자여야 합니다',

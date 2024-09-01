@@ -1,6 +1,6 @@
 import { TUserSchemaMessage } from '../../types'
 
-export const schemaMessageDe: TUserSchemaMessage = {
+export const schemaMessagesDe: TUserSchemaMessage = {
   documentId: {
     isString: 'Die Identifikationsnummer muss eine Zeichenkette sein',
     minLength: 'Die Identifikationsnummer muss mindestens 8 Zeichen haben',

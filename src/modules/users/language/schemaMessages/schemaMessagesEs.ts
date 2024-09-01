@@ -1,6 +1,6 @@
 import { TUserSchemaMessage } from '../../types'
 
-export const schemaMessageEs: TUserSchemaMessage = {
+export const schemaMessagesEs: TUserSchemaMessage = {
   documentId: {
     isString: 'El documento de identidad debe ser una cadena',
     minLength: 'El documento de identidad debe tener al menos 8 caracteres',

@@ -8,7 +8,7 @@ import {
   TRequest,
   TResponse
 } from '../../../../common'
-import { userMessageCrud } from '../../language'
+import { userCrudMessage } from '../../language'
 import { IUser, TFiltersUsers } from '../../types'
 import { userCollection } from '../config'
 
@@ -26,7 +26,7 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     success: { list },
     warning: { notMore, isEmpty },
     error: { unexpectedError }
-  } = userMessageCrud[lang]
+  } = userCrudMessage[lang]
 
   const collection = await userCollection
 
