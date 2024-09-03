@@ -8,7 +8,7 @@ import {
   TRequest,
   TResponse
 } from '../../../../common'
-import { userCrudMessage } from '../../language'
+import { userCrudMessages } from '../../language'
 import { IUser, TFiltersUsers } from '../../types'
 import { userCollection } from '../config'
 
@@ -23,10 +23,10 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
   const skip = (page - 1) * limit
 
   const {
-    success: { list },
-    warning: { notMore, isEmpty },
-    error: { unexpectedError }
-  } = userCrudMessage[lang]
+    success: { list = '' } = {},
+    warning: { notMore = '', isEmpty = '' } = {},
+    error: { unexpectedError = '' } = {}
+  } = userCrudMessages[lang]
 
   const collection = await userCollection
 

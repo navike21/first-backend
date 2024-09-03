@@ -7,7 +7,7 @@ import {
   TResponse
 } from '../../../../common'
 import { userCollection } from '../config'
-import { userCrudMessage } from '../../language'
+import { userCrudMessages } from '../../language'
 import { MongoServerError } from 'mongodb'
 import { defaultUserData } from '../../constants'
 
@@ -16,9 +16,9 @@ export const createUser = async ({ body, headers }: TRequest, response: TRespons
   const { data } = body as IRequest
 
   const {
-    success: { created },
-    error: { creationFailed, unexpectedError, duplicate }
-  } = userCrudMessage[lang]
+    success: { created = '' } = {},
+    error: { creationFailed = '', unexpectedError = '', duplicate = '' } = {}
+  } = userCrudMessages[lang]
 
   try {
     await (

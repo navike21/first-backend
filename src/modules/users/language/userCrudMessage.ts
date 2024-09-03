@@ -10,7 +10,7 @@ import {
   crudMessagesPt
 } from './crudMessages'
 
-export const userCrudMessage = {
+export const userCrudMessages = {
   [DE]: crudMessagesDe,
   [EN]: crudMessagesEn,
   [ES]: crudMessagesEs,
