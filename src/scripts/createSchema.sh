@@ -13,9 +13,9 @@ createSchema() {
 
   cat <<EOF > "$schemaFile"
 import joi from 'joi'
-import { EN, TLanguage } from '../../../common'
+import { DEFAULT_LANGUAGE, TLanguage } from '../../../common'
 
-export const ${singularNamePascal}Schema = (lang: TLanguage = EN) => {
+export const ${singularNamePascal}Schema = (lang: TLanguage = DEFAULT_LANGUAGE) => {
   return joi.object({})
 }
 EOF

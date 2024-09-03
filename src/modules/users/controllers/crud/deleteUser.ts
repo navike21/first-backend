@@ -7,7 +7,7 @@ import {
   TRequest,
   TResponse
 } from '../../../../common'
-import { userCrudMessage } from '../../language'
+import { userCrudMessages } from '../../language'
 import { userCollection } from '../config'
 
 export const deleteUser = async (
@@ -17,10 +17,10 @@ export const deleteUser = async (
   const { lang } = getInfoHeaders(headers)
   const { idUser } = params
   const {
-    success: { deleted },
-    warning: { notUpdated },
-    error: { validationFailed, unexpectedError }
-  } = userCrudMessage[lang]
+    success: { deleted = '' } = {},
+    warning: { notUpdated = '' } = {},
+    error: { validationFailed = '', unexpectedError = '' } = {}
+  } = userCrudMessages[lang]
 
   if (!idUser) {
     return handleErrors(

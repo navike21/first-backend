@@ -1,8 +1,8 @@
-import joi from 'joi'
-import { EN, TLanguage } from '../../../common'
+import Joi from 'joi'
+import { DEFAULT_LANGUAGE, TLanguage } from '../../../common'
 import { userSchemaMessage } from '../language'
 
-export const UserSchema = (lang: TLanguage = EN) => {
+export const UserSchema = (lang: TLanguage = DEFAULT_LANGUAGE) => {
   const {
     documentId: {
       isString: isStringDocumentId = '',
@@ -41,46 +41,46 @@ export const UserSchema = (lang: TLanguage = EN) => {
     }
   } = userSchemaMessage[lang]
 
-  return joi.object({
-    documentId: joi.string().min(8).max(8).required().messages({
+  return Joi.object({
+    documentId: Joi.string().min(8).max(8).required().messages({
       'string.base': isStringDocumentId,
       'string.min': minLengthDocumentId,
       'string.max': maxLengthDocumentId,
       'any.required': isRequiredDocumentId,
       'string.empty': isRequiredDocumentId
     }),
-    email: joi.string().email().required().messages({
+    email: Joi.string().email().required().messages({
       'string.base': isStringEmail,
       'string.email': isEmailEmail,
       'any.required': isRequiredEmail,
       'string.empty': isRequiredEmail
     }),
-    fatherLastName: joi.string().min(2).max(50).required().messages({
+    fatherLastName: Joi.string().min(2).max(50).required().messages({
       'string.base': isStringFatherLastName,
       'string.min': minLengthFatherLastName,
       'string.max': maxLengthFatherLastName,
       'any.required': isRequiredFatherLastName,
       'string.empty': isRequiredFatherLastName
     }),
-    image: joi.string().uri().messages({
+    image: Joi.string().uri().messages({
       'string.base': isStringImage,
       'string.uri': isUrlImage
     }),
-    motherLastName: joi.string().min(2).max(50).required().messages({
+    motherLastName: Joi.string().min(2).max(50).required().messages({
       'string.base': isStringMotherLastName,
       'string.min': minLengthMotherLastName,
       'string.max': maxLengthMotherLastName,
       'any.required': isRequiredMotherLastName,
       'string.empty': isRequiredMotherLastName
     }),
-    names: joi.string().min(2).max(50).required().messages({
+    names: Joi.string().min(2).max(50).required().messages({
       'string.base': isStringName,
       'string.min': minLengthName,
       'string.max': maxLengthName,
       'any.required': isRequiredName,
       'string.empty': isRequiredName
     }),
-    phone: joi.string().min(7).max(15).messages({
+    phone: Joi.string().min(7).max(15).messages({
       'string.base': isStringPhone,
       'string.min': minLengthPhone,
       'string.max': maxLengthPhone
