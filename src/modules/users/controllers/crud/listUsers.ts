@@ -70,11 +70,9 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     ])
 
     const dataStructuredUser = data as WithId<IUser>[]
-    const dataParsed = dataStructuredUser.map(
-      ({ _id, lastModified, config, ...rest }) => ({
-        ...rest
-      })
-    )
+    const dataParsed = dataStructuredUser.map(({ ...rest }) => ({
+      ...rest
+    }))
 
     const meta = {
       page,
@@ -117,6 +115,7 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
       )
     }
   } catch (error) {
+    console.error(error)
     handleErrors(
       {
         message: unexpectedError,
