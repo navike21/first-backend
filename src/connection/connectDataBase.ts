@@ -15,8 +15,13 @@ export async function connectDataBase() {
   try {
     await clientDB.connect()
     await clientDB.db('admin').command({ ping: 1 })
-    console.log('Connected to the database')
+    return true
   } catch (error) {
-    console.error('Error connecting to the database', error)
+    const errorMessageDefault = 'Error connecting to the database'
+    if (error instanceof Error) {
+      throw new Error(`${errorMessageDefault}: ${error.message}`)
+    } else {
+      throw new Error(errorMessageDefault)
+    }
   }
 }

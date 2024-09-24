@@ -24,8 +24,10 @@ export const schemaMessagesFr: TUserSchemaMessage = {
   },
   motherLastName: {
     isString: 'Le nom de famille de la mère doit être une chaîne',
-    minLength: 'Le nom de famille de la mère doit contenir au moins 2 caractères',
-    maxLength: 'Le nom de famille de la mère ne doit pas dépasser 50 caractères',
+    minLength:
+      'Le nom de famille de la mère doit contenir au moins 2 caractères',
+    maxLength:
+      'Le nom de famille de la mère ne doit pas dépasser 50 caractères',
     isRequired: 'Le nom de famille de la mère est obligatoire'
   },
   names: {
