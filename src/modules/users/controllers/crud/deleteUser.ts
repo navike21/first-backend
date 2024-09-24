@@ -10,10 +10,7 @@ import {
 import { userCrudMessages } from '../../language'
 import { userCollection } from '../config'
 
-export const deleteUser = async (
-  { body, headers, params }: TRequest,
-  response: TResponse
-) => {
+export const deleteUser = async ({ headers, params }: TRequest, response: TResponse) => {
   const { lang } = getInfoHeaders(headers)
   const { idUser } = params
   const {
