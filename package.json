@@ -13,8 +13,9 @@
     "start:dev": "nodemon --exec ts-node ./src/main.ts",
     "dev": "nodemon",
     "new-module": "bash ./src/scripts/new-module.sh",
-    "lint": "eslint",
-    "format": "prettier --write 'src/**/*.{ts,js,md}'"
+    "lint": "eslint . --fix",
+    "format": "prettier --write 'src/**/*.{ts,js,md}'",
+    "test": "jest"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -22,22 +23,28 @@
     "express": "^4.19.2",
     "joi": "^17.13.3",
     "mongodb": "^6.8.0",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "winston": "^3.14.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.11.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.13",
     "@types/node": "^22.2.0",
+    "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^9.11.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   }

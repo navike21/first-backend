@@ -11,7 +11,10 @@ import { userCrudMessages } from '../../language'
 import { MongoServerError } from 'mongodb'
 import { defaultUserData } from '../../constants'
 
-export const createUser = async ({ body, headers }: TRequest, response: TResponse) => {
+export const createUser = async (
+  { body, headers }: TRequest,
+  response: TResponse
+) => {
   const { lang } = getInfoHeaders(headers)
   const { data } = body as IRequest
 

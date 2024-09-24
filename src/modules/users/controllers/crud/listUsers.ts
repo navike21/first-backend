@@ -11,8 +11,12 @@ import {
 import { userCrudMessages } from '../../language'
 import { IUser, TFiltersUsers } from '../../types'
 import { userCollection } from '../config'
+import { logger } from '../../../../logger'
 
-export const listUsers = async ({ headers, body }: TRequest, response: TResponse) => {
+export const listUsers = async (
+  { headers, body }: TRequest,
+  response: TResponse
+) => {
   const { lang } = getInfoHeaders(headers)
   const {
     meta: { page = 1, limit = 10 } = {},
@@ -42,16 +46,32 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
   const query: Filter<Document> =
     Object.keys(filters).length > 0
       ? {
-          ...(documentId && { documentId: documentId }),
-          ...(email && { email: email }),
-          ...(createdAt && { createdAt: { $gte: new Date(createdAt) } }),
+          ...(documentId && {
+            documentId: documentId
+          }),
+          ...(email && {
+            email: email
+          }),
+          ...(createdAt && {
+            createdAt: {
+              $gte: new Date(createdAt)
+            }
+          }),
           ...(fatherLastName && {
-            fatherLastName: { $regex: new RegExp(fatherLastName, 'i') }
+            fatherLastName: {
+              $regex: new RegExp(fatherLastName, 'i')
+            }
           }),
           ...(motherLastName && {
-            motherLastName: { $regex: new RegExp(motherLastName, 'i') }
+            motherLastName: {
+              $regex: new RegExp(motherLastName, 'i')
+            }
           }),
-          ...(names && { names: { $regex: new RegExp(names, 'i') } }),
+          ...(names && {
+            names: {
+              $regex: new RegExp(names, 'i')
+            }
+          }),
           state: ECollectionState.ACTIVE
         }
       : {
@@ -115,7 +135,7 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
       )
     }
   } catch (error) {
-    console.error(error)
+    logger.error(error)
     handleErrors(
       {
         message: unexpectedError,

@@ -1,4 +1,9 @@
-import { ECollectionState, EThemeBrowser, EUserStatus, generateId } from '../../../common'
+import {
+  ECollectionState,
+  EThemeBrowser,
+  EUserStatus,
+  generateId
+} from '../../../common'
 import { IUser } from '../types'
 
 export const defaultUserData: Omit<IUser, 'lastModified'> = {
