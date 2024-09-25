@@ -17,7 +17,6 @@ export const defaultUserData: Omit<IUser, 'lastModified'> = {
     themeBrowser: EThemeBrowser.AUTO,
     userAlias: ''
   },
-  createdAt: new Date(),
   dateOfBirth: '',
   documentId: '',
   email: '',

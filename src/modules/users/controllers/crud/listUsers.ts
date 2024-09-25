@@ -1,4 +1,4 @@
-import { Document, Filter, Sort, WithId } from 'mongodb'
+import { FilterQuery, SortOrder } from 'mongoose'
 import {
   ECollectionState,
   getInfoHeaders,
@@ -10,7 +10,7 @@ import {
 } from '../../../../common'
 import { userCrudMessages } from '../../language'
 import { IUser, TFiltersUsers } from '../../types'
-import { userCollection } from '../config'
+import { UserModel } from '../../models'
 import { logger } from '../../../../logger'
 
 export const listUsers = async (
@@ -32,8 +32,6 @@ export const listUsers = async (
     error: { unexpectedError = '' } = {}
   } = userCrudMessages[lang]
 
-  const collection = await userCollection
-
   const {
     documentId = '',
     email = '',
@@ -43,61 +41,40 @@ export const listUsers = async (
     names = ''
   } = filters as TFiltersUsers
 
-  const query: Filter<Document> =
+  const query: FilterQuery<IUser> =
     Object.keys(filters).length > 0
       ? {
-          ...(documentId && {
-            documentId: documentId
-          }),
-          ...(email && {
-            email: email
-          }),
-          ...(createdAt && {
-            createdAt: {
-              $gte: new Date(createdAt)
-            }
-          }),
+          ...(documentId && { documentId }),
+          ...(email && { email }),
+          ...(createdAt && { createdAt: { $gte: new Date(createdAt) } }),
           ...(fatherLastName && {
-            fatherLastName: {
-              $regex: new RegExp(fatherLastName, 'i')
-            }
+            fatherLastName: { $regex: new RegExp(fatherLastName, 'i') }
           }),
           ...(motherLastName && {
-            motherLastName: {
-              $regex: new RegExp(motherLastName, 'i')
-            }
+            motherLastName: { $regex: new RegExp(motherLastName, 'i') }
           }),
-          ...(names && {
-            names: {
-              $regex: new RegExp(names, 'i')
-            }
-          }),
+          ...(names && { names: { $regex: new RegExp(names, 'i') } }),
           state: ECollectionState.ACTIVE
         }
-      : {
-          state: ECollectionState.ACTIVE
-        }
+      : { state: ECollectionState.ACTIVE }
 
   try {
     const [data, total] = await Promise.all([
-      collection
-        .find(query)
-        .sort(sort as Sort)
+      UserModel.find(query)
+        .sort(sort as string | { [key: string]: SortOrder })
         .skip(skip)
         .limit(limit)
-        .toArray(),
-      collection.countDocuments(query)
+        .lean(),
+      UserModel.countDocuments(query)
     ])
 
-    const dataStructuredUser = data as WithId<IUser>[]
-    const dataParsed = dataStructuredUser.map(
+    const dataParsed = data.map(
       ({
         dateOfBirth,
         documentId,
         email,
         fatherLastName,
         image,
-        lastModified,
         motherLastName,
         names,
         phone,
@@ -109,7 +86,6 @@ export const listUsers = async (
         email,
         fatherLastName,
         image,
-        lastModified,
         motherLastName,
         names,
         phone,
@@ -135,9 +111,7 @@ export const listUsers = async (
         },
         response
       )
-    }
-
-    if (dataParsed.length === 0 && page > 1) {
+    } else if (page > 1) {
       handleErrors(
         {
           message: notMore,
@@ -146,9 +120,7 @@ export const listUsers = async (
         },
         response
       )
-    }
-
-    if (meta.totalPages === 0) {
+    } else {
       handleErrors(
         {
           message: isEmpty,

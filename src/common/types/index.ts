@@ -1,6 +1,7 @@
 export * from './customRequest'
 export * from './language'
 export * from './messages'
+export * from './mongoServerError'
 export * from './params'
 export * from './requestSchema'
 export * from './response'
