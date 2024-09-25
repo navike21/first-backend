@@ -4,6 +4,7 @@ import { userSchemaMessage } from '../language'
 
 export const UserSchema = (lang: TLanguage = DEFAULT_LANGUAGE) => {
   const {
+    dateOfBirth: { isDate: isDateDateOfBirth = '' },
     documentId: {
       isString: isStringDocumentId = '',
       minLength: minLengthDocumentId = '',
@@ -42,6 +43,9 @@ export const UserSchema = (lang: TLanguage = DEFAULT_LANGUAGE) => {
   } = userSchemaMessage[lang]
 
   return Joi.object({
+    dateOfBirth: Joi.date().messages({
+      'date.base': isDateDateOfBirth
+    }),
     documentId: Joi.string().min(8).max(8).required().messages({
       'string.base': isStringDocumentId,
       'string.min': minLengthDocumentId,

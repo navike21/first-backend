@@ -90,9 +90,33 @@ export const listUsers = async (
     ])
 
     const dataStructuredUser = data as WithId<IUser>[]
-    const dataParsed = dataStructuredUser.map(({ ...rest }) => ({
-      ...rest
-    }))
+    const dataParsed = dataStructuredUser.map(
+      ({
+        dateOfBirth,
+        documentId,
+        email,
+        fatherLastName,
+        image,
+        lastModified,
+        motherLastName,
+        names,
+        phone,
+        publicId,
+        state
+      }) => ({
+        dateOfBirth,
+        documentId,
+        email,
+        fatherLastName,
+        image,
+        lastModified,
+        motherLastName,
+        names,
+        phone,
+        publicId,
+        state
+      })
+    )
 
     const meta = {
       page,
