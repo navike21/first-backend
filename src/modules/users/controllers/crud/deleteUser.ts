@@ -1,4 +1,4 @@
-import { MongoServerError } from 'mongodb'
+import { Error as MongooseError } from 'mongoose'
 import {
   ECollectionState,
   getInfoHeaders,
@@ -8,7 +8,7 @@ import {
   TResponse
 } from '../../../../common'
 import { userCrudMessages } from '../../language'
-import { userCollection } from '../config'
+import { UserModel } from '../../models'
 
 export const deleteUser = async (
   { headers, params }: TRequest,
@@ -33,9 +33,7 @@ export const deleteUser = async (
   }
 
   try {
-    const result = await (
-      await userCollection
-    ).updateMany(
+    const result = await UserModel.updateMany(
       { publicId: idUser },
       {
         $set: {
@@ -65,19 +63,15 @@ export const deleteUser = async (
       response
     )
   } catch (error) {
-    if (error instanceof MongoServerError) {
-      const { code, errorResponse } = error
-
-      if (Object.keys(errorResponse).length > 0) {
-        handleErrors(
-          {
-            message: notUpdated,
-            data: { code },
-            statusCode: 500
-          },
-          response
-        )
-      }
+    if (error instanceof MongooseError) {
+      handleErrors(
+        {
+          message: unexpectedError,
+          data: error,
+          statusCode: 500
+        },
+        response
+      )
     } else {
       handleErrors(
         {

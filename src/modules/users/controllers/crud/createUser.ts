@@ -3,13 +3,14 @@ import {
   handleErrors,
   handleSuccess,
   IRequest,
+  TMongoServerError,
   TRequest,
   TResponse
 } from '../../../../common'
-import { userCollection } from '../config'
 import { userCrudMessages } from '../../language'
-import { MongoServerError } from 'mongodb'
 import { defaultUserData } from '../../constants'
+import { UserModel } from '../../models'
+import { Error } from 'mongoose'
 
 export const createUser = async (
   { body, headers }: TRequest,
@@ -24,12 +25,12 @@ export const createUser = async (
   } = userCrudMessages[lang]
 
   try {
-    await (
-      await userCollection
-    ).insertOne({
+    const newUser = new UserModel({
       ...defaultUserData,
       ...data
     })
+
+    await newUser.save()
 
     handleSuccess(
       {
@@ -40,15 +41,15 @@ export const createUser = async (
       response
     )
   } catch (error) {
-    if (error instanceof MongoServerError) {
-      const { code, errorResponse } = error
-
+    const { stack, name } = error as Error
+    if (name === 'MongoServerError') {
+      const { code } = error as TMongoServerError
       if (code === 11000) {
         handleErrors(
           {
             message: duplicate,
-            statusCode: 400,
-            data: errorResponse
+            statusCode: 500,
+            data: error
           },
           response
         )
@@ -56,7 +57,8 @@ export const createUser = async (
         handleErrors(
           {
             message: creationFailed,
-            statusCode: 500
+            statusCode: 500,
+            data: error
           },
           response
         )
@@ -65,7 +67,8 @@ export const createUser = async (
       handleErrors(
         {
           message: unexpectedError,
-          statusCode: 500
+          statusCode: 500,
+          data: stack
         },
         response
       )

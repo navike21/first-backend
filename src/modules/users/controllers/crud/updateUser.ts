@@ -1,4 +1,4 @@
-import { MongoServerError } from 'mongodb'
+import { Error as ErrorMongoose } from 'mongoose'
 import {
   getInfoHeaders,
   handleErrors,
@@ -7,9 +7,8 @@ import {
   TRequest,
   TResponse
 } from '../../../../common'
-import { defaultUserData } from '../../constants'
 import { userCrudMessages } from '../../language'
-import { userCollection } from '../config'
+import { UserModel } from '../../models'
 
 export const updateUser = async (
   { body, headers, params }: TRequest,
@@ -36,33 +35,22 @@ export const updateUser = async (
   }
 
   try {
-    const currentData = await (
-      await userCollection
-    ).findOne({ publicId: idUser })
-    delete currentData?.lastModified
-
-    const result = await (
-      await userCollection
-    ).updateMany(
+    const updatedUser = await UserModel.findOneAndUpdate(
       { publicId: idUser },
       {
         $set: {
-          ...defaultUserData,
-          ...currentData,
-          ...data,
-          publicId: idUser
+          ...data
         },
-        $currentDate: {
-          lastModified: true
-        }
-      }
+        $currentDate: { lastModified: true }
+      },
+      { new: true, lean: true }
     )
 
-    if (result.matchedCount === 0) {
+    if (!updatedUser) {
       return handleErrors(
         {
           message: notUpdated,
-          statusCode: 400
+          statusCode: 404
         },
         response
       )
@@ -72,29 +60,22 @@ export const updateUser = async (
       {
         message: updated,
         statusCode: 200,
-        data: {
-          ...data,
-          publicId: idUser
-        }
+        data: updatedUser
       },
       response
     )
   } catch (error) {
-    if (error instanceof MongoServerError) {
-      const { errorResponse } = error
-
-      if (Object.keys(errorResponse).length > 0) {
-        handleErrors(
-          {
-            message: notUpdated,
-            data: { errorResponse },
-            statusCode: 500
-          },
-          response
-        )
-      }
+    if (error instanceof ErrorMongoose) {
+      return handleErrors(
+        {
+          message: validationFailed,
+          data: error,
+          statusCode: 400
+        },
+        response
+      )
     } else {
-      handleErrors(
+      return handleErrors(
         {
           message: unexpectedError,
           statusCode: 500

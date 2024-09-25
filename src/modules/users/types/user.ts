@@ -1,9 +1,9 @@
 import { ECollectionState, EThemeBrowser, EUserStatus } from '../../../common'
+import { Document } from 'mongoose'
 
 export interface IUser {
   auth: IUserAuth
   config: IUserConfig
-  createdAt: Date
   dateOfBirth: Date | string
   documentId: string
   email: string
@@ -14,8 +14,9 @@ export interface IUser {
   phone: string
   publicId: string
   state: ECollectionState
-  lastModified: Date | string
 }
+
+export interface IUserDocument extends IUser, Document {}
 
 export interface IUserAuth {
   password: string

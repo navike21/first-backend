@@ -38,7 +38,7 @@ export default [
     },
     rules: {
       'no-console': 'warn',
-      'prettier/prettier': 'error',
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
       '@typescript-eslint/naming-convention': [
         'error',
         {
