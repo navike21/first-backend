@@ -15,7 +15,6 @@ const compat = new FlatCompat({
 
 export default [
   {
-    // Ignorar ciertos directorios y archivos
     ignores: [
       '**/dist',
       '**/node_modules',
@@ -23,27 +22,41 @@ export default [
       'webpack.config.js'
     ]
   },
-  // Extender configuraciones recomendadas
   ...compat.extends(
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended'
   ),
   {
-    // Opciones de lenguaje
     languageOptions: {
       parser: tsParser,
       ecmaVersion: 2024,
       sourceType: 'module'
     },
-    // Plugins
     plugins: {
       prettier: pluginPrettier
     },
-    // Reglas
     rules: {
       'no-console': 'warn',
-      'prettier/prettier': 'error'
+      'prettier/prettier': 'error',
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'typeAlias',
+          format: ['PascalCase'],
+          prefix: ['T']
+        },
+        {
+          selector: 'interface',
+          format: ['PascalCase'],
+          prefix: ['I']
+        },
+        {
+          selector: 'enum',
+          format: ['PascalCase'],
+          prefix: ['E']
+        }
+      ]
     }
   }
 ]
