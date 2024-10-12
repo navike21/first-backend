@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import { DEFAULT_LANGUAGE, TLanguage } from '../../../common'
 import { userSchemaMessage } from '../language'
+import { IUser } from '../types'
 
 export const UserSchema = (lang: TLanguage = DEFAULT_LANGUAGE) => {
   const {
@@ -42,7 +43,7 @@ export const UserSchema = (lang: TLanguage = DEFAULT_LANGUAGE) => {
     }
   } = userSchemaMessage[lang]
 
-  return Joi.object({
+  return Joi.object<IUser>({
     dateOfBirth: Joi.date().messages({
       'date.base': isDateDateOfBirth
     }),
