@@ -44,34 +44,25 @@ export const createUser = async (
     const { stack, name } = error as Error
     if (name === 'MongoServerError') {
       const { code } = error as TMongoServerError
-      if (code === 11000) {
-        handleErrors(
-          {
-            message: duplicate,
-            statusCode: 500,
-            data: error
-          },
-          response
-        )
-      } else {
-        handleErrors(
-          {
-            message: creationFailed,
-            statusCode: 500,
-            data: error
-          },
-          response
-        )
-      }
-    } else {
-      handleErrors(
+      const errorMessage = code === 11000 ? duplicate : creationFailed
+
+      return handleErrors(
         {
-          message: unexpectedError,
+          message: errorMessage,
           statusCode: 500,
-          data: stack
+          data: error
         },
         response
       )
     }
+
+    return handleErrors(
+      {
+        message: unexpectedError,
+        statusCode: 500,
+        data: stack
+      },
+      response
+    )
   }
 }
