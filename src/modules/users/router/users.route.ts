@@ -1,8 +1,8 @@
-import { Router } from 'express'
+import { TRouter } from '../../../common'
 import { createUser, deleteUser, listUsers, updateUser } from '../controllers'
 import { validateUser } from '../middlewares'
 
-export function users(router: Router) {
+export function users(router: TRouter) {
   router.post('/users/create', validateUser, createUser)
   router.post('/users/list-filter', listUsers)
   router.post('/users/update/:idUser', updateUser)
