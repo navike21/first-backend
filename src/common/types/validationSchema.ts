@@ -10,4 +10,5 @@ export interface IValidationSchema {
   isBoolean?: string
   isUrl?: string
   isObject?: string
+  isPattern?: string
 }

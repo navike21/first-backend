@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose'
+import { Schema } from 'mongoose'
 import { IUserDocument } from '../types'
 
-const userSchema = new Schema<IUserDocument>(
+export const userModelSchema = new Schema<IUserDocument>(
   {
     auth: {
       password: { type: String, required: false },
@@ -29,5 +29,3 @@ const userSchema = new Schema<IUserDocument>(
     versionKey: false
   }
 )
-
-export const UserModel = model<IUserDocument>('User', userSchema)
