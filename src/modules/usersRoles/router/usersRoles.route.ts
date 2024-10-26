@@ -1,10 +1,19 @@
 import { TRouter } from '../../../common'
-import { createUserRole, updateUserRole } from '../controllers'
-import { validateUserRole } from '../middlewares'
+import { createUserRole, deleteUserRole, updateUserRole } from '../controllers'
+import { checkUserRoleExists, validateUserRole } from '../middlewares'
 
 export function usersRoles(router: TRouter) {
   router.post('/users-roles/create', validateUserRole, createUserRole)
   // router.post('/users-roles/list-filter', listUsersRoles)
-  router.post('/users-roles/update/:idRole', validateUserRole, updateUserRole)
-  // router.delete('/users-roles/delete/:idRole', deleteUserRole)
+  router.post(
+    '/users-roles/update/:idRole',
+    checkUserRoleExists,
+    validateUserRole,
+    updateUserRole
+  )
+  router.delete(
+    '/users-roles/delete/:idRole',
+    checkUserRoleExists,
+    deleteUserRole
+  )
 }
