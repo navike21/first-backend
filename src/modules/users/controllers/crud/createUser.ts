@@ -10,7 +10,7 @@ import {
 import { userCrudMessages } from '../../language'
 import { defaultUserData } from '../../constants'
 import { UserModel } from '../../models'
-import { Error } from 'mongoose'
+import { MongoServerError } from 'mongodb'
 
 export const createUser = async (
   { body, headers }: TRequest,
@@ -18,49 +18,27 @@ export const createUser = async (
 ) => {
   const { lang } = getInfoHeaders(headers)
   const { data } = body as IRequest
-
   const {
     success: { created = '' } = {},
     error: { creationFailed = '', unexpectedError = '', duplicate = '' } = {}
   } = userCrudMessages[lang]
 
   try {
-    const newUser = new UserModel({
-      ...defaultUserData,
-      ...data
-    })
-
+    const newUser = new UserModel({ ...defaultUserData, ...data })
     await newUser.save()
 
-    handleSuccess(
-      {
-        message: created,
-        statusCode: 201,
-        data
-      },
-      response
-    )
+    return handleSuccess({ message: created, statusCode: 201, data }, response)
   } catch (error) {
-    const { stack, name } = error as Error
-    if (name === 'MongoServerError') {
-      const { code } = error as TMongoServerError
-      const errorMessage = code === 11000 ? duplicate : creationFailed
+    const isDuplicateError =
+      error instanceof MongoServerError &&
+      (error as unknown as TMongoServerError).code === 11000
+    const errorMessage = isDuplicateError ? duplicate : creationFailed
 
-      return handleErrors(
-        {
-          message: errorMessage,
-          statusCode: 500,
-          data: error
-        },
-        response
-      )
-    }
-
-    return handleErrors(
+    handleErrors(
       {
-        message: unexpectedError,
+        message: isDuplicateError ? errorMessage : unexpectedError,
         statusCode: 500,
-        data: stack
+        data: error
       },
       response
     )

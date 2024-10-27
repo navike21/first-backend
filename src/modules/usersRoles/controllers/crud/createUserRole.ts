@@ -1,4 +1,3 @@
-import { Error } from 'mongoose'
 import {
   ECollectionState,
   generateId,
@@ -13,6 +12,7 @@ import {
 import { userRoleCrudMessages } from '../../language'
 import { UserRoleModel } from '../../models'
 import { TUserRoleOmitted } from '../../types'
+import { MongoServerError } from 'mongodb'
 
 export const createUserRole = async (
   { body, headers }: TRequest,
@@ -20,7 +20,6 @@ export const createUserRole = async (
 ) => {
   const { lang } = getInfoHeaders(headers)
   const { data } = body as IRequest
-
   const { name, role, systemModules } = data as TUserRoleOmitted
 
   const {
@@ -39,36 +38,18 @@ export const createUserRole = async (
 
     await newUserRole.save()
 
-    handleSuccess(
-      {
-        message: created,
-        statusCode: 201,
-        data
-      },
-      response
-    )
+    return handleSuccess({ message: created, statusCode: 201, data }, response)
   } catch (error) {
-    const { stack, name } = error as Error
+    const isDuplicateError =
+      error instanceof MongoServerError &&
+      (error as unknown as TMongoServerError).code === 11000
+    const errorMessage = isDuplicateError ? duplicate : creationFailed
 
-    if (name === 'MongoServerError') {
-      const { code } = error as TMongoServerError
-      const errorMessage = code === 11000 ? duplicate : creationFailed
-
-      return handleErrors(
-        {
-          message: errorMessage,
-          statusCode: 500,
-          data: error
-        },
-        response
-      )
-    }
-
-    return handleErrors(
+    handleErrors(
       {
-        message: unexpectedError,
+        message: isDuplicateError ? errorMessage : unexpectedError,
         statusCode: 500,
-        data: stack
+        data: error
       },
       response
     )
