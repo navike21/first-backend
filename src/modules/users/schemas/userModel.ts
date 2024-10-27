@@ -9,7 +9,12 @@ export const userModelSchema = new Schema<IUserDocument>(
     },
     config: {
       language: { type: String, required: false },
-      role: { type: [String], required: false },
+      role: [
+        {
+          ref: 'Users_Role',
+          type: Schema.Types.ObjectId
+        }
+      ],
       themeBrowser: { type: String, required: false },
       userAlias: { type: String, required: false }
     },
