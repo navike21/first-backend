@@ -1,4 +1,4 @@
-import { Document, Filter, Sort, WithId } from 'mongodb'
+import { FilterQuery, SortOrder } from 'mongoose'
 import {
   ECollectionState,
   getInfoHeaders,
@@ -8,27 +8,28 @@ import {
   TRequest,
   TResponse
 } from '../../../../common'
-import { userMessageCrud } from '../../language'
+import { userCrudMessages } from '../../language'
 import { IUser, TFiltersUsers } from '../../types'
-import { userCollection } from '../config'
+import { UserModel } from '../../models'
+import { logger } from '../../../../logger'
 
-export const listUsers = async ({ headers, body }: TRequest, response: TResponse) => {
+export const listUsers = async (
+  { headers, body }: TRequest,
+  response: TResponse
+) => {
   const { lang } = getInfoHeaders(headers)
   const {
     meta: { page = 1, limit = 10 } = {},
     filters = {},
     sort = {}
   } = body as IRequest
-
   const skip = (page - 1) * limit
 
   const {
-    success: { list },
-    warning: { notMore, isEmpty },
-    error: { unexpectedError }
-  } = userMessageCrud[lang]
-
-  const collection = await userCollection
+    success: { list = '' } = {},
+    warning: { notMore = '', isEmpty = '' } = {},
+    error: { unexpectedError = '' } = {}
+  } = userCrudMessages[lang]
 
   const {
     documentId = '',
@@ -39,90 +40,71 @@ export const listUsers = async ({ headers, body }: TRequest, response: TResponse
     names = ''
   } = filters as TFiltersUsers
 
-  const query: Filter<Document> =
-    Object.keys(filters).length > 0
-      ? {
-          ...(documentId && { documentId: documentId }),
-          ...(email && { email: email }),
-          ...(createdAt && { createdAt: { $gte: new Date(createdAt) } }),
-          ...(fatherLastName && {
-            fatherLastName: { $regex: new RegExp(fatherLastName, 'i') }
-          }),
-          ...(motherLastName && {
-            motherLastName: { $regex: new RegExp(motherLastName, 'i') }
-          }),
-          ...(names && { names: { $regex: new RegExp(names, 'i') } }),
-          state: ECollectionState.ACTIVE
-        }
-      : {
-          state: ECollectionState.ACTIVE
-        }
+  const query: FilterQuery<IUser> = {
+    state: ECollectionState.ACTIVE,
+    ...(documentId && { documentId }),
+    ...(email && { email }),
+    ...(createdAt && { createdAt: { $gte: new Date(createdAt) } }),
+    ...(fatherLastName && {
+      fatherLastName: { $regex: new RegExp(fatherLastName, 'i') }
+    }),
+    ...(motherLastName && {
+      motherLastName: { $regex: new RegExp(motherLastName, 'i') }
+    }),
+    ...(names && { names: { $regex: new RegExp(names, 'i') } })
+  }
 
   try {
     const [data, total] = await Promise.all([
-      collection
-        .find(query)
-        .sort(sort as Sort)
+      UserModel.find(query)
+        .sort(sort as Record<string, SortOrder>)
         .skip(skip)
         .limit(limit)
-        .toArray(),
-      collection.countDocuments(query)
+        .lean(),
+      UserModel.countDocuments(query)
     ])
 
-    const dataStructuredUser = data as WithId<IUser>[]
-    const dataParsed = dataStructuredUser.map(
-      ({ _id, lastModified, config, ...rest }) => ({
-        ...rest
+    const dataParsed = data.map(
+      ({
+        dateOfBirth,
+        documentId,
+        email,
+        fatherLastName,
+        image,
+        motherLastName,
+        names,
+        phone,
+        publicId,
+        state
+      }) => ({
+        dateOfBirth,
+        documentId,
+        email,
+        fatherLastName,
+        image,
+        motherLastName,
+        names,
+        phone,
+        publicId,
+        state
       })
     )
 
-    const meta = {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit)
-    }
+    const meta = { page, limit, total, totalPages: Math.ceil(total / limit) }
 
     if (dataParsed.length > 0) {
       handleSuccess(
-        {
-          message: list,
-          data: dataParsed,
-          meta,
-          statusCode: 200
-        },
+        { message: list, data: dataParsed, meta, statusCode: 200 },
         response
       )
-    }
-
-    if (dataParsed.length === 0 && page > 1) {
+    } else {
       handleErrors(
-        {
-          message: notMore,
-          statusCode: 404,
-          meta
-        },
-        response
-      )
-    }
-
-    if (meta.totalPages === 0) {
-      handleErrors(
-        {
-          message: isEmpty,
-          statusCode: 404,
-          meta
-        },
+        { message: page > 1 ? notMore : isEmpty, statusCode: 404, meta },
         response
       )
     }
   } catch (error) {
-    handleErrors(
-      {
-        message: unexpectedError,
-        statusCode: 500
-      },
-      response
-    )
+    logger.error(error)
+    handleErrors({ message: unexpectedError, statusCode: 500 }, response)
   }
 }

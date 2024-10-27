@@ -1,4 +1,9 @@
-import { ECollectionState, EUserStatus, generateId } from '../../../common'
+import {
+  ECollectionState,
+  EThemeBrowser,
+  EUserStatus,
+  generateId
+} from '../../../common'
 import { IUser } from '../types'
 
 export const defaultUserData: Omit<IUser, 'lastModified'> = {
@@ -9,10 +14,9 @@ export const defaultUserData: Omit<IUser, 'lastModified'> = {
   config: {
     language: '',
     role: [],
-    themeBrowser: 'auto',
+    themeBrowser: EThemeBrowser.AUTO,
     userAlias: ''
   },
-  createdAt: new Date(),
   dateOfBirth: '',
   documentId: '',
   email: '',
@@ -21,6 +25,6 @@ export const defaultUserData: Omit<IUser, 'lastModified'> = {
   motherLastName: '',
   names: '',
   phone: '',
-  public_id: generateId(),
+  publicId: generateId(),
   state: ECollectionState.ACTIVE
 }
