@@ -19,67 +19,31 @@ export const deleteUser = async (
   const {
     success: { deleted = '' } = {},
     warning: { notUpdated = '' } = {},
-    error: { validationFailed = '', unexpectedError = '' } = {}
+    error: { unexpectedError = '' } = {}
   } = userCrudMessages[lang]
 
-  if (!idUser) {
-    return handleErrors(
-      {
-        message: validationFailed,
-        statusCode: 400
-      },
-      response
-    )
-  }
-
   try {
-    const result = await UserModel.updateMany(
-      { publicId: idUser },
+    const result = await UserModel.updateOne(
+      { publicId: idUser, state: { $ne: ECollectionState.DELETED } },
       {
-        $set: {
-          state: ECollectionState.DELETED
-        },
-        $currentDate: {
-          lastModified: true
-        }
+        $set: { state: ECollectionState.DELETED },
+        $currentDate: { lastModified: true }
       }
     )
 
     if (result.matchedCount === 0) {
-      return handleErrors(
-        {
-          message: notUpdated,
-          statusCode: 400
-        },
-        response
-      )
+      return handleErrors({ message: notUpdated, statusCode: 404 }, response)
     }
 
-    handleSuccess(
+    handleSuccess({ message: deleted, statusCode: 200 }, response)
+  } catch (error) {
+    handleErrors(
       {
-        message: deleted,
-        statusCode: 200
+        message: unexpectedError,
+        statusCode: 500,
+        data: error instanceof MongooseError ? error : undefined
       },
       response
     )
-  } catch (error) {
-    if (error instanceof MongooseError) {
-      handleErrors(
-        {
-          message: unexpectedError,
-          data: error,
-          statusCode: 500
-        },
-        response
-      )
-    } else {
-      handleErrors(
-        {
-          message: unexpectedError,
-          statusCode: 500
-        },
-        response
-      )
-    }
   }
 }
