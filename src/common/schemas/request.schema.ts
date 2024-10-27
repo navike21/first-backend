@@ -1,9 +1,9 @@
 import Joi from 'joi'
 import { TLanguage } from '../types'
 import { requestMessageSchema } from '../languages'
-import { EN } from '../constants'
+import { DEFAULT_LANGUAGE } from '../constants'
 
-export const RequestSchema = (lang: TLanguage = EN) => {
+export const RequestSchema = (lang: TLanguage = DEFAULT_LANGUAGE) => {
   const {
     data: { isObject = '', isRequired = '' }
   } = requestMessageSchema[lang]

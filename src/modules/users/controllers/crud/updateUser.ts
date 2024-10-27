@@ -1,4 +1,4 @@
-import { MongoServerError } from 'mongodb'
+import { Error as MongooseError } from 'mongoose'
 import {
   getInfoHeaders,
   handleErrors,
@@ -7,9 +7,8 @@ import {
   TRequest,
   TResponse
 } from '../../../../common'
-import { defaultUserData } from '../../constants'
-import { userMessageCrud } from '../../language'
-import { userCollection } from '../config'
+import { userCrudMessages } from '../../language'
+import { UserModel } from '../../models'
 
 export const updateUser = async (
   { body, headers, params }: TRequest,
@@ -20,80 +19,38 @@ export const updateUser = async (
   const { data } = body as IRequest
 
   const {
-    success: { updated },
-    warning: { notUpdated },
-    error: { validationFailed, unexpectedError }
-  } = userMessageCrud[lang]
-
-  if (!idUser) {
-    return handleErrors(
-      {
-        message: validationFailed,
-        statusCode: 400
-      },
-      response
-    )
-  }
+    success: { updated = '' } = {},
+    warning: { notUpdated = '' } = {},
+    error: { validationFailed = '', unexpectedError = '' } = {}
+  } = userCrudMessages[lang]
 
   try {
-    const currentData = await (await userCollection).findOne({ public_id: idUser })
-    delete currentData?.lastModified
-
-    const result = await (
-      await userCollection
-    ).updateMany(
-      { public_id: idUser },
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { publicId: idUser },
       {
-        $set: {
-          ...defaultUserData,
-          ...currentData,
-          ...data,
-          public_id: idUser
-        },
+        $set: data,
         $currentDate: { lastModified: true }
-      }
+      },
+      { new: true, lean: true }
     )
 
-    if (result.matchedCount === 0) {
-      return handleErrors(
-        {
-          message: notUpdated,
-          statusCode: 400
-        },
-        response
-      )
+    if (!updatedUser) {
+      return handleErrors({ message: notUpdated, statusCode: 404 }, response)
     }
 
     handleSuccess(
-      {
-        message: updated,
-        statusCode: 200,
-        data: { ...data, public_id: idUser }
-      },
+      { message: updated, statusCode: 200, data: updatedUser },
       response
     )
   } catch (error) {
-    if (error instanceof MongoServerError) {
-      const { errorResponse } = error
-
-      if (Object.keys(errorResponse).length > 0) {
-        handleErrors(
-          {
-            message: notUpdated,
-            data: { errorResponse },
-            statusCode: 500
-          },
-          response
-        )
-      }
-    } else {
-      handleErrors(
-        {
-          message: unexpectedError,
-          statusCode: 500
-        },
-        response
-      )
-    }
+    const isValidationError = error instanceof MongooseError
+    handleErrors(
+      {
+        message: isValidationError ? validationFailed : unexpectedError,
+        data: isValidationError ? error : undefined,
+        statusCode: isValidationError ? 400 : 500
+      },
+      response
+    )
   }
 }
