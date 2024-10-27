@@ -12,7 +12,6 @@
     "start": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node ./src/main.ts",
     "dev": "nodemon",
-    "new-module": "bash ./src/scripts/new-module.sh",
     "lint": "eslint . --fix",
     "format": "prettier --write 'src/**/*.{ts,js,md}'",
     "test": "jest"
