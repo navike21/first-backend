@@ -3,69 +3,44 @@ import {
   handleErrors,
   handleSuccess,
   IRequest,
+  TMongoServerError,
   TRequest,
   TResponse
 } from '../../../../common'
-import { userCollection } from '../config'
-import { userMessageCrud } from '../../language'
-import { MongoServerError } from 'mongodb'
+import { userCrudMessages } from '../../language'
 import { defaultUserData } from '../../constants'
+import { UserModel } from '../../models'
+import { MongoServerError } from 'mongodb'
 
-export const createUser = async ({ body, headers }: TRequest, response: TResponse) => {
+export const createUser = async (
+  { body, headers }: TRequest,
+  response: TResponse
+) => {
   const { lang } = getInfoHeaders(headers)
   const { data } = body as IRequest
-
   const {
-    success: { created },
-    error: { creationFailed, unexpectedError, duplicate }
-  } = userMessageCrud[lang]
+    success: { created = '' } = {},
+    error: { creationFailed = '', unexpectedError = '', duplicate = '' } = {}
+  } = userCrudMessages[lang]
 
   try {
-    await (
-      await userCollection
-    ).insertOne({
-      ...defaultUserData,
-      ...data
-    })
+    const newUser = new UserModel({ ...defaultUserData, ...data })
+    await newUser.save()
 
-    handleSuccess(
+    return handleSuccess({ message: created, statusCode: 201, data }, response)
+  } catch (error) {
+    const isDuplicateError =
+      error instanceof MongoServerError &&
+      (error as unknown as TMongoServerError).code === 11000
+    const errorMessage = isDuplicateError ? duplicate : creationFailed
+
+    handleErrors(
       {
-        message: created,
-        statusCode: 201,
-        data
+        message: isDuplicateError ? errorMessage : unexpectedError,
+        statusCode: 500,
+        data: error
       },
       response
     )
-  } catch (error) {
-    if (error instanceof MongoServerError) {
-      const { code, errorResponse } = error
-
-      if (code === 11000) {
-        handleErrors(
-          {
-            message: duplicate,
-            statusCode: 400,
-            data: errorResponse
-          },
-          response
-        )
-      } else {
-        handleErrors(
-          {
-            message: creationFailed,
-            statusCode: 500
-          },
-          response
-        )
-      }
-    } else {
-      handleErrors(
-        {
-          message: unexpectedError,
-          statusCode: 500
-        },
-        response
-      )
-    }
   }
 }

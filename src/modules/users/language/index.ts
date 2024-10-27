@@ -1,2 +1,2 @@
-export * from './userMessageSchema'
-export * from './userMessageCrud'
+export * from './userSchemaMessage'
+export * from './userCrudMessage'
