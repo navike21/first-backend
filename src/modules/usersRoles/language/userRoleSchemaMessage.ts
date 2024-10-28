@@ -1,4 +1,4 @@
-import { DE, EN, ES, FR, IT, JP, KO, PT } from '../../../common'
+import { DE, EN, ES, FR, IT, JP, KO, PT, RU, ZH } from '../../../common'
 import {
   schemaMessagesDe,
   schemaMessagesEn,
@@ -7,7 +7,9 @@ import {
   schemaMessagesIt,
   schemaMessagesJp,
   schemaMessagesKo,
-  schemaMessagesPt
+  schemaMessagesPt,
+  schemaMessagesRu,
+  schemaMessagesZh
 } from './schemaMessages'
 
 export const userRoleSchemaMessage = {
@@ -18,5 +20,7 @@ export const userRoleSchemaMessage = {
   [IT]: schemaMessagesIt,
   [JP]: schemaMessagesJp,
   [KO]: schemaMessagesKo,
-  [PT]: schemaMessagesPt
+  [PT]: schemaMessagesPt,
+  [RU]: schemaMessagesRu,
+  [ZH]: schemaMessagesZh
 }

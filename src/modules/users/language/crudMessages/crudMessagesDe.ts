@@ -15,7 +15,7 @@ export const crudMessagesDe: IMessages = {
     deletionFailed: 'Fehler beim Löschen des Benutzers',
     retrievalFailed: 'Fehler beim Abrufen des Benutzers',
     listFailed: 'Fehler beim Auflisten der Benutzer',
-    searchFailed: 'Fehler beim Suchen des Benutzers',
+    searchFailed: 'Fehler bei der Benutzersuche',
     validationFailed: 'Validierungsfehler',
     duplicate: 'Benutzer ist bereits registriert',
     connectionError: 'Verbindungsfehler',
@@ -30,7 +30,7 @@ export const crudMessagesDe: IMessages = {
     notRetrieved: 'Benutzer nicht abgerufen',
     notListed: 'Benutzer konnten nicht aufgelistet werden',
     notFoundSearch: 'Benutzer in der Suche nicht gefunden',
-    notMore: 'Keine weiter Benutzer zum Auflisten',
-    isEmpty: 'Keine Benutzer zum Auflisten vorhanden'
+    notMore: 'Keine weiteren Benutzer zum Auflisten',
+    isEmpty: 'Derzeit keine Benutzer zum Auflisten'
   }
 }

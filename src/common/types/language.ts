@@ -1,4 +1,4 @@
-import { DE, EN, ES, FR, IT, JP, KO, PT } from '../constants'
+import { DE, EN, ES, FR, IT, JP, KO, PT, RU, ZH } from '../constants'
 
 export type TLanguage =
   | typeof EN
@@ -9,3 +9,5 @@ export type TLanguage =
   | typeof IT
   | typeof JP
   | typeof KO
+  | typeof RU
+  | typeof ZH

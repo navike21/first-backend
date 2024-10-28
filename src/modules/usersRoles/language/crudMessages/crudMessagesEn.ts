@@ -10,26 +10,26 @@ export const crudMessagesEn: IMessages = {
     found: 'Role found'
   },
   error: {
-    creationFailed: 'Failed to create the role',
-    updateFailed: 'Failed to update the role',
-    deletionFailed: 'Failed to delete the role',
-    retrievalFailed: 'Failed to retrieve the role',
+    creationFailed: 'Failed to create role',
+    updateFailed: 'Failed to update role',
+    deletionFailed: 'Failed to delete role',
+    retrievalFailed: 'Failed to retrieve role',
     listFailed: 'Failed to list roles',
-    searchFailed: 'Failed to search for the role',
+    searchFailed: 'Failed to search role',
     validationFailed: 'Validation error',
-    duplicate: 'The role is already registered',
+    duplicate: 'Role is already registered',
     connectionError: 'Connection error',
     databaseError: 'Database error',
     unexpectedError: 'Unexpected error',
-    queryFailed: 'Query error'
+    queryFailed: 'Query failed'
   },
   warning: {
-    notFound: 'The role was not found',
-    notUpdated: 'The role was not updated',
-    notDeleted: 'The role was not deleted',
-    notRetrieved: 'The role was not retrieved',
-    notListed: 'Could not list the roles',
-    notFoundSearch: 'The role was not found',
+    notFound: 'Role not found',
+    notUpdated: 'Role not updated',
+    notDeleted: 'Role not deleted',
+    notRetrieved: 'Role not retrieved',
+    notListed: 'Roles could not be listed',
+    notFoundSearch: 'Role not found',
     notMore: 'No more roles to list',
     isEmpty: 'No roles to list at the moment'
   }

@@ -7,17 +7,17 @@ export const crudMessagesKo: IMessages = {
     deleted: '사용자가 성공적으로 삭제되었습니다',
     retrieved: '사용자가 성공적으로 검색되었습니다',
     list: '사용자가 성공적으로 나열되었습니다',
-    found: '사용자가 발견되었습니다'
+    found: '사용자를 찾았습니다'
   },
   error: {
-    creationFailed: '사용자 생성 실패',
-    updateFailed: '사용자 업데이트 실패',
-    deletionFailed: '사용자 삭제 실패',
-    retrievalFailed: '사용자 검색 실패',
-    listFailed: '사용자 나열 실패',
-    searchFailed: '사용자 검색 실패',
-    validationFailed: '유효성 검사 오류',
-    duplicate: '사용자가 이미 등록되었습니다',
+    creationFailed: '사용자 생성 중 오류',
+    updateFailed: '사용자 업데이트 중 오류',
+    deletionFailed: '사용자 삭제 중 오류',
+    retrievalFailed: '사용자 검색 중 오류',
+    listFailed: '사용자 목록 표시 중 오류',
+    searchFailed: '사용자 검색 오류',
+    validationFailed: '검증 오류',
+    duplicate: '사용자가 이미 등록되어 있습니다',
     connectionError: '연결 오류',
     databaseError: '데이터베이스 오류',
     unexpectedError: '예기치 않은 오류',
@@ -31,6 +31,6 @@ export const crudMessagesKo: IMessages = {
     notListed: '사용자를 나열할 수 없습니다',
     notFoundSearch: '검색에서 사용자를 찾을 수 없습니다',
     notMore: '더 이상 나열할 사용자가 없습니다',
-    isEmpty: '이 시점에 나열할 사용자가 없습니다'
+    isEmpty: '현재 나열할 사용자가 없습니다'
   }
 }

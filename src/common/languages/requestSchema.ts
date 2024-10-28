@@ -1,4 +1,4 @@
-import { DE, EN, ES, FR, IT, JP, KO, PT } from '../constants'
+import { DE, EN, ES, FR, IT, JP, KO, PT, RU, ZH } from '../constants'
 import {
   requestMessageSchemaDe,
   requestMessageSchemaEn,
@@ -7,7 +7,9 @@ import {
   requestMessageSchemaIt,
   requestMessageSchemaJp,
   requestMessageSchemaKo,
-  requestMessageSchemaPt
+  requestMessageSchemaPt,
+  requestMessageSchemaRu,
+  requestMessageSchemaZh
 } from './requestMessageSchema'
 
 export const requestMessageSchema = {
@@ -18,5 +20,7 @@ export const requestMessageSchema = {
   [IT]: requestMessageSchemaIt,
   [JP]: requestMessageSchemaJp,
   [KO]: requestMessageSchemaKo,
-  [PT]: requestMessageSchemaPt
+  [PT]: requestMessageSchemaPt,
+  [RU]: requestMessageSchemaRu,
+  [ZH]: requestMessageSchemaZh
 }

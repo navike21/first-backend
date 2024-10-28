@@ -19,6 +19,7 @@ export interface IUser {
 export interface IUserDocument extends IUser, Document {}
 
 export interface IUserAuth {
+  confirmPassword?: string
   password: string
   status: EUserStatus
 }

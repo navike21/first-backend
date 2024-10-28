@@ -17,7 +17,7 @@ export const crudMessagesJp: IMessages = {
     listFailed: 'ユーザーの一覧表示に失敗しました',
     searchFailed: 'ユーザーの検索に失敗しました',
     validationFailed: '検証エラー',
-    duplicate: 'ユーザーは既に登録されています',
+    duplicate: 'ユーザーはすでに登録されています',
     connectionError: '接続エラー',
     databaseError: 'データベースエラー',
     unexpectedError: '予期しないエラー',
@@ -25,12 +25,12 @@ export const crudMessagesJp: IMessages = {
   },
   warning: {
     notFound: 'ユーザーが見つかりません',
-    notUpdated: 'ユーザーが更新されませんでした',
-    notDeleted: 'ユーザーが削除されませんでした',
-    notRetrieved: 'ユーザーが取得されませんでした',
+    notUpdated: 'ユーザーは更新されていません',
+    notDeleted: 'ユーザーは削除されていません',
+    notRetrieved: 'ユーザーは取得されていません',
     notListed: 'ユーザーを一覧表示できませんでした',
     notFoundSearch: '検索でユーザーが見つかりませんでした',
-    notMore: 'リストするユーザーがもうありません',
-    isEmpty: 'この時点でリストするユーザーはありません'
+    notMore: 'これ以上のユーザーはありません',
+    isEmpty: '現在、一覧表示できるユーザーがいません'
   }
 }

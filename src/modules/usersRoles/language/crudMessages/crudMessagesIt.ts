@@ -10,27 +10,27 @@ export const crudMessagesIt: IMessages = {
     found: 'Ruolo trovato'
   },
   error: {
-    creationFailed: 'Errore durante la creazione del ruolo',
-    updateFailed: "Errore durante l'aggiornamento del ruolo",
-    deletionFailed: "Errore durante l'eliminazione del ruolo",
-    retrievalFailed: 'Errore durante il recupero del ruolo',
-    listFailed: "Errore durante l'elenco dei ruoli",
-    searchFailed: 'Errore durante la ricerca del ruolo',
+    creationFailed: 'Errore nella creazione del ruolo',
+    updateFailed: "Errore nell'aggiornamento del ruolo",
+    deletionFailed: 'Errore nella eliminazione del ruolo',
+    retrievalFailed: 'Errore nel recupero del ruolo',
+    listFailed: 'Errore nella lista dei ruoli',
+    searchFailed: 'Errore nella ricerca del ruolo',
     validationFailed: 'Errore di validazione',
     duplicate: 'Il ruolo è già registrato',
     connectionError: 'Errore di connessione',
-    databaseError: 'Errore di database',
+    databaseError: 'Errore del database',
     unexpectedError: 'Errore inaspettato',
-    queryFailed: 'Errore di query'
+    queryFailed: 'Errore nella query'
   },
   warning: {
-    notFound: 'Il ruolo non è stato trovato',
-    notUpdated: 'Il ruolo non è stato aggiornato',
-    notDeleted: 'Il ruolo non è stato eliminato',
-    notRetrieved: 'Il ruolo non è stato recuperato',
+    notFound: 'Ruolo non trovato',
+    notUpdated: 'Ruolo non aggiornato',
+    notDeleted: 'Ruolo non eliminato',
+    notRetrieved: 'Ruolo non recuperato',
     notListed: 'Impossibile elencare i ruoli',
-    notFoundSearch: 'Il ruolo non è stato trovato',
-    notMore: 'Non ci sono altri ruoli da elencare',
-    isEmpty: 'Non ci sono ruoli da elencare in questo momento'
+    notFoundSearch: 'Ruolo non trovato',
+    notMore: 'Non ci sono più ruoli da elencare',
+    isEmpty: 'Nessun ruolo da elencare al momento'
   }
 }

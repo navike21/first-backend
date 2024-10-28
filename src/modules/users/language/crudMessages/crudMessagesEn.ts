@@ -17,7 +17,7 @@ export const crudMessagesEn: IMessages = {
     listFailed: 'Error listing users',
     searchFailed: 'Error searching for user',
     validationFailed: 'Validation error',
-    duplicate: 'User already registered',
+    duplicate: 'User is already registered',
     connectionError: 'Connection error',
     databaseError: 'Database error',
     unexpectedError: 'Unexpected error',
@@ -28,8 +28,8 @@ export const crudMessagesEn: IMessages = {
     notUpdated: 'User not updated',
     notDeleted: 'User not deleted',
     notRetrieved: 'User not retrieved',
-    notListed: 'Users not listed',
-    notFoundSearch: 'User not found',
+    notListed: 'Users could not be listed',
+    notFoundSearch: 'User not found in search',
     notMore: 'No more users to list',
     isEmpty: 'No users to list at this time'
   }

@@ -40,6 +40,6 @@ export const schemaMessagesPt: TUserSchemaMessage = {
     maxLength: 'O telefone deve ter no máximo 15 caracteres'
   },
   dateOfBirth: {
-    isDate: 'A data de nascimento deve ser uma data'
+    isDate: 'A data de nascimento deve ser uma data válida'
   }
 }

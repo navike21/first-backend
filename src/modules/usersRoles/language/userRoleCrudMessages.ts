@@ -1,4 +1,4 @@
-import { DE, EN, ES, FR, IT, JP, KO, PT } from '../../../common'
+import { DE, EN, ES, FR, IT, JP, KO, PT, RU, ZH } from '../../../common'
 import {
   crudMessagesDe,
   crudMessagesEn,
@@ -7,7 +7,9 @@ import {
   crudMessagesIt,
   crudMessagesJp,
   crudMessagesKo,
-  crudMessagesPt
+  crudMessagesPt,
+  crudMessagesRu,
+  crudMessagesZh
 } from './crudMessages'
 
 export const userRoleCrudMessages = {
@@ -18,5 +20,7 @@ export const userRoleCrudMessages = {
   [IT]: crudMessagesIt,
   [JP]: crudMessagesJp,
   [KO]: crudMessagesKo,
-  [PT]: crudMessagesPt
+  [PT]: crudMessagesPt,
+  [RU]: crudMessagesRu,
+  [ZH]: crudMessagesZh
 }

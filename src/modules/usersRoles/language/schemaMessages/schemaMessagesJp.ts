@@ -2,22 +2,22 @@ import { TUserRoleSchemaMessage } from '../../types'
 
 export const schemaMessagesJp: TUserRoleSchemaMessage = {
   name: {
-    isRequired: '役割名が必要です',
-    isString: '役割名は文字列でなければなりません',
-    minLength: '役割名は2文字以上でなければなりません',
-    maxLength: '役割名は最大50文字でなければなりません'
+    isRequired: 'ロール名は必須です',
+    isString: 'ロール名は文字列である必要があります',
+    minLength: 'ロール名は最小2文字である必要があります',
+    maxLength: 'ロール名は最大50文字である必要があります'
   },
   role: {
-    isRequired: '役割は必須です',
-    isString: '役割は文字列でなければなりません',
+    isRequired: 'ロールは必須です',
+    isString: 'ロールは文字列である必要があります',
     isPattern:
-      '役割には文字、数字、ダッシュ（-）、アンダースコア（_）のみを含めることができ、スペースは含まない',
-    minLength: '役割は4文字以上でなければなりません',
-    maxLength: '役割は10文字以内でなければなりません'
+      'ロールはスペースなしで文字、数字、ハイフン (-)、およびアンダースコア (_) のみを含むことができます',
+    minLength: 'ロールは最小4文字である必要があります',
+    maxLength: 'ロールは最大10文字である必要があります'
   },
   systemModules: {
     isObject: 'システムモジュールはオブジェクトである必要があります',
-    isRequired: 'システムモジュールが必要です',
+    isRequired: 'システムモジュールは必須です',
     minLength: '少なくとも1つのシステムモジュールが必要です'
   }
 }

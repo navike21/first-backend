@@ -14,23 +14,23 @@ export const crudMessagesIt: IMessages = {
     updateFailed: "Errore nell'aggiornamento dell'utente",
     deletionFailed: "Errore nell'eliminazione dell'utente",
     retrievalFailed: "Errore nel recupero dell'utente",
-    listFailed: "Errore nell'elencare gli utenti",
+    listFailed: "Errore nell'elenco degli utenti",
     searchFailed: "Errore nella ricerca dell'utente",
     validationFailed: 'Errore di validazione',
-    duplicate: "L'utente è già registrato",
+    duplicate: 'Utente già registrato',
     connectionError: 'Errore di connessione',
     databaseError: 'Errore del database',
     unexpectedError: 'Errore imprevisto',
-    queryFailed: 'Errore nella query'
+    queryFailed: 'Errore di query'
   },
   warning: {
     notFound: 'Utente non trovato',
     notUpdated: 'Utente non aggiornato',
     notDeleted: 'Utente non eliminato',
     notRetrieved: 'Utente non recuperato',
-    notListed: 'Non è stato possibile elencare gli utenti',
+    notListed: 'Gli utenti non possono essere elencati',
     notFoundSearch: 'Utente non trovato nella ricerca',
     notMore: 'Non ci sono più utenti da elencare',
-    isEmpty: 'Non ci sono utenti da elencare in questo momento'
+    isEmpty: 'Nessun utente da elencare al momento'
   }
 }

@@ -10,27 +10,27 @@ export const crudMessagesFr: IMessages = {
     found: 'Rôle trouvé'
   },
   error: {
-    creationFailed: 'Erreur lors de la création du rôle',
-    updateFailed: 'Erreur lors de la mise à jour du rôle',
-    deletionFailed: 'Erreur lors de la suppression du rôle',
-    retrievalFailed: 'Erreur lors de la récupération du rôle',
-    listFailed: 'Erreur lors de la liste des rôles',
-    searchFailed: 'Erreur lors de la recherche du rôle',
+    creationFailed: 'Échec de la création du rôle',
+    updateFailed: 'Échec de la mise à jour du rôle',
+    deletionFailed: 'Échec de la suppression du rôle',
+    retrievalFailed: 'Échec de la récupération du rôle',
+    listFailed: 'Échec de la liste des rôles',
+    searchFailed: 'Échec de la recherche du rôle',
     validationFailed: 'Erreur de validation',
     duplicate: 'Le rôle est déjà enregistré',
     connectionError: 'Erreur de connexion',
     databaseError: 'Erreur de base de données',
     unexpectedError: 'Erreur inattendue',
-    queryFailed: 'Erreur de requête'
+    queryFailed: 'Échec de la requête'
   },
   warning: {
-    notFound: "Le rôle n'a pas été trouvé",
-    notUpdated: "Le rôle n'a pas été mis à jour",
-    notDeleted: "Le rôle n'a pas été supprimé",
-    notRetrieved: "Le rôle n'a pas été récupéré",
+    notFound: 'Rôle non trouvé',
+    notUpdated: 'Rôle non mis à jour',
+    notDeleted: 'Rôle non supprimé',
+    notRetrieved: 'Rôle non récupéré',
     notListed: 'Impossible de lister les rôles',
-    notFoundSearch: "Le rôle n'a pas été trouvé",
-    notMore: "Il n'y a plus de rôles à lister",
-    isEmpty: "Il n'y a pas de rôles à lister pour le moment"
+    notFoundSearch: 'Rôle non trouvé',
+    notMore: 'Plus de rôles à lister',
+    isEmpty: 'Aucun rôle à lister pour le moment'
   }
 }

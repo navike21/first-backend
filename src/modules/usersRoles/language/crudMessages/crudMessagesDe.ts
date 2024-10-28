@@ -17,20 +17,20 @@ export const crudMessagesDe: IMessages = {
     listFailed: 'Fehler beim Auflisten der Rollen',
     searchFailed: 'Fehler beim Suchen der Rolle',
     validationFailed: 'Validierungsfehler',
-    duplicate: 'Die Rolle ist bereits registriert',
+    duplicate: 'Rolle ist bereits registriert',
     connectionError: 'Verbindungsfehler',
     databaseError: 'Datenbankfehler',
     unexpectedError: 'Unerwarteter Fehler',
-    queryFailed: 'Abfragefehler'
+    queryFailed: 'Abfrage fehlgeschlagen'
   },
   warning: {
-    notFound: 'Die Rolle wurde nicht gefunden',
-    notUpdated: 'Die Rolle wurde nicht aktualisiert',
-    notDeleted: 'Die Rolle wurde nicht gelöscht',
-    notRetrieved: 'Die Rolle wurde nicht abgerufen',
-    notListed: 'Die Rollen konnten nicht aufgelistet werden',
-    notFoundSearch: 'Die Rolle wurde nicht gefunden',
-    notMore: 'Es gibt keine weiteren Rollen aufzulisten',
-    isEmpty: 'Es gibt momentan keine Rollen aufzulisten'
+    notFound: 'Rolle nicht gefunden',
+    notUpdated: 'Rolle nicht aktualisiert',
+    notDeleted: 'Rolle nicht gelöscht',
+    notRetrieved: 'Rolle nicht abgerufen',
+    notListed: 'Rollen konnten nicht aufgelistet werden',
+    notFoundSearch: 'Rolle nicht gefunden',
+    notMore: 'Keine weiteren Rollen aufzulisten',
+    isEmpty: 'Zurzeit keine Rollen zum Auflisten'
   }
 }
