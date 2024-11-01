@@ -5,12 +5,14 @@ export interface IMessages {
 }
 
 export interface ISuccessMessages {
+  completed?: string
   created?: string
-  updated?: string
   deleted?: string
-  retrieved?: string
-  list?: string
   found?: string
+  list?: string
+  retrieved?: string
+  search?: string
+  updated?: string
 }
 
 export interface IErrorMessages {
@@ -38,4 +40,7 @@ export interface IWarningMessages {
   notMore?: string
   isEmpty?: string
   notMatch?: string
+  isBlocked?: string
+  isInactive?: string
+  isExpired?: string
 }

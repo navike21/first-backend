@@ -1,5 +1,4 @@
 import {
-  ECollectionState,
   getInfoHeaders,
   handleErrors,
   TNext,
@@ -7,7 +6,7 @@ import {
   TResponse
 } from '../../../common'
 import { userCrudMessages } from '../language'
-import { UserModel } from '../models'
+import { getInfoUser } from '../utils'
 
 export const checkUserExists = async (
   { params, headers }: TRequest,
@@ -29,8 +28,10 @@ export const checkUserExists = async (
       )
     }
 
-    const existingUser = await UserModel.findOne({ publicId: idUser }).lean()
-    if (!existingUser || existingUser.state === ECollectionState.DELETED) {
+    const existingUser = await getInfoUser({
+      publicId: idUser
+    })
+    if (!existingUser) {
       return handleErrors(
         {
           message: notFound,

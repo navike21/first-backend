@@ -1,4 +1,5 @@
 import {
+  encryptPassword,
   getInfoHeaders,
   handleErrors,
   handleSuccess,
@@ -42,15 +43,15 @@ export const updatePassword = async (
       )
     }
 
-    const updatedPassWordUser = await UserModel.findOneAndUpdate(
+    const updatedPasswordUser = await UserModel.findOneAndUpdate(
       { publicId: idUser },
       {
-        $set: { 'auth.password': password }
+        $set: { 'auth.password': encryptPassword(password) }
       },
-      { new: true, lean: true }
+      { new: true, lean: true, projection: { _id: 0, auth: 0 } }
     )
 
-    if (!updatedPassWordUser) {
+    if (!updatedPasswordUser) {
       return handleErrors(
         { message: notUpdatedPassword, statusCode: 404 },
         response
@@ -58,7 +59,7 @@ export const updatePassword = async (
     }
 
     handleSuccess(
-      { message: passwordUpdated, statusCode: 200, data: updatedPassWordUser },
+      { message: passwordUpdated, statusCode: 200, data: updatedPasswordUser },
       response
     )
   } catch (error) {

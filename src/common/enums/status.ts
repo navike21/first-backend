@@ -24,6 +24,6 @@ export enum EUserStatus {
  */
 export enum ECollectionState {
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  DELETED = 'DELETED'
+  DELETED = 'DELETED',
+  BLOCKED = 'BLOCKED'
 }

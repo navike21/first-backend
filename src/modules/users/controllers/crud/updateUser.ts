@@ -31,7 +31,7 @@ export const updateUser = async (
         $set: data,
         $currentDate: { lastModified: true }
       },
-      { new: true, lean: true }
+      { new: true, lean: true, projection: { _id: 0, auth: 0 } }
     )
 
     if (!updatedUser) {

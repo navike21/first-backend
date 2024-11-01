@@ -1,4 +1,6 @@
+export * from './bcrypt.handle'
 export * from './generateId'
 export * from './getInfoHeaders'
 export * from './handleErrors'
 export * from './handleSuccess'
+export * from './jwt.handle'

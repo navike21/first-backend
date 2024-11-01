@@ -11,4 +11,8 @@ export interface IValidationSchema {
   isUrl?: string
   isObject?: string
   isPattern?: string
+  isEmpty?: string
+  isMissing?: string
+  isMatch?: string
+  isExpired?: string
 }
