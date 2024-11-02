@@ -11,6 +11,7 @@ export interface IRequest {
   meta?: IMeta
   filters?: object
   sort?: object
+  files?: object[]
 }
 
 export type TRequestSchemaMessage = {

@@ -11,9 +11,13 @@ export async function validateRequest(
   if (method === 'GET' || method === 'DELETE') {
     return next()
   }
+  const { lang, filesContent } = getInfoHeaders(headers)
+
+  if (filesContent) {
+    return next()
+  }
 
   try {
-    const { lang } = getInfoHeaders(headers)
     const schema = RequestSchema(lang)
 
     await schema.validateAsync(body, {
@@ -25,7 +29,7 @@ export async function validateRequest(
     handleErrors(
       {
         message,
-        statusCode: 402,
+        statusCode: 400,
         data: details
       },
       response

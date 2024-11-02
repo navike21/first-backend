@@ -48,3 +48,6 @@ credentials.json
 
 # Ignore Vercel build output
 .vercel/
+
+# Ignore uploads directory
+uploads/
