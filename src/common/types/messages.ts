@@ -28,6 +28,8 @@ export interface IErrorMessages {
   databaseError?: string
   unexpectedError?: string
   queryFailed?: string
+  uploadFailed?: string
+  uploadsFailed?: string
 }
 
 export interface IWarningMessages {

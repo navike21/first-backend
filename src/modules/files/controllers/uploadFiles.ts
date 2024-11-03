@@ -1,32 +1,44 @@
 import {
+  ECollectionState,
   generateId,
+  getInfoHeaders,
   handleErrors,
   handleSuccess,
   TRequest,
   TResponse
 } from '../../../common'
+import { fileMessages } from '../language'
 import { FileModel } from '../models'
 import { IExtendedFile, IFile } from '../types'
 
 export async function uploadFiles(
-  req: TRequest,
-  res: TResponse
+  { files, headers }: TRequest,
+  response: TResponse
 ): Promise<void> {
-  const files = req.files as IExtendedFile[]
+  const { lang } = getInfoHeaders(headers)
+  const filesParams = files as IExtendedFile[]
+
+  const {
+    files: {
+      success: { completed: filesCompleted = '' } = {},
+      warning: { notFound: filesNotFound = '' } = {},
+      error: { unexpectedError = '' } = {}
+    } = {}
+  } = fileMessages[lang]
 
   try {
-    if (!files || files.length === 0) {
+    if (!filesParams || filesParams.length === 0) {
       return handleErrors(
         {
-          message: 'No files to upload',
+          message: filesNotFound,
           statusCode: 400
         },
-        res
+        response
       )
     }
 
     const savedFiles = await Promise.all(
-      files.map(async (file): Promise<IFile> => {
+      filesParams.map(async (file): Promise<Omit<IFile, '_id'>> => {
         const fileData: IFile = new FileModel({
           originalName: file.originalname,
           path: file.path,
@@ -34,18 +46,27 @@ export async function uploadFiles(
           mimeType: file.mimetype,
           idFile: generateId(),
           webpPath: file.webpPath || null,
-          thumbnails: file.thumbnails || []
+          thumbnails: file.thumbnails || [],
+          state: ECollectionState.ACTIVE
         })
 
         const savedFile = await fileData.save()
 
-        return savedFile.toObject()
+        const fileWithoutId = savedFile.toObject()
+        delete fileWithoutId._id
+
+        return fileWithoutId
       })
     )
 
-    handleSuccess({ message: '', statusCode: 201, data: savedFiles }, res)
+    handleSuccess(
+      { message: filesCompleted, statusCode: 201, data: savedFiles },
+      response
+    )
   } catch (error) {
-    const { message } = error as Error
-    handleErrors({ message, statusCode: 500, data: error }, res)
+    handleErrors(
+      { message: unexpectedError, statusCode: 500, data: error },
+      response
+    )
   }
 }

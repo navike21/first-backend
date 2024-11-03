@@ -1,27 +1,50 @@
 import multer from 'multer'
-import { TNext, TRequest, TResponse } from '../../../common'
+import {
+  getInfoHeaders,
+  handleErrors,
+  TNext,
+  TRequest,
+  TResponse
+} from '../../../common'
 import { IExtendedFile } from '../types'
 import { createThumbnailsAndConverted, uploadMulter } from '../utils'
+import { fileMessages } from '../language'
 
 export const uploadFilesMiddleware = (
-  req: TRequest,
-  res: TResponse,
+  request: TRequest,
+  response: TResponse,
   next: TNext
 ) => {
-  uploadMulter(req, res, async err => {
+  const { lang } = getInfoHeaders(request.headers)
+
+  const {
+    files: { error: { unexpectedError = '', uploadFailed = '' } = {} } = {}
+  } = fileMessages[lang]
+
+  uploadMulter(request, response, async err => {
     if (err) {
       if (err instanceof multer.MulterError) {
-        return res
-          .status(400)
-          .json({ message: 'Error al subir el archivo', error: err.message })
+        return handleErrors(
+          {
+            message: uploadFailed,
+            statusCode: 400
+          },
+          response
+        )
       } else if (err instanceof Error) {
-        return res.status(400).json({ message: err.message })
+        return handleErrors(
+          {
+            message: unexpectedError,
+            statusCode: 400
+          },
+          response
+        )
       }
     }
 
-    if (Array.isArray(req.files)) {
+    if (Array.isArray(request.files)) {
       await Promise.all(
-        req.files.map(async (file: Express.Multer.File) => {
+        request.files.map(async (file: Express.Multer.File) => {
           file.path = file.path.replace(/\\/g, '/')
 
           if (
