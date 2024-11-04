@@ -1,26 +1,45 @@
-import { IFilesMessage } from '../../types'
+import { TFilesMessage } from '../../types'
 
-export const filesMessagesZh: IFilesMessage = {
+export const filesMessagesZh: TFilesMessage = {
   files: {
     error: {
       uploadFailed: '文件上传失败',
-      uploadsFailed: '文件上传失败',
-      unexpectedError: '文件上传时发生意外错误',
+      unexpectedError: '意外错误',
       deletionFailed: '删除文件失败'
     },
     success: {
       completed: '文件上传成功',
-      list: '文件列表获取成功',
-      found: '文件找到成功',
-      retrieved: '文件检索成功'
+      list: '文件列表成功',
+      deleted: '文件已成功删除'
     },
     warning: {
-      notFound: '未找到要上传到服务器的文件',
+      notFound: '未找到文件',
+      notFoundToDelete: '未找到要删除的文件',
       notDeleted: '无法删除文件',
       notRetrieved: '无法检索文件',
       notFoundSearch: '未找到符合搜索条件的文件',
-      notMore: '没有更多文件可显示',
-      notMatch: '文件类型不允许'
+      notMore: '没有更多文件可显示'
+    }
+  },
+  file: {
+    error: {
+      deletionFailed: '删除文件失败'
+    },
+    success: {
+      deleted: '文件已成功删除'
+    },
+    warning: {
+      notFound: '未找到文件',
+      notDeleted: '无法删除文件',
+      notRetrieved: '无法检索文件',
+      notMatch: '不允许的文件类型'
+    }
+  },
+  validation: {
+    idFiles: {
+      isRequired: '文件 ID 是必需的',
+      isString: '文件 ID 必须是字符串',
+      isArray: '文件 ID 必须是数组'
     }
   }
 }

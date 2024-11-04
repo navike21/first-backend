@@ -4,7 +4,7 @@ import { createFilePath } from './createFilePath'
 import { generateId } from '../../../common'
 
 export const storageMulter = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (request, file, cb) => {
     const mimeType = file.mimetype
     let fileTypeDir = 'others'
 
@@ -42,7 +42,7 @@ export const storageMulter = multer.diskStorage({
     const dirPath = createFilePath(fileTypeDir)
     cb(null, dirPath)
   },
-  filename: (req, file, cb) => {
+  filename: (request, file, cb) => {
     const uniqueSuffix = generateId()
     cb(
       null,

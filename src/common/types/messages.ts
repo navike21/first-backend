@@ -13,6 +13,7 @@ export interface ISuccessMessages {
   retrieved?: string
   search?: string
   updated?: string
+  updatedAll?: string
 }
 
 export interface IErrorMessages {
@@ -29,11 +30,13 @@ export interface IErrorMessages {
   unexpectedError?: string
   queryFailed?: string
   uploadFailed?: string
-  uploadsFailed?: string
 }
 
 export interface IWarningMessages {
   notFound?: string
+  notFoundToDelete?: string
+  notFoundToUpdate?: string
+  notFoundToUpload?: string
   notUpdated?: string
   notDeleted?: string
   notRetrieved?: string

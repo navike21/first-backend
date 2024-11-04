@@ -1,26 +1,45 @@
-import { IFilesMessage } from '../../types'
+import { TFilesMessage } from '../../types'
 
-export const filesMessagesDe: IFilesMessage = {
+export const filesMessagesDe: TFilesMessage = {
   files: {
     error: {
-      uploadFailed: 'Fehler beim Hochladen der Datei',
-      uploadsFailed: 'Fehler beim Hochladen der Dateien',
-      unexpectedError: 'Unerwarteter Fehler beim Hochladen der Dateien',
-      deletionFailed: 'Fehler beim Löschen der Datei'
+      uploadFailed: 'Fehler beim Hochladen der Dateien',
+      unexpectedError: 'Unerwarteter Fehler',
+      deletionFailed: 'Fehler beim Löschen der Dateien'
     },
     success: {
       completed: 'Die Dateien wurden erfolgreich hochgeladen',
-      list: 'Dateiliste erfolgreich abgerufen',
-      found: 'Datei erfolgreich gefunden',
-      retrieved: 'Datei erfolgreich abgerufen'
+      list: 'Die Dateien wurden erfolgreich aufgelistet',
+      deleted: 'Dateien erfolgreich gelöscht'
     },
     warning: {
-      notFound: 'Keine Dateien zum Hochladen auf den Server gefunden',
-      notDeleted: 'Dateien konnten nicht gelöscht werden',
-      notRetrieved: 'Datei konnte nicht abgerufen werden',
+      notFound: 'Die Dateien wurden nicht gefunden',
+      notFoundToDelete: 'Keine zu löschenden Dateien gefunden',
+      notDeleted: 'Die Dateien konnten nicht gelöscht werden',
+      notRetrieved: 'Die Dateien konnten nicht abgerufen werden',
       notFoundSearch: 'Keine Dateien mit den Suchkriterien gefunden',
-      notMore: 'Keine weiteren Dateien zum Anzeigen',
+      notMore: 'Es gibt keine weiteren Dateien zum Anzeigen'
+    }
+  },
+  file: {
+    error: {
+      deletionFailed: 'Fehler beim Löschen der Datei'
+    },
+    success: {
+      deleted: 'Datei erfolgreich gelöscht'
+    },
+    warning: {
+      notFound: 'Datei nicht gefunden',
+      notDeleted: 'Datei konnte nicht gelöscht werden',
+      notRetrieved: 'Datei konnte nicht abgerufen werden',
       notMatch: 'Dateityp nicht erlaubt'
+    }
+  },
+  validation: {
+    idFiles: {
+      isRequired: 'Die Datei-ID ist erforderlich',
+      isString: 'Die Datei-ID muss eine Zeichenkette sein',
+      isArray: 'Die Datei-ID muss ein Array sein'
     }
   }
 }

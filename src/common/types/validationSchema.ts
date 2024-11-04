@@ -15,4 +15,5 @@ export interface IValidationSchema {
   isMissing?: string
   isMatch?: string
   isExpired?: string
+  isArray?: string
 }

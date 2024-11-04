@@ -37,6 +37,7 @@ export async function uploadFiles(
       )
     }
 
+    // Guardar cada archivo y transformar la respuesta
     const savedFiles = await Promise.all(
       filesParams.map(async (file): Promise<Omit<IFile, '_id'>> => {
         const fileData: IFile = new FileModel({

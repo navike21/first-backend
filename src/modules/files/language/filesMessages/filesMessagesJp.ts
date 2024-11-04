@@ -1,27 +1,45 @@
-import { IFilesMessage } from '../../types'
+import { TFilesMessage } from '../../types'
 
-export const filesMessagesJp: IFilesMessage = {
+export const filesMessagesJp: TFilesMessage = {
   files: {
     error: {
-      uploadFailed: 'ファイルのアップロードに失敗しました',
-      uploadsFailed: 'ファイルのアップロードに失敗しました',
-      unexpectedError:
-        'ファイルのアップロード中に予期しないエラーが発生しました',
-      deletionFailed: 'ファイルの削除エラー'
+      uploadFailed: 'ファイルのアップロード中にエラーが発生しました',
+      unexpectedError: '予期しないエラー',
+      deletionFailed: 'ファイルの削除中にエラーが発生しました'
     },
     success: {
       completed: 'ファイルが正常にアップロードされました',
-      list: 'ファイルリストの取得に成功しました',
-      found: 'ファイルが正常に見つかりました',
-      retrieved: 'ファイルが正常に取得されました'
+      list: 'ファイルが正常に一覧表示されました',
+      deleted: 'ファイルが正常に削除されました'
     },
     warning: {
-      notFound: 'サーバーにアップロードするファイルが見つかりません',
+      notFound: 'ファイルが見つかりません',
+      notFoundToDelete: '削除するファイルが見つかりません',
       notDeleted: 'ファイルを削除できませんでした',
       notRetrieved: 'ファイルを取得できませんでした',
-      notFoundSearch: '検索条件に一致するファイルは見つかりませんでした',
-      notMore: '表示するファイルがありません',
-      notMatch: '許可されていないファイルタイプ'
+      notFoundSearch: '検索条件に一致するファイルが見つかりません',
+      notMore: '表示するファイルがもうありません'
+    }
+  },
+  file: {
+    error: {
+      deletionFailed: 'ファイルの削除中にエラーが発生しました'
+    },
+    success: {
+      deleted: 'ファイルが正常に削除されました'
+    },
+    warning: {
+      notFound: 'ファイルが見つかりません',
+      notDeleted: 'ファイルを削除できませんでした',
+      notRetrieved: 'ファイルを取得できませんでした',
+      notMatch: '許可されていないファイル形式です'
+    }
+  },
+  validation: {
+    idFiles: {
+      isRequired: 'ファイルIDが必要です',
+      isString: 'ファイルIDは文字列でなければなりません',
+      isArray: 'ファイルIDは配列でなければなりません'
     }
   }
 }

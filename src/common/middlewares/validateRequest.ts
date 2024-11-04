@@ -8,9 +8,14 @@ export async function validateRequest(
   response: Response,
   next: NextFunction
 ) {
-  if (method === 'GET' || method === 'DELETE') {
+  if (method === 'GET') {
     return next()
   }
+
+  if (method === 'DELETE' && Object.keys(body).length === 0) {
+    return next()
+  }
+
   const { lang, filesContent } = getInfoHeaders(headers)
 
   if (filesContent) {

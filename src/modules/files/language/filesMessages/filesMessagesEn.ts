@@ -1,26 +1,45 @@
-import { IFilesMessage } from '../../types'
+import { TFilesMessage } from '../../types'
 
-export const filesMessagesEn: IFilesMessage = {
+export const filesMessagesEn: TFilesMessage = {
   files: {
     error: {
-      uploadFailed: 'File upload failed',
-      uploadsFailed: 'Files upload failed',
-      unexpectedError: 'Unexpected error during files upload',
-      deletionFailed: 'Error deleting the file'
+      uploadFailed: 'Error uploading files',
+      unexpectedError: 'Unexpected error',
+      deletionFailed: 'Error deleting files'
     },
     success: {
       completed: 'Files uploaded successfully',
-      list: 'File list retrieved successfully',
-      found: 'File found successfully',
-      retrieved: 'File retrieved successfully'
+      list: 'Files listed successfully',
+      deleted: 'Files deleted successfully'
     },
     warning: {
-      notFound: 'No files found to upload to the server',
+      notFound: 'Files not found',
+      notFoundToDelete: 'No files found to delete',
       notDeleted: 'Files could not be deleted',
+      notRetrieved: 'Files could not be retrieved',
+      notFoundSearch: 'No files found matching search criteria',
+      notMore: 'No more files to display'
+    }
+  },
+  file: {
+    error: {
+      deletionFailed: 'Error deleting file'
+    },
+    success: {
+      deleted: 'File deleted successfully'
+    },
+    warning: {
+      notFound: 'File not found',
+      notDeleted: 'File could not be deleted',
       notRetrieved: 'File could not be retrieved',
-      notFoundSearch: 'No files found with the search criteria',
-      notMore: 'No more files to display',
       notMatch: 'File type not allowed'
+    }
+  },
+  validation: {
+    idFiles: {
+      isRequired: 'File ID is required',
+      isString: 'File ID must be a string',
+      isArray: 'File ID must be an array'
     }
   }
 }

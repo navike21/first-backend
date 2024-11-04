@@ -1,26 +1,45 @@
-import { IFilesMessage } from '../../types'
+import { TFilesMessage } from '../../types'
 
-export const filesMessagesPt: IFilesMessage = {
+export const filesMessagesPt: TFilesMessage = {
   files: {
     error: {
-      uploadFailed: 'Erro ao enviar o arquivo',
-      uploadsFailed: 'Erro ao enviar os arquivos',
-      unexpectedError: 'Erro inesperado ao enviar os arquivos',
-      deletionFailed: 'Erro ao excluir o arquivo'
+      uploadFailed: 'Erro ao fazer o upload dos arquivos',
+      unexpectedError: 'Erro inesperado',
+      deletionFailed: 'Erro ao excluir os arquivos'
     },
     success: {
       completed: 'Arquivos carregados com sucesso',
-      list: 'Lista de arquivos obtida com sucesso',
-      found: 'Arquivo encontrado com sucesso',
-      retrieved: 'Arquivo recuperado com sucesso'
+      list: 'Arquivos listados com sucesso',
+      deleted: 'Arquivos excluídos com sucesso'
     },
     warning: {
-      notFound: 'Nenhum arquivo encontrado para enviar ao servidor',
-      notDeleted: 'Não foi possível excluir os arquivos',
-      notRetrieved: 'Não foi possível recuperar o arquivo',
+      notFound: 'Arquivos não encontrados',
+      notFoundToDelete: 'Nenhum arquivo encontrado para exclusão',
+      notDeleted: 'Os arquivos não puderam ser excluídos',
+      notRetrieved: 'Os arquivos não puderam ser recuperados',
       notFoundSearch: 'Nenhum arquivo encontrado com os critérios de pesquisa',
-      notMore: 'Não há mais arquivos para mostrar',
+      notMore: 'Não há mais arquivos para exibir'
+    }
+  },
+  file: {
+    error: {
+      deletionFailed: 'Erro ao excluir o arquivo'
+    },
+    success: {
+      deleted: 'Arquivo excluído com sucesso'
+    },
+    warning: {
+      notFound: 'Arquivo não encontrado',
+      notDeleted: 'O arquivo não pôde ser excluído',
+      notRetrieved: 'O arquivo não pôde ser recuperado',
       notMatch: 'Tipo de arquivo não permitido'
+    }
+  },
+  validation: {
+    idFiles: {
+      isRequired: 'O ID do arquivo é obrigatório',
+      isString: 'O ID do arquivo deve ser uma string',
+      isArray: 'O ID do arquivo deve ser uma matriz'
     }
   }
 }
