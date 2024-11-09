@@ -14,18 +14,14 @@ async function startServer() {
     if (dbConnected) {
       logger.info('Database connected successfully')
 
-      // Ruta base
       app.get('/', (req, res) => {
         res.send(`Hello World! ${PORT}`)
       })
 
-      // Middleware para validar solicitudes
       app.use(validateRequest)
 
-      // Rutas
       app.use('/', routers())
 
-      // Iniciar servidor
       app.listen(PORT, () => {
         logger.info(`Server running on port ${PORT}`)
       })

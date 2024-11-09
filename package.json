@@ -14,7 +14,8 @@
     "dev": "nodemon",
     "lint": "eslint . --fix",
     "format": "prettier --write 'src/**/*.{ts,js,md}'",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

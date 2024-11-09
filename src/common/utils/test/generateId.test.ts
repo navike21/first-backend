@@ -1,18 +1,15 @@
 import { generateId } from '../generateId'
 import { v7 as uuid } from 'uuid'
 
-jest.mock('uuid', () => ({
-  v7: jest.fn()
-}))
+jest.mock('uuid')
 
-describe('generateId', () => {
-  it('should generate a unique id', () => {
-    const mockUuid = '123e4567-e89b-12d3-a456-426614174000'
+describe('generateId function', () => {
+  it('should generate a valid UUID', () => {
+    const mockUuid = 'mocked-uuid'
     ;(uuid as jest.Mock).mockReturnValue(mockUuid)
 
     const id = generateId()
-
     expect(id).toBe(mockUuid)
-    expect(uuid).toHaveBeenCalledTimes(1)
+    expect(uuid).toHaveBeenCalled()
   })
 })

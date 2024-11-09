@@ -1,31 +1,24 @@
-import { Request, Response, NextFunction } from 'express'
 import { RequestSchema } from '../schemas'
 import { ValidationError } from 'joi'
 import { getInfoHeaders, handleErrors } from '../utils'
+import { TNext, TRequest, TResponse } from '../types'
 
 export async function validateRequest(
-  { body, headers, method }: Request,
-  response: Response,
-  next: NextFunction
+  { body, headers, method }: TRequest,
+  response: TResponse,
+  next: TNext
 ) {
-  if (method === 'GET') {
-    return next()
-  }
-
-  if (method === 'DELETE' && Object.keys(body).length === 0) {
-    return next()
-  }
-
   const { lang, filesContent } = getInfoHeaders(headers)
-
-  if (filesContent) {
+  if (
+    method === 'GET' ||
+    (method === 'DELETE' && Object.keys(body).length === 0) ||
+    filesContent
+  ) {
     return next()
   }
 
   try {
-    const schema = RequestSchema(lang)
-
-    await schema.validateAsync(body, {
+    await RequestSchema(lang).validateAsync(body, {
       abortEarly: true
     })
     next()
