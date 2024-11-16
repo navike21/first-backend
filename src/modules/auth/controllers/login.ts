@@ -22,18 +22,18 @@ export const login = async (
 
   const {
     login: {
-      success: { completed: loginComplete = '' } = {},
+      success: { completed: loginComplete } = {},
       warning: {
-        notFound: userNotFound = '',
-        isBlocked: userBlocked = '',
-        notMatch: passwordNotMatch = ''
+        notFound: userNotFound,
+        isBlocked: userBlocked,
+        notMatch: passwordNotMatch
       } = {},
-      error: { unexpectedError = '' } = {},
-      password: { isMissing: passwordIsMissing = '' } = {}
+      error: { unexpectedError } = {},
+      password: { isMissing: passwordIsMissing } = {}
     }
   } = userAuthMessages[lang]
 
-  const { email = '', password = '' } = data as ILogin
+  const { email, password } = data as ILogin
 
   try {
     const existingUser = await getInfoUser({
@@ -41,30 +41,36 @@ export const login = async (
     })
 
     if (!existingUser) {
-      return handleErrors({ message: userNotFound, statusCode: 404 }, response)
+      return handleErrors(
+        { message: `${userNotFound}`, statusCode: 404 },
+        response
+      )
     } else {
       const {
-        auth: { password: passwordData = '' } = {},
-        state = '',
-        names: userName = '',
-        fatherLastName = '',
-        motherLastName = ''
+        auth: { password: passwordData } = {},
+        state,
+        names: userName,
+        fatherLastName,
+        motherLastName
       } = existingUser
 
       if (!passwordData) {
         return handleErrors(
-          { message: passwordIsMissing, statusCode: 400 },
+          { message: `${passwordIsMissing}`, statusCode: 400 },
           response
         )
       }
 
       if (state === ECollectionState.BLOCKED) {
-        return handleErrors({ message: userBlocked, statusCode: 400 }, response)
+        return handleErrors(
+          { message: `${userBlocked}`, statusCode: 400 },
+          response
+        )
       }
 
       if (!verifyPassword(password, passwordData)) {
         return handleErrors(
-          { message: passwordNotMatch, statusCode: 403 },
+          { message: `${passwordNotMatch}`, statusCode: 401 },
           response
         )
       }
@@ -78,7 +84,7 @@ export const login = async (
 
       handleSuccess(
         {
-          message: loginComplete,
+          message: `${loginComplete}`,
           statusCode: 200,
           data: {
             token
@@ -90,7 +96,7 @@ export const login = async (
   } catch (error) {
     handleErrors(
       {
-        message: unexpectedError,
+        message: `${unexpectedError}`,
         statusCode: 500,
         data: error
       },

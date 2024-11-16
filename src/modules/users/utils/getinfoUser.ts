@@ -11,7 +11,9 @@ export const getInfoUser = async (
     _id: 0
   }).lean<IUser>()
 
-  return existingUser && existingUser.state !== ECollectionState.DELETED
+  return existingUser &&
+    existingUser.state !== ECollectionState.DELETED &&
+    existingUser.state !== ECollectionState.BLOCKED
     ? existingUser
     : null
 }

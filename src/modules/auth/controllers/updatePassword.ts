@@ -21,24 +21,24 @@ export const updatePassword = async (
 
   const {
     password: {
-      success: { updated: passwordUpdated = '' } = {},
+      success: { updated: passwordUpdated } = {},
       error: {
-        updateFailed: updateFailedPassword = '',
-        unexpectedError: unexpectedErrorPassword = ''
+        updateFailed: updateFailedPassword,
+        unexpectedError: unexpectedErrorPassword
       } = {},
       warning: {
-        notUpdated: notUpdatedPassword = '',
-        notMatch: notMatchPassword = ''
+        notUpdated: notUpdatedPassword,
+        notMatch: notMatchPassword
       } = {}
     }
   } = userAuthMessages[lang]
 
   try {
-    const { confirmPassword = '', password = '' } = data as IUserAuth
+    const { confirmPassword, password } = data as IUserAuth
 
     if (password !== confirmPassword) {
       return handleErrors(
-        { message: notMatchPassword, statusCode: 400 },
+        { message: `${notMatchPassword}`, statusCode: 400 },
         response
       )
     }
@@ -53,22 +53,24 @@ export const updatePassword = async (
 
     if (!updatedPasswordUser) {
       return handleErrors(
-        { message: notUpdatedPassword, statusCode: 404 },
+        { message: `${notUpdatedPassword}`, statusCode: 404 },
         response
       )
     }
 
     handleSuccess(
-      { message: passwordUpdated, statusCode: 200, data: updatedPasswordUser },
+      {
+        message: `${passwordUpdated}`,
+        statusCode: 200,
+        data: updatedPasswordUser
+      },
       response
     )
   } catch (error) {
     const isValidationError = error instanceof Error
     handleErrors(
       {
-        message: isValidationError
-          ? updateFailedPassword
-          : unexpectedErrorPassword,
+        message: `${isValidationError ? updateFailedPassword : unexpectedErrorPassword}`,
         data: isValidationError ? error : undefined,
         statusCode: isValidationError ? 400 : 500
       },
