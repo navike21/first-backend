@@ -17,9 +17,9 @@ export const deleteUser = async (
   const { lang } = getInfoHeaders(headers)
   const { idUser } = params
   const {
-    success: { deleted = '' } = {},
-    warning: { notUpdated = '' } = {},
-    error: { unexpectedError = '' } = {}
+    success: { deleted } = {},
+    warning: { notUpdated } = {},
+    error: { unexpectedError } = {}
   } = userCrudMessages[lang]
 
   try {
@@ -32,14 +32,17 @@ export const deleteUser = async (
     )
 
     if (result.matchedCount === 0) {
-      return handleErrors({ message: notUpdated, statusCode: 404 }, response)
+      return handleErrors(
+        { message: `${notUpdated}`, statusCode: 404 },
+        response
+      )
     }
 
-    handleSuccess({ message: deleted, statusCode: 200 }, response)
+    handleSuccess({ message: `${deleted}`, statusCode: 200 }, response)
   } catch (error) {
     handleErrors(
       {
-        message: unexpectedError,
+        message: `${unexpectedError}`,
         statusCode: 500,
         data: error instanceof MongooseError ? error : undefined
       },

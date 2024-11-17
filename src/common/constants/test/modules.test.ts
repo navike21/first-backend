@@ -1,15 +1,19 @@
-import { USERS, USERS_GROUPS, DEMOS } from '../modules'
+import { USERS, USERS_ROLES, AUTH, FILES } from '../modules'
 
 describe('Module Constants', () => {
   it('should have USERS constant equal to "users"', () => {
     expect(USERS).toBe('users')
   })
 
-  it('should have USERS_GROUPS constant equal to "users_groups"', () => {
-    expect(USERS_GROUPS).toBe('users_groups')
+  it('should have USERS_ROLES constant equal to "users_roles"', () => {
+    expect(USERS_ROLES).toBe('users_roles')
   })
 
-  it('should have DEMOS constant equal to "demos"', () => {
-    expect(DEMOS).toBe('demos')
+  it('should have AUTH constant equal to "auth"', () => {
+    expect(AUTH).toBe('auth')
+  })
+
+  it('should have FILES constant equal to "files"', () => {
+    expect(FILES).toBe('files')
   })
 })

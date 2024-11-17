@@ -7,7 +7,7 @@ export async function validateRequest(
   { body, headers, method }: TRequest,
   response: TResponse,
   next: TNext
-) {
+): Promise<void> {
   const { lang, filesContent } = getInfoHeaders(headers)
   if (
     method === 'GET' ||

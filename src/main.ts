@@ -2,27 +2,27 @@ import express from 'express'
 import { connectDataBase } from './connection'
 import { app, corsConfig } from './configurations'
 import routers from './routers'
-import { PORT, validateRequest } from './common'
+import { PORT, TRequest, TResponse, validateRequest } from './common'
 import { logger } from './logger'
 
 app.use(express.json())
 
 corsConfig()
-async function startServer() {
+async function startServer(): Promise<void> {
   try {
-    const dbConnected = await connectDataBase()
+    const dbConnected: boolean = await connectDataBase()
     if (dbConnected) {
       logger.info('Database connected successfully')
 
-      app.get('/', (req, res) => {
-        res.send(`Hello World! ${PORT}`)
+      app.get('/', (_: TRequest, response: TResponse): void => {
+        response.send(`Hello World! ${PORT}`)
       })
 
       app.use(validateRequest)
 
       app.use('/', routers())
 
-      app.listen(PORT, () => {
+      app.listen(PORT, (): void => {
         logger.info(`Server running on port ${PORT}`)
       })
     }
@@ -35,3 +35,9 @@ async function startServer() {
 }
 
 startServer()
+  .then(() => {
+    logger.info('Server started successfully')
+  })
+  .catch(error => {
+    logger.error('Failed to start server', error)
+  })

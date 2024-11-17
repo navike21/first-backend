@@ -4,7 +4,7 @@ import { usersRoles } from '../modules/usersRoles/router'
 import { auth } from '../modules/auth/router'
 import { files } from '../modules/files/router'
 
-const router = Router()
+const router: Router = Router()
 
 export default (): Router => {
   auth(router)

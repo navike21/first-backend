@@ -1,3 +1,4 @@
+export const AUTH = 'auth'
+export const FILES = 'files'
 export const USERS = 'users'
-export const USERS_GROUPS = 'users_groups'
-export const DEMOS = 'demos'
+export const USERS_ROLES = 'users_roles'

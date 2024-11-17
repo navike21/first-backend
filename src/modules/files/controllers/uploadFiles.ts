@@ -20,9 +20,9 @@ export async function uploadFiles(
 
   const {
     files: {
-      success: { completed: filesCompleted = '' } = {},
-      warning: { notFound: filesNotFound = '' } = {},
-      error: { unexpectedError = '' } = {}
+      success: { completed: filesCompleted } = {},
+      warning: { notFound: filesNotFound } = {},
+      error: { unexpectedError } = {}
     } = {}
   } = fileMessages[lang]
 
@@ -30,14 +30,13 @@ export async function uploadFiles(
     if (!filesParams || filesParams.length === 0) {
       return handleErrors(
         {
-          message: filesNotFound,
+          message: `${filesNotFound}`,
           statusCode: 400
         },
         response
       )
     }
 
-    // Guardar cada archivo y transformar la respuesta
     const savedFiles = await Promise.all(
       filesParams.map(async (file): Promise<Omit<IFile, '_id'>> => {
         const fileData: IFile = new FileModel({
@@ -61,12 +60,12 @@ export async function uploadFiles(
     )
 
     handleSuccess(
-      { message: filesCompleted, statusCode: 201, data: savedFiles },
+      { message: `${filesCompleted}`, statusCode: 201, data: savedFiles },
       response
     )
   } catch (error) {
     handleErrors(
-      { message: unexpectedError, statusCode: 500, data: error },
+      { message: `${unexpectedError}`, statusCode: 500, data: error },
       response
     )
   }

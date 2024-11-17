@@ -19,15 +19,18 @@ export const createUser = async (
   const { lang } = getInfoHeaders(headers)
   const { data } = body as IRequest
   const {
-    success: { created = '' } = {},
-    error: { creationFailed = '', unexpectedError = '', duplicate = '' } = {}
+    success: { created } = {},
+    error: { creationFailed, unexpectedError, duplicate } = {}
   } = userCrudMessages[lang]
 
   try {
     const newUser = new UserModel({ ...defaultUserData, ...data })
     await newUser.save()
 
-    return handleSuccess({ message: created, statusCode: 201, data }, response)
+    return handleSuccess(
+      { message: `${created}`, statusCode: 201, data },
+      response
+    )
   } catch (error) {
     const isDuplicateError =
       error instanceof MongoServerError &&
@@ -36,7 +39,7 @@ export const createUser = async (
 
     handleErrors(
       {
-        message: isDuplicateError ? errorMessage : unexpectedError,
+        message: `${isDuplicateError ? errorMessage : unexpectedError}`,
         statusCode: 500,
         data: error
       },

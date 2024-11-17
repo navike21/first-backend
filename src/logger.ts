@@ -1,6 +1,6 @@
-import { createLogger, format, transports } from 'winston'
+import { createLogger, format, transports, Logger } from 'winston'
 
-export const logger = createLogger({
+export const logger: Logger = createLogger({
   level: 'info',
   format: format.combine(
     format.timestamp(),
@@ -10,8 +10,5 @@ export const logger = createLogger({
   defaultMeta: {
     service: 'first-backend'
   },
-  transports: [
-    new transports.Console()
-    // Puedes añadir otros transportes si lo necesitas (archivos, base de datos, etc.)
-  ]
+  transports: [new transports.Console()]
 })

@@ -26,18 +26,18 @@ export const listUsers = async (
   const skip = (page - 1) * limit
 
   const {
-    success: { list = '' } = {},
-    warning: { notMore = '', isEmpty = '' } = {},
-    error: { unexpectedError = '' } = {}
+    success: { list } = {},
+    warning: { notMore, isEmpty } = {},
+    error: { unexpectedError } = {}
   } = userCrudMessages[lang]
 
   const {
-    documentId = '',
-    email = '',
-    createdAt = '',
-    fatherLastName = '',
-    motherLastName = '',
-    names = ''
+    documentId,
+    email,
+    createdAt,
+    fatherLastName,
+    motherLastName,
+    names
   } = filters as TFiltersUsers
 
   const query: FilterQuery<IUser> = {
@@ -92,19 +92,23 @@ export const listUsers = async (
 
     const meta = { page, limit, total, totalPages: Math.ceil(total / limit) }
 
-    if (dataParsed.length > 0) {
+    if (dataParsed.length) {
       handleSuccess(
-        { message: list, data: dataParsed, meta, statusCode: 200 },
+        { message: `${list}`, data: dataParsed, meta, statusCode: 200 },
         response
       )
     } else {
       handleErrors(
-        { message: page > 1 ? notMore : isEmpty, statusCode: 404, meta },
+        {
+          message: page > 1 ? `${notMore}` : `${isEmpty}`,
+          statusCode: 404,
+          meta
+        },
         response
       )
     }
   } catch (error) {
     logger.error(error)
-    handleErrors({ message: unexpectedError, statusCode: 500 }, response)
+    handleErrors({ message: `${unexpectedError}`, statusCode: 500 }, response)
   }
 }
