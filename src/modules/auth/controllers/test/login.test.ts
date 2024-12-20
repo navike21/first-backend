@@ -5,7 +5,8 @@ import {
   handleErrors,
   handleSuccess,
   ECollectionState,
-  verifyPassword
+  verifyPassword,
+  decryptData
 } from '../../../../common'
 import { getInfoUser } from '../../../users/utils'
 import { userAuthMessages } from '../../language'
@@ -20,7 +21,8 @@ jest.mock('../../../../common', () => ({
     DELETED: 'DELETED',
     BLOCKED: 'BLOCKED'
   },
-  verifyPassword: jest.fn()
+  verifyPassword: jest.fn(),
+  decryptData: jest.fn()
 }))
 
 jest.mock('../../../users/utils', () => ({
@@ -63,7 +65,7 @@ describe('login', () => {
 
   beforeEach(() => {
     req = {
-      body: { data: { email: 'test@example.com', password: 'password123' } },
+      body: { data: { dataLoginEncrypted: 'encryptedData' } },
       headers: {}
     }
     res = {
@@ -74,6 +76,9 @@ describe('login', () => {
   })
 
   it('should handle user not found', async () => {
+    ;(decryptData as jest.Mock).mockReturnValue(
+      JSON.stringify({ email: 'test@example.com', password: 'password' })
+    )
     ;(getInfoUser as jest.Mock).mockResolvedValue(null)
 
     await login(req as TRequest, res as TResponse)
@@ -88,6 +93,9 @@ describe('login', () => {
   })
 
   it('should handle user is blocked', async () => {
+    ;(decryptData as jest.Mock).mockReturnValue(
+      JSON.stringify({ email: 'test@example.com', password: 'password' })
+    )
     ;(getInfoUser as jest.Mock).mockResolvedValue({
       auth: { password: 'hashedPassword' },
       state: ECollectionState.BLOCKED,
@@ -108,6 +116,9 @@ describe('login', () => {
   })
 
   it('should handle missing password in user data', async () => {
+    ;(decryptData as jest.Mock).mockReturnValue(
+      JSON.stringify({ email: 'test@example.com', password: 'password' })
+    )
     ;(getInfoUser as jest.Mock).mockResolvedValue({
       auth: { password: '' },
       state: ECollectionState.ACTIVE,
@@ -128,6 +139,9 @@ describe('login', () => {
   })
 
   it('should handle password mismatch', async () => {
+    ;(decryptData as jest.Mock).mockReturnValue(
+      JSON.stringify({ email: 'test@example.com', password: 'password' })
+    )
     ;(getInfoUser as jest.Mock).mockResolvedValue({
       auth: { password: 'hashedPassword' },
       state: ECollectionState.ACTIVE,
@@ -149,6 +163,9 @@ describe('login', () => {
   })
 
   it('should handle successful login', async () => {
+    ;(decryptData as jest.Mock).mockReturnValue(
+      JSON.stringify({ email: 'test@example.com', password: 'password' })
+    )
     ;(getInfoUser as jest.Mock).mockResolvedValue({
       auth: { password: 'hashedPassword' },
       state: ECollectionState.ACTIVE,
@@ -164,13 +181,22 @@ describe('login', () => {
       {
         message: userAuthMessagesEn?.login?.success?.completed,
         statusCode: 200,
-        data: { token: 'test-token' }
+        data: {
+          token: 'test-token',
+          email: 'test@example.com',
+          names: 'Test',
+          fatherLastName: 'User',
+          motherLastName: ''
+        }
       },
       res
     )
   })
 
   it('should handle unexpected error', async () => {
+    ;(decryptData as jest.Mock).mockReturnValue(
+      JSON.stringify({ email: 'test@example.com', password: 'password' })
+    )
     ;(getInfoUser as jest.Mock).mockRejectedValue(new Error('Unexpected error'))
 
     await login(req as TRequest, res as TResponse)

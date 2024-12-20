@@ -7,10 +7,11 @@ import {
   handleSuccess,
   ECollectionState,
   verifyPassword,
-  generateJwtToken
+  generateJwtToken,
+  decryptData
 } from '../../../common'
 import { userAuthMessages } from '../language'
-import { ILogin } from '../types'
+import { ILogin, ILoginDecrypted } from '../types'
 import { getInfoUser } from '../../users/utils'
 
 export const login = async (
@@ -33,7 +34,12 @@ export const login = async (
     }
   } = userAuthMessages[lang]
 
-  const { email, password } = data as ILogin
+  const { dataLoginEncrypted } = data as ILogin
+
+  const { email, password } =
+    (JSON.parse(
+      decryptData(dataLoginEncrypted)
+    ) as unknown as ILoginDecrypted) ?? {}
 
   try {
     const existingUser = await getInfoUser({
@@ -75,19 +81,22 @@ export const login = async (
         )
       }
 
-      const token = await generateJwtToken({
+      const userDataResponse = {
         email,
         names: userName,
         fatherLastName,
         motherLastName
-      })
+      }
+
+      const token = await generateJwtToken(userDataResponse)
 
       handleSuccess(
         {
           message: `${loginComplete}`,
           statusCode: 200,
           data: {
-            token
+            token,
+            ...userDataResponse
           }
         },
         response

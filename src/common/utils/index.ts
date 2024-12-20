@@ -1,4 +1,5 @@
 export * from './bcrypt.handle'
+export * from './encryptAndDecryptData'
 export * from './generateId'
 export * from './getInfoHeaders'
 export * from './handleErrors'
