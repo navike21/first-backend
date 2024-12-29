@@ -2,7 +2,13 @@ import express from 'express'
 import { connectDataBase } from './connection'
 import { app, corsConfig } from './configurations'
 import routers from './routers'
-import { PORT, TRequest, TResponse, validateRequest } from './common'
+import {
+  PORT,
+  TRequest,
+  TResponse,
+  URL_ORIGINS,
+  validateRequest
+} from './common'
 import { logger } from './logger'
 
 app.use(express.json())
@@ -24,6 +30,7 @@ async function startServer(): Promise<void> {
 
       app.listen(PORT, (): void => {
         logger.info(`Server running on port ${PORT}`)
+        logger.info(`Environment: ${URL_ORIGINS.split(',')}`)
       })
     }
   } catch (error) {

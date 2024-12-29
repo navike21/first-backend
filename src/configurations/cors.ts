@@ -6,7 +6,6 @@ export function corsConfig(): void {
   app.use(
     cors({
       origin: `${URL_ORIGINS}`.split(',')
-      // origin: '*'
     })
   )
 }
