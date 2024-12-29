@@ -5,7 +5,8 @@ import { URL_ORIGINS } from '../common'
 export function corsConfig(): void {
   app.use(
     cors({
-      origin: `${URL_ORIGINS}`.split(',')
+      // origin: `${URL_ORIGINS}`.split(',')
+      origin: '*'
     })
   )
 }
