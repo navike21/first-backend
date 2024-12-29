@@ -21,7 +21,7 @@ async function startServer(): Promise<void> {
       logger.info('Database connected successfully')
 
       app.get('/', (_: TRequest, response: TResponse): void => {
-        response.send(`Hello World! ${PORT}`)
+        response.send(`Hello World! ${PORT} ${URL_ORIGINS.split(',')}`)
       })
 
       app.use(validateRequest)
@@ -30,7 +30,6 @@ async function startServer(): Promise<void> {
 
       app.listen(PORT, (): void => {
         logger.info(`Server running on port ${PORT}`)
-        logger.info(`Environment: ${URL_ORIGINS.split(',')}`)
       })
     }
   } catch (error) {
