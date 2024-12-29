@@ -21,6 +21,7 @@ async function startServer(): Promise<void> {
       logger.info('Database connected successfully')
 
       app.get('/', (_: TRequest, response: TResponse): void => {
+        logger.info(URL_ORIGINS.split(',') as string[])
         response.send(`Hello World! ${PORT} ${URL_ORIGINS.split(',')}`)
       })
 
