@@ -19,9 +19,9 @@ async function startServer(): Promise<void> {
     const dbConnected: boolean = await connectDataBase()
     if (dbConnected) {
       logger.info('Database connected successfully')
+      logger.info(URL_ORIGINS.split(',') as string[])
 
       app.get('/', (_: TRequest, response: TResponse): void => {
-        logger.info(URL_ORIGINS.split(',') as string[])
         response.send(`Hello World! ${PORT} ${URL_ORIGINS.split(',')}`)
       })
 
