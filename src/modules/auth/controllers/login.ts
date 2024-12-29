@@ -13,6 +13,7 @@ import {
 import { userAuthMessages } from '../language'
 import { ILogin, ILoginDecrypted } from '../types'
 import { getInfoUser } from '../../users/utils'
+import { logger } from '../../../logger'
 
 export const login = async (
   { body, headers }: TRequest,
@@ -103,6 +104,7 @@ export const login = async (
       )
     }
   } catch (error) {
+    logger.error('Failed to login --> ', { error })
     handleErrors(
       {
         message: `${unexpectedError}`,
