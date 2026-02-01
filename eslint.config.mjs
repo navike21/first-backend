@@ -1,62 +1,34 @@
-import tsParser from '@typescript-eslint/parser'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
-import pluginPrettier from 'eslint-plugin-prettier'
+import eslint from '@eslint/js'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all
-})
-
-export default [
+export default tseslint.config(
   {
-    ignores: [
-      '**/dist',
-      '**/node_modules',
-      'jest.config.js',
-      'webpack.config.js'
-    ]
+    ignores: ['eslint.config.mjs']
   },
-  ...compat.extends(
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
-  ),
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  eslintPluginPrettierRecommended,
   {
     languageOptions: {
-      parser: tsParser,
-      ecmaVersion: 2024,
-      sourceType: 'module'
-    },
-    plugins: {
-      prettier: pluginPrettier
-    },
+      globals: {
+        ...globals.node,
+        ...globals.jest
+      },
+      sourceType: 'commonjs',
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname
+      }
+    }
+  },
+  {
     rules: {
-      'no-console': 'warn',
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
-      '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          selector: 'typeAlias',
-          format: ['PascalCase'],
-          prefix: ['T']
-        },
-        {
-          selector: 'interface',
-          format: ['PascalCase'],
-          prefix: ['I']
-        },
-        {
-          selector: 'enum',
-          format: ['PascalCase'],
-          prefix: ['E']
-        }
-      ]
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      'prettier/prettier': ['error', { endOfLine: 'auto' }]
     }
   }
-]
+)
