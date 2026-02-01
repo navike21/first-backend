@@ -11,6 +11,51 @@
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
       }
+    },
+    "files": {
+      "type": "application",
+      "root": "apps/files",
+      "entryFile": "main",
+      "sourceRoot": "apps/files/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/files/tsconfig.app.json"
+      }
+    },
+    "mail": {
+      "type": "application",
+      "root": "apps/mail",
+      "entryFile": "main",
+      "sourceRoot": "apps/mail/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mail/tsconfig.app.json"
+      }
+    },
+    "projects": {
+      "type": "application",
+      "root": "apps/projects",
+      "entryFile": "main",
+      "sourceRoot": "apps/projects/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/projects/tsconfig.app.json"
+      }
+    },
+    "realtime": {
+      "type": "application",
+      "root": "apps/realtime",
+      "entryFile": "main",
+      "sourceRoot": "apps/realtime/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/realtime/tsconfig.app.json"
+      }
+    },
+    "users": {
+      "type": "application",
+      "root": "apps/users",
+      "entryFile": "main",
+      "sourceRoot": "apps/users/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/users/tsconfig.app.json"
+      }
     }
   }
 }
