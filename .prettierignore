@@ -1,0 +1,28 @@
+# Dependencies
+node_modules
+pnpm-lock.yaml
+
+# Build output
+dist
+build
+.vercel
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Database
+prisma/migrations
+
+# Testing
+coverage
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import dotenv from "dotenv";
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -14,20 +14,20 @@ app.use(cors());
 app.use(express.json());
 
 // Health check
-app.get("/health", (req, res) => {
+app.get('/health', (_, res) => {
   res.json({
-    status: "ok",
-    message: "FIRST Backend is running!",
+    status: 'ok',
+    message: 'FIRST Backend is running!',
     node: process.version,
     timestamp: new Date().toISOString(),
   });
 });
 
 // 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
+app.use((_, res) => {
+  res.status(404).json({ error: 'Route not found' });
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.info(`🚀 Server running on http://localhost:${PORT}`);
 });
