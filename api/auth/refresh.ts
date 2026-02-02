@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { refreshTokenSchema } from '../../src/lib/auth/schemas.js';
+import { refreshTokenSchema } from './schemas.js';
 import { generateTokens, verifyRefreshToken } from '../../src/lib/auth/jwt.js';
 import prisma from '../../src/lib/db/prisma.js';
 import {
@@ -8,14 +8,7 @@ import {
 } from '../../src/utils/response-handler.js';
 
 export default async function handler(req: Request, res: Response) {
-  const { error, unauthorized, success, validationError } = ApiResponder;
-
-  if (req.method !== 'POST') {
-    return error(res, {
-      status: 405,
-      message: 'Method not allowed',
-    });
-  }
+  const { unauthorized, success, validationError } = ApiResponder;
 
   try {
     // Validate input

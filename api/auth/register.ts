@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { registerSchema } from '../../src/lib/auth/schemas.js';
+import { registerSchema } from './schemas.js';
 import prisma from '../../src/lib/db/prisma.js';
 import { hashPassword } from '../../src/lib/auth/password.js';
 import { generateTokens } from '../../src/lib/auth/jwt.js';
@@ -9,15 +9,7 @@ import {
 } from '../../src/utils/response-handler.js';
 
 export default async function handler(req: Request, res: Response) {
-  const { error, badRequest, created, validationError, internalError } =
-    ApiResponder;
-
-  if (req.method !== 'POST') {
-    return error(res, {
-      status: 405,
-      message: 'Method not allowed',
-    });
-  }
+  const { badRequest, created, validationError, internalError } = ApiResponder;
 
   try {
     // 1️⃣ Validar input

@@ -4,14 +4,7 @@ import prisma from '../../src/lib/db/prisma.js';
 import { ApiResponder } from '../../src/utils/response-handler.js';
 
 export default async function handler(req: AuthRequest, res: Response) {
-  const { error, notFound, success, internalError } = ApiResponder;
-
-  if (req.method !== 'GET') {
-    return error(res, {
-      status: 405,
-      message: 'Method not allowed',
-    });
-  }
+  const { notFound, success, internalError } = ApiResponder;
 
   try {
     const user = await prisma.user.findUnique({
