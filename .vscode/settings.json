@@ -25,5 +25,5 @@
   "files.autoSave": "off",
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": ["commitear", "supabase", "vercel"]
+  "cSpell.words": ["commitear", "Redirección", "supabase", "vercel"]
 }
