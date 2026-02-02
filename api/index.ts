@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: process.env.DOTENV_CONFIG_PATH ?? '.env' });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
