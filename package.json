@@ -1,55 +1,44 @@
 {
-  "name": "first-backend",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "scripts": {
-    "dev": "node --import tsx --watch api/index.ts",
-    "dev:dev": "DOTENV_CONFIG_PATH=.env.development node --import tsx --watch api/index.ts",
-    "dev:prod": "DOTENV_CONFIG_PATH=.env.production node --import tsx --watch api/index.ts",
-    "build": "tsc",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
-    "format:check": "prettier --check \"**/*.{ts,js,json,md}\"",
-    "type-check": "tsc --noEmit",
-    "check": "pnpm lint && pnpm format:check && pnpm type-check"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.28.2",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.93.3",
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "helmet": "^8.1.0",
-    "jsonwebtoken": "^9.0.3",
-    "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@types/bcryptjs": "^3.0.0",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.2.0",
-    "@vitest/ui": "^4.0.18",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.3.0",
-    "prettier": "^3.8.1",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0",
-    "vitest": "^4.0.18"
-  },
-  "engines": {
-    "node": ">=20.0.0"
-  }
+	"name": "first-backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/server.js",
+	"scripts": {
+		"dev": "nodemon"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/navike21/first-backend.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "Apache-2.0",
+	"type": "commonjs",
+	"bugs": {
+		"url": "https://github.com/navike21/first-backend/issues"
+	},
+	"homepage": "https://github.com/navike21/first-backend#readme",
+	"devDependencies": {
+		"@types/compression": "^1.8.1",
+		"@types/cookie-parser": "^1.4.10",
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.6",
+		"@types/node": "^25.2.0",
+		"nodemon": "^3.1.11",
+		"prettier": "^3.8.1",
+		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"compression": "^1.8.1",
+		"cookie-parser": "^1.4.7",
+		"cors": "^2.8.6",
+		"date-fns": "^4.1.0",
+		"dotenv": "^17.2.3",
+		"express": "^5.2.1",
+		"express-rate-limit": "^8.2.1",
+		"helmet": "^8.1.0",
+		"mongoose": "^9.1.6"
+	}
 }
