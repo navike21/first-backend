@@ -7,6 +7,8 @@ import type {
   HttpStatusCode,
   ResponseType,
 } from '../types/api-response.js';
+import { AUTH_ERROR_MESSAGES } from '../../api/auth/constants.js';
+import { USER_ERROR_MESSAGES } from '../../api/users/constants.js';
 
 /**
  * Genera metadata base para todas las respuestas
@@ -28,16 +30,26 @@ export function sendApiResponse<TData = unknown>(
     status: HttpStatusCode;
     type: ResponseType;
     message: string;
+    code?: string;
     data?: TData;
     errors?: ApiErrorDetail[];
     meta?: Partial<ApiMeta>;
   }
 ): void {
-  const { status, type, message, data = null, errors = null, meta } = options;
+  const {
+    status,
+    type,
+    message,
+    code,
+    data = null,
+    errors = null,
+    meta,
+  } = options;
 
   const response: ApiResponse<TData> = {
     status,
     type,
+    ...(code && { code }),
     message,
     data,
     errors,
@@ -57,12 +69,14 @@ export const ApiResponder = {
       data: TData;
       message?: string;
       status?: 200 | 201;
+      code?: string;
       meta?: Partial<ApiMeta>;
     }
   ) => {
     sendApiResponse(res, {
       status: options.status ?? 200,
       type: 'success',
+      code: options.code,
       message: options.message ?? 'Success',
       data: options.data,
       errors: undefined,
@@ -72,7 +86,12 @@ export const ApiResponder = {
 
   created: <TData>(
     res: Response,
-    options: { data: TData; message?: string; meta?: Partial<ApiMeta> }
+    options: {
+      data: TData;
+      message?: string;
+      code?: string;
+      meta?: Partial<ApiMeta>;
+    }
   ) => {
     ApiResponder.success(res, {
       ...options,
@@ -86,6 +105,7 @@ export const ApiResponder = {
     options: {
       message: string;
       status?: HttpStatusCode;
+      code?: string;
       errors?: ApiErrorDetail[];
       meta?: Partial<ApiMeta>;
     }
@@ -93,6 +113,7 @@ export const ApiResponder = {
     sendApiResponse(res, {
       status: options.status ?? 500,
       type: 'error',
+      code: options.code,
       message: options.message,
       data: null,
       errors: options.errors ?? undefined,
@@ -105,12 +126,14 @@ export const ApiResponder = {
     res: Response,
     options?: {
       message?: string;
+      code?: string;
       errors?: ApiErrorDetail[];
       meta?: Partial<ApiMeta>;
     }
   ) =>
     ApiResponder.error(res, {
       status: 400,
+      code: options?.code,
       message: options?.message ?? 'Bad request',
       errors: options?.errors,
       meta: options?.meta,
@@ -118,30 +141,38 @@ export const ApiResponder = {
 
   unauthorized: (
     res: Response,
-    options?: { message?: string; meta?: Partial<ApiMeta> }
+    options?: { message?: string; code?: string; meta?: Partial<ApiMeta> }
   ) =>
     ApiResponder.error(res, {
       status: 401,
+      code: options?.code,
       message: options?.message ?? 'Unauthorized',
       meta: options?.meta,
     }),
 
   forbidden: (
     res: Response,
-    options?: { message?: string; meta?: Partial<ApiMeta> }
+    options?: { message?: string; code?: string; meta?: Partial<ApiMeta> }
   ) =>
     ApiResponder.error(res, {
       status: 403,
+      code: options?.code,
       message: options?.message ?? 'Forbidden',
       meta: options?.meta,
     }),
 
   notFound: (
     res: Response,
-    options?: { message?: string; resource?: string; meta?: Partial<ApiMeta> }
+    options?: {
+      message?: string;
+      resource?: string;
+      code?: string;
+      meta?: Partial<ApiMeta>;
+    }
   ) =>
     ApiResponder.error(res, {
       status: 404,
+      code: options?.code,
       message:
         options?.message ?? `${options?.resource ?? 'Resource'} not found`,
       meta: options?.meta,
@@ -151,12 +182,14 @@ export const ApiResponder = {
     res: Response,
     options?: {
       message?: string;
+      code?: string;
       errors?: ApiErrorDetail[];
       meta?: Partial<ApiMeta>;
     }
   ) =>
     ApiResponder.error(res, {
       status: 409,
+      code: options?.code,
       message: options?.message ?? 'Conflict',
       errors: options?.errors,
       meta: options?.meta,
@@ -167,11 +200,13 @@ export const ApiResponder = {
     options: {
       errors: ApiErrorDetail[];
       message?: string;
+      code?: string;
       meta?: Partial<ApiMeta>;
     }
   ) =>
     ApiResponder.error(res, {
       status: 422,
+      code: options.code,
       message: options.message ?? 'Validation error',
       errors: options.errors,
       meta: options.meta,
@@ -179,13 +214,19 @@ export const ApiResponder = {
 
   internalError: (
     res: Response,
-    options?: { message?: string; error?: unknown; meta?: Partial<ApiMeta> }
+    options?: {
+      message?: string;
+      code?: string;
+      error?: unknown;
+      meta?: Partial<ApiMeta>;
+    }
   ) => {
     if (process.env.NODE_ENV === 'development' && options?.error) {
       console.error('Internal Server Error:', options.error);
     }
     ApiResponder.error(res, {
       status: 500,
+      code: options?.code,
       message:
         options?.message ?? 'Internal server error. Please try again later.',
       meta: options?.meta,
@@ -195,8 +236,12 @@ export const ApiResponder = {
 
 /**
  * Convierte errores de Zod a ApiErrorDetail[]
+ * Mapea códigos de error a mensajes descriptivos
  */
 export function formatZodErrors(zodError: unknown): ApiErrorDetail[] {
+  // Combinar mapeos de mensajes
+  const allMessages = { ...AUTH_ERROR_MESSAGES, ...USER_ERROR_MESSAGES };
+
   if (
     typeof zodError === 'object' &&
     zodError !== null &&
@@ -209,10 +254,14 @@ export function formatZodErrors(zodError: unknown): ApiErrorDetail[] {
         message: string;
         code?: string;
       };
+
+      // El código viene en el message (PASSWORD_SPECIAL_CHAR, EMAIL_INVALID, etc)
+      const errorCode = zodIssue.message;
+
       return {
         field: zodIssue.path?.join('.') || undefined,
-        issue: zodIssue.message,
-        code: zodIssue.code?.toUpperCase(),
+        code: errorCode,
+        message: allMessages[errorCode] || errorCode,
       };
     });
   }

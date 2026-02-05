@@ -1,64 +1,68 @@
 import type { Request, Response } from 'express';
 import { loginSchema } from './schemas.js';
-import prisma from '../../src/lib/db/prisma.js';
-import { comparePassword } from '../../src/lib/auth/password.js';
-import { generateTokens } from '../../src/lib/auth/jwt.js';
+import { AUTH_ERROR_CODES, AUTH_SUCCESS_CODES } from './constants.js';
+import supabase from '../../src/lib/supabase.js';
 import {
   ApiResponder,
   formatZodErrors,
 } from '../../src/utils/response-handler.js';
 
 export default async function handler(req: Request, res: Response) {
-  const { validationError, unauthorized, forbidden, success, internalError } =
+  const { validationError, unauthorized, success, internalError, notFound } =
     ApiResponder;
 
   try {
     // Validate input
     const validatedData = loginSchema.parse(req.body);
 
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email: validatedData.email },
+    // Authenticate with Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: validatedData.email,
+      password: validatedData.password,
     });
 
-    if (!user) {
-      return unauthorized(res, { message: 'Invalid credentials' });
+    if (error || !data.session) {
+      return unauthorized(res, {
+        message: 'Invalid credentials',
+        code: AUTH_ERROR_CODES.INVALID_CREDENTIALS,
+      });
     }
 
-    // Check if user is active
-    if (!user.isActive) {
-      return forbidden(res, { message: 'Account is deactivated' });
+    // Fetch user data from Supabase for additional information
+    const { data: userData, error: userError } = await supabase
+      .from('user')
+      .select('*')
+      .eq('email', validatedData.email)
+      .single();
+
+    if (userError || !userData) {
+      return notFound(res, {
+        message: 'User not found',
+        code: AUTH_ERROR_CODES.USER_NOT_FOUND,
+      });
     }
 
-    // Verify password
-    const isPasswordValid = await comparePassword(
-      validatedData.password,
-      user.password
-    );
-    if (!isPasswordValid) {
-      return unauthorized(res, { message: 'Invalid credentials' });
-    }
-
-    // Generate tokens
-    const tokens = generateTokens({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    });
+    // Get role from user_metadata (already in data.user from auth)
+    const role = (data.user.user_metadata?.role as string) || 'USER';
 
     // Success response
     return success(res, {
       data: {
         user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          isActive: user.isActive,
+          id: userData.id,
+          email: userData.email,
+          name: userData.name,
+          lastName: userData.lastName,
+          role,
+          isActive: true,
         },
-        tokens,
+        tokens: {
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        },
       },
       message: 'Login successful',
+      code: AUTH_SUCCESS_CODES.LOGIN_SUCCESS,
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -67,6 +71,7 @@ export default async function handler(req: Request, res: Response) {
       return validationError(res, {
         errors: formatZodErrors(error),
         message: 'Validation error',
+        code: AUTH_ERROR_CODES.INVALID_EMAIL,
       });
     }
 

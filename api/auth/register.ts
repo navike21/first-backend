@@ -1,63 +1,71 @@
 import type { Request, Response } from 'express';
 import { registerSchema } from './schemas.js';
-import prisma from '../../src/lib/db/prisma.js';
-import { hashPassword } from '../../src/lib/auth/password.js';
-import { generateTokens } from '../../src/lib/auth/jwt.js';
+import { AUTH_ERROR_CODES, AUTH_SUCCESS_CODES } from './constants.js';
+import supabase from '../../src/lib/supabase.js';
 import {
   ApiResponder,
   formatZodErrors,
 } from '../../src/utils/response-handler.js';
 
 export default async function handler(req: Request, res: Response) {
-  const { badRequest, created, validationError, internalError } = ApiResponder;
+  const { notFound, created, validationError, internalError } = ApiResponder;
 
   try {
-    // 1️⃣ Validar input
-    const { email, name, password } = registerSchema.parse(req.body);
+    // Validate input
+    const { email, password } = registerSchema.parse(req.body);
 
-    // 2️⃣ Verificar si el usuario ya existe
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
+    // Check if user exists in Supabase
+    const { data: existingUser, error: userError } = await supabase
+      .from('user')
+      .select('*')
+      .eq('email', email)
+      .single();
 
-    if (existingUser) {
-      return badRequest(res, {
-        message: 'Email already registered',
+    if (userError || !existingUser) {
+      return notFound(res, {
+        message: 'User not found. Please create a user account first.',
+        code: AUTH_ERROR_CODES.USER_NOT_FOUND,
       });
     }
 
-    // 3️⃣ Hash de la contraseña
-    const hashedPassword = await hashPassword(password);
-
-    // 4️⃣ Crear usuario
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name,
-        role: 'USER',
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
+    // Sign up with Supabase Auth - role stored in user_metadata
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          userId: existingUser.id,
+          role: 'USER',
+          name: existingUser.name,
+          lastName: existingUser.lastName,
+        },
       },
     });
 
-    // 5️⃣ Generar tokens
-    const tokens = generateTokens({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    });
+    if (error || !data.user) {
+      console.error('Supabase signup error:', error);
+      return internalError(res, {
+        error: error?.message || 'Failed to create authentication',
+        message: 'Authentication registration failed',
+      });
+    }
 
-    // 6️⃣ Responder
+    // Respond
     return created(res, {
-      data: { user, tokens },
-      message: 'User registered successfully',
+      data: {
+        user: {
+          id: existingUser.id,
+          email: existingUser.email,
+          name: existingUser.name,
+          lastName: existingUser.lastName,
+        },
+        tokens: {
+          access_token: data.session?.access_token || null,
+          refresh_token: data.session?.refresh_token || null,
+        },
+      },
+      message: 'Authentication registered successfully',
+      code: AUTH_SUCCESS_CODES.REGISTRATION_SUCCESS,
     });
   } catch (error) {
     console.error('Registration error:', error);
@@ -65,7 +73,8 @@ export default async function handler(req: Request, res: Response) {
     if (error instanceof Error && error.name === 'ZodError') {
       return validationError(res, {
         errors: formatZodErrors(error),
-        message: 'Validation error',
+        message: 'Registration failed due to validation errors',
+        code: AUTH_ERROR_CODES.REGISTRATION_FAILED,
       });
     }
 

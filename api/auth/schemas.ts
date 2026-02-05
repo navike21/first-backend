@@ -1,27 +1,29 @@
 import { z } from 'zod';
+import { AUTH_VALIDATION_MESSAGES } from './constants.js';
 
 export const registerSchema = z.object({
-  email: z.email('Invalid email address'),
+  email: z.email(AUTH_VALIDATION_MESSAGES.EMAIL_INVALID),
   password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/\d/, 'Password must contain at least one number')
+    .string(AUTH_VALIDATION_MESSAGES.PASSWORD_REQUIRED)
+    .min(8, AUTH_VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH)
+    .regex(/[A-Z]/, AUTH_VALIDATION_MESSAGES.PASSWORD_UPPERCASE)
+    .regex(/[a-z]/, AUTH_VALIDATION_MESSAGES.PASSWORD_LOWERCASE)
+    .regex(/\d/, AUTH_VALIDATION_MESSAGES.PASSWORD_NUMBER)
     .regex(
       /[!@#$%^&*(),.?":{}|<>]/,
-      'Password must contain at least one special character'
+      AUTH_VALIDATION_MESSAGES.PASSWORD_SPECIAL_CHAR
     ),
-  name: z.string().min(2, 'Name must be at least 2 characters'),
 });
 
 export const loginSchema = z.object({
-  email: z.email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.email(AUTH_VALIDATION_MESSAGES.EMAIL_INVALID),
+  password: z.string().min(1, AUTH_VALIDATION_MESSAGES.PASSWORD_REQUIRED),
 });
 
 export const refreshTokenSchema = z.object({
-  refreshToken: z.string().min(1, 'Refresh token is required'),
+  refreshToken: z
+    .string()
+    .min(1, AUTH_VALIDATION_MESSAGES.REFRESH_TOKEN_REQUIRED),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

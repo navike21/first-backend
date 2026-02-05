@@ -1,11 +1,13 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import { ApiResponder } from '../src/utils/response-handler.js';
 
 // Routers
 import authRouter from './auth/router.js';
-import { ApiResponder } from '../src/utils/response-handler.js';
+import userRouter from './users/router.js';
 
 dotenv.config({ path: process.env.DOTENV_CONFIG_PATH ?? '.env' });
 
@@ -33,7 +35,8 @@ app.get('/health', (_, res) => {
 });
 
 // Routes
-app.use('/api/auth', authRouter);
+app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 // 404 handler
 app.use((_, res) => {

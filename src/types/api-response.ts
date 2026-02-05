@@ -37,9 +37,9 @@ export type ResponseType = 'success' | 'error' | 'warning' | 'info';
 // Error individual
 // ------------------------
 export interface ApiErrorDetail {
-  readonly field?: string; // campo opcional asociado al error
-  readonly issue: string; // descripción obligatoria del error
-  readonly code?: string; // código interno opcional
+  readonly field?: string; // campo del formulario donde ocurrió el error
+  readonly code: string; // código de error (ej: EMAIL_INVALID, PASSWORD_MIN_LENGTH)
+  readonly message: string; // mensaje descriptivo del error
 }
 
 // ------------------------
@@ -63,6 +63,7 @@ export interface ApiMeta {
 export interface ApiResponse<TData = unknown> {
   readonly status: HttpStatusCode; // código HTTP
   readonly type: ResponseType; // tipo de mensaje
+  readonly code?: string; // código de error interno (p.ej. USER_NOT_FOUND)
   readonly message: string; // mensaje amigable
   readonly data: TData | null; // datos o null si hay error
   readonly errors?: ApiErrorDetail[] | null; // detalles de errores, opcional

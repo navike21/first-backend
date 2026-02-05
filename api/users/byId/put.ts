@@ -1,6 +1,7 @@
 import type { Response } from 'express';
 import { ZodError } from 'zod';
 import type { AuthRequest } from '../../../src/middleware/auth.js';
+import { USER_ERROR_CODES, USER_SUCCESS_CODES } from '../constants.js';
 import {
   ApiResponder,
   formatZodErrors,
@@ -19,7 +20,14 @@ export async function handleUpdateUser(
   if (!userId) {
     return validationError(res, {
       message: 'User ID is required',
-      errors: [{ field: 'id', issue: 'User ID is required', code: 'REQUIRED' }],
+      errors: [
+        {
+          field: 'id',
+          code: USER_ERROR_CODES.INVALID_USER_ID,
+          message: 'User ID is required',
+        },
+      ],
+      code: USER_ERROR_CODES.INVALID_USER_ID,
     });
   }
 
@@ -29,7 +37,10 @@ export async function handleUpdateUser(
     // Check if user exists
     const existingUser = await getUserById(userId);
     if (!existingUser) {
-      return notFound(res, { resource: 'User' });
+      return notFound(res, {
+        resource: 'User',
+        code: USER_ERROR_CODES.USER_NOT_FOUND,
+      });
     }
 
     // Check if email is being changed and if it's already taken
@@ -41,10 +52,11 @@ export async function handleUpdateUser(
           errors: [
             {
               field: 'email',
-              issue: 'This email is already registered',
-              code: 'EMAIL_EXISTS',
+              code: USER_ERROR_CODES.DUPLICATE_EMAIL,
+              message: 'This email is already registered',
             },
           ],
+          code: USER_ERROR_CODES.DUPLICATE_EMAIL,
         });
       }
     }
@@ -54,12 +66,14 @@ export async function handleUpdateUser(
     return success(res, {
       message: 'User updated successfully',
       data: { user: updatedUser },
+      code: USER_SUCCESS_CODES.USER_UPDATED,
     });
   } catch (error) {
     if (error instanceof ZodError) {
       return validationError(res, {
         message: 'Validation failed',
         errors: formatZodErrors(error),
+        code: USER_ERROR_CODES.INVALID_USER_DATA,
       });
     }
 
