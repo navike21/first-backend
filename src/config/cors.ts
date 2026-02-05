@@ -2,6 +2,7 @@
  * @copyright Copyright navike21
  * @license Apache-2.0
  */
+
 import cors, { CorsOptions } from 'cors';
 
 export const corsOptions: CorsOptions = {
