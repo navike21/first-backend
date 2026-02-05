@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { refreshTokenSchema } from './schemas.js';
-import { generateTokens, verifyRefreshToken } from '../../src/lib/auth/jwt.js';
-import prisma from '../../src/lib/db/prisma.js';
+import { AUTH_ERROR_CODES, AUTH_SUCCESS_CODES } from './constants.js';
+import supabase from '../../src/lib/supabase.js';
 import {
   ApiResponder,
   formatZodErrors,
@@ -14,31 +14,28 @@ export default async function handler(req: Request, res: Response) {
     // Validate input
     const validatedData = refreshTokenSchema.parse(req.body);
 
-    // Verify refresh token
-    const payload = verifyRefreshToken(validatedData.refreshToken);
-
-    // Check if user exists and is active
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
+    // Refresh session with Supabase using refresh token
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token: validatedData.refreshToken,
     });
 
-    if (!user?.isActive) {
+    if (error || !data.session || !data.user) {
       return unauthorized(res, {
-        message: 'Invalid refresh token',
+        message: 'Invalid or expired refresh token',
+        code: AUTH_ERROR_CODES.INVALID_TOKEN,
       });
     }
 
-    // Generate new tokens
-    const tokens = generateTokens({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    });
-
-    // Success response
+    // Success response with new tokens (role is in user_metadata)
     return success(res, {
-      data: { tokens },
+      data: {
+        tokens: {
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        },
+      },
       message: 'Tokens refreshed successfully',
+      code: AUTH_SUCCESS_CODES.TOKEN_REFRESH_SUCCESS,
     });
   } catch (error) {
     console.error('Refresh token error:', error);
@@ -48,6 +45,7 @@ export default async function handler(req: Request, res: Response) {
       return validationError(res, {
         errors: formatZodErrors(error),
         message: 'Validation error',
+        code: AUTH_ERROR_CODES.INVALID_TOKEN,
       });
     }
 
