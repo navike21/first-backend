@@ -1,3 +1,8 @@
+/**
+ * @copyright Copyright navike21
+ * @license Apache-2.0
+ */
+
 import router from '@Routes/main';
 import { app } from './app';
 import { connectToDatabase, disconnectFromDatabase } from './dataBase';

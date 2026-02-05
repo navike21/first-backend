@@ -1,3 +1,8 @@
+/**
+ * @copyright Copyright navike21
+ * @license Apache-2.0
+ */
+
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
