@@ -1,15 +1,11 @@
-/**
- * @copyright Copyright navike21
- * @license Apache-2.0
- */
-
+import { SySTEM_ENVIRONMENT } from '@Constants/ systemEnvironment';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const configEnvironment = {
 	PORT: process.env.PORT || 3000,
-	NODE_ENV: process.env.NODE_ENV || 'development',
+	NODE_ENV: process.env.NODE_ENV || SySTEM_ENVIRONMENT.DEVELOPMENT,
 	WHITELISTED_DOMAINS: process.env.WHITELISTED_DOMAINS
 		? process.env.WHITELISTED_DOMAINS.split(',')
 				.map((domain) => domain.trim())

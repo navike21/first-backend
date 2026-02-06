@@ -1,8 +1,3 @@
-/**
- * @copyright Copyright navike21
- * @license Apache-2.0
- */
-
 import rateLimit from 'express-rate-limit';
 
 const limiter = rateLimit({

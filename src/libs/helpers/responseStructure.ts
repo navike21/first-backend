@@ -1,10 +1,7 @@
-/**
- * @copyright Copyright navike21
- * @license Apache-2.0
- */
-
 import { formatISO } from 'date-fns';
 import { Response } from 'express';
+import { isDevelopmentEnvironment } from './systemEnvironment';
+import { logError } from './log';
 
 interface ApiResponse<T> {
 	success: boolean;
@@ -39,13 +36,14 @@ interface ErrorResponseOptions {
 	details?: unknown;
 }
 
+const { isDevelopment } = isDevelopmentEnvironment();
+
 export const successResponse = <T>(
 	res: Response,
 	options: SuccessResponseOptions<T>,
 ): Response<ApiResponse<T>> => {
 	const { data, message = 'OK', statusCode = 200 } = options;
 
-	// In the successResponse function:
 	const response: ApiResponse<T> = {
 		success: true,
 		statusCode,
@@ -79,6 +77,10 @@ export const errorResponse = (
 			timestamp: formatISO(new Date()),
 		},
 	};
+
+	if (isDevelopment) {
+		logError(response);
+	}
 
 	return res.status(statusCode).json(response);
 };
