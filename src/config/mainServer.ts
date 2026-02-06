@@ -3,16 +3,19 @@
  * @license Apache-2.0
  */
 
-import router from '@Routes/main';
-import { app } from './app';
-import { connectToDatabase, disconnectFromDatabase } from './dataBase';
-import configEnvironment from './environments';
+import mainRouter from '@Routes/route';
+import {
+	connectToDatabase,
+	disconnectFromDatabase,
+} from '@Connection/dataBase';
 import { logError, logInfo } from '@Helpers/log';
+import { app } from './app';
+import configEnvironment from './environments';
 
-export const startServer = async () => {
+export async function startServer(): Promise<void> {
 	try {
 		await connectToDatabase();
-		app.use(router);
+		app.use(mainRouter());
 		app.listen(configEnvironment.PORT, () => {
 			logInfo(
 				`Server is running on port ${configEnvironment.PORT} in ${configEnvironment.NODE_ENV} mode.`,
@@ -22,9 +25,9 @@ export const startServer = async () => {
 		logError(`Failed to start server: ${error as Error}`);
 		process.exit(1);
 	}
-};
+}
 
-export const handleServerShutdown = async () => {
+export async function handleServerShutdown(): Promise<void> {
 	try {
 		logInfo('Shutting down server gracefully...');
 		await disconnectFromDatabase();
@@ -33,4 +36,4 @@ export const handleServerShutdown = async () => {
 		logError(`Error during server shutdown: ${error as Error}`);
 		process.exit(1);
 	}
-};
+}

@@ -3,8 +3,8 @@
  * @license Apache-2.0
  */
 
-import { Response } from 'express';
 import { formatISO } from 'date-fns';
+import { Response } from 'express';
 
 interface ApiResponse<T> {
 	success: boolean;
