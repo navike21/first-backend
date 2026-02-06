@@ -1,11 +1,6 @@
-/**
- * @copyright Copyright navike21
- * @license Apache-2.0
- */
-
 import mongoose, { type ConnectOptions } from 'mongoose';
 
-import { logError, logInfo } from '@Helpers/log';
+import { logError, logInfo } from 'src/libs/helpers/log';
 import configEnvironment from '@Config/environments';
 
 const mongoOptions: ConnectOptions = {

@@ -13,7 +13,8 @@
 		"paths": {
 			"@Config/*": ["src/config/*"],
 			"@Connection/*": ["src/connection/*"],
-			"@Helpers/*": ["src/helpers/*"],
+			"@Constants/*": ["src/libs/constants/*"],
+			"@Helpers/*": ["src/libs/helpers/*"],
 			"@Routes/*": ["src/routes/*"],
 			"@Types/*": ["src/libs/types/*"],
 			"@Modules/*": ["src/modules/*"]

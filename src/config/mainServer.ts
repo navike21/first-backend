@@ -1,14 +1,9 @@
-/**
- * @copyright Copyright navike21
- * @license Apache-2.0
- */
-
 import mainRouter from '@Routes/route';
 import {
 	connectToDatabase,
 	disconnectFromDatabase,
 } from '@Connection/dataBase';
-import { logError, logInfo } from '@Helpers/log';
+import { logError, logInfo } from 'src/libs/helpers/log';
 import { app } from './app';
 import configEnvironment from './environments';
 
