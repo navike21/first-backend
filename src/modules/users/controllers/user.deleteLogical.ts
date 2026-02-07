@@ -1,17 +1,20 @@
-import { asyncHandler } from '@Middlewares/asyncHandler';
 import { QueryFilter } from 'mongoose';
 
-import { UserSchema } from '../types/user.schema';
-import UserModel from '../models/user.modelDB';
+import { ACTIVE, DELETED } from '@Constants/statusRegister';
+import { asyncHandler } from '@Middlewares/asyncHandler';
 import setThrowError from '@Helpers/setThrowError';
 import { successResponse } from '@Helpers/responseStructure';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 
-export const userSearchById = asyncHandler(async (request, response) => {
+import { UserSchema } from '../types/user.schema';
+import UserModel from '../models/user.modelDB';
+
+export const userDeleteLogical = asyncHandler(async (request, response) => {
 	const { id } = request.params;
 
 	const query: QueryFilter<UserSchema> = {
 		id,
+		status: ACTIVE,
 	};
 	const user = await UserModel.findOne(query).lean();
 
@@ -23,10 +26,13 @@ export const userSearchById = asyncHandler(async (request, response) => {
 		});
 	}
 
+	user.status = DELETED;
+	await UserModel.findOneAndUpdate(query, user, { new: true }).lean();
+
 	successResponse(response, {
 		statusCode: 200,
-		message: 'User found successfully',
-		code: 'SUCCESS_USER_FOUND',
+		message: 'User deleted successfully',
+		code: 'SUCCESS_USER_DELETED',
 		data: cleanMongoFields(user),
 	});
 });
