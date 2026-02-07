@@ -17,7 +17,8 @@
 			"@Helpers/*": ["src/libs/helpers/*"],
 			"@Routes/*": ["src/routes/*"],
 			"@Types/*": ["src/libs/types/*"],
-			"@Modules/*": ["src/modules/*"]
+			"@Modules/*": ["src/modules/*"],
+			"@Middlewares/*": ["src/libs/middlewares/*"]
 		}
 	},
 	"include": ["src/**/*"],

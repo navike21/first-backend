@@ -6,11 +6,15 @@ import {
 import { logError, logInfo } from 'src/libs/helpers/log';
 import { app } from './app';
 import configEnvironment from './environments';
+import { errorMiddleware } from '@Middlewares/errorMiddleware';
 
 export async function startServer(): Promise<void> {
 	try {
 		await connectToDatabase();
+
 		app.use(mainRouter());
+		app.use(errorMiddleware);
+
 		app.listen(configEnvironment.PORT, () => {
 			logInfo(
 				`Server is running on port ${configEnvironment.PORT} in ${configEnvironment.NODE_ENV} mode.`,
