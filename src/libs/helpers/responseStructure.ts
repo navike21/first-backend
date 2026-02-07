@@ -15,13 +15,14 @@ export const successResponse = <T>(
 	res: Response,
 	options: SuccessResponseOptions<T>,
 ): Response<ApiResponse<T>> => {
-	const { data, message = 'OK', statusCode = 200, code } = options;
+	const { data, message = 'OK', statusCode = 200, code, meta } = options;
 
 	const response: ApiResponse<T> = {
 		code,
 		data,
 		message,
 		meta: {
+			...meta,
 			timestamp: formatISO(new Date()),
 		},
 		statusCode,
