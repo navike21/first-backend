@@ -8,7 +8,6 @@ export const validateSchema =
 	<T>(schema: ZodType<T>) =>
 	(req: Request, _: Response, next: NextFunction) => {
 		const dateOfBirth = req.body?.personalInformation?.dateOfBirth;
-		console.log('Received dateOfBirth:', isValidISODateString(dateOfBirth));
 
 		const parseBody: UserSchema = {
 			...req.body,
