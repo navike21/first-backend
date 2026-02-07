@@ -1,7 +1,6 @@
 import { errorResponse as errorResponseSend } from '@Helpers/responseStructure';
 import { ErrorResponseOptions } from '@Types/responseStructure';
 import type { NextFunction, Request, Response } from 'express';
-import { Error } from 'mongoose';
 
 interface CustomError extends ErrorResponseOptions {
 	errorResponse: unknown;
@@ -14,18 +13,20 @@ export const errorMiddleware = (
 	_next: NextFunction,
 ) => {
 	const errorData = JSON.stringify(error);
-
 	const errorDataMongoose = JSON.parse(errorData) as CustomError;
 
 	if (Object.keys(errorDataMongoose).length) {
 		const { code, statusCode, message, details, errorResponse } =
 			errorDataMongoose;
-
 		return errorResponseSend(res, {
 			statusCode: statusCode || 500,
 			code,
 			message,
-			details: errorResponse || details,
+			details:
+				message ||
+				(error instanceof Error && error.message) ||
+				errorResponse ||
+				details,
 		});
 	}
 
@@ -34,10 +35,13 @@ export const errorMiddleware = (
 		genericError.message,
 	) as ErrorResponseOptions;
 
-	return errorResponseSend(res, {
-		statusCode: errorDataGeneric.statusCode || 500,
-		code: errorDataGeneric.code,
-		message: errorDataGeneric.message,
-		details: errorDataGeneric.details,
-	});
+	if (Object.keys(errorDataGeneric).length) {
+		const { code, message, statusCode, details } = errorDataGeneric;
+		return errorResponseSend(res, {
+			statusCode: statusCode || 500,
+			code,
+			message,
+			details,
+		});
+	}
 };

@@ -9,16 +9,8 @@ import { emailValidate } from '@Helpers/emailValidate';
 import { dateValidate } from '@Helpers/dateValidate';
 
 import { UserSchema } from '../types/user.schema';
-import {
-	ADMIN_INFORMATION,
-	CONTACT_INFORMATION,
-	FIRST_NAME,
-	LAST_NAME,
-	PERSONAL_INFORMATION,
-	STATUS,
-} from '../constants/messagesCodes';
 
-const userSchema = new Schema<UserSchema>(
+const UserModel = new Schema<UserSchema>(
 	{
 		id: {
 			type: String,
@@ -28,33 +20,30 @@ const userSchema = new Schema<UserSchema>(
 		},
 		firstName: {
 			type: String,
-			required: [true, FIRST_NAME.REQUIRED],
-			maxLength: [50, FIRST_NAME.MAX_LENGTH],
-			minLength: [2, FIRST_NAME.MIN_LENGTH],
+			required: true,
+			maxLength: 50,
+			minLength: 2,
 		},
 		lastName: {
 			type: String,
-			required: [true, LAST_NAME.REQUIRED],
-			maxLength: [100, LAST_NAME.MAX_LENGTH],
-			minLength: [2, LAST_NAME.MIN_LENGTH],
+			required: true,
+			maxLength: 100,
+			minLength: 2,
 		},
 		adminInformation: {
 			required: false,
 			type: {
 				password: {
 					type: String,
-					required: [true, ADMIN_INFORMATION.PASSWORD.REQUIRED],
-					minLength: [8, ADMIN_INFORMATION.PASSWORD.MIN_LENGTH],
+					required: true,
+					minLength: 8,
 					select: false,
 				},
 				role: {
 					type: [String],
-					required: [true, ADMIN_INFORMATION.ROLE.REQUIRED],
+					required: true,
 					default: [USER_CUSTOMER],
-					enum: {
-						values: USER_ROLES_ARRAY,
-						message: ADMIN_INFORMATION.ROLE.ENUM,
-					},
+					enum: USER_ROLES_ARRAY,
 				},
 			},
 		},
@@ -63,26 +52,25 @@ const userSchema = new Schema<UserSchema>(
 			type: {
 				email: {
 					type: String,
-					required: [true, CONTACT_INFORMATION.EMAIL.REQUIRED],
-					unique: [true, CONTACT_INFORMATION.EMAIL.UNIQUE],
+					required: true,
+					unique: true,
 					validate: {
 						validator: (value: string) => {
 							return emailValidate(value);
 						},
-						message: CONTACT_INFORMATION.EMAIL.VALID,
 					},
 				},
 				phoneNumber: {
 					type: Number,
 					required: false,
-					minLength: [9, CONTACT_INFORMATION.PHONE_NUMBER.MIN_LENGTH],
-					maxLength: [15, CONTACT_INFORMATION.PHONE_NUMBER.MAX_LENGTH],
+					minLength: 9,
+					maxLength: 15,
 				},
 				address: {
 					type: String,
 					required: false,
-					maxLength: [300, CONTACT_INFORMATION.ADDRESS.MAX_LENGTH],
-					minLength: [5, CONTACT_INFORMATION.ADDRESS.MIN_LENGTH],
+					maxLength: 300,
+					minLength: 5,
 				},
 			},
 		},
@@ -97,7 +85,6 @@ const userSchema = new Schema<UserSchema>(
 							if (!value) return true;
 							return urlValidate(value);
 						},
-						message: PERSONAL_INFORMATION.PROFILE_PICTURE.VALID,
 					},
 					select: false,
 				},
@@ -109,16 +96,12 @@ const userSchema = new Schema<UserSchema>(
 							if (!value) return true;
 							return dateValidate(value);
 						},
-						message: PERSONAL_INFORMATION.DATE_OF_BIRTH.VALID,
 					},
 				},
 				gender: {
 					type: String,
-					required: [true, PERSONAL_INFORMATION.GENDER.REQUIRED],
-					enum: {
-						values: USER_GENDER_ARRAY,
-						message: PERSONAL_INFORMATION.GENDER.VALID,
-					},
+					required: true,
+					enum: USER_GENDER_ARRAY,
 				},
 			},
 		},
@@ -201,10 +184,7 @@ const userSchema = new Schema<UserSchema>(
 			type: String,
 			required: true,
 			default: ACTIVE,
-			enum: {
-				values: STATUS_REGISTER_ARRAY,
-				message: STATUS.ENUM,
-			},
+			enum: STATUS_REGISTER_ARRAY,
 		},
 	},
 	{
@@ -212,4 +192,4 @@ const userSchema = new Schema<UserSchema>(
 	},
 );
 
-export default model<UserSchema>('User', userSchema);
+export default model<UserSchema>('User', UserModel);

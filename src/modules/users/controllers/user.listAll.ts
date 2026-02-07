@@ -1,13 +1,14 @@
 import { QueryFilter } from 'mongoose';
-import { asyncHandler } from '@Middlewares/asyncHandler';
 
-import userSchema from '../models/user.modelDB';
+import { ACTIVE } from '@Constants/statusRegister';
 import { successResponse } from '@Helpers/responseStructure';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
-import { ACTIVE } from '@Constants/statusRegister';
-import { UserSchema } from '../types/user.schema';
 import { metaInformation, paramsInformation } from '@Helpers/metaInformation';
 import setThrowError from '@Helpers/setThrowError';
+import { asyncHandler } from '@Middlewares/asyncHandler';
+
+import UserModel from '../models/user.modelDB';
+import { UserSchema } from '../types/user.schema';
 
 export const userListAll = asyncHandler(async (request, response) => {
 	const { limitNumber, pageNumber, statusParam, skip } =
@@ -18,8 +19,8 @@ export const userListAll = asyncHandler(async (request, response) => {
 	};
 
 	const [data, total] = await Promise.all([
-		userSchema.find(query).skip(skip).limit(limitNumber).lean(),
-		userSchema.countDocuments(query),
+		UserModel.find(query).skip(skip).limit(limitNumber).lean(),
+		UserModel.countDocuments(query),
 	]);
 
 	if (data.length === 0) {
