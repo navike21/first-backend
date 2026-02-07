@@ -2,19 +2,21 @@ import setThrowError from '@Helpers/setThrowError';
 import type { Request, Response, NextFunction } from 'express';
 import type { ZodType } from 'zod';
 import { UserSchema } from '../types/user.schema';
+import { isValidISODateString } from '@Helpers/isValidISODateString';
 
 export const validateSchema =
 	<T>(schema: ZodType<T>) =>
 	(req: Request, _: Response, next: NextFunction) => {
 		const dateOfBirth = req.body?.personalInformation?.dateOfBirth;
+		console.log('Received dateOfBirth:', isValidISODateString(dateOfBirth));
+
 		const parseBody: UserSchema = {
 			...req.body,
 			personalInformation: {
 				...req.body.personalInformation,
-				dateOfBirth:
-					typeof req.body.personalInformation.dateOfBirth === 'string'
-						? new Date(dateOfBirth)
-						: dateOfBirth,
+				dateOfBirth: isValidISODateString(dateOfBirth)
+					? new Date(dateOfBirth)
+					: dateOfBirth,
 			},
 		};
 		const { data, success, error } = schema.safeParse(parseBody);
