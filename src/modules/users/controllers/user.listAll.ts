@@ -26,8 +26,8 @@ export const userListAll = asyncHandler(async (request, response) => {
 	if (data.length === 0) {
 		setThrowError({
 			statusCode: 404,
-			message: 'No users found',
-			code: 'error_no_users_found',
+			message: 'User list empty',
+			code: 'USER_LIST_EMPTY',
 		});
 	}
 
@@ -41,8 +41,8 @@ export const userListAll = asyncHandler(async (request, response) => {
 
 	successResponse(response, {
 		statusCode: 200,
-		message: 'User List Successfully',
-		code: 'success_user_list',
+		message: 'User list retrieved successfully',
+		code: 'SUCCESS_USER_LIST',
 		data: cleanedUserList,
 		meta,
 	});
