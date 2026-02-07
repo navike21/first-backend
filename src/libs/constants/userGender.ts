@@ -1,6 +1,6 @@
 export const FEMALE = 'female';
 export const MALE = 'male';
 
-export type USER_GENDER = typeof FEMALE | typeof MALE;
+export type UserGender = typeof FEMALE | typeof MALE;
 
-export const USER_GENDER_ARRAY: USER_GENDER[] = [FEMALE, MALE];
+export const USER_GENDER_ARRAY: UserGender[] = [FEMALE, MALE];

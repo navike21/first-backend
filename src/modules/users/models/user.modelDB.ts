@@ -3,6 +3,7 @@ import { v6 as uuid } from 'uuid';
 
 import { USER_CUSTOMER, USER_ROLES_ARRAY } from '@Constants/userRole';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
+import { ACTIVE, STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 import { urlValidate } from '@Helpers/urlValidate';
 import { emailValidate } from '@Helpers/emailValidate';
 import { dateValidate } from '@Helpers/dateValidate';
@@ -14,6 +15,7 @@ import {
 	FIRST_NAME,
 	LAST_NAME,
 	PERSONAL_INFORMATION,
+	STATUS,
 } from '../constants/messagesCodes';
 
 const userSchema = new Schema<UserSchema>(
@@ -194,6 +196,15 @@ const userSchema = new Schema<UserSchema>(
 						},
 					},
 				},
+			},
+		},
+		status: {
+			type: String,
+			required: true,
+			default: ACTIVE,
+			enum: {
+				values: STATUS_REGISTER_ARRAY,
+				message: STATUS.ENUM,
 			},
 		},
 	},

@@ -1,4 +1,5 @@
-import { USER_ROLES } from '@Constants/userRole';
+import { StatusRegister } from '@Constants/statusRegister';
+import { UserRoles } from '@Constants/userRole';
 
 export interface UserSchema {
 	id: string;
@@ -6,7 +7,7 @@ export interface UserSchema {
 	lastName: string;
 	adminInformation: {
 		password: string;
-		role: USER_ROLES[];
+		role: UserRoles[];
 	};
 	contactInformation: {
 		email: string;
@@ -27,4 +28,5 @@ export interface UserSchema {
 		youTube?: string;
 		website?: string;
 	};
+	status: StatusRegister;
 }
