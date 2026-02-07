@@ -6,34 +6,37 @@ import { successResponse } from '@Helpers/responseStructure';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { ACTIVE } from '@Constants/statusRegister';
 import { UserSchema } from '../types/user.schema';
+import { metaInformation, paramsInformation } from '@Helpers/metaInformation';
+import setThrowError from '@Helpers/setThrowError';
 
 export const userListAll = asyncHandler(async (request, response) => {
-	const { limit = 10, page = 1, status } = request.query;
-
-	const limitNumber = Number(limit);
-	const pageNumber = Number(page);
+	const { limitNumber, pageNumber, statusParam, skip } =
+		paramsInformation(request);
 
 	const query: QueryFilter<UserSchema> = {
-		status: status ?? ACTIVE,
+		status: statusParam ?? ACTIVE,
 	};
-
-	const skip = (pageNumber - 1) * limitNumber;
 
 	const [data, total] = await Promise.all([
 		userSchema.find(query).skip(skip).limit(limitNumber).lean(),
 		userSchema.countDocuments(query),
 	]);
 
-	const meta = {
+	if (data.length === 0) {
+		setThrowError({
+			statusCode: 404,
+			message: 'No users found',
+			code: 'error_no_users_found',
+		});
+	}
+
+	const meta = metaInformation({
 		page: pageNumber,
 		limit: limitNumber,
 		total,
-		totalPages: Math.ceil(total / limitNumber),
-	};
-
-	const cleanedUserList = data.map((item) => {
-		return cleanMongoFields(item);
 	});
+
+	const cleanedUserList = data.map((item) => cleanMongoFields(item));
 
 	successResponse(response, {
 		statusCode: 200,
