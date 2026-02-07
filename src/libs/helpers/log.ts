@@ -2,7 +2,7 @@ import { isDevelopmentEnvironment } from './systemEnvironment';
 
 const { isDevelopment } = isDevelopmentEnvironment();
 
-type Log = string | object;
+export type Log = string | object;
 
 function formatMessage(message: Log): string {
 	return typeof message === 'object'
