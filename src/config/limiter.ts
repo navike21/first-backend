@@ -1,13 +1,23 @@
 import rateLimit from 'express-rate-limit';
 
-const limiter = rateLimit({
-	windowMs: 60000, // 1 minute
-	max: 60, // limit each IP to 60 requests per windowMs
-	standardHeaders: 'draft-8', // Return rate limit info in the `RateLimit-*` headers
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+export const globalLimiter = rateLimit({
+	windowMs: 60_000,
+	max: 100,
+	standardHeaders: 'draft-8',
+	legacyHeaders: false,
 	message: {
-		error: 'Too many requests, please try again later.',
+		success: false,
+		statusCode: 429,
+		message: 'Too many requests, please try again later.',
 	},
 });
 
-export default limiter;
+export const authLimiter = rateLimit({
+	windowMs: 60_000,
+	max: 5,
+	message: {
+		success: false,
+		statusCode: 429,
+		message: 'Too many login attempts.',
+	},
+});
