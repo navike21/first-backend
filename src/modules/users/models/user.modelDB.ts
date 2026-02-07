@@ -24,7 +24,6 @@ const userSchema = new Schema<UserSchema>(
 			type: String,
 			required: true,
 			unique: true,
-			select: false,
 			default: uuid(),
 		},
 		firstName: {

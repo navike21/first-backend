@@ -5,7 +5,7 @@ export interface ApiResponse<T> {
 	data?: T;
 	code?: string;
 	error?: ApiError;
-	meta?: Meta;
+	meta?: QueryMeta;
 }
 
 export interface ApiError {
@@ -14,6 +14,13 @@ export interface ApiError {
 }
 
 export interface Meta {
+	page?: number;
+	limit?: number;
+	total?: number;
+	totalPages?: number;
+}
+
+export interface QueryMeta extends Meta {
 	timestamp: string;
 	requestId?: string;
 }
@@ -23,6 +30,7 @@ export interface SuccessResponseOptions<T> {
 	message?: string;
 	statusCode?: number;
 	code?: string;
+	meta?: Meta;
 }
 
 export interface ErrorResponseOptions {
