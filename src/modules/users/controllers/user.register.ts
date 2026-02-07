@@ -3,13 +3,12 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { successResponse } from '@Helpers/responseStructure';
 
 import { UserSchema } from '../types/user.schema';
-import userSchema from '../models/user.modelDB';
+import UserModel from '../models/user.modelDB';
 
 export const userRegister = asyncHandler(async (request, response) => {
 	const userRequest = request.body as UserSchema;
 
-	const registerResponse = await userSchema.create(userRequest);
-
+	const registerResponse = await UserModel.create(userRequest);
 	const dataResponse = cleanMongoFields(
 		registerResponse.toObject({ versionKey: false, getters: true }),
 	);

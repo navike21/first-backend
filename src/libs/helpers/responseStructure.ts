@@ -47,7 +47,10 @@ export const errorResponse = (
 		error,
 		message,
 		meta: {
-			timestamp: formatISO(new Date()),
+			timestamp: formatISO(new Date(), {
+				representation: 'complete',
+				format: 'extended',
+			}),
 		},
 		statusCode,
 		success: false,

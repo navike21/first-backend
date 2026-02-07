@@ -2,7 +2,7 @@ import { StatusRegister } from '@Constants/statusRegister';
 import { UserRoles } from '@Constants/userRole';
 
 export interface UserSchema {
-	id: string;
+	id?: string;
 	firstName: string;
 	lastName: string;
 	adminInformation: {
