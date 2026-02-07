@@ -23,8 +23,8 @@ export const userRegister = asyncHandler(async (request, response) => {
 
 	successResponse(response, {
 		statusCode: 201,
-		message: 'User Register Successfully',
-		code: 'success_register',
+		message: 'User registered successfully',
+		code: 'SUCCESS_USER_REGISTER',
 		data: sanitizedUser,
 	});
 });

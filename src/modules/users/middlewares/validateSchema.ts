@@ -17,7 +17,7 @@ export const validateSchema =
 
 		if (!success) {
 			setThrowError({
-				code: 'VALIDATION_ERROR',
+				code: 'VALIDATION_SCHEMA_ERROR',
 				statusCode: 300,
 				details: {
 					validation: error.issues.map((issue) => ({
@@ -25,7 +25,7 @@ export const validateSchema =
 						message: issue.message,
 					})),
 				},
-				message: 'Validation failed',
+				message: 'Validation failed for the provided data',
 			});
 		}
 

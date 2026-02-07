@@ -13,21 +13,20 @@ export const userSearchById = asyncHandler(async (request, response) => {
 	const query: QueryFilter<UserSchema> = {
 		id,
 	};
-
 	const user = await UserModel.findOne(query).lean();
 
 	if (!user) {
 		setThrowError({
 			statusCode: 404,
 			message: 'User not found',
-			code: 'error_user_not_found',
+			code: 'USER_NOT_FOUND',
 		});
 	}
 
 	successResponse(response, {
 		statusCode: 200,
 		message: 'User found successfully',
-		code: 'success_user_found',
+		code: 'SUCCESS_USER_FOUND',
 		data: cleanMongoFields(user),
 	});
 });
