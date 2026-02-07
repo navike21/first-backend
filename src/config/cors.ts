@@ -1,19 +1,27 @@
-import cors, { CorsOptions } from 'cors';
+import cors, { type CorsOptions } from 'cors';
+import { logError } from 'src/libs/helpers/log';
+
+const whitelistedDomains = process.env.WHITELISTED_DOMAINS
+	? process.env.WHITELISTED_DOMAINS.split(',').map((domain) => domain.trim())
+	: [];
 
 export const corsOptions: CorsOptions = {
 	origin(origin, callback) {
-		const whitelistedDomains = process.env.WHITELISTED_DOMAINS
-			? process.env.WHITELISTED_DOMAINS.split(',').map((domain) =>
-					domain.trim(),
-				)
-			: [];
+		// permitir herramientas como Postman / curl
+		if (!origin) return callback(null, true);
 
-		if (!origin || whitelistedDomains.includes(origin)) {
-			callback(null, true);
-		} else {
-			callback(new Error('Not allowed by CORS'));
+		if (whitelistedDomains.includes(origin)) {
+			return callback(null, true);
 		}
+
+		logError(`CORS blocked origin: ${origin}`);
+		return callback(new Error('CORS policy: Not allowed by origin'));
 	},
+
+	credentials: true,
+	methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+	allowedHeaders: ['Content-Type', 'Authorization'],
+	optionsSuccessStatus: 204,
 };
 
 export const corsConfig = cors(corsOptions);

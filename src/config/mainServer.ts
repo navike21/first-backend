@@ -7,6 +7,10 @@ import { logError, logInfo } from 'src/libs/helpers/log';
 import { app } from './app';
 import configEnvironment from './environments';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
+import type { Server } from 'node:http';
+
+let server: Server;
+let isShuttingDown = false;
 
 export async function startServer(): Promise<void> {
 	try {
@@ -15,7 +19,7 @@ export async function startServer(): Promise<void> {
 		app.use(mainRouter());
 		app.use(errorMiddleware);
 
-		app.listen(configEnvironment.PORT, () => {
+		server = app.listen(configEnvironment.PORT, () => {
 			logInfo(
 				`Server is running on port ${configEnvironment.PORT} in ${configEnvironment.NODE_ENV} mode.`,
 			);
@@ -27,12 +31,18 @@ export async function startServer(): Promise<void> {
 }
 
 export async function handleServerShutdown(): Promise<void> {
-	try {
-		logInfo('Shutting down server gracefully...');
-		await disconnectFromDatabase();
-		process.exit(0);
-	} catch (error) {
-		logError(`Error during server shutdown: ${error as Error}`);
-		process.exit(1);
-	}
+	if (isShuttingDown) return;
+	isShuttingDown = true;
+
+	logInfo('Shutting down server gracefully...');
+
+	server.close(async () => {
+		try {
+			await disconnectFromDatabase();
+			process.exit(0);
+		} catch (error) {
+			logError(`Error during server shutdown: ${error as Error}`);
+			process.exit(1);
+		}
+	});
 }
