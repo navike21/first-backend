@@ -1,4 +1,3 @@
-import { logError } from '@Helpers/log';
 import { errorResponse as errorResponseSend } from '@Helpers/responseStructure';
 import { ErrorResponseOptions } from '@Types/responseStructure';
 import type { NextFunction, Request, Response } from 'express';
@@ -14,18 +13,31 @@ export const errorMiddleware = (
 	res: Response,
 	_next: NextFunction,
 ) => {
-	const errorData = JSON.stringify(error as Error);
+	const errorData = JSON.stringify(error);
 
-	const { code, message, statusCode, details, errorResponse } = JSON.parse(
-		errorData,
-	) as CustomError;
+	const errorDataMongoose = JSON.parse(errorData) as CustomError;
 
-	logError(details || message);
+	if (Object.keys(errorDataMongoose).length) {
+		const { code, statusCode, message, details, errorResponse } =
+			errorDataMongoose;
 
-	errorResponseSend(res, {
-		statusCode: statusCode || 500,
-		code,
-		message,
-		details: errorResponse || details,
+		return errorResponseSend(res, {
+			statusCode: statusCode || 500,
+			code,
+			message,
+			details: errorResponse || details,
+		});
+	}
+
+	const genericError = error as Error;
+	const errorDataGeneric = JSON.parse(
+		genericError.message,
+	) as ErrorResponseOptions;
+
+	return errorResponseSend(res, {
+		statusCode: errorDataGeneric.statusCode || 500,
+		code: errorDataGeneric.code,
+		message: errorDataGeneric.message,
+		details: errorDataGeneric.details,
 	});
 };
