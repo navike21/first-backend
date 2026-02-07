@@ -1,4 +1,5 @@
 import { StatusRegister } from '@Constants/statusRegister';
+import { UserGender } from '@Constants/userGender';
 import { UserRoles } from '@Constants/userRole';
 
 export interface UserSchema {
@@ -17,7 +18,7 @@ export interface UserSchema {
 	personalInformation: {
 		profilePictureUrl?: string;
 		dateOfBirth?: Date;
-		gender: 'male' | 'female';
+		gender: UserGender;
 	};
 	socialMediaLinks?: {
 		facebook?: string;
