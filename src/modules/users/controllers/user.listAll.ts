@@ -19,9 +19,24 @@ export const userListAll = asyncHandler(async (request, response) => {
 	};
 
 	const [data, total] = await Promise.all([
-		UserModel.find(query).skip(skip).limit(limitNumber).lean(),
+		UserModel.find(query)
+			.skip(skip)
+			.limit(limitNumber)
+			.select({
+				id: 1,
+				firstName: 1,
+				lastName: 1,
+				contactInformation: 1,
+				adminInformation: {
+					role: 1,
+				},
+				personalInformation: 1,
+			})
+			.lean(),
 		UserModel.countDocuments(query),
 	]);
+
+	console.log('data -->', data);
 
 	if (data.length === 0) {
 		setThrowError({
