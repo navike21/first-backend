@@ -31,24 +31,58 @@ export const userDeleteLogicalBulk = asyncHandler(async (request, response) => {
 
 	const users = await UserModel.find(query).lean();
 
-	if (!users.length) {
-		setThrowError({
-			statusCode: 404,
-			message: 'No active users found to delete',
-			code: 'ERROR_USERS_NOT_FOUND',
+	const foundIds = users
+		.map((user) => user.id)
+		.filter((id): id is string => Boolean(id));
+
+	const notFoundOrInactiveIds = ids.filter((id) => !foundIds.includes(id));
+
+	// 🟥 Caso 3: ninguno existe o ninguno está ACTIVE
+	if (foundIds.length === 0) {
+		successResponse(response, {
+			statusCode: 200,
+			message: 'No users were deleted',
+			code: 'SUCCESS_NO_USERS_DELETED',
+			data: {
+				deleted: [],
+				deletedIds: [],
+				notFoundOrInactiveIds,
+			},
 		});
+		return;
 	}
 
-	await UserModel.updateMany(query, {
-		$set: { status: DELETED },
-	});
+	await UserModel.updateMany(
+		{ id: { $in: foundIds }, status: ACTIVE },
+		{ $set: { status: DELETED } },
+	);
 
 	const cleanedUsers = users.map((user) => cleanMongoFields(user));
 
+	// 🟩 Caso 1: todos eliminados
+	if (notFoundOrInactiveIds.length === 0) {
+		successResponse(response, {
+			statusCode: 200,
+			message: 'Users deleted successfully',
+			code: 'SUCCESS_USERS_DELETED',
+			data: {
+				deleted: cleanedUsers,
+				deletedIds: foundIds,
+				notFoundOrInactiveIds: [],
+			},
+		});
+		return;
+	}
+
+	// 🟨 Caso 2: eliminación parcial
 	successResponse(response, {
 		statusCode: 200,
-		message: 'Users deleted successfully',
-		code: 'SUCCESS_USERS_DELETED',
-		data: cleanedUsers,
+		message: 'Users deleted partially',
+		code: 'SUCCESS_USERS_PARTIALLY_DELETED',
+		data: {
+			deleted: cleanedUsers,
+			deletedIds: foundIds,
+			notFoundOrInactiveIds,
+		},
 	});
 });
