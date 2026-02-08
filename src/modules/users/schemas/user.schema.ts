@@ -3,7 +3,7 @@ import type { UserSchema } from '../types/user.schema';
 import { USER_ROLES_ARRAY } from '@Constants/userRole';
 import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 
-export const UserZodSchema = z.object({
+export const UserRegisterSchema = z.object({
 	id: z.uuid({ message: 'USER_ID_VALID' }).optional(),
 
 	firstName: z.string({
