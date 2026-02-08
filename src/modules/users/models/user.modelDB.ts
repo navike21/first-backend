@@ -86,7 +86,6 @@ const UserModel = new Schema<UserSchema>(
 							return urlValidate(value);
 						},
 					},
-					select: false,
 				},
 				dateOfBirth: {
 					type: Date,
