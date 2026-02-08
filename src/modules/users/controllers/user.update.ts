@@ -8,8 +8,8 @@ export const userUpdate = asyncHandler(async (request, response) => {
 	const userId = request.params.id;
 	const userRequest = request.body;
 
-	const updatedUser = await userModelDB.findByIdAndUpdate(
-		userId,
+	const updatedUser = await userModelDB.findOneAndUpdate(
+		{ id: userId },
 		{ $set: userRequest },
 		{ new: true, runValidators: true },
 	);

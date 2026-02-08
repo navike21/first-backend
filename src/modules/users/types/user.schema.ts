@@ -6,7 +6,7 @@ export interface UserSchema {
 	id?: string;
 	firstName: string;
 	lastName: string;
-	adminInformation: {
+	adminInformation?: {
 		password: string;
 		role: UserRoles[];
 	};

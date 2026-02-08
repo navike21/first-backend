@@ -35,7 +35,7 @@ const UserModel = new Schema<UserSchema>(
 			type: {
 				password: {
 					type: String,
-					required: true,
+					required: false,
 					minLength: 8,
 					select: false,
 				},
