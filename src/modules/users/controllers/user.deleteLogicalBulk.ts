@@ -7,19 +7,22 @@ import { successResponse } from '@Helpers/responseStructure';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 
 import { UserSchema } from '../types/user.schema';
-import { BulkDeleteUsersBody } from '../types/userDeleteManyBody';
 import UserModel from '../models/user.modelDB';
 
-export const userDeleteLogicalBulk = asyncHandler(async (request, response) => {
-	const { ids } = request.body as BulkDeleteUsersBody;
+import { BulkDeleteUsersSchema } from '../schemas/userBulkDeleteUsersSchema';
 
-	if (!ids || !Array.isArray(ids) || ids.length === 0) {
+export const userDeleteLogicalBulk = asyncHandler(async (request, response) => {
+	const parsedBody = BulkDeleteUsersSchema.safeParse(request.body);
+
+	if (!parsedBody.success) {
 		setThrowError({
 			statusCode: 400,
-			message: 'IDs array is required',
-			code: 'ERROR_IDS_REQUIRED',
+			message: parsedBody.error.issues.map((issue) => issue.message).join(', '),
+			code: 'ERROR_INVALID_BODY',
 		});
 	}
+
+	const { ids } = parsedBody.data;
 
 	const query: QueryFilter<UserSchema> = {
 		id: { $in: ids },

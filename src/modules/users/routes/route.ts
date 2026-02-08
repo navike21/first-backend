@@ -18,7 +18,7 @@ import { userListAll } from '../controllers/user.listAll';
 import { userSearchById } from '../controllers/user.userSearchById';
 import { userDeleteLogical } from '../controllers/user.deleteLogical';
 import { userRegisterBulk } from '../controllers/user.registerBulk';
-import { userDeleteLogicalBulk } from '../controllers/user.deleteLogicalMany';
+import { userDeleteLogicalBulk } from '../controllers/user.deleteLogicalBulk';
 
 export function usersApi(router: Router) {
 	router.post(USER_PATH_REGISTER, validateSchema(UserZodSchema), userRegister);
