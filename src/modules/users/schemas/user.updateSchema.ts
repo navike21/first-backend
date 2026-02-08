@@ -25,7 +25,6 @@ export const UserUpdateSchema = z.object({
 	adminInformation: z
 		.object({
 			role: z.array(z.enum(USER_ROLES_ARRAY)).nonempty(),
-			// password eliminado del update general
 		})
 		.optional(),
 
