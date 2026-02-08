@@ -36,8 +36,6 @@ export const userListAll = asyncHandler(async (request, response) => {
 		UserModel.countDocuments(query),
 	]);
 
-	console.log('data -->', data);
-
 	if (data.length === 0) {
 		setThrowError({
 			statusCode: 404,
