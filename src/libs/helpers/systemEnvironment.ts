@@ -1,5 +1,5 @@
 import configEnvironment from '@Config/environments';
-import { SySTEM_ENVIRONMENT } from '@Constants/ systemEnvironment';
+import { SySTEM_ENVIRONMENT } from '@Constants/systemEnvironment';
 
 export function isDevelopmentEnvironment() {
 	const isDevelopment =
