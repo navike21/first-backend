@@ -1,7 +1,7 @@
-export const CLIENT_TYPE_PERSON = 'person';
-export const CLIENT_TYPE_COMPANY = 'company';
-export const CLIENT_TYPE_ORGANIZATION = 'organization';
-export const CLIENT_TYPE_GOVERNMENT = 'government';
+export const CLIENT_TYPE_PERSON = 'CLIENT_TYPE_PERSON';
+export const CLIENT_TYPE_COMPANY = 'CLIENT_TYPE_COMPANY';
+export const CLIENT_TYPE_ORGANIZATION = 'CLIENT_TYPE_ORGANIZATION';
+export const CLIENT_TYPE_GOVERNMENT = 'CLIENT_TYPE_GOVERNMENT';
 
 export type ClientType =
 	| typeof CLIENT_TYPE_PERSON
