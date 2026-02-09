@@ -1,4 +1,4 @@
-import { SySTEM_ENVIRONMENT } from '@Constants/ systemEnvironment';
+import { SySTEM_ENVIRONMENT } from '@Constants/systemEnvironment';
 import dotenv from 'dotenv';
 
 dotenv.config();
