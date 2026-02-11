@@ -1,8 +1,0 @@
-export enum EActions {
-  CREATE = 'CREATE',
-  READ = 'READ',
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE',
-  RESTORE = 'RESTORE',
-  DELETE_PERMANENTLY = 'DELETE_PERMANENTLY'
-}

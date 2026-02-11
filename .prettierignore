@@ -1,6 +1,27 @@
+# License and documentation files
+LICENSE
+CHANGELOG.md
+README.md
+
+# Build and dependencies
 node_modules
 dist
+.vercel
+coverage
+
+# Environment
+.env
+.env.*
+
+# Git
 .git
-.husky
+.gitignore
+
+# IDE
 .vscode
 .idea
+*.swp
+*.swo
+
+# Prisma
+prisma/migrations
