@@ -1,10 +1,11 @@
 import express from 'express';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+
 import mainRouter from '@Routes/route';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 import { corsConfig } from '@Config/cors';
-import cookieParser from 'cookie-parser';
-import compression from 'compression';
-import helmet from 'helmet';
 import { globalLimiter } from '@Config/limiter';
 import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
 
