@@ -1,5 +1,4 @@
 import express from 'express';
-import { connectToDatabase } from '@Connection/dataBase';
 import mainRouter from '@Routes/route';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 import { corsConfig } from '@Config/cors';
@@ -7,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import helmet from 'helmet';
 import { globalLimiter } from '@Config/limiter';
+import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
 
 const app = express();
 
@@ -37,22 +37,9 @@ app.use(
 
 app.use(globalLimiter);
 
-// Middleware para conectar a MongoDB una sola vez
-let dbConnected = false;
-app.use(async (req, res, next) => {
-	if (!dbConnected) {
-		try {
-			await connectToDatabase();
-			dbConnected = true;
-		} catch (error) {
-			console.error('Failed to connect to database:', error);
-			return res.status(503).json({ error: 'Database connection failed' });
-		}
-	}
-	next();
-});
-
+app.use(dbConnectedMiddleware);
 app.use(mainRouter());
+
 app.use(errorMiddleware);
 
 export default app;
