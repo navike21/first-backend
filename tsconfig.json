@@ -1,17 +1,26 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "lib": ["ES6"],
-    "sourceMap": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "rootDir": "./src",
-    "outDir": "./dist"
-  },
-  "include": ["src/**/*"]
+	"compilerOptions": {
+		"target": "es2017",
+		"module": "commonjs",
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"removeComments": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+			"@Config/*": ["src/config/*"],
+			"@Connection/*": ["src/connection/*"],
+			"@Constants/*": ["src/libs/constants/*"],
+			"@Helpers/*": ["src/libs/helpers/*"],
+			"@Routes/*": ["src/routes/*"],
+			"@Types/*": ["src/libs/types/*"],
+			"@Modules/*": ["src/modules/*"],
+			"@Middlewares/*": ["src/libs/middlewares/*"]
+		}
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist"]
 }
