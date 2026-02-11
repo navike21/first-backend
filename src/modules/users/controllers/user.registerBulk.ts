@@ -17,18 +17,48 @@ export const userRegisterBulk = asyncHandler(async (request, response) => {
 		});
 	}
 
-	const registerResponse = await UserModel.insertMany(usersRequest, {
-		ordered: true, // si uno falla, se detiene (puedes poner false si quieres que continúe)
-	});
+	try {
+		const registerResponse = await UserModel.insertMany(usersRequest, {
+			ordered: false,
+		});
 
-	const dataResponse = registerResponse.map((user) =>
-		cleanMongoFields(user.toObject({ versionKey: false, getters: true })),
-	);
+		const dataResponse = registerResponse.map((user) =>
+			cleanMongoFields(user.toObject({ versionKey: false, getters: true })),
+		);
 
-	successResponse(response, {
-		statusCode: 201,
-		message: 'Users registered successfully',
-		code: 'SUCCESS_USERS_REGISTER_BULK',
-		data: dataResponse,
-	});
+		successResponse(response, {
+			statusCode: 201,
+			message: 'Users registered successfully',
+			code: 'SUCCESS_USERS_REGISTER_BULK',
+			data: dataResponse,
+		});
+	} catch (error: unknown) {
+		const mongoError = error as any;
+
+		// Manejo de error E11000 (duplicate key)
+		if (mongoError.code === 11000) {
+			setThrowError({
+				statusCode: 409,
+				message: 'One or more users already exist with duplicate unique fields',
+				code: 'ERROR_DUPLICATE_USER',
+				details: {
+					duplicateField: Object.keys(mongoError.keyPattern || {}),
+					duplicateValue: mongoError.keyValue,
+				},
+			});
+		}
+
+		// Manejo de errores de validación
+		if (mongoError.errors) {
+			setThrowError({
+				statusCode: 400,
+				message: 'Validation error in one or more users',
+				code: 'ERROR_VALIDATION_FAILED',
+				details: mongoError.errors,
+			});
+		}
+
+		// Re-lanzar otros errores no esperados
+		throw error;
+	}
 });

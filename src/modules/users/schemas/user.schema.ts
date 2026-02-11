@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { UserSchema } from '../types/user.schema';
 import { USER_ROLES_ARRAY } from '@Constants/userRole';
 import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
+import { USER_GENDER_ARRAY } from '@Constants/userGender';
 
 export const UserRegisterSchema = z.object({
 	id: z.uuid({ message: 'USER_ID_VALID' }).optional(),
@@ -81,7 +82,7 @@ export const UserRegisterSchema = z.object({
 				.url({ message: 'USER_PROFILE_PICTURE_VALID' })
 				.optional(),
 			dateOfBirth: z.date().optional(),
-			gender: z.enum(['male', 'female'], {
+			gender: z.enum(USER_GENDER_ARRAY, {
 				error: (iss) =>
 					iss.input === undefined
 						? 'USER_GENDER_REQUIRED'
@@ -108,8 +109,9 @@ export const UserRegisterSchema = z.object({
 		})
 		.optional(),
 
-	status: z.enum(STATUS_REGISTER_ARRAY, {
-		error: (iss) =>
-			iss.input === undefined ? 'USER_STATUS_REQUIRED' : 'USER_STATUS_INVALID',
-	}),
+	status: z
+		.enum(STATUS_REGISTER_ARRAY, {
+			error: (iss) => 'USER_STATUS_INVALID',
+		})
+		.optional(),
 }) satisfies z.ZodType<UserSchema>;

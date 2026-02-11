@@ -1,6 +1,6 @@
 export const USER_PATH_REGISTER = '/user/register';
 export const USER_PATH_REGISTER_BULK = '/user/register-bulk';
-export const USER_PATH_LOGIN = '/user/list';
+export const USER_PATH_LIST = '/user/list';
 export const USER_PATH_SEARCH_BY_ID = '/user/search/:id';
 export const USER_PATH_UPDATE = '/user/update/:id';
 export const USER_PATH_DELETE = '/user/delete/:id';
