@@ -4,7 +4,7 @@ import {
 	disconnectFromDatabase,
 } from '@Connection/dataBase';
 import { logError, logInfo } from 'src/libs/helpers/log';
-import { app } from './app';
+import { app } from '../server';
 import configEnvironment from './environments';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 import type { Server } from 'node:http';

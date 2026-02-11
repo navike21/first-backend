@@ -1,19 +1,8 @@
 {
-	"version": 2,
-	"builds": [
+	"rewrites": [
 		{
-			"src": "src/vercel.ts",
-			"use": "@vercel/node"
+			"source": "/(.*)",
+			"destination": "/api"
 		}
-	],
-	"routes": [
-		{
-			"src": "/(.*)",
-			"dest": "src/vercel.ts"
-		}
-	],
-	"env": {
-		"NODE_ENV": "production"
-	},
-	"buildCommand": "tsc && cp tsconfig.json dist/"
+	]
 }

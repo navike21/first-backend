@@ -46,4 +46,5 @@ app.use(mainRouter());
 
 app.use(errorMiddleware);
 
+export { app };
 export default app;
