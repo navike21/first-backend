@@ -8,7 +8,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import { globalLimiter } from '@Config/limiter';
 
-export const app = express();
+const app = express();
 
 app.use(corsConfig);
 
@@ -37,7 +37,20 @@ app.use(
 
 app.use(globalLimiter);
 
-connectToDatabase();
+// Middleware para conectar a MongoDB una sola vez
+let dbConnected = false;
+app.use(async (req, res, next) => {
+	if (!dbConnected) {
+		try {
+			await connectToDatabase();
+			dbConnected = true;
+		} catch (error) {
+			console.error('Failed to connect to database:', error);
+			return res.status(503).json({ error: 'Database connection failed' });
+		}
+	}
+	next();
+});
 
 app.use(mainRouter());
 app.use(errorMiddleware);
