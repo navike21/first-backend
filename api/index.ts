@@ -1,6 +1,5 @@
-// Register tsconfig-paths for module resolution
-require('tsconfig-paths/register');
+import type { Application } from 'express';
 
-import app from '../src/server';
+const app: Application = require('../dist/server').default;
 
 export default app;
