@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { UserSchema } from '../types/user.schema';
 import { USER_ROLES_ARRAY } from '@Constants/userRole';
 import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
+import { USER_GENDER_ARRAY } from '@Constants/userGender';
 
 type DeepPartial<T> = {
 	[K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
@@ -14,7 +15,11 @@ type UserUpdateSchema = DeepPartial<Omit<UserSchema, 'adminInformation'>> & {
 };
 
 export const UserUpdateSchema = z.object({
-	firstName: z.string().optional(),
+	firstName: z
+		.string()
+		.min(2, { message: 'USER_FIRST_NAME_MIN_LENGTH' })
+		.max(50, { message: 'USER_FIRST_NAME_MAX_LENGTH' })
+		.optional(),
 
 	lastName: z
 		.string()
@@ -52,7 +57,7 @@ export const UserUpdateSchema = z.object({
 				.url({ message: 'USER_PROFILE_PICTURE_VALID' })
 				.optional(),
 			dateOfBirth: z.date().optional(),
-			gender: z.enum(['male', 'female']).optional(),
+			gender: z.enum(USER_GENDER_ARRAY).optional(),
 		})
 		.optional(),
 
