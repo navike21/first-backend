@@ -1,4 +1,4 @@
-import { successResponse } from 'src/libs/helpers/responseStructure';
+import { successResponse } from '@Helpers/responseStructure';
 import { Router } from 'express';
 
 export function welcomeApi(router: Router) {
