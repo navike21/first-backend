@@ -11,6 +11,9 @@ import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
 
 const app = express();
 
+// Trust proxy for Vercel / reverse proxies
+app.set('trust proxy', 1);
+
 app.use(corsConfig);
 
 app.use(express.json());
