@@ -10,10 +10,4 @@ connectToDatabase();
 app.use(mainRouter());
 app.use(errorMiddleware);
 
-if (process.env.VERCEL) {
-	module.exports = app;
-} else {
-	// Local development
-	const { startServer } = require('./config/mainServer');
-	startServer();
-}
+export default app;
