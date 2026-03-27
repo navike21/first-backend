@@ -4,10 +4,13 @@ import {
 	disconnectFromDatabase,
 } from '@Connection/dataBase';
 import { logError, logInfo } from '@Helpers/log';
-import { app } from '../server';
+
 import configEnvironment from './environments';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 import type { Server } from 'node:http';
+import express from 'express';
+
+const app = express();
 
 let server: Server;
 let isShuttingDown = false;
