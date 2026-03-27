@@ -1,6 +1,6 @@
 import mongoose, { type ConnectOptions } from 'mongoose';
 
-import { logError, logInfo } from 'src/libs/helpers/log';
+import { logError, logInfo } from '@Helpers/log';
 import configEnvironment from '@Config/environments';
 
 let isConnected = false;

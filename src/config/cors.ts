@@ -1,5 +1,5 @@
 import cors, { type CorsOptions } from 'cors';
-import { logError } from 'src/libs/helpers/log';
+import { logError } from '@Helpers/log';
 
 const whitelistedDomains = process.env.WHITELISTED_DOMAINS
 	? process.env.WHITELISTED_DOMAINS.split(',').map((domain) => domain.trim())

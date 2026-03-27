@@ -3,7 +3,7 @@ import {
 	connectToDatabase,
 	disconnectFromDatabase,
 } from '@Connection/dataBase';
-import { logError, logInfo } from 'src/libs/helpers/log';
+import { logError, logInfo } from '@Helpers/log';
 import { app } from '../server';
 import configEnvironment from './environments';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
