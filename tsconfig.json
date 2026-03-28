@@ -14,11 +14,7 @@
 			"@Config/*": ["src/config/*"],
 			"@Connection/*": ["src/connection/*"],
 			"@Constants/*": ["src/constants/*"],
-			"@Helpers/*": ["src/helpers/*"],
-			"@Routes/*": ["src/routes/*"],
-			"@Types/*": ["src/types/*"],
-			"@Modules/*": ["src/modules/*"],
-			"@Middlewares/*": ["src/middlewares/*"]
+			"@Routers/*": ["src/routers/*"]
 		}
 	},
 	"include": ["src/**/*"],
