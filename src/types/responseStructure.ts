@@ -3,14 +3,14 @@ export interface ApiError {
 	details?: unknown;
 }
 
-export interface Meta {
+export interface MetaInformation {
 	page?: number;
 	limit?: number;
 	total?: number;
 	totalPages?: number;
 }
 
-export interface QueryMeta extends Meta {
+export interface QueryMeta extends MetaInformation {
 	timestamp: string;
 	requestId?: string;
 }
@@ -20,7 +20,7 @@ export interface SuccessResponseOptions<T> {
 	message?: string;
 	statusCode?: number;
 	code?: string;
-	meta?: Meta;
+	meta?: MetaInformation;
 }
 
 export interface ErrorResponseOptions {
