@@ -1,4 +1,4 @@
-import { PORT } from './constants/environments';
+import { PORT } from '@Constants/environments';
 import express from 'express';
 
 const app = express();

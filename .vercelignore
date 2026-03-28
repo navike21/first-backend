@@ -1,0 +1,17 @@
+# Archivos que Vercel no debe subir ni procesar
+node_modules
+src
+.env
+.env.*
+*.log
+.git
+.vscode
+coverage
+.eslintignore
+.prettierignore
+.prettierrc
+.markdownlint.json
+nodemon.json
+tsconfig.json
+pnpm-lock.yaml
+README.md
