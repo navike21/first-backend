@@ -1,11 +1,13 @@
 import { Server } from 'node:http';
 import type { Express } from 'express';
 import { configApp } from './app';
-import { disconnectFromDatabase } from '@Connection/connectionDB';
+import {
+	connectToDatabase,
+	disconnectFromDatabase,
+} from '@Connection/connectionDB';
 import { logError, logInfo } from '@Helpers/log';
 import configEnvironment from '@Constants/environments';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
-import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
 import mainRouter from '@Routes/routes';
 
 let server: Server;
@@ -14,7 +16,7 @@ let isShuttingDown = false;
 export async function startServer(app: Express): Promise<void> {
 	try {
 		configApp(app);
-		app.use(dbConnectedMiddleware);
+		await connectToDatabase();
 
 		app.use(mainRouter());
 		app.use(errorMiddleware);
