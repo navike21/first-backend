@@ -15,8 +15,9 @@ app.get('/api/health', (req, res) => {
 	res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
+// Only listen if this file is run directly (not imported as module)
+// This allows local development while letting Vercel import the app
+if (require.main === module) {
 	app.listen(PORT, () => {
 		console.log(`Server running locally on http://localhost:${PORT}`);
 		console.log(`Press Ctrl+C to stop`);
