@@ -13,12 +13,12 @@
 		"paths": {
 			"@Config/*": ["src/config/*"],
 			"@Connection/*": ["src/connection/*"],
-			"@Constants/*": ["src/libs/constants/*"],
-			"@Helpers/*": ["src/libs/helpers/*"],
+			"@Constants/*": ["src/constants/*"],
+			"@Helpers/*": ["src/helpers/*"],
 			"@Routes/*": ["src/routes/*"],
-			"@Types/*": ["src/libs/types/*"],
+			"@Types/*": ["src/types/*"],
 			"@Modules/*": ["src/modules/*"],
-			"@Middlewares/*": ["src/libs/middlewares/*"]
+			"@Middlewares/*": ["src/middlewares/*"]
 		}
 	},
 	"include": ["src/**/*"],
