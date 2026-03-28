@@ -1,16 +1,25 @@
 {
 	"name": "first-backend",
 	"version": "1.0.0",
-	"description": "",
-	"main": "dist/server.js",
+	"description": "Backend APIs for managing navike21 web ecosystem and services",
+	"main": "dist/index.js",
 	"scripts": {
-		"dev": "nodemon"
+		"dev": "nodemon",
+		"build": "tsc && tsc-alias",
+		"vercel-build": "tsc && tsc-alias"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/navike21/first-backend.git"
 	},
-	"keywords": [],
+	"keywords": [
+		"express",
+		"typescript",
+		"vercel",
+		"serverless",
+		"backend",
+		"api"
+	],
 	"author": "",
 	"license": "Apache-2.0",
 	"type": "commonjs",
@@ -27,7 +36,9 @@
 		"nodemon": "^3.1.11",
 		"prettier": "^3.8.1",
 		"ts-node": "^10.9.2",
+		"tsc-alias": "^1.8.16",
 		"tsconfig-paths": "^4.2.0",
+		"tsx": "^4.21.0",
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
@@ -35,12 +46,10 @@
 		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.6",
 		"date-fns": "^4.1.0",
-		"dotenv": "^17.2.3",
 		"express": "^5.2.1",
 		"express-rate-limit": "^8.2.1",
 		"helmet": "^8.1.0",
 		"mongoose": "^9.1.6",
-		"uuid": "^13.0.0",
 		"zod": "^4.3.6"
 	}
 }
