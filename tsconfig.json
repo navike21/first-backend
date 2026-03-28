@@ -16,6 +16,7 @@
 			"@Constants/*": ["src/constants/*"],
 			"@Helpers/*": ["src/helpers/*"],
 			"@Middlewares/*": ["src/middlewares/*"],
+			"@Modules/*": ["src/modules/*"],
 			"@Types/*": ["src/types/*"],
 			"@Routers/*": ["src/routers/*"]
 		}
