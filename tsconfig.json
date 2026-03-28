@@ -15,6 +15,7 @@
 			"@Connection/*": ["src/connection/*"],
 			"@Constants/*": ["src/constants/*"],
 			"@Helpers/*": ["src/helpers/*"],
+			"@Middlewares/*": ["src/middlewares/*"],
 			"@Types/*": ["src/types/*"],
 			"@Routers/*": ["src/routers/*"]
 		}
