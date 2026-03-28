@@ -1,0 +1,16 @@
+export const SySTEM_ENVIRONMENT = {
+	DEVELOPMENT: 'development',
+	RELEASE: 'release',
+	PRODUCTION: 'production',
+};
+
+export type SystemEnvironment =
+	| typeof SySTEM_ENVIRONMENT.DEVELOPMENT
+	| typeof SySTEM_ENVIRONMENT.RELEASE
+	| typeof SySTEM_ENVIRONMENT.PRODUCTION;
+
+export const SYSTEM_ENVIRONMENT_ARRAY: SystemEnvironment[] = [
+	SySTEM_ENVIRONMENT.DEVELOPMENT,
+	SySTEM_ENVIRONMENT.RELEASE,
+	SySTEM_ENVIRONMENT.PRODUCTION,
+];
