@@ -1,10 +1,7 @@
 import { Server } from 'node:http';
 import type { Express } from 'express';
 import { configApp } from './app';
-import {
-	connectToDatabase,
-	disconnectFromDatabase,
-} from '@Connection/connectionDB';
+import { disconnectFromDatabase } from '@Connection/connectionDB';
 import { logError, logInfo } from '@Helpers/log';
 import configEnvironment from '@Constants/environments';
 import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
@@ -19,7 +16,6 @@ export async function startServer(app: Express): Promise<void> {
 		configApp(app);
 		app.use(dbConnectedMiddleware);
 		app.use(mainRouter());
-		// await connectToDatabase();
 		app.use(errorMiddleware);
 
 		server = app.listen(configEnvironment.PORT, () => {
