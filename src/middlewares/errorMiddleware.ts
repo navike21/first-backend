@@ -44,4 +44,11 @@ export const errorMiddleware = (
 			details,
 		});
 	}
+
+	return errorResponseSend(res, {
+		statusCode: 500,
+		code: 'INTERNAL_SERVER_ERROR',
+		message: 'An unexpected error occurred',
+		details: error,
+	});
 };
