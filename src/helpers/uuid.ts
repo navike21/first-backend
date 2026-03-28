@@ -1,8 +1,7 @@
+import { randomUUID } from 'node:crypto';
+
 const generateUUID = (): string => {
-	return (
-		Math.random().toString(36).substring(2, 15) +
-		Math.random().toString(36).substring(2, 15)
-	);
+	return randomUUID();
 };
 
 export default generateUUID;
