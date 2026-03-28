@@ -19,7 +19,7 @@ export async function startServer(app: Express): Promise<void> {
 		configApp(app);
 		app.use(dbConnectedMiddleware);
 		app.use(mainRouter());
-		await connectToDatabase();
+		// await connectToDatabase();
 		app.use(errorMiddleware);
 
 		server = app.listen(configEnvironment.PORT, () => {
