@@ -6,6 +6,7 @@ import configEnvironment from '@Constants/environments';
 import { configApp } from './app';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
+import mainRouter from 'src/routes/routes';
 
 let server: Server;
 let isShuttingDown = false;
@@ -15,7 +16,7 @@ export async function startServer(app: Express): Promise<void> {
 		configApp(app);
 		app.use(dbConnectedMiddleware);
 
-		// app.use(mainRouter());
+		app.use(mainRouter());
 		app.use(errorMiddleware);
 
 		server = app.listen(configEnvironment.PORT, () => {
