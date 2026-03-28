@@ -1,5 +1,5 @@
 import {
-	// connectToDatabase,
+	connectToDatabase,
 	disconnectFromDatabase,
 } from '@Connection/connectionDB';
 import { Server } from 'node:http';
@@ -12,7 +12,7 @@ let isShuttingDown = false;
 
 export async function startServer(app: Express): Promise<void> {
 	try {
-		// await connectToDatabase();
+		await connectToDatabase();
 
 		// app.use(mainRouter());
 		// app.use(errorMiddleware);
