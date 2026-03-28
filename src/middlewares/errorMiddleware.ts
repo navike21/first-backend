@@ -1,3 +1,4 @@
+import { logInfo } from '@Helpers/log';
 import { errorResponse as errorResponseSend } from '@Helpers/responseStructure';
 import { ErrorResponseOptions } from '@Types/responseStructure';
 import type { NextFunction, Request, Response } from 'express';
@@ -12,6 +13,9 @@ export const errorMiddleware = (
 	res: Response,
 	_next: NextFunction,
 ) => {
+	logInfo(
+		`Error captured by errorMiddleware: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+	);
 	const errorData = JSON.stringify(error);
 	const errorDataMongoose = JSON.parse(errorData) as CustomError;
 
@@ -44,11 +48,4 @@ export const errorMiddleware = (
 			details,
 		});
 	}
-
-	return errorResponseSend(res, {
-		statusCode: 500,
-		code: 'INTERNAL_SERVER_ERROR',
-		message: 'An unexpected error occurred',
-		details: error,
-	});
 };

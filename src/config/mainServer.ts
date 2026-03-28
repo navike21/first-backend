@@ -9,6 +9,7 @@ import { logError, logInfo } from '@Helpers/log';
 import configEnvironment from '@Constants/environments';
 import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
 import mainRouter from '@Routes/routes';
+import { errorMiddleware } from '@Middlewares/errorMiddleware';
 
 let server: Server;
 let isShuttingDown = false;
@@ -17,9 +18,9 @@ export async function startServer(app: Express): Promise<void> {
 	try {
 		configApp(app);
 		app.use(dbConnectedMiddleware);
-
 		app.use(mainRouter());
 		await connectToDatabase();
+		app.use(errorMiddleware);
 
 		server = app.listen(configEnvironment.PORT, () => {
 			logInfo(
