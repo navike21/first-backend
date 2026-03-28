@@ -9,15 +9,17 @@ const whitelistedDomains = process.env.WHITELISTED_DOMAINS
 
 export const corsOptions: CorsOptions = {
 	origin(origin, callback) {
-		// En desarrollo, permitir peticiones sin origin (Postman, Thunder Client, etc.)
+		// Permitir peticiones sin origin (Server-Side, Postman, etc.)
 		if (!origin) {
-			if (isDevelopment) {
-				logInfo('CORS: Request without origin allowed (development mode)');
-				return callback(null, true);
-			}
-			// En producción, rechazar peticiones sin origin por seguridad
-			logError('CORS: Request without origin blocked (production mode)');
-			return callback(new Error('CORS policy: Origin required'));
+			logInfo('CORS: Request without origin allowed');
+			return callback(null, true);
+		}
+
+		// Si hay origin, validar contra whitelist
+		if (whitelistedDomains.length === 0) {
+			// Si no hay whitelist configurada, permitir todos los origins
+			logInfo(`CORS: No whitelist configured, allowing origin: ${origin}`);
+			return callback(null, true);
 		}
 
 		if (whitelistedDomains.includes(origin)) {
