@@ -1,7 +1,8 @@
-import { v4 as uuid } from 'uuid';
-
 const generateUUID = (): string => {
-	return uuid();
+	return (
+		Math.random().toString(36).substring(2, 15) +
+		Math.random().toString(36).substring(2, 15)
+	);
 };
 
 export default generateUUID;
