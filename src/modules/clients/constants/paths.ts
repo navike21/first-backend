@@ -1,9 +1,0 @@
-export const CLIENT_PATH_REGISTER = '/client/register';
-export const CLIENT_PATH_REGISTER_BULK = '/client/register-bulk';
-export const CLIENT_PATH_LIST = '/client/list';
-export const CLIENT_PATH_SEARCH_BY_ID = '/client/search/:id';
-export const CLIENT_PATH_UPDATE = '/client/update/:id';
-export const CLIENT_PATH_DELETE = '/client/delete/:id';
-export const CLIENT_PATH_DELETE_BULK = '/client/delete-bulk';
-export const CLIENT_PATH_DELETE_LOGIC = '/client/delete-logic/:id';
-export const CLIENT_PATH_DELETE_LOGIC_BULK = '/client/delete-logic-bulk';

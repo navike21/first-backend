@@ -4,3 +4,4 @@ coverage
 .env
 /dist
 .env*.local
+api/*.js.map
