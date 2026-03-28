@@ -1,17 +1,17 @@
 import { model, Schema } from 'mongoose';
-import { v6 as uuid } from 'uuid';
 import { SubscriberSchema } from '../types/subscriber.schema';
 import { emailValidate } from '@Helpers/emailValidate';
 import { ACTIVE, STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 import { dateValidate } from '@Helpers/dateValidate';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
+import generateUUID from '@Helpers/uuid';
 
 const SubscriberModel = new Schema<SubscriberSchema>({
 	id: {
 		type: String,
 		required: true,
 		unique: true,
-		default: uuid(),
+		default: generateUUID(),
 	},
 	firstName: {
 		type: String,
