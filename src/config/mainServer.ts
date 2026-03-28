@@ -7,7 +7,7 @@ import {
 } from '@Connection/connectionDB';
 import { logError, logInfo } from '@Helpers/log';
 import configEnvironment from '@Constants/environments';
-import { errorMiddleware } from '@Middlewares/errorMiddleware';
+import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
 import mainRouter from '@Routes/routes';
 
 let server: Server;
@@ -16,10 +16,10 @@ let isShuttingDown = false;
 export async function startServer(app: Express): Promise<void> {
 	try {
 		configApp(app);
-		await connectToDatabase();
+		app.use(dbConnectedMiddleware);
 
 		app.use(mainRouter());
-		app.use(errorMiddleware);
+		await connectToDatabase();
 
 		server = app.listen(configEnvironment.PORT, () => {
 			logInfo(
