@@ -1,4 +1,5 @@
 {
-  "no-hard-tabs": false,
-  "MD041": false
+	"no-hard-tabs": false,
+	"MD041": false,
+	"MD025": false
 }

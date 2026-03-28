@@ -1,7 +1,9 @@
-# .vercelignore - Solo excluir archivos innecesarios PARA EL DEPLOYMENT
-# NO excluir src/ ni tsconfig.json (Vercel los necesita para BUILD)
+# .vercelignore - Only exclude unnecessary files FOR DEPLOYMENT
 
-# Development tools (no necesarios en runtime)
+# DO NOT exclude src/ or tsconfig.json (Vercel needs them for BUILD)
+
+# Development tools (not needed at runtime)
+
 node_modules
 .env
 .env.*
@@ -10,7 +12,8 @@ node_modules
 .vscode
 coverage
 
-# Config files (no necesarios en runtime, pero algunos SÍ para build)
+# Config files (not needed at runtime, but some ARE needed for build)
+
 .eslintignore
 .prettierignore
 .prettierrc
@@ -18,10 +21,9 @@ coverage
 nodemon.json
 
 # Lock files
+
 pnpm-lock.yaml
 
-# Documentation (opcional)
+# Documentation (not needed for runtime)
+
 README.md
-README_VERCEL.md
-VERCEL_ARCHITECTURE.md
-VERCEL_SETUP.md
