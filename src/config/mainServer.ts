@@ -1,12 +1,12 @@
-import { disconnectFromDatabase } from '@Connection/connectionDB';
 import { Server } from 'node:http';
 import type { Express } from 'express';
+import { configApp } from './app';
+import { disconnectFromDatabase } from '@Connection/connectionDB';
 import { logError, logInfo } from '@Helpers/log';
 import configEnvironment from '@Constants/environments';
-import { configApp } from './app';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
-import mainRouter from 'src/routes/routes';
+import mainRouter from '@Routes/routes';
 
 let server: Server;
 let isShuttingDown = false;
