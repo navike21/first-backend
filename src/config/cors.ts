@@ -1,5 +1,5 @@
+import { logError } from '@Helpers/log';
 import cors, { type CorsOptions } from 'cors';
-import { logError } from 'src/libs/helpers/log';
 
 const whitelistedDomains = process.env.WHITELISTED_DOMAINS
 	? process.env.WHITELISTED_DOMAINS.split(',').map((domain) => domain.trim())
@@ -7,8 +7,9 @@ const whitelistedDomains = process.env.WHITELISTED_DOMAINS
 
 export const corsOptions: CorsOptions = {
 	origin(origin, callback) {
-		// permitir herramientas como Postman / curl
-		if (!origin) return callback(null, true);
+		if (!origin) {
+			return callback(null, true);
+		}
 
 		if (whitelistedDomains.includes(origin)) {
 			return callback(null, true);
