@@ -1,8 +1,8 @@
 {
 	"name": "first-backend",
 	"version": "1.0.0",
-	"description": "",
-	"main": "dist/server.js",
+	"description": "Backend APIs for managing navike21 web ecosystem and services",
+	"main": "dist/index.js",
 	"scripts": {
 		"dev": "nodemon",
 		"build": "tsc && tsc-alias",
@@ -12,7 +12,14 @@
 		"type": "git",
 		"url": "git+https://github.com/navike21/first-backend.git"
 	},
-	"keywords": [],
+	"keywords": [
+		"express",
+		"typescript",
+		"vercel",
+		"serverless",
+		"backend",
+		"api"
+	],
 	"author": "",
 	"license": "Apache-2.0",
 	"type": "commonjs",
