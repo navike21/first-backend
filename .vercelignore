@@ -1,0 +1,29 @@
+# .vercelignore - Only exclude unnecessary files FOR DEPLOYMENT
+
+# DO NOT exclude src/ or tsconfig.json (Vercel needs them for BUILD)
+
+# Development tools (not needed at runtime)
+
+node_modules
+.env
+.env.*
+*.log
+.git
+.vscode
+coverage
+
+# Config files (not needed at runtime, but some ARE needed for build)
+
+.eslintignore
+.prettierignore
+.prettierrc
+.markdownlint.json
+nodemon.json
+
+# Lock files
+
+pnpm-lock.yaml
+
+# Documentation (not needed for runtime)
+
+README.md
