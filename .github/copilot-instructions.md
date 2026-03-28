@@ -1,46 +1,76 @@
 # Copilot instructions (first-backend)
 
 ## Big picture
-- Entry point: `src/server.ts` calls `configureApp()` then `startServer()`.
-- App setup: `src/config/app.ts` configures Express middleware (CORS, JSON/body parsing, cookies, compression, helmet, rate limiting).
-- Server lifecycle: `src/config/mainServer.ts` connects Mongo (`connectToDatabase()`), mounts routes (`mainRouter()`), mounts `errorMiddleware`, listens, and performs graceful shutdown on `SIGINT`/`SIGTERM`.
 
-## How routing is structured
-- Central router: `src/routes/route.ts` mounts module APIs in order: `welcomeApi`, `authApi`, `usersApi`.
-- Each module exposes an `*Api(router: Router)` function from `src/modules/<module>/routes/route.ts` and is re-exported via `src/modules/<module>/index.ts`.
+This is a minimal Express.js + TypeScript backend deployed as a Vercel serverless function.
 
-## Response + error conventions (important)
-- Success responses MUST use `successResponse(res, { statusCode, code, message, data, meta? })` from `src/libs/helpers/responseStructure.ts`.
-- Errors are typically thrown via `setThrowError({ statusCode, code, message, details? })` (`src/libs/helpers/setThrowError.ts`).
-  - This throws `new Error(JSON.stringify(errorData))` and is formatted by `src/libs/middlewares/errorMiddleware.ts`.
-- Some controllers (e.g. `src/modules/auth/controllers/auth.login.ts`) use `try/catch` and call `errorResponse()` directly; when adding new endpoints, prefer the `asyncHandler` + `setThrowError` pattern used throughout `users`.
+- **Entry point:** `src/index.ts` - Simple Express app with 2 basic routes (/ and /api/health)
+- **Environment config:** `src/constants/environments.ts` - Exports all environment variables
+- **Development:** Uses nodemon with Node.js native `.env` support (v25.6+)
+- **Production:** Compiled to `dist/` and wrapped by `api/index.js` for Vercel serverless
 
-## Adding a new endpoint (follow existing patterns)
-1. Add a path constant in `src/modules/<module>/constants/paths.ts`.
-2. (If needed) define Zod schema in `src/modules/<module>/schemas/*`.
-3. Validate input using the module middleware:
-   - `validateSchema(schema)` for single objects
-   - `validateSchemaArray(schema)` for bulk arrays
-   - `validateUpdateSchema(schema)` for PATCH semantics
-4. Implement controller using `asyncHandler` (`src/libs/middlewares/asyncHandler.ts`).
-5. Register the route in `src/modules/<module>/routes/route.ts`.
-6. Ensure the module is mounted from `src/routes/route.ts`.
+## Current structure
 
-## Mongo/Mongoose conventions
-- Mongo connection lives in `src/connection/dataBase.ts` and uses env vars from `src/config/environments.ts`.
-- Models live in `src/modules/<module>/models/*` and use Mongoose validators via helper functions (e.g. `emailValidate`, `urlValidate`, `dateValidate`).
-- API responses should strip Mongo internals using `cleanMongoFields()` and avoid returning secrets (e.g. `adminInformation.password` is sanitized in `userRegister`/`userUpdate`).
+```
+src/
+├── index.ts                    # Main Express app (exports default)
+└── constants/
+    └── environments.ts         # Environment variables
 
-## Environment + runtime
-- Env is loaded via `dotenv` in `src/config/environments.ts`.
-- Expected variables: `PORT`, `NODE_ENV`, `WHITELISTED_DOMAINS` (comma-separated), `MONGO_URI`, `MONGO_DATABASE`, `MONGO_APP_NAME`.
-- CORS behavior is enforced in `src/config/cors.ts` (no `Origin` allowed for Postman/curl; non-whitelisted origins are blocked and logged).
-- Rate limiting is global via `globalLimiter` (`src/config/limiter.ts`); `authLimiter` exists for login-like endpoints.
+dist/                           # Build output (generated, gitignored)
+api/index.js                    # Vercel serverless wrapper
+```
+
+### Planned expansions (dependencies installed, not yet implemented):
+
+- MongoDB/Mongoose connection
+- Modular routing system (auth, users, etc.)
+- Zod validation schemas
+- Middleware: helmet, rate limiting, CORS, compression
 
 ## TypeScript + imports
-- The repo uses TS path aliases from `tsconfig.json` (e.g. `@Config/*`, `@Modules/*`, `@Helpers/*`).
-- Note: there is a constant file with a leading space in its filename: `src/libs/constants/ systemEnvironment.ts`, imported as `@Constants/ systemEnvironment` (including the space). Do not “fix” the import path unless you also rename the file and update all references.
+
+- Path aliases configured in `tsconfig.json`:
+  - `@Constants/*` → `src/constants/*` (currently used)
+  - `@Config/*` → `src/config/*` (prepared for future)
+  - `@Modules/*` → `src/modules/*` (prepared for future)
+  - `@Helpers/*` → `src/libs/helpers/*` (prepared for future)
+- `tsc-alias` resolves these to relative paths during build
+
+## Environment variables
+
+Expected in `.env` (all optional with fallbacks):
+
+```env
+NODE_ENV=development
+PORT=3000
+MONGO_URI=mongodb+srv://...
+MONGO_DATABASE=your-db
+MONGO_APP_NAME=first-backend
+SECRET_KEY=your-secret
+WHITELISTED_DOMAINS=http://localhost:3000
+JWT_EXPIRES_IN=7d
+```
 
 ## Local dev commands
-- `pnpm dev` (nodemon + ts-node + tsconfig-paths) runs `src/server.ts`.
-- Typecheck/build: `pnpm exec tsc` (outputs to `dist/` per `tsconfig.json`).
+
+- `pnpm dev` - Runs nodemon with ts-node and tsconfig-paths, watches `src/`
+- `pnpm run build` - Compiles TypeScript and resolves path aliases to `dist/`
+- `node --env-file=.env dist/index.js` - Test production build locally
+
+## Vercel deployment (serverless functions)
+
+- **Entry point:** `api/index.js` wraps and re-exports `dist/index.js` (the compiled Express app)
+- **Build:** `vercel.json` runs `pnpm run build` which executes `tsc && tsc-alias`
+- **Path aliases:** `tsc-alias` resolves all `@Constants/*`, etc. to relative paths in `dist/` at build time. Vercel never sees the TypeScript source or path aliases
+- **Routing:** `vercel.json` rewrites all requests `/(.*) → /api/index` so every route hits the Express app
+- **Environment variables:** Must be set in Vercel dashboard (not read from `.env` in production)
+- **Testing production build locally:** `pnpm run build && node --env-file=.env dist/index.js`
+
+### Important Vercel behavior:
+
+- `src/index.ts` checks `require.main === module` to conditionally listen on PORT (for local dev only)
+- In Vercel, the app is imported (not executed directly), so `app.listen()` never runs
+- Vercel wraps the exported Express app in its serverless handler automatically
+
+Do not modify `api/index.js` or `vercel.json` without understanding the serverless wrapper pattern.

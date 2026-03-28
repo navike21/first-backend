@@ -1,27 +1,26 @@
-import mainRouter from '@Routes/route';
-import {
-	connectToDatabase,
-	disconnectFromDatabase,
-} from '@Connection/dataBase';
-import { logError, logInfo } from 'src/libs/helpers/log';
-import { app } from '../server';
-import configEnvironment from './environments';
+import { Server } from 'node:http';
+import type { Express } from 'express';
+import { configApp } from './app';
+import { disconnectFromDatabase } from '@Connection/connectionDB';
+import { logError, logInfo } from '@Helpers/log';
+import configEnvironment from '@Constants/environments';
+import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
+import mainRouter from '@Routes/routes';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
-import type { Server } from 'node:http';
 
 let server: Server;
 let isShuttingDown = false;
 
-export async function startServer(): Promise<void> {
+export async function startServer(app: Express): Promise<void> {
 	try {
-		await connectToDatabase();
-
+		configApp(app);
+		app.use(dbConnectedMiddleware);
 		app.use(mainRouter());
 		app.use(errorMiddleware);
 
 		server = app.listen(configEnvironment.PORT, () => {
 			logInfo(
-				`Server is running on port ${configEnvironment.PORT} in ${configEnvironment.NODE_ENV} mode.`,
+				`Server is running on port ${configEnvironment.PORT} in ${configEnvironment.PORT} mode.`,
 			);
 		});
 	} catch (error) {
