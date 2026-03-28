@@ -1,5 +1,7 @@
-import { logError } from '@Helpers/log';
+import { logError, logInfo } from '@Helpers/log';
 import cors, { type CorsOptions } from 'cors';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const whitelistedDomains = process.env.WHITELISTED_DOMAINS
 	? process.env.WHITELISTED_DOMAINS.split(',').map((domain) => domain.trim())
@@ -7,8 +9,15 @@ const whitelistedDomains = process.env.WHITELISTED_DOMAINS
 
 export const corsOptions: CorsOptions = {
 	origin(origin, callback) {
+		// En desarrollo, permitir peticiones sin origin (Postman, Thunder Client, etc.)
 		if (!origin) {
-			return callback(null, true);
+			if (isDevelopment) {
+				logInfo('CORS: Request without origin allowed (development mode)');
+				return callback(null, true);
+			}
+			// En producción, rechazar peticiones sin origin por seguridad
+			logError('CORS: Request without origin blocked (production mode)');
+			return callback(new Error('CORS policy: Origin required'));
 		}
 
 		if (whitelistedDomains.includes(origin)) {
@@ -20,8 +29,16 @@ export const corsOptions: CorsOptions = {
 	},
 
 	credentials: true,
-	methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-	allowedHeaders: ['Content-Type', 'Authorization'],
+	methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+	allowedHeaders: [
+		'Content-Type',
+		'Authorization',
+		'X-Requested-With',
+		'Accept',
+		'Origin',
+	],
+	exposedHeaders: ['X-Total-Count', 'X-Page-Count'],
+	maxAge: 86400, // 24 horas - cachea la respuesta preflight
 	optionsSuccessStatus: 204,
 };
 
