@@ -13,9 +13,10 @@ export const validateSchema =
 			...req.body,
 			personalInformation: {
 				...req.body.personalInformation,
-				dateOfBirth: isValidISODateString(dateOfBirth)
-					? new Date(dateOfBirth)
-					: dateOfBirth,
+				dateOfBirth:
+					dateOfBirth && isValidISODateString(dateOfBirth)
+						? new Date(dateOfBirth)
+						: dateOfBirth,
 			},
 		};
 		const { data, success, error } = schema.safeParse(parseBody);
