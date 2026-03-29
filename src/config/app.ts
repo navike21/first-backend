@@ -6,9 +6,9 @@ import { corsConfig } from './cors';
 import { globalLimiter } from './limiter';
 
 export const configApp = (app: Express) => {
-	app.use(corsConfig);
-
 	app.use(express.json());
+
+	app.use(corsConfig);
 
 	app.use(express.urlencoded({ extended: true }));
 
