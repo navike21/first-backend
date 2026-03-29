@@ -1,8 +1,6 @@
 import { logError, logInfo } from '@Helpers/log';
 import cors, { type CorsOptions } from 'cors';
 
-const isDevelopment = process.env.NODE_ENV === 'development';
-
 const whitelistedDomains = process.env.WHITELISTED_DOMAINS
 	? process.env.WHITELISTED_DOMAINS.split(',').map((domain) => domain.trim())
 	: [];
