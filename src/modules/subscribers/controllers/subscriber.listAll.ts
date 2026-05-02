@@ -10,7 +10,8 @@ export const subscriberListAll = asyncHandler(async (req, res) => {
 	const { data, meta } = await listAllSubscribers({ limit, page, status });
 	successResponse(res, {
 		statusCode: 200,
-		message: 'Subscriber list retrieved successfully',
+		message: 'SUCCESS_SUBSCRIBER_LIST',
+		ns: 'subscribers',
 		code: 'SUCCESS_SUBSCRIBER_LIST',
 		data,
 		meta,

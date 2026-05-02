@@ -6,7 +6,8 @@ export const subscriberDeleteLogical = asyncHandler(async (req, res) => {
 	const data = await deleteSubscriberLogical(String(req.params.id));
 	successResponse(res, {
 		statusCode: 200,
-		message: 'Subscriber deleted successfully',
+		message: 'SUCCESS_SUBSCRIBER_DELETED',
+		ns: 'subscribers',
 		code: 'SUCCESS_SUBSCRIBER_DELETED',
 		data,
 	});

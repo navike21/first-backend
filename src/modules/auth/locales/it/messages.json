@@ -1,0 +1,10 @@
+{
+	"AUTH_LOGIN_SUCCESS": "Accesso effettuato con successo",
+	"AUTH_LOGOUT_SUCCESS": "Disconnessione effettuata con successo",
+	"AUTH_REFRESH_SUCCESS": "Token aggiornato",
+	"AUTH_EMAIL_VERIFIED": "Email verificata con successo",
+	"AUTH_PASSWORD_CHANGED": "Password modificata con successo. Accedi nuovamente su tutti i tuoi dispositivi.",
+	"AUTH_PASSWORD_RESET": "Password reimpostata con successo. Accedi con la tua nuova password.",
+	"AUTH_FORGOT_PASSWORD_SENT": "Se quella email è registrata, riceverai a breve un link di reimpostazione.",
+	"AUTH_SESSIONS_LIST": "Sessioni attive recuperate"
+}

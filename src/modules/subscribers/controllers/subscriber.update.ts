@@ -6,7 +6,8 @@ export const subscriberUpdate = asyncHandler(async (req, res) => {
 	const data = await updateSubscriber(String(req.params.id), req.body);
 	successResponse(res, {
 		statusCode: 200,
-		message: 'Subscriber updated successfully',
+		message: 'SUCCESS_SUBSCRIBER_UPDATE',
+		ns: 'subscribers',
 		code: 'SUCCESS_SUBSCRIBER_UPDATE',
 		data,
 	});

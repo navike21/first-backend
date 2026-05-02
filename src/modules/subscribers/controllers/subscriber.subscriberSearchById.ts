@@ -6,7 +6,8 @@ export const subscriberSearchById = asyncHandler(async (req, res) => {
 	const data = await searchSubscriberById(String(req.params.id));
 	successResponse(res, {
 		statusCode: 200,
-		message: 'Subscriber found successfully',
+		message: 'SUCCESS_SUBSCRIBER_FOUND',
+		ns: 'subscribers',
 		code: 'SUCCESS_SUBSCRIBER_FOUND',
 		data,
 	});
