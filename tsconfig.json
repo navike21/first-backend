@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "es2017",
+		"target": "es2021",
+		"ignoreDeprecations": "6.0",
 		"module": "commonjs",
 		"rootDir": "./src",
 		"outDir": "./dist",
