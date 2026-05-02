@@ -1,0 +1,14 @@
+{
+  "VALIDATION_SCHEMA_ERROR": "Los datos proporcionados no son válidos",
+  "VALIDATION_SCHEMA_ARRAY_ERROR": "Uno o más elementos no superaron la validación",
+  "ERROR_NO_SUBSCRIBERS_PROVIDED": "No se proporcionaron suscriptores para el registro masivo",
+  "ERROR_DUPLICATE_SUBSCRIBER": "Uno o más suscriptores ya existen con campos únicos duplicados",
+  "ERROR_VALIDATION_FAILED": "Error de validación en uno o más suscriptores",
+  "SUBSCRIBER_LIST_EMPTY": "La lista de suscriptores está vacía",
+  "ERROR_SUBSCRIBER_NOT_FOUND": "Suscriptor no encontrado",
+  "SUBSCRIBER_NOT_FOUND": "Suscriptor no encontrado",
+  "ERROR_INVALID_BODY": "El cuerpo de la solicitud no es válido",
+  "INTERNAL_SERVER_ERROR": "Ocurrió un error inesperado",
+  "SERVICE_UNAVAILABLE": "El servicio no está disponible temporalmente",
+  "FORBIDDEN": "Acceso denegado"
+}
