@@ -49,6 +49,8 @@
 		"express": "^5.2.1",
 		"express-rate-limit": "^8.2.1",
 		"helmet": "^8.1.0",
+		"i18next": "^26.0.8",
+		"i18next-fs-backend": "^2.6.5",
 		"mongoose": "^9.1.6",
 		"zod": "^4.3.6"
 	}

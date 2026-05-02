@@ -1,10 +1,10 @@
 import { Server } from 'node:http';
 import type { Express } from 'express';
 import { configApp } from './app';
-import { disconnectFromDatabase } from '@Connection/connectionDB';
+import { connectToDatabase, disconnectFromDatabase } from '@Connection/connectionDB';
 import { logError, logInfo } from '@Helpers/log';
-import configEnvironment from '@Constants/environments';
-import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
+import { ENV } from '@Constants/environments';
+import { initI18n } from './i18n';
 import mainRouter from '@Routes/routes';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 
@@ -13,15 +13,15 @@ let isShuttingDown = false;
 
 export async function startServer(app: Express): Promise<void> {
 	try {
+		await initI18n();
+		await connectToDatabase();
+
 		configApp(app);
-		app.use(dbConnectedMiddleware);
 		app.use(mainRouter());
 		app.use(errorMiddleware);
 
-		server = app.listen(configEnvironment.PORT, () => {
-			logInfo(
-				`Server is running on port ${configEnvironment.PORT} in ${configEnvironment.PORT} mode.`,
-			);
+		server = app.listen(ENV.PORT, () => {
+			logInfo(`Server running on port ${ENV.PORT} in ${ENV.NODE_ENV} mode.`);
 		});
 	} catch (error) {
 		logError(`Failed to start server: ${error as Error}`);
