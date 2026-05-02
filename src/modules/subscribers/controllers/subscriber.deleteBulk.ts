@@ -17,17 +17,20 @@ export const subscriberDeletePhysicalBulk = asyncHandler(async (req, res) => {
 
 	const data = await deleteSubscribersBulk(parsed.data.ids);
 
-	const code = data.deletedIds.length === 0
-		? 'SUCCESS_NO_SUBSCRIBERS_DELETED'
-		: data.notFoundIds.length > 0
-			? 'SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED'
-			: 'SUCCESS_SUBSCRIBERS_DELETED';
+	let code: string;
+	if (data.deletedIds.length === 0) {
+		code = 'SUCCESS_NO_SUBSCRIBERS_DELETED';
+	} else if (data.notFoundIds.length > 0) {
+		code = 'SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED';
+	} else {
+		code = 'SUCCESS_SUBSCRIBERS_DELETED';
+	}
 
-	const message = data.deletedIds.length === 0
-		? 'No subscribers were deleted'
-		: data.notFoundIds.length > 0
-			? 'Subscribers deleted partially'
-			: 'Subscribers deleted successfully';
-
-	successResponse(res, { statusCode: 200, message, code, data });
+	successResponse(res, {
+		statusCode: 200,
+		message: code,
+		ns: 'subscribers',
+		code,
+		data,
+	});
 });

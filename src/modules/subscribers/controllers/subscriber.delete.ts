@@ -6,7 +6,8 @@ export const subscriberDeletePhysical = asyncHandler(async (req, res) => {
 	const data = await deleteSubscriber(String(req.params.id));
 	successResponse(res, {
 		statusCode: 200,
-		message: 'Subscriber permanently deleted successfully',
+		message: 'SUCCESS_SUBSCRIBER_DELETED_PHYSICAL',
+		ns: 'subscribers',
 		code: 'SUCCESS_SUBSCRIBER_DELETED_PHYSICAL',
 		data,
 	});

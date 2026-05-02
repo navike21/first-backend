@@ -1,0 +1,10 @@
+{
+	"AUTH_LOGIN_SUCCESS": "Connexion réussie",
+	"AUTH_LOGOUT_SUCCESS": "Déconnexion réussie",
+	"AUTH_REFRESH_SUCCESS": "Token actualisé",
+	"AUTH_EMAIL_VERIFIED": "Email vérifié avec succès",
+	"AUTH_PASSWORD_CHANGED": "Mot de passe modifié avec succès. Veuillez vous reconnecter sur tous vos appareils.",
+	"AUTH_PASSWORD_RESET": "Mot de passe réinitialisé avec succès. Veuillez vous connecter avec votre nouveau mot de passe.",
+	"AUTH_FORGOT_PASSWORD_SENT": "Si cet email est enregistré, vous recevrez un lien de réinitialisation sous peu.",
+	"AUTH_SESSIONS_LIST": "Sessions actives récupérées"
+}

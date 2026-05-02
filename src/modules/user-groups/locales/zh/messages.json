@@ -1,0 +1,8 @@
+{
+	"USER_GROUP_CREATED": "用户组创建成功",
+	"USER_GROUP_UPDATED": "用户组更新成功",
+	"USER_GROUP_DELETED": "用户组删除成功",
+	"USER_GROUP_FOUND": "已获取用户组",
+	"USER_GROUPS_LISTED": "已获取用户组列表",
+	"PERMISSIONS_CATALOG": "可用权限"
+}

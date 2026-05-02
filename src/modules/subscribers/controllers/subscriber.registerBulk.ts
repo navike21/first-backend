@@ -15,7 +15,8 @@ export const subscriberRegisterBulk = asyncHandler(async (req, res) => {
 	const data = await registerSubscriberBulk(req.body);
 	successResponse(res, {
 		statusCode: 201,
-		message: 'Subscribers registered successfully',
+		message: 'SUCCESS_SUBSCRIBERS_REGISTER_BULK',
+		ns: 'subscribers',
 		code: 'SUCCESS_SUBSCRIBERS_REGISTER_BULK',
 		data,
 	});

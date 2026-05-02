@@ -1,0 +1,10 @@
+{
+	"AUTH_LOGIN_SUCCESS": "登录成功",
+	"AUTH_LOGOUT_SUCCESS": "已成功退出登录",
+	"AUTH_REFRESH_SUCCESS": "令牌已刷新",
+	"AUTH_EMAIL_VERIFIED": "电子邮件验证成功",
+	"AUTH_PASSWORD_CHANGED": "密码修改成功。请在所有设备上重新登录。",
+	"AUTH_PASSWORD_RESET": "密码重置成功。请使用新密码登录。",
+	"AUTH_FORGOT_PASSWORD_SENT": "如果该电子邮件已注册，您将很快收到重置链接。",
+	"AUTH_SESSIONS_LIST": "已获取活跃会话"
+}
