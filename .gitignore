@@ -5,3 +5,4 @@ coverage
 /dist
 .env*.local
 api/*.js.map
+.claude/
