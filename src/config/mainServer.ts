@@ -1,10 +1,14 @@
 import { Server } from 'node:http';
 import type { Express } from 'express';
 import { configApp } from './app';
-import { connectToDatabase, disconnectFromDatabase } from '@Connection/connectionDB';
+import {
+	connectToDatabase,
+	disconnectFromDatabase,
+} from '@Connection/connectionDB';
 import { logError, logInfo } from '@Helpers/log';
 import { ENV } from '@Constants/environments';
 import { initI18n } from './i18n';
+import { initSocketServer } from '@Shared/infrastructure/SocketServer';
 import mainRouter from '@Routes/routes';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 
@@ -23,6 +27,9 @@ export async function startServer(app: Express): Promise<void> {
 		server = app.listen(ENV.PORT, () => {
 			logInfo(`Server running on port ${ENV.PORT} in ${ENV.NODE_ENV} mode.`);
 		});
+
+		initSocketServer(server);
+		logInfo('Socket.io server initialized.');
 	} catch (error) {
 		logError(`Failed to start server: ${error as Error}`);
 		process.exit(1);

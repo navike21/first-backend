@@ -1,0 +1,734 @@
+{
+  "info": {
+    "name": "First Backend API",
+    "_postman_id": "first-backend-v1",
+    "description": "Complete API collection for First Backend.\n\n**Modules:** Health · Auth · Users · User Groups · Subscribers\n\n**Setup:**\n1. Import this collection in Postman or Insomnia\n2. Set the environment variables listed below\n3. Create a user with `POST /api/v1/users`, then login with `POST /api/v1/auth/login` — the test script captures the access token automatically\n\n**Environment variables:**\n- `BASE_URL` — e.g. `http://localhost:3200`\n- `ACCESS_TOKEN` — auto-filled by the Login test script\n- `ACCEPT_LANGUAGE` — supported values: `en` `es` `de` `fr` `it` `ja` `ko` `pt` `ru` `zh`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "BASE_URL", "value": "http://localhost:3200", "type": "string" },
+    { "key": "ACCESS_TOKEN", "value": "", "type": "string" },
+    { "key": "ACCEPT_LANGUAGE", "value": "en", "type": "string", "description": "en | es | de | fr | it | ja | ko | pt | ru | zh" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/health",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "health"]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"code\": \"HEALTH_OK\",\n  \"message\": \"Service is healthy\",\n  \"data\": { \"status\": \"ok\", \"db\": \"connected\" }\n}"
+            },
+            {
+              "name": "503 DB Disconnected",
+              "status": "Service Unavailable",
+              "code": 503,
+              "body": "{\n  \"success\": false,\n  \"code\": \"SERVICE_UNAVAILABLE\",\n  \"message\": \"Service is temporarily unavailable\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data && res.data.accessToken) {",
+                  "  pm.collectionVariables.set('ACCESS_TOKEN', res.data.accessToken);",
+                  "  pm.test('Token captured', () => pm.expect(res.data.accessToken).to.be.a('string'));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"Admin1234\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": [
+            {
+              "name": "200 Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"code\": \"AUTH_LOGIN_SUCCESS\",\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"email\": \"admin@example.com\",\n      \"firstName\": \"Admin\",\n      \"lastName\": \"User\",\n      \"permissions\": [\"users:manage\", \"user-groups:manage\"]\n    }\n  }\n}"
+            },
+            {
+              "name": "401 Invalid Credentials",
+              "status": "Unauthorized",
+              "code": 401,
+              "body": "{\n  \"success\": false,\n  \"code\": \"INVALID_CREDENTIALS\",\n  \"message\": \"Invalid email or password\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/refresh",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "refresh"]
+            },
+            "description": "The refresh token is read from the httpOnly cookie set at login. Postman/Insomnia sends it automatically."
+          },
+          "response": [
+            {
+              "name": "200 Success",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"code\": \"AUTH_REFRESH_SUCCESS\",\n  \"message\": \"Token refreshed\",\n  \"data\": { \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\" }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/logout",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            }
+          },
+          "response": [
+            {
+              "name": "200 Success",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"code\": \"AUTH_LOGOUT_SUCCESS\",\n  \"message\": \"Logged out successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/verify-email/:token",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "verify-email", ":token"],
+              "variable": [{ "key": "token", "value": "<jwt_email_token>" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/forgot-password",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "forgot-password"]
+            }
+          },
+          "response": [
+            {
+              "name": "200 Success",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"code\": \"AUTH_FORGOT_PASSWORD_SENT\",\n  \"message\": \"If that email is registered, you will receive a reset link shortly.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewPass1234\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/reset-password/:token",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "reset-password", ":token"],
+              "variable": [{ "key": "token", "value": "<jwt_reset_token>" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Admin1234\",\n  \"newPassword\": \"NewAdmin5678\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/change-password",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "change-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Active Sessions",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/auth/sessions",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "auth", "sessions"]
+            }
+          },
+          "response": [
+            {
+              "name": "200 Success",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"code\": \"AUTH_SESSIONS_LIST\",\n  \"data\": [\n    {\n      \"userAgent\": \"Mozilla/5.0...\",\n      \"ip\": \"127.0.0.1\",\n      \"lastSeen\": \"2026-05-02T10:00:00.000Z\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"Juan1234\",\n  \"firstName\": \"Juan\",\n  \"lastName\": \"García\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"gender\": \"male\",\n  \"phone\": \"+521234567890\",\n  \"groupId\": \"<user-group-id>\",\n  \"status\": \"active\",\n  \"address\": {\n    \"street\": \"Av. Reforma 100\",\n    \"city\": \"CDMX\",\n    \"country\": \"MX\",\n    \"postalCode\": \"06600\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "users"]
+            },
+            "description": "Requires: `users:create` or `users:manage`. Sends a verification email."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"success\": true,\n  \"code\": \"USER_CREATED\",\n  \"message\": \"User created. Verification email sent.\",\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"email\": \"juan@example.com\",\n    \"firstName\": \"Juan\",\n    \"lastName\": \"García\"\n  }\n}"
+            },
+            {
+              "name": "409 Email Exists",
+              "code": 409,
+              "body": "{\n  \"success\": false,\n  \"code\": \"EMAIL_ALREADY_EXISTS\",\n  \"message\": \"An account with this email already exists\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users?page=1&limit=20",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "active", "disabled": true, "description": "active | inactive" },
+                { "key": "search", "value": "", "disabled": true, "description": "Search by name or email" },
+                { "key": "groupId", "value": "", "disabled": true }
+              ]
+            },
+            "description": "Requires: `users:read` or `users:manage`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "users", ":id"],
+              "variable": [{ "key": "id", "value": "<user-id>" }]
+            },
+            "description": "Requires: `users:read` or `users:manage`."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Juan Carlos\",\n  \"groupId\": \"<group-id>\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "users", ":id"],
+              "variable": [{ "key": "id", "value": "<user-id>" }]
+            },
+            "description": "Requires: `users:update` or `users:manage`."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "users", ":id"],
+              "variable": [{ "key": "id", "value": "<user-id>" }]
+            },
+            "description": "Requires: `users:delete` or `users:manage`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/me",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "users", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Juan\",\n  \"phone\": \"+521234567890\",\n  \"address\": {\n    \"city\": \"Guadalajara\",\n    \"country\": \"MX\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/users/me",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "users", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Groups",
+      "item": [
+        {
+          "name": "Permissions Catalog",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/permissions/catalog",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "permissions", "catalog"]
+            },
+            "description": "Returns all available permissions. Use these when creating or updating user groups."
+          },
+          "response": [
+            {
+              "name": "200 Success",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"code\": \"PERMISSIONS_CATALOG\",\n  \"data\": {\n    \"permissions\": [\"users:read\", \"users:create\", \"users:update\", \"users:delete\", \"users:manage\", \"user-groups:read\", \"user-groups:create\", \"user-groups:update\", \"user-groups:delete\", \"user-groups:manage\", \"subscribers:read\", \"subscribers:create\", \"subscribers:update\", \"subscribers:delete\", \"subscribers:manage\", \"profile:read\", \"profile:update\", \"*:*\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create User Group",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Administrators\",\n  \"description\": \"Full access to all resources\",\n  \"permissions\": [\"users:manage\", \"user-groups:manage\", \"subscribers:manage\"],\n  \"color\": \"#ef4444\",\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/user-groups",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "user-groups"]
+            },
+            "description": "Requires: `user-groups:create` or `user-groups:manage`."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "code": 201,
+              "body": "{\n  \"success\": true,\n  \"code\": \"USER_GROUP_CREATED\",\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"name\": \"Administrators\",\n    \"slug\": \"administrators\",\n    \"permissions\": [\"users:manage\", \"user-groups:manage\", \"subscribers:manage\"],\n    \"color\": \"#ef4444\",\n    \"isSystem\": false,\n    \"status\": \"active\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "List User Groups",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/user-groups?page=1&limit=20",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "user-groups"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "active", "disabled": true },
+                { "key": "search", "value": "", "disabled": true }
+              ]
+            },
+            "description": "Requires: `user-groups:read` or `user-groups:manage`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Group By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/user-groups/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "user-groups", ":id"],
+              "variable": [{ "key": "id", "value": "<group-id>" }]
+            },
+            "description": "Requires: `user-groups:read` or `user-groups:manage`."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Group",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated description\",\n  \"permissions\": [\"users:read\", \"subscribers:read\"],\n  \"color\": \"#6366f1\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/user-groups/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "user-groups", ":id"],
+              "variable": [{ "key": "id", "value": "<group-id>" }]
+            },
+            "description": "Requires: `user-groups:update` or `user-groups:manage`. System groups (`isSystem: true`) cannot be modified."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User Group",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/user-groups/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "user-groups", ":id"],
+              "variable": [{ "key": "id", "value": "<group-id>" }]
+            },
+            "description": "Requires: `user-groups:delete` or `user-groups:manage`. System groups (`isSystem: true`) cannot be deleted."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Subscribers",
+      "item": [
+        {
+          "name": "Register Subscriber",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"subscriber@example.com\",\n  \"firstName\": \"Ana\",\n  \"lastName\": \"López\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Subscribers Bulk",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  { \"email\": \"sub1@example.com\", \"firstName\": \"Sub\", \"lastName\": \"One\" },\n  { \"email\": \"sub2@example.com\", \"firstName\": \"Sub\", \"lastName\": \"Two\" }\n]"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/register-bulk",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "register-bulk"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Subscribers",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/list?page=1&limit=20",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "list"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "status", "value": "active", "disabled": true, "description": "active | inactive" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subscriber By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/search/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "search", ":id"],
+              "variable": [{ "key": "id", "value": "<subscriber-id>" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Subscriber",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ana Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/update/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "update", ":id"],
+              "variable": [{ "key": "id", "value": "<subscriber-id>" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logical Delete Subscriber",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/delete-logic/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "delete-logic", ":id"],
+              "variable": [{ "key": "id", "value": "<subscriber-id>" }]
+            },
+            "description": "Sets the subscriber status to inactive. Does not remove from DB."
+          },
+          "response": []
+        },
+        {
+          "name": "Logical Delete Subscribers Bulk",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\"<subscriber-id-1>\", \"<subscriber-id-2>\"]\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/delete-logic-bulk",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "delete-logic-bulk"]
+            },
+            "description": "Sets multiple subscribers to inactive. Response code varies: SUCCESS_SUBSCRIBERS_DELETED | SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED | SUCCESS_NO_SUBSCRIBERS_DELETED."
+          },
+          "response": []
+        },
+        {
+          "name": "Hard Delete Subscriber",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/delete/:id",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "delete", ":id"],
+              "variable": [{ "key": "id", "value": "<subscriber-id>" }]
+            },
+            "description": "Permanently removes the subscriber from the database."
+          },
+          "response": []
+        },
+        {
+          "name": "Hard Delete Subscribers Bulk",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{ACCESS_TOKEN}}" },
+              { "key": "Accept-Language", "value": "{{ACCEPT_LANGUAGE}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\"<subscriber-id-1>\", \"<subscriber-id-2>\"]\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/v1/subscriber/delete-bulk",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "v1", "subscriber", "delete-bulk"]
+            },
+            "description": "Permanently removes multiple subscribers. Response code varies: SUCCESS_SUBSCRIBERS_DELETED | SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED | SUCCESS_NO_SUBSCRIBERS_DELETED."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

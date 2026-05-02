@@ -12,15 +12,27 @@ interface ListAllParams {
 	status?: string;
 }
 
-export async function listAllSubscribers({ limit, page, status }: ListAllParams) {
+export async function listAllSubscribers({
+	limit,
+	page,
+	status,
+}: ListAllParams) {
 	const skip = (page - 1) * limit;
-	const query: QueryFilter<SubscriberSchema> = { status: (status ?? ACTIVE) as StatusRegister };
+	const query: QueryFilter<SubscriberSchema> = {
+		status: (status ?? ACTIVE) as StatusRegister,
+	};
 
 	const [data, total] = await Promise.all([
 		SubscriberModel.find(query)
 			.skip(skip)
 			.limit(limit)
-			.select({ id: 1, firstName: 1, lastName: 1, contactInformation: 1, personalInformation: 1 })
+			.select({
+				id: 1,
+				firstName: 1,
+				lastName: 1,
+				contactInformation: 1,
+				personalInformation: 1,
+			})
 			.lean(),
 		SubscriberModel.countDocuments(query),
 	]);

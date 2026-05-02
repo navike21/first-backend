@@ -3,7 +3,10 @@ import setThrowError from '@Helpers/setThrowError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 import { SubscriberSchema } from '../types/subscriber.schema';
 
-export async function updateSubscriber(id: string, data: Partial<SubscriberSchema>) {
+export async function updateSubscriber(
+	id: string,
+	data: Partial<SubscriberSchema>,
+) {
 	const updated = await SubscriberModel.findOneAndUpdate(
 		{ id },
 		{ $set: data },
@@ -18,5 +21,7 @@ export async function updateSubscriber(id: string, data: Partial<SubscriberSchem
 		});
 	}
 
-	return cleanMongoFields(updated.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		updated.toObject({ versionKey: false, getters: true }),
+	);
 }

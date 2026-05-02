@@ -4,7 +4,10 @@ import setThrowError from '@Helpers/setThrowError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 
 export async function deleteSubscriberLogical(id: string) {
-	const subscriber = await SubscriberModel.findOne({ id, status: ACTIVE }).lean();
+	const subscriber = await SubscriberModel.findOne({
+		id,
+		status: ACTIVE,
+	}).lean();
 
 	if (!subscriber) {
 		setThrowError({
@@ -14,7 +17,10 @@ export async function deleteSubscriberLogical(id: string) {
 		});
 	}
 
-	await SubscriberModel.findOneAndUpdate({ id, status: ACTIVE }, { $set: { status: DELETED } });
+	await SubscriberModel.findOneAndUpdate(
+		{ id, status: ACTIVE },
+		{ $set: { status: DELETED } },
+	);
 
 	return cleanMongoFields({ ...subscriber, status: DELETED });
 }
