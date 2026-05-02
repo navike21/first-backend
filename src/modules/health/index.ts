@@ -6,10 +6,14 @@ export function healthApi(router: Router) {
 	router.get('/health', (_, res) => {
 		const readyState = mongoose.connection.readyState;
 		const dbConnected = readyState === 1;
-		const dbStatus =
-			readyState === 1 ? 'connected' :
-			readyState === 2 ? 'connecting' :
-			'disconnected';
+
+		const getDbStatus = (state: number) => {
+			if (state === 1) return 'connected';
+			if (state === 2) return 'connecting';
+			return 'disconnected';
+		};
+
+		const dbStatus = getDbStatus(readyState);
 
 		if (!dbConnected) {
 			return errorResponse(res, {

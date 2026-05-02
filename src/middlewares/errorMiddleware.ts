@@ -13,7 +13,10 @@ export const errorMiddleware = (
 	const lang = (res.locals.lang as string | undefined) ?? 'en';
 
 	if (error instanceof AppError) {
-		const message = i18next.t(error.code, { lng: lang, defaultValue: error.message });
+		const message = i18next.t(error.code, {
+			lng: lang,
+			defaultValue: error.message,
+		});
 		return errorResponse(res, {
 			statusCode: error.statusCode,
 			code: error.code,
@@ -22,9 +25,15 @@ export const errorMiddleware = (
 		});
 	}
 
-	logError(`Unhandled error: ${error instanceof Error ? `${error.message}\n${error.stack}` : String(error)}`);
+	const errorMessage =
+		error instanceof Error ? `${error.message}\n${error.stack}` : String(error);
 
-	const message = i18next.t('INTERNAL_SERVER_ERROR', { lng: lang, defaultValue: 'An unexpected error occurred' });
+	logError(`Unhandled error: ${errorMessage}`);
+
+	const message = i18next.t('INTERNAL_SERVER_ERROR', {
+		lng: lang,
+		defaultValue: 'An unexpected error occurred',
+	});
 	return errorResponse(res, {
 		statusCode: 500,
 		code: 'INTERNAL_SERVER_ERROR',

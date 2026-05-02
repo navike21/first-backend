@@ -10,12 +10,18 @@ export async function registerSubscriberBulk(data: SubscriberSchema[]) {
 			cleanMongoFields(s.toObject({ versionKey: false, getters: true })),
 		);
 	} catch (error: unknown) {
-		const mongoError = error as { code?: number; keyPattern?: object; keyValue?: unknown; errors?: unknown };
+		const mongoError = error as {
+			code?: number;
+			keyPattern?: object;
+			keyValue?: unknown;
+			errors?: unknown;
+		};
 
 		if (mongoError.code === 11000) {
 			setThrowError({
 				statusCode: 409,
-				message: 'One or more subscribers already exist with duplicate unique fields',
+				message:
+					'One or more subscribers already exist with duplicate unique fields',
 				code: 'ERROR_DUPLICATE_SUBSCRIBER',
 				details: {
 					duplicateField: Object.keys(mongoError.keyPattern ?? {}),
