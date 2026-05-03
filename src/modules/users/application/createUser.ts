@@ -2,7 +2,7 @@ import { HashedPassword } from '@Modules/auth/domain/value-objects/HashedPasswor
 import { ENV } from '@Constants/environments';
 import { JwtService } from '@Shared/infrastructure/JwtService';
 import { sendEmail, verifyEmailTemplate } from '@Modules/notifications';
-import UserModel from '../infrastructure/UserModel';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import { EmailAlreadyExistsError } from '../domain/errors/UserErrors';
 import { CreateUserInput } from '../schemas/user.schema';
 

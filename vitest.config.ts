@@ -16,6 +16,7 @@ export default defineConfig({
       '@Helpers': resolve(__dirname, 'src/helpers'),
       '@Modules': resolve(__dirname, 'src/modules'),
       '@Routes': resolve(__dirname, 'src/routes'),
+      '@Shared': resolve(__dirname, 'src/shared'),
       '@Config': resolve(__dirname, 'src/config'),
       '@Types/responseStructure': resolve(__dirname, 'src/types/responseStructure.ts')
     }
