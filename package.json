@@ -50,6 +50,7 @@
 		"globals": "^17.6.0",
 		"nodemon": "^3.1.14",
 		"prettier": "^3.8.3",
+		"supertest": "^6.3.4",
 		"ts-node": "^10.9.2",
 		"tsc-alias": "^1.8.17",
 		"tsconfig-paths": "^4.2.0",
