@@ -1,5 +1,5 @@
 import { JwtService } from '@Shared/infrastructure/JwtService';
-import { sendEmail, welcomeEmailTemplate } from '@Modules/notifications';
+import { sendEmail, welcomeEmailTemplate } from '@Modules/notifications-email';
 import { UserModel } from '@Modules/users';
 import {
 	InvalidTokenError,

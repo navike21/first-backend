@@ -17,7 +17,7 @@ vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { signEmail: vi.fn().mockReturnValue('RESET_TOKEN') },
 }));
 
-vi.mock('@Modules/notifications', () => ({
+vi.mock('@Modules/notifications-email', () => ({
 	sendEmail: vi.fn(),
 	passwordResetTemplate: vi
 		.fn()
@@ -28,7 +28,7 @@ vi.mock('@Helpers/log', () => ({
 	logInfo: vi.fn(),
 }));
 
-import { sendEmail } from '@Modules/notifications';
+import { sendEmail } from '@Modules/notifications-email';
 
 type MockUser = Pick<UserDocument, 'id' | 'email' | 'firstName'>;
 

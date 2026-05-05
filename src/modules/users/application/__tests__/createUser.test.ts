@@ -5,14 +5,14 @@ import type { CreateUserInput } from '@Modules/users/schemas/user.schema';
 import { createUser } from '@Modules/users/application/createUser';
 import { EmailAlreadyExistsError } from '@Modules/users/domain/errors/UserErrors';
 import UserModel from '@Modules/users/infrastructure/UserModel';
-import { sendEmail, verifyEmailTemplate } from '@Modules/notifications';
+import { sendEmail, verifyEmailTemplate } from '@Modules/notifications-email';
 import { JwtService } from '@Shared/infrastructure/JwtService';
 
 vi.mock('@Modules/users/infrastructure/UserModel', () => ({
 	default: { findOne: vi.fn(), create: vi.fn() },
 }));
 
-vi.mock('@Modules/notifications', () => ({
+vi.mock('@Modules/notifications-email', () => ({
 	sendEmail: vi.fn(),
 	verifyEmailTemplate: vi
 		.fn()

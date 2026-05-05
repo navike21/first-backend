@@ -17,7 +17,7 @@ vi.mock('@Modules/users', () => ({
 	UserModel: { findOneAndUpdate: vi.fn() },
 }));
 
-vi.mock('@Modules/notifications', () => ({
+vi.mock('@Modules/notifications-email', () => ({
 	sendEmail: vi.fn(),
 	welcomeEmailTemplate: vi
 		.fn()

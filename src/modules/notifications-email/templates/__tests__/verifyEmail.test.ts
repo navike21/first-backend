@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { verifyEmailTemplate } from '@Modules/notifications/templates/verifyEmail.template';
+import { verifyEmailTemplate } from '@Modules/notifications-email/templates/verifyEmail.template';
 
 describe('verifyEmailTemplate', () => {
 	it('returns an object with subject and html properties', () => {

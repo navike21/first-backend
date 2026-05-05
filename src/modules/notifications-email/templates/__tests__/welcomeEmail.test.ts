@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { welcomeEmailTemplate } from '@Modules/notifications/templates/welcomeEmail.template';
+import { welcomeEmailTemplate } from '@Modules/notifications-email/templates/welcomeEmail.template';
 
 describe('welcomeEmailTemplate', () => {
 	it('returns an object with subject and html properties', () => {

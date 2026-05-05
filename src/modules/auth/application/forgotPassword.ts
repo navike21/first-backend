@@ -1,6 +1,6 @@
 import { ENV } from '@Constants/environments';
 import { JwtService } from '@Shared/infrastructure/JwtService';
-import { sendEmail, passwordResetTemplate } from '@Modules/notifications';
+import { sendEmail, passwordResetTemplate } from '@Modules/notifications-email';
 import { logInfo } from '@Helpers/log';
 import { UserModel } from '@Modules/users';
 
