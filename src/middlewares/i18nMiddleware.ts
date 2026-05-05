@@ -10,8 +10,7 @@ export const i18nMiddleware = (
 	next: NextFunction,
 ) => {
 	const acceptLanguage = req.headers['accept-language'] ?? DEFAULT_LANG;
-	const lang =
-		acceptLanguage.split(',')[0]?.split('-')[0]?.toLowerCase() ?? DEFAULT_LANG;
+	const lang = acceptLanguage.split(',')[0].split('-')[0].toLowerCase();
 	res.locals.lang = SUPPORTED_SET.has(lang as never) ? lang : DEFAULT_LANG;
 	next();
 };

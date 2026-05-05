@@ -26,5 +26,11 @@ export const subscriberDeleteLogicalBulk = asyncHandler(async (req, res) => {
 		code = 'SUCCESS_SUBSCRIBERS_DELETED';
 	}
 
-	successResponse(res, { statusCode: 200, message: code, ns: 'subscribers', code, data });
+	successResponse(res, {
+		statusCode: 200,
+		message: code,
+		ns: 'subscribers',
+		code,
+		data,
+	});
 });
