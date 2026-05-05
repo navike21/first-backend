@@ -8,7 +8,7 @@ const mockEnv = vi.hoisted(() => ({
 
 vi.mock('@Constants/environments', () => ({ ENV: mockEnv }));
 
-vi.mock('@Modules/notifications/infrastructure/emailTransporter', () => ({
+vi.mock('@Modules/notifications-email/infrastructure/emailTransporter', () => ({
 	getEmailTransporter: vi.fn(),
 }));
 
@@ -25,8 +25,8 @@ vi.mock('nodemailer', () => ({
 	},
 }));
 
-import { sendEmail } from '@Modules/notifications/application/sendEmail';
-import { getEmailTransporter } from '@Modules/notifications/infrastructure/emailTransporter';
+import { sendEmail } from '@Modules/notifications-email/application/sendEmail';
+import { getEmailTransporter } from '@Modules/notifications-email/infrastructure/emailTransporter';
 import { logInfo, logError } from '@Helpers/log';
 import nodemailer from 'nodemailer';
 

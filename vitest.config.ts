@@ -9,7 +9,10 @@ export default defineConfig({
 		globals: true,
 		coverage: {
 			provider: 'istanbul',
-			reporter: ['text', 'lcov'],
+			reporter: ['text', 'lcov', 'json-summary'],
+			all: true,
+			include: ['src/modules/**/*.ts'],
+			exclude: ['src/modules/**/__tests__/**', 'src/modules/**/*.test.ts'],
 		},
 	},
 	resolve: {

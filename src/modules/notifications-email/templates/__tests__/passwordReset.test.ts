@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { passwordResetTemplate } from '@Modules/notifications/templates/passwordReset.template';
+import { passwordResetTemplate } from '@Modules/notifications-email/templates/passwordReset.template';
 
 describe('passwordResetTemplate', () => {
 	it('returns an object with subject and html properties', () => {

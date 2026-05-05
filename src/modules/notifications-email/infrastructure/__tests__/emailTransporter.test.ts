@@ -27,7 +27,7 @@ describe('email transporter', () => {
 		vi.doMock('@Helpers/log', () => ({ logInfo: vi.fn(), logError: vi.fn() }));
 
 		const { getEmailTransporter } =
-			await import('@Modules/notifications/infrastructure/emailTransporter');
+			await import('@Modules/notifications-email/infrastructure/emailTransporter');
 		const nodemailerModule = await import('nodemailer');
 
 		// Act — first call creates the transporter
@@ -68,7 +68,7 @@ describe('email transporter', () => {
 		vi.doMock('@Helpers/log', () => ({ logInfo: vi.fn(), logError: vi.fn() }));
 
 		const { getEmailTransporter } =
-			await import('@Modules/notifications/infrastructure/emailTransporter');
+			await import('@Modules/notifications-email/infrastructure/emailTransporter');
 		const nodemailerModule = await import('nodemailer');
 
 		// Act
