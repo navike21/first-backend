@@ -12,7 +12,7 @@ export const authVerifyEmail = asyncHandler(async (req, res) => {
 			message: 'Verification token is required',
 		});
 
-	const data = await verifyEmail(token);
+	const data = await verifyEmail(token, res.locals.lang as string);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'AUTH_EMAIL_VERIFIED',

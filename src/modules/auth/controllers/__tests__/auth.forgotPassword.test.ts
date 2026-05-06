@@ -19,7 +19,7 @@ import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes() {
 	return {
-		locals: {},
+		locals: { lang: 'en' },
 		status: vi.fn().mockReturnThis(),
 		json: vi.fn().mockReturnThis(),
 	} as unknown as Response;
@@ -32,7 +32,7 @@ describe('authForgotPassword', () => {
 		const res = makeRes();
 		const next = vi.fn();
 		await authForgotPassword(req, res, next);
-		expect(forgotPassword).toHaveBeenCalledWith('a@b.com');
+		expect(forgotPassword).toHaveBeenCalledWith('a@b.com', 'en');
 		expect(successResponse).toHaveBeenCalled();
 	});
 

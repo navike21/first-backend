@@ -4,7 +4,7 @@ import { UserModel } from '@Modules/users';
 import { InvalidTokenError } from '../domain/errors/AuthErrors';
 import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
 
-export async function verifyEmail(token: string) {
+export async function verifyEmail(token: string, lang = 'en') {
 	let payload;
 	try {
 		payload = JwtService.verifyEmail(token);
@@ -24,7 +24,7 @@ export async function verifyEmail(token: string) {
 
 	await sendEmail({
 		to: user.email,
-		...welcomeEmailTemplate({ firstName: user.firstName }),
+		...welcomeEmailTemplate({ firstName: user.firstName, lang }),
 	});
 
 	return { id: user.id, email: user.email };

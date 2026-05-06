@@ -22,11 +22,12 @@ vi.mock('@Modules/notifications-email', () => ({
 		.mockReturnValue({ subject: 'Welcome', html: '<p>Welcome</p>' }),
 }));
 
+import { welcomeEmailTemplate } from '@Modules/notifications-email';
+
 type MockUser = Pick<UserDocument, 'id' | 'email' | 'firstName'>;
 
 describe('verifyEmail', () => {
 	it('verifies the email and returns user data', async () => {
-		// Arrange
 		vi.mocked(JwtService.verifyEmail).mockReturnValue({
 			sub: 'u1',
 			type: 'email_verification',
@@ -36,47 +37,73 @@ describe('verifyEmail', () => {
 			mockUser as unknown as HydratedDocument<UserDocument>,
 		);
 
-		// Act
-		const result = await verifyEmail('valid-token');
+		const result = await verifyEmail('valid-token', 'en');
 
-		// Assert
 		expect(result).toEqual({ id: 'u1', email: 'a@b.c' });
 	});
 
+	it('passes the provided lang to the welcome email template', async () => {
+		vi.mocked(JwtService.verifyEmail).mockReturnValue({
+			sub: 'u1',
+			type: 'email_verification',
+		});
+		const mockUser: MockUser = { id: 'u1', email: 'a@b.c', firstName: 'Alice' };
+		vi.mocked(UserModel.findOneAndUpdate).mockResolvedValue(
+			mockUser as unknown as HydratedDocument<UserDocument>,
+		);
+
+		await verifyEmail('valid-token', 'es');
+
+		expect(welcomeEmailTemplate).toHaveBeenCalledWith(
+			expect.objectContaining({ lang: 'es' }),
+		);
+	});
+
+	it('defaults to English when no lang is provided', async () => {
+		vi.mocked(JwtService.verifyEmail).mockReturnValue({
+			sub: 'u1',
+			type: 'email_verification',
+		});
+		const mockUser: MockUser = { id: 'u1', email: 'a@b.c', firstName: 'Alice' };
+		vi.mocked(UserModel.findOneAndUpdate).mockResolvedValue(
+			mockUser as unknown as HydratedDocument<UserDocument>,
+		);
+
+		await verifyEmail('valid-token');
+
+		expect(welcomeEmailTemplate).toHaveBeenCalledWith(
+			expect.objectContaining({ lang: 'en' }),
+		);
+	});
+
 	it('throws InvalidTokenError when the JWT is invalid', async () => {
-		// Arrange
 		vi.mocked(JwtService.verifyEmail).mockImplementation(() => {
 			throw new Error('bad');
 		});
 
-		// Act & Assert
 		await expect(verifyEmail('bad-token')).rejects.toBeInstanceOf(
 			InvalidTokenError,
 		);
 	});
 
 	it('throws InvalidTokenError when the token type is not email_verification', async () => {
-		// Arrange
 		vi.mocked(JwtService.verifyEmail).mockReturnValue({
 			sub: 'u1',
 			type: 'password_reset',
 		});
 
-		// Act & Assert
 		await expect(verifyEmail('wrong-type-token')).rejects.toBeInstanceOf(
 			InvalidTokenError,
 		);
 	});
 
 	it('throws UserNotFoundError when no user is updated', async () => {
-		// Arrange
 		vi.mocked(JwtService.verifyEmail).mockReturnValue({
 			sub: 'u1',
 			type: 'email_verification',
 		});
 		vi.mocked(UserModel.findOneAndUpdate).mockResolvedValue(null);
 
-		// Act & Assert
 		await expect(verifyEmail('valid-token')).rejects.toBeInstanceOf(
 			UserNotFoundError,
 		);

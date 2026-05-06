@@ -51,7 +51,6 @@ describe('Users createUser', () => {
 	});
 
 	it('creates a user, sends a verification email, and returns user data', async () => {
-		// Arrange
 		const created: MockCreatedUser = {
 			id: 'u123',
 			email: baseInput.email,
@@ -60,13 +59,11 @@ describe('Users createUser', () => {
 		};
 		vi.mocked(UserModel.findOne).mockResolvedValue(null);
 		vi.mocked(UserModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<UserDocument>,
+			created as unknown as HydratedDocument<UserDocument>[],
 		);
 
-		// Act
-		const result = await createUser(baseInput);
+		const result = await createUser(baseInput, 'en');
 
-		// Assert
 		expect(UserModel.findOne).toHaveBeenCalledWith({ email: baseInput.email });
 		expect(UserModel.create).toHaveBeenCalledWith(
 			expect.objectContaining({ email: baseInput.email, password: 'hashedPW' }),
@@ -78,6 +75,7 @@ describe('Users createUser', () => {
 		expect(verifyEmailTemplate).toHaveBeenCalledWith({
 			firstName: baseInput.firstName,
 			verificationUrl: 'http://client.local/verify-email?token=EMAIL_TOKEN',
+			lang: 'en',
 		});
 		expect(sendEmail).toHaveBeenCalledWith(
 			expect.objectContaining({ to: baseInput.email }),
@@ -90,8 +88,45 @@ describe('Users createUser', () => {
 		});
 	});
 
+	it('passes the provided lang to the verification email template', async () => {
+		const created: MockCreatedUser = {
+			id: 'u124',
+			email: baseInput.email,
+			firstName: baseInput.firstName,
+			lastName: baseInput.lastName,
+		};
+		vi.mocked(UserModel.findOne).mockResolvedValue(null);
+		vi.mocked(UserModel.create).mockResolvedValue(
+			created as unknown as HydratedDocument<UserDocument>[],
+		);
+
+		await createUser(baseInput, 'es');
+
+		expect(verifyEmailTemplate).toHaveBeenCalledWith(
+			expect.objectContaining({ lang: 'es' }),
+		);
+	});
+
+	it('defaults to English when no lang is provided', async () => {
+		const created: MockCreatedUser = {
+			id: 'u125',
+			email: baseInput.email,
+			firstName: baseInput.firstName,
+			lastName: baseInput.lastName,
+		};
+		vi.mocked(UserModel.findOne).mockResolvedValue(null);
+		vi.mocked(UserModel.create).mockResolvedValue(
+			created as unknown as HydratedDocument<UserDocument>[],
+		);
+
+		await createUser(baseInput);
+
+		expect(verifyEmailTemplate).toHaveBeenCalledWith(
+			expect.objectContaining({ lang: 'en' }),
+		);
+	});
+
 	it('converts dateOfBirth string to a Date object when provided', async () => {
-		// Arrange
 		const inputWithDob: CreateUserInput = {
 			...baseInput,
 			dateOfBirth: '1990-06-15',
@@ -104,13 +139,11 @@ describe('Users createUser', () => {
 		};
 		vi.mocked(UserModel.findOne).mockResolvedValue(null);
 		vi.mocked(UserModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<UserDocument>,
+			created as unknown as HydratedDocument<UserDocument>[],
 		);
 
-		// Act
 		const result = await createUser(inputWithDob);
 
-		// Assert
 		expect(UserModel.create).toHaveBeenCalledWith(
 			expect.objectContaining({ dateOfBirth: new Date('1990-06-15') }),
 		);
@@ -118,12 +151,10 @@ describe('Users createUser', () => {
 	});
 
 	it('throws EmailAlreadyExistsError when the email is already registered', async () => {
-		// Arrange
 		vi.mocked(UserModel.findOne).mockResolvedValue({
 			id: 'existing',
 		} as unknown as HydratedDocument<UserDocument>);
 
-		// Act & Assert
 		await expect(createUser(baseInput)).rejects.toBeInstanceOf(
 			EmailAlreadyExistsError,
 		);

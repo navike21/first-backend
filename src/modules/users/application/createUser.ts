@@ -6,7 +6,7 @@ import UserModel from '@Modules/users/infrastructure/UserModel';
 import { EmailAlreadyExistsError } from '../domain/errors/UserErrors';
 import { CreateUserInput } from '../schemas/user.schema';
 
-export async function createUser(input: CreateUserInput) {
+export async function createUser(input: CreateUserInput, lang = 'en') {
 	const existing = await UserModel.findOne({ email: input.email });
 	if (existing) throw new EmailAlreadyExistsError();
 
@@ -29,7 +29,7 @@ export async function createUser(input: CreateUserInput) {
 
 	await sendEmail({
 		to: user.email,
-		...verifyEmailTemplate({ firstName: user.firstName, verificationUrl }),
+		...verifyEmailTemplate({ firstName: user.firstName, verificationUrl, lang }),
 	});
 
 	return {

@@ -19,7 +19,7 @@ import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes() {
 	return {
-		locals: {},
+		locals: { lang: 'en' },
 		status: vi.fn().mockReturnThis(),
 		json: vi.fn().mockReturnThis(),
 	} as unknown as Response;
@@ -32,7 +32,7 @@ describe('authVerifyEmail', () => {
 		const res = makeRes();
 		const next = vi.fn();
 		await authVerifyEmail(req, res, next);
-		expect(verifyEmail).toHaveBeenCalledWith('mytoken');
+		expect(verifyEmail).toHaveBeenCalledWith('mytoken', 'en');
 		expect(successResponse).toHaveBeenCalled();
 	});
 

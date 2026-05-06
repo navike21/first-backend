@@ -14,7 +14,7 @@ export const authForgotPassword = asyncHandler(async (req, res) => {
 		});
 	}
 
-	await forgotPassword(parsed.data.email);
+	await forgotPassword(parsed.data.email, res.locals.lang as string);
 
 	// Siempre responde igual — no revelar si el email existe
 	successResponse(res, {
