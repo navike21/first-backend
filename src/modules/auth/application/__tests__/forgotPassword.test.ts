@@ -28,13 +28,12 @@ vi.mock('@Helpers/log', () => ({
 	logInfo: vi.fn(),
 }));
 
-import { sendEmail } from '@Modules/notifications-email';
+import { sendEmail, passwordResetTemplate } from '@Modules/notifications-email';
 
 type MockUser = Pick<UserDocument, 'id' | 'email' | 'firstName'>;
 
 describe('forgotPassword', () => {
 	it('sends a password reset email when the user exists', async () => {
-		// Arrange
 		const mockUser: MockUser = {
 			id: 'u1',
 			email: 'user@example.com',
@@ -44,24 +43,57 @@ describe('forgotPassword', () => {
 			mockUser as unknown as HydratedDocument<UserDocument>,
 		);
 
-		// Act
-		await forgotPassword('user@example.com');
+		await forgotPassword('user@example.com', 'en');
 
-		// Assert
 		expect(JwtService.signEmail).toHaveBeenCalledWith({
 			sub: 'u1',
 			type: 'password_reset',
 		});
+		expect(passwordResetTemplate).toHaveBeenCalledWith(
+			expect.objectContaining({ firstName: 'Alice', lang: 'en' }),
+		);
 		expect(sendEmail).toHaveBeenCalledWith(
 			expect.objectContaining({ to: 'user@example.com' }),
 		);
 	});
 
+	it('passes the provided lang to the email template', async () => {
+		const mockUser: MockUser = {
+			id: 'u2',
+			email: 'user@example.com',
+			firstName: 'Bob',
+		};
+		vi.mocked(UserModel.findOne).mockResolvedValue(
+			mockUser as unknown as HydratedDocument<UserDocument>,
+		);
+
+		await forgotPassword('user@example.com', 'es');
+
+		expect(passwordResetTemplate).toHaveBeenCalledWith(
+			expect.objectContaining({ lang: 'es' }),
+		);
+	});
+
+	it('defaults to English when no lang is provided', async () => {
+		const mockUser: MockUser = {
+			id: 'u3',
+			email: 'user@example.com',
+			firstName: 'Carol',
+		};
+		vi.mocked(UserModel.findOne).mockResolvedValue(
+			mockUser as unknown as HydratedDocument<UserDocument>,
+		);
+
+		await forgotPassword('user@example.com');
+
+		expect(passwordResetTemplate).toHaveBeenCalledWith(
+			expect.objectContaining({ lang: 'en' }),
+		);
+	});
+
 	it('returns without throwing when the user does not exist', async () => {
-		// Arrange
 		vi.mocked(UserModel.findOne).mockResolvedValue(null);
 
-		// Act & Assert
 		await expect(
 			forgotPassword('unknown@example.com'),
 		).resolves.toBeUndefined();

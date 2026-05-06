@@ -4,7 +4,7 @@ import { sendEmail, passwordResetTemplate } from '@Modules/notifications-email';
 import { logInfo } from '@Helpers/log';
 import { UserModel } from '@Modules/users';
 
-export async function forgotPassword(email: string) {
+export async function forgotPassword(email: string, lang = 'en') {
 	const user = await UserModel.findOne({ email: email.toLowerCase() });
 
 	if (!user) {
@@ -19,6 +19,6 @@ export async function forgotPassword(email: string) {
 
 	await sendEmail({
 		to: user.email,
-		...passwordResetTemplate({ firstName: user.firstName, resetUrl }),
+		...passwordResetTemplate({ firstName: user.firstName, resetUrl, lang }),
 	});
 }

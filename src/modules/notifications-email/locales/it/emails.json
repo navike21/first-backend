@@ -1,0 +1,23 @@
+{
+  "verifyEmail": {
+    "subject": "Verifica il tuo indirizzo email",
+    "heading": "Ciao {{firstName}},",
+    "body": "Verifica il tuo indirizzo email per attivare il tuo account. Questo link scade tra 24 ore.",
+    "button": "Verifica email",
+    "safety": "Se non hai creato un account, puoi ignorare questa email in tutta sicurezza."
+  },
+  "passwordReset": {
+    "subject": "Reimposta la tua password",
+    "heading": "Ciao {{firstName}},",
+    "body": "Abbiamo ricevuto una richiesta di reimpostazione della tua password. Clicca il pulsante qui sotto per crearne una nuova. Questo link scade tra 1 ora.",
+    "button": "Reimposta password",
+    "safety": "Se non hai richiesto una reimpostazione della password, puoi ignorare questa email. La tua password non cambierà."
+  },
+  "welcomeEmail": {
+    "subject": "Benvenuto su First Backend!",
+    "heading": "Benvenuto, {{firstName}}!",
+    "body": "Il tuo account è stato verificato ed è ora completamente attivo. Sei pronto per iniziare.",
+    "thanks": "Grazie per esserti unito a noi."
+  },
+  "footer": "© {{year}} First Backend. Tutti i diritti riservati."
+}

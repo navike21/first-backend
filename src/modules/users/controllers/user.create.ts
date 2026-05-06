@@ -20,7 +20,7 @@ export const createUserController = asyncHandler(async (req, res) => {
 		});
 	}
 
-	const data = await createUser(parsed.data);
+	const data = await createUser(parsed.data, res.locals.lang as string);
 	successResponse(res, {
 		statusCode: 201,
 		code: 'USER_CREATED',
