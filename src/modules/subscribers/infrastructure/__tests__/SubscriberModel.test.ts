@@ -16,7 +16,7 @@ vi.mock('mongoose', async (importOriginal) => {
 	return {
 		...actual,
 		model: vi.fn().mockImplementation((_name: string, schema: unknown) => {
-			const M = Object.assign(function () {}, { schema }) as MockModel;
+			const M = Object.assign(function () {}, { schema }) as unknown as MockModel;
 			return M;
 		}),
 	};

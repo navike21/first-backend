@@ -32,7 +32,7 @@ describe('registerSubscriber', () => {
 			}),
 		};
 		vi.mocked(SubscriberModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<SubscriberSchema>,
+			created as unknown as HydratedDocument<SubscriberSchema>[],
 		);
 
 		// Act
