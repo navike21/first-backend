@@ -1,6 +1,10 @@
 // Vercel serverless function wrapper
 // CommonJS require since dist/ is compiled to CommonJS
-const app = require('../dist/index').default;
+const { default: app, readyPromise } = require('../dist/index');
 
-// Vercel automatically wraps Express apps
-module.exports = app;
+async function handler(req, res) {
+	await readyPromise;
+	app(req, res);
+}
+
+module.exports = handler;
