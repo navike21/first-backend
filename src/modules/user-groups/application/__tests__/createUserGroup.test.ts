@@ -21,7 +21,7 @@ describe('createUserGroup', () => {
 			slug: 'admin-users',
 		};
 		vi.mocked(UserGroupModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<UserGroupDocument>,
+			created as unknown as HydratedDocument<UserGroupDocument>[],
 		);
 
 		// Act
@@ -63,7 +63,7 @@ describe('createUserGroup', () => {
 			id: 'g2',
 			name: 'Super & Admins',
 			slug: 'super-admins',
-		} as unknown as HydratedDocument<UserGroupDocument>);
+		} as unknown as HydratedDocument<UserGroupDocument>[]);
 
 		// Act
 		await createUserGroup({
