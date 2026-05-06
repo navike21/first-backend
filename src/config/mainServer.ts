@@ -15,14 +15,18 @@ import { errorMiddleware } from '@Middlewares/errorMiddleware';
 let server: Server;
 let isShuttingDown = false;
 
+export async function initializeApp(app: Express): Promise<void> {
+	await initI18n();
+	await connectToDatabase();
+
+	configApp(app);
+	app.use(mainRouter());
+	app.use(errorMiddleware);
+}
+
 export async function startServer(app: Express): Promise<void> {
 	try {
-		await initI18n();
-		await connectToDatabase();
-
-		configApp(app);
-		app.use(mainRouter());
-		app.use(errorMiddleware);
+		await initializeApp(app);
 
 		server = app.listen(ENV.PORT, () => {
 			logInfo(`Server running on port ${ENV.PORT} in ${ENV.NODE_ENV} mode.`);
