@@ -4,8 +4,7 @@ import setThrowError from '@Helpers/setThrowError';
 import { ENV } from '@Constants/environments';
 import { LoginSchema } from '../schemas/auth.schema';
 import { loginUser } from '../application/loginUser';
-
-const REFRESH_COOKIE = 'refreshToken';
+import { REFRESH_COOKIE, AUTH_COOKIE_PATH } from '../constants/authCookies';
 
 export const authLogin = asyncHandler(async (req, res) => {
 	const parsed = LoginSchema.safeParse(req.body);
@@ -42,7 +41,7 @@ export const authLogin = asyncHandler(async (req, res) => {
 		secure: ENV.NODE_ENV === 'production',
 		sameSite: 'strict',
 		maxAge: refreshExpiresMs,
-		path: '/api/v1/auth',
+		path: AUTH_COOKIE_PATH,
 	});
 
 	successResponse(res, {

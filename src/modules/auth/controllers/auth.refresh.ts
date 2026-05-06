@@ -3,8 +3,7 @@ import { successResponse } from '@Helpers/responseStructure';
 import setThrowError from '@Helpers/setThrowError';
 import { ENV } from '@Constants/environments';
 import { rotateRefreshToken } from '../application/refreshToken';
-
-const REFRESH_COOKIE = 'refreshToken';
+import { REFRESH_COOKIE, AUTH_COOKIE_PATH } from '../constants/authCookies';
 
 export const authRefresh = asyncHandler(async (req, res) => {
 	const token = req.cookies?.[REFRESH_COOKIE] as string | undefined;
@@ -31,7 +30,7 @@ export const authRefresh = asyncHandler(async (req, res) => {
 		secure: ENV.NODE_ENV === 'production',
 		sameSite: 'strict',
 		maxAge: refreshExpiresMs,
-		path: '/api/v1/auth',
+		path: AUTH_COOKIE_PATH,
 	});
 
 	successResponse(res, {
