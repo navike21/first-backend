@@ -1,10 +1,8 @@
 import { JwtService } from '@Shared/infrastructure/JwtService';
 import { UserModel } from '@Modules/users';
 import { HashedPassword } from '../domain/value-objects/HashedPassword';
-import {
-	InvalidTokenError,
-	UserNotFoundError,
-} from '../domain/errors/AuthErrors';
+import { InvalidTokenError } from '../domain/errors/AuthErrors';
+import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
 import RefreshTokenModel from '../infrastructure/RefreshTokenModel';
 import SessionModel from '../infrastructure/SessionModel';
 

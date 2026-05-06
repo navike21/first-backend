@@ -2,10 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import type { HydratedDocument } from 'mongoose';
 import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
 import { verifyEmail } from '@Modules/auth/application/verifyEmail';
-import {
-	InvalidTokenError,
-	UserNotFoundError,
-} from '@Modules/auth/domain/errors/AuthErrors';
+import { InvalidTokenError } from '@Modules/auth/domain/errors/AuthErrors';
+import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
 import { JwtService } from '@Shared/infrastructure/JwtService';
 import { UserModel } from '@Modules/users';
 

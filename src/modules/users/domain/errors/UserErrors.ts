@@ -19,13 +19,3 @@ export class EmailAlreadyExistsError extends AppError {
 		});
 	}
 }
-
-export class UserGroupNotFoundError extends AppError {
-	constructor() {
-		super({
-			statusCode: 404,
-			code: 'USER_GROUP_NOT_FOUND',
-			message: 'User group not found',
-		});
-	}
-}

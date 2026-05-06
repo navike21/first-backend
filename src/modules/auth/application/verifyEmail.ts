@@ -1,10 +1,8 @@
 import { JwtService } from '@Shared/infrastructure/JwtService';
 import { sendEmail, welcomeEmailTemplate } from '@Modules/notifications-email';
 import { UserModel } from '@Modules/users';
-import {
-	InvalidTokenError,
-	UserNotFoundError,
-} from '../domain/errors/AuthErrors';
+import { InvalidTokenError } from '../domain/errors/AuthErrors';
+import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
 
 export async function verifyEmail(token: string) {
 	let payload;
