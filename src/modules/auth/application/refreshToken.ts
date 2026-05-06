@@ -1,12 +1,13 @@
 import generateUUID from '@Helpers/uuid';
 import { JwtService } from '@Shared/infrastructure/JwtService';
 import { UserModel } from '@Modules/users';
-import { UserGroupModel } from '@Modules/user-groups';
 import {
 	InvalidTokenError,
 	TokenReuseDetectedError,
 } from '../domain/errors/AuthErrors';
 import RefreshTokenModel from '../infrastructure/RefreshTokenModel';
+import { REFRESH_EXPIRES_MS } from '../constants/authCookies';
+import { loadUserPermissions } from './loadUserPermissions';
 
 export async function rotateRefreshToken(
 	incomingToken: string,
@@ -34,18 +35,13 @@ export async function rotateRefreshToken(
 	const user = await UserModel.findOne({ id: payload.sub });
 	if (!user) throw new InvalidTokenError();
 
-	const permissions: string[] = [];
-	if (user.groupId) {
-		const group = await UserGroupModel.findOne({ id: user.groupId });
-		if (group) permissions.push(...group.permissions);
-	}
+	const permissions = await loadUserPermissions(user.groupId);
 
 	const newJti = generateUUID();
 	const newAccessToken = JwtService.signAccess({ sub: user.id, permissions });
 	const newRefreshToken = JwtService.signRefresh({ sub: user.id, jti: newJti });
 
-	const refreshExpiresMs = 7 * 24 * 60 * 60 * 1000;
-	const expiresAt = new Date(Date.now() + refreshExpiresMs);
+	const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS);
 
 	await Promise.all([
 		RefreshTokenModel.findOneAndUpdate(
@@ -64,6 +60,6 @@ export async function rotateRefreshToken(
 	return {
 		accessToken: newAccessToken,
 		refreshToken: newRefreshToken,
-		refreshExpiresMs,
+		refreshExpiresMs: REFRESH_EXPIRES_MS,
 	};
 }

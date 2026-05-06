@@ -5,15 +5,7 @@ import {
 	SystemGroupModificationError,
 	UserGroupSlugConflictError,
 } from '../domain/errors/UserGroupErrors';
-
-function toSlug(name: string): string {
-	return name
-		.toLowerCase()
-		.trim()
-		.replaceAll(/\s+/g, '-')
-		.replaceAll(/[^a-z0-9-]/g, '')
-		.replaceAll(/-+/g, '-');
-}
+import { toSlug } from '../utils/slug';
 
 export async function updateUserGroup(id: string, input: UpdateUserGroupInput) {
 	const group = await UserGroupModel.findOne({ id });
