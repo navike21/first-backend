@@ -37,13 +37,10 @@ export function emitSessionUpdate(
 	event: 'login' | 'logout',
 	payload: { userId: string; sessionId?: string },
 ): void {
-	try {
-		getIO().emit('sessions:update', {
-			event,
-			...payload,
-			timestamp: new Date().toISOString(),
-		});
-	} catch {
-		// Socket no inicializado — no es crítico
-	}
+	if (!io) return;
+	io.emit('sessions:update', {
+		event,
+		...payload,
+		timestamp: new Date().toISOString(),
+	});
 }

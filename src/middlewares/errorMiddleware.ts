@@ -22,22 +22,22 @@ export const errorMiddleware = (
 			message,
 			details: error.details,
 		});
-	} else {
-		const errorMessage =
-			error instanceof Error
-				? `${error.message}\n${error.stack}`
-				: String(error);
-
-		logError(`Unhandled error: ${errorMessage}`);
-
-		const message = i18next.t('INTERNAL_SERVER_ERROR', {
-			lng: lang,
-			defaultValue: 'An unexpected error occurred',
-		});
-		return errorResponse(res, {
-			statusCode: 500,
-			code: 'INTERNAL_SERVER_ERROR',
-			message,
-		});
 	}
+
+	const errorMessage =
+		error instanceof Error
+			? `${error.message}\n${error.stack}`
+			: String(error);
+
+	logError(`Unhandled error: ${errorMessage}`);
+
+	const message = i18next.t('INTERNAL_SERVER_ERROR', {
+		lng: lang,
+		defaultValue: 'An unexpected error occurred',
+	});
+	return errorResponse(res, {
+		statusCode: 500,
+		code: 'INTERNAL_SERVER_ERROR',
+		message,
+	});
 };
