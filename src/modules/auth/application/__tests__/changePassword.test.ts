@@ -2,10 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import type { HydratedDocument } from 'mongoose';
 import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
 import { changePassword } from '@Modules/auth/application/changePassword';
-import {
-	InvalidCredentialsError,
-	UserNotFoundError,
-} from '@Modules/auth/domain/errors/AuthErrors';
+import { InvalidCredentialsError } from '@Modules/auth/domain/errors/AuthErrors';
+import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
 import { UserModel } from '@Modules/users';
 import { HashedPassword } from '@Modules/auth/domain/value-objects/HashedPassword';
 import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
