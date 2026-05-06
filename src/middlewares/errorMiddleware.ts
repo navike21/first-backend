@@ -25,9 +25,7 @@ export const errorMiddleware = (
 	}
 
 	const errorMessage =
-		error instanceof Error
-			? `${error.message}\n${error.stack}`
-			: String(error);
+		error instanceof Error ? `${error.message}\n${error.stack}` : String(error);
 
 	logError(`Unhandled error: ${errorMessage}`);
 
