@@ -1,0 +1,770 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-05-06T00:00:00.000Z",
+  "__export_source": "first-backend.api",
+  "resources": [
+    {
+      "_id": "wrk_firstbackend",
+      "_type": "workspace",
+      "name": "First Backend API",
+      "description": "API REST para First Backend — Node.js + TypeScript + Express + MongoDB.\n\nBase URL: http://localhost:3200\nVersión de API: v1 (/api/v1)\n\nAutenticación: Bearer Token (JWT de corta vida, 15 min).\nEl access token se obtiene en POST /auth/login y se renueva en POST /auth/refresh (via cookie httpOnly).",
+      "scope": "collection"
+    },
+
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_firstbackend",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3200",
+        "access_token": "",
+        "user_id": "",
+        "group_id": "",
+        "subscriber_id": ""
+      },
+      "color": null,
+      "isPrivate": false
+    },
+    {
+      "_id": "env_dev",
+      "_type": "environment",
+      "parentId": "env_base",
+      "name": "Development",
+      "data": {
+        "base_url": "http://localhost:3200"
+      },
+      "color": "#7C3AED",
+      "isPrivate": false
+    },
+    {
+      "_id": "env_prod",
+      "_type": "environment",
+      "parentId": "env_base",
+      "name": "Production (Vercel)",
+      "data": {
+        "base_url": "https://first-backend.vercel.app"
+      },
+      "color": "#059669",
+      "isPrivate": false
+    },
+
+    {
+      "_id": "fld_general",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "General",
+      "description": "Endpoints de bienvenida y estado del servicio.",
+      "metaSortKey": -1000
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "Auth",
+      "description": "Autenticación y gestión de sesiones.\n\nFlujo típico:\n1. POST /auth/login → guarda el access_token en la variable de entorno.\n2. Las rutas protegidas usan Bearer {{ access_token }} automáticamente.\n3. POST /auth/refresh renueva el access token usando la cookie httpOnly.",
+      "metaSortKey": -900
+    },
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "Users",
+      "description": "Gestión de usuarios del sistema.\n\nRutas de perfil propio: solo requieren estar autenticado.\nRutas administrativas: requieren permiso users:read / users:create / users:update / users:delete (o users:manage para todo).",
+      "metaSortKey": -800
+    },
+    {
+      "_id": "fld_usergroups",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "User Groups",
+      "description": "Gestión de grupos de usuarios y sus permisos (RBAC).\n\nCada usuario pertenece a un grupo. El grupo define qué permisos tiene el usuario en el sistema.\n\nRequiere permiso user-groups:read / create / update / delete (o user-groups:manage).",
+      "metaSortKey": -700
+    },
+    {
+      "_id": "fld_subscribers",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "Subscribers",
+      "description": "Gestión de suscriptores (newsletter / formulario público).\n\nPública: POST /subscriber/register (formulario de suscripción).\nAdmin: el resto de rutas requieren autenticación y permiso subscribers:read / create / update / delete (o subscribers:manage).",
+      "metaSortKey": -600
+    },
+
+    {
+      "_id": "req_welcome",
+      "_type": "request",
+      "parentId": "fld_general",
+      "name": "Welcome",
+      "description": "Endpoint raíz de bienvenida. Retorna información básica de la API (nombre y versión). No requiere autenticación.",
+      "method": "GET",
+      "url": "{{ base_url }}/",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_welcome_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_health",
+      "_type": "request",
+      "parentId": "fld_general",
+      "name": "Health Check",
+      "description": "Verifica el estado del servicio y la conexión a la base de datos MongoDB.\n\nRespuestas:\n- 200 OK: servicio y DB operativos. `data.db` = \"connected\".\n- 503 Service Unavailable: DB desconectada. `data.db` = \"disconnected\" | \"connecting\".\n\nNo requiere autenticación.",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/health",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_health_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -200
+    },
+
+    {
+      "_id": "req_auth_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "description": "Inicia sesión con email y contraseña.\n\nRetorna:\n- `accessToken`: JWT de 15 min para usar en el header Authorization.\n- `refreshToken`: se guarda como cookie httpOnly automáticamente (no visible en la respuesta).\n- `user`: datos básicos del usuario + array `permissions` con los permisos del grupo.\n\nReglas de contraseña: mínimo 8 caracteres, al menos una mayúscula y un número.\n\nErrores comunes:\n- 401 INVALID_CREDENTIALS: email o contraseña incorrectos.\n- 401 EMAIL_NOT_VERIFIED: el usuario no ha verificado su correo.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/auth/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_login_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_login_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password1!\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_auth_refresh",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Refresh Token",
+      "description": "Renueva el access token usando el refresh token almacenado en la cookie httpOnly `refresh_token`.\n\nNo requiere body ni Authorization header. La cookie se envía automáticamente por el navegador/cliente.\n\nRetorna un nuevo `accessToken` y rota el refresh token (el anterior queda inválido).\n\nErrores:\n- 401 UNAUTHORIZED: no existe cookie de refresh token.\n- 401 INVALID_TOKEN: refresh token inválido, expirado o revocado.\n- 401 TOKEN_REUSE_DETECTED: se detectó reutilización de un token ya usado (posible robo de sesión). Se revocan TODAS las sesiones del usuario.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/auth/refresh",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_refresh_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_auth_logout",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Logout",
+      "description": "Cierra la sesión actual revocando el refresh token de la cookie httpOnly.\n\nNo requiere body. Limpia la cookie en el cliente.\n\nSi no existe cookie de refresh token, responde igualmente con 200 (operación idempotente).",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/auth/logout",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_logout_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_auth_verify_email",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Verify Email",
+      "description": "Verifica el correo electrónico de un usuario mediante el token enviado por email al crear la cuenta.\n\nEl token va en la URL como path parameter. Expira en 24 horas.\n\nTras verificar exitosamente, se envía un email de bienvenida al usuario.\n\nErrores:\n- 400 MISSING_TOKEN: falta el token en la URL.\n- 401 INVALID_TOKEN: token inválido, expirado o de tipo incorrecto.\n- 404 USER_NOT_FOUND: el usuario ya estaba verificado o no existe.",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/auth/verify-email/:token",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_verifyemail_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_auth_forgot_password",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Forgot Password",
+      "description": "Solicita el envío de un email de restablecimiento de contraseña.\n\nPor seguridad, siempre responde 200 independientemente de si el email existe en el sistema (evita enumeración de usuarios).\n\nEl token enviado por email expira en 1 hora.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/auth/forgot-password",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_forgot_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_forgot_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@example.com\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_auth_reset_password",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Reset Password",
+      "description": "Restablece la contraseña usando el token recibido por email en el flujo de Forgot Password.\n\nEl token va en la URL como path parameter. Expira en 1 hora.\n\nTras el reset exitoso, todas las sesiones activas del usuario son invalidadas.\n\nReglas de contraseña: mínimo 8 caracteres, al menos una mayúscula y un número.\n\nErrores:\n- 401 INVALID_TOKEN: token inválido, expirado o de tipo incorrecto.\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/auth/reset-password/:token",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_reset_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_reset_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"password\": \"NewPassword1!\"\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_auth_change_password",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Change Password",
+      "description": "Cambia la contraseña del usuario autenticado. Requiere proporcionar la contraseña actual para confirmación.\n\nTras el cambio exitoso, todas las sesiones activas (excepto la actual) son invalidadas y se debe volver a hacer login.\n\nRequiere: Bearer Token (access token)\n\nReglas de nueva contraseña: mínimo 8 caracteres, al menos una mayúscula y un número.\n\nErrores:\n- 401 UNAUTHORIZED: no autenticado.\n- 401 INVALID_CREDENTIALS: contraseña actual incorrecta.\n- 422 VALIDATION_SCHEMA_ERROR: formato inválido.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/auth/change-password",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_changepw_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_changepw_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"currentPassword\": \"Password1!\",\n  \"newPassword\": \"NewPassword2!\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -700
+    },
+    {
+      "_id": "req_auth_sessions",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Get Active Sessions",
+      "description": "Retorna la lista de sesiones activas del usuario autenticado (dispositivos donde hay una sesión abierta).\n\nCada sesión incluye: user agent, IP, fecha de último acceso.\n\nRequiere: Bearer Token (access token)",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/auth/sessions",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_sessions_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -800
+    },
+
+    {
+      "_id": "req_users_me_get",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Get My Profile",
+      "description": "Retorna el perfil completo del usuario autenticado.\n\nIncluye: datos personales, dirección, grupo asignado, estado de verificación de email.\n\nRequiere: Bearer Token (access token)",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/users/me",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_mep_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_users_me_patch",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Update My Profile",
+      "description": "Actualiza los datos del perfil del usuario autenticado.\n\nCampos actualizables: firstName, lastName, dateOfBirth, gender, phone, profilePictureUrl, address.\nNO se puede cambiar email ni password por esta ruta.\n\nTodos los campos son opcionales (PATCH parcial).\n\nRequiere: Bearer Token (access token)",
+      "method": "PATCH",
+      "url": "{{ base_url }}/api/v1/users/me",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_meup_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_meup_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstName\": \"José\",\n  \"lastName\": \"García\",\n  \"phone\": \"+52 55 1234 5678\",\n  \"gender\": \"male\",\n  \"dateOfBirth\": \"1990-06-15\",\n  \"address\": {\n    \"street\": \"Av. Insurgentes Sur 123\",\n    \"city\": \"Ciudad de México\",\n    \"state\": \"CDMX\",\n    \"country\": \"México\",\n    \"postalCode\": \"06600\"\n  }\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_users_create",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Create User (Admin)",
+      "description": "Crea un nuevo usuario en el sistema.\n\nTras la creación, se envía un email de verificación al usuario. El usuario no podrá hacer login hasta que verifique su correo.\n\nPermiso requerido: users:create o users:manage\n\nCampos:\n- email (requerido): dirección de correo (única en el sistema)\n- password (requerido): mín. 8 chars, al menos 1 mayúscula y 1 número\n- firstName (requerido): 2-50 caracteres\n- lastName (requerido): 2-100 caracteres\n- dateOfBirth (opcional): formato YYYY-MM-DD\n- gender (opcional): female | male | other | prefer_not_to_say\n- phone (opcional): máx. 30 caracteres\n- profilePictureUrl (opcional): URL válida\n- address (opcional): objeto con street, city, state, country, postalCode\n- groupId (opcional): ID del grupo de usuario\n- status (opcional): active | inactive (default: active)\n\nErrores:\n- 409 EMAIL_ALREADY_EXISTS: el email ya está registrado.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/users",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_ucreate_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_ucreate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"Password1!\",\n  \"firstName\": \"María\",\n  \"lastName\": \"López\",\n  \"dateOfBirth\": \"1995-03-20\",\n  \"gender\": \"female\",\n  \"phone\": \"+52 55 9876 5432\",\n  \"groupId\": \"{{ group_id }}\",\n  \"status\": \"active\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_users_list",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "List Users (Admin)",
+      "description": "Lista todos los usuarios con paginación y filtros.\n\nPermiso requerido: users:read o users:manage\n\nQuery params:\n- page (default: 1): número de página\n- limit (default: 20, máx: 100): resultados por página\n- status (opcional): active | inactive\n- search (opcional): búsqueda por nombre o email\n- groupId (opcional): filtrar por grupo",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/users",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_ulist_1" }
+      ],
+      "parameters": [
+        { "name": "page", "value": "1", "disabled": false },
+        { "name": "limit", "value": "20", "disabled": false },
+        { "name": "status", "value": "active", "disabled": true },
+        { "name": "search", "value": "", "disabled": true },
+        { "name": "groupId", "value": "", "disabled": true }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_users_get_by_id",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Get User By ID (Admin)",
+      "description": "Obtiene los datos completos de un usuario por su ID (UUID).\n\nPermiso requerido: users:read o users:manage\n\nErrores:\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/users/{{ user_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_ugetid_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_users_update",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Update User (Admin)",
+      "description": "Actualiza los datos de un usuario por su ID.\n\nPermiso requerido: users:update o users:manage\n\nCampos actualizables: firstName, lastName, dateOfBirth, gender, phone, profilePictureUrl, address, groupId, status.\nNO se puede cambiar email ni password por esta ruta.\n\nTodos los campos son opcionales (PATCH parcial).\n\nErrores:\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/api/v1/users/{{ user_id }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_uupdate_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_uupdate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstName\": \"Carlos\",\n  \"status\": \"inactive\",\n  \"groupId\": \"{{ group_id }}\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_users_delete",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Delete User (Admin)",
+      "description": "Elimina un usuario del sistema por su ID.\n\nPermiso requerido: users:delete o users:manage\n\nErrores:\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/api/v1/users/{{ user_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_udelete_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -700
+    },
+
+    {
+      "_id": "req_permissions_catalog",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Get Permissions Catalog",
+      "description": "Retorna el catálogo completo de permisos disponibles en el sistema.\n\nÚtil para poblar el selector de permisos al crear o editar grupos.\n\nRequiere: Bearer Token (access token). No requiere permiso específico de user-groups.",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/permissions/catalog",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_permcat_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_usergroups_create",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Create User Group",
+      "description": "Crea un nuevo grupo de usuarios con sus permisos asignados.\n\nPermiso requerido: user-groups:create o user-groups:manage\n\nCampos:\n- name (requerido): 2-80 caracteres. Se genera un slug único automáticamente.\n- description (opcional): máx. 255 caracteres\n- permissions (opcional): array de permisos válidos del catálogo. Default: []\n- color (opcional): color hex (#RRGGBB). Default: #6366f1\n- status (opcional): active | inactive. Default: active\n\nErrores:\n- 409 USER_GROUP_SLUG_CONFLICT: ya existe un grupo con ese nombre.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/user-groups",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_ugcreate_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_ugcreate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Administradores\",\n  \"description\": \"Grupo con acceso completo al sistema\",\n  \"permissions\": [\n    \"users:manage\",\n    \"user-groups:manage\",\n    \"subscribers:manage\",\n    \"profile:read\",\n    \"profile:update\"\n  ],\n  \"color\": \"#dc2626\",\n  \"status\": \"active\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_usergroups_list",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "List User Groups",
+      "description": "Lista todos los grupos de usuarios con paginación y filtros.\n\nPermiso requerido: user-groups:read o user-groups:manage\n\nQuery params:\n- page (default: 1): número de página\n- limit (default: 20, máx: 100): resultados por página\n- status (opcional): active | inactive\n- search (opcional): búsqueda por nombre o slug",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/user-groups",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_uglist_1" }
+      ],
+      "parameters": [
+        { "name": "page", "value": "1", "disabled": false },
+        { "name": "limit", "value": "20", "disabled": false },
+        { "name": "status", "value": "active", "disabled": true },
+        { "name": "search", "value": "", "disabled": true }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_usergroups_get_by_id",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Get User Group By ID",
+      "description": "Obtiene los datos completos de un grupo de usuarios por su ID (UUID).\n\nPermiso requerido: user-groups:read o user-groups:manage\n\nErrores:\n- 404 USER_GROUP_NOT_FOUND: grupo no encontrado.",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/user-groups/{{ group_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_uggetid_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_usergroups_update",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Update User Group",
+      "description": "Actualiza los datos de un grupo de usuarios por su ID.\n\nPermiso requerido: user-groups:update o user-groups:manage\n\nTodos los campos son opcionales (PATCH parcial). El slug se regenera automáticamente si cambia el nombre.\n\nNOTA: Los grupos del sistema (isSystem: true) no pueden ser modificados.\n\nErrores:\n- 404 USER_GROUP_NOT_FOUND: grupo no encontrado.\n- 409 USER_GROUP_SLUG_CONFLICT: nombre ya usado por otro grupo.\n- 403 USER_GROUP_SYSTEM_PROTECTED: el grupo es del sistema.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/api/v1/user-groups/{{ group_id }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_ugupdate_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_ugupdate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Editores\",\n  \"description\": \"Grupo con acceso de lectura y edición\",\n  \"permissions\": [\n    \"users:read\",\n    \"subscribers:read\",\n    \"subscribers:update\",\n    \"profile:read\",\n    \"profile:update\"\n  ],\n  \"color\": \"#2563eb\",\n  \"status\": \"active\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_usergroups_delete",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Delete User Group",
+      "description": "Elimina un grupo de usuarios por su ID.\n\nPermiso requerido: user-groups:delete o user-groups:manage\n\nNOTA: Los grupos del sistema (isSystem: true) no pueden ser eliminados.\n\nErrores:\n- 404 USER_GROUP_NOT_FOUND: grupo no encontrado.\n- 403 USER_GROUP_SYSTEM_PROTECTED: el grupo es del sistema.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/api/v1/user-groups/{{ group_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_ugdelete_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -600
+    },
+
+    {
+      "_id": "req_sub_register",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Register Subscriber (Público)",
+      "description": "Registra un nuevo suscriptor desde el formulario público de suscripción.\n\nEsta es la ÚNICA ruta pública del módulo. No requiere autenticación.\n\nCampos:\n- firstName (requerido): 2-50 caracteres\n- lastName (requerido): 2-100 caracteres\n- contactInformation (requerido):\n  - email (requerido): dirección de correo válida\n  - phoneNumber (opcional): 9-15 caracteres\n  - address (opcional): 10-300 caracteres\n- personalInformation (requerido):\n  - gender (requerido): female | male | other | prefer_not_to_say\n  - dateOfBirth (opcional): fecha\n  - profilePictureUrl (opcional): URL válida\n- status (opcional): estado del registro\n\nErrores:\n- 409 ERROR_DUPLICATE_SUBSCRIBER: el email ya está suscrito.\n- 422 VALIDATION_SCHEMA_ERROR: campos inválidos.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/subscriber/register",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_subreg_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_subreg_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Martínez\",\n  \"contactInformation\": {\n    \"email\": \"ana@example.com\",\n    \"phoneNumber\": \"+5215512345678\",\n    \"address\": \"Av. Reforma 123, Col. Juárez, CDMX\"\n  },\n  \"personalInformation\": {\n    \"gender\": \"female\"\n  }\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_sub_register_bulk",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Register Subscribers Bulk (Admin)",
+      "description": "Registra múltiples suscriptores en una sola petición.\n\nPermiso requerido: subscribers:create o subscribers:manage\n\nEl body es un array de objetos con el mismo esquema que el registro individual.\nSe procesan en lote — si alguno falla validación, se reporta por separado.\n\nErrores:\n- 400 ERROR_NO_SUBSCRIBERS_PROVIDED: array vacío.\n- 422 ERROR_VALIDATION_FAILED: uno o más elementos inválidos.",
+      "method": "POST",
+      "url": "{{ base_url }}/api/v1/subscriber/register-bulk",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_subbulkreg_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_subbulkreg_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "[\n  {\n    \"firstName\": \"Pedro\",\n    \"lastName\": \"Ramírez\",\n    \"contactInformation\": {\n      \"email\": \"pedro@example.com\"\n    },\n    \"personalInformation\": {\n      \"gender\": \"male\"\n    }\n  },\n  {\n    \"firstName\": \"Laura\",\n    \"lastName\": \"Sánchez\",\n    \"contactInformation\": {\n      \"email\": \"laura@example.com\",\n      \"phoneNumber\": \"+5215598765432\"\n    },\n    \"personalInformation\": {\n      \"gender\": \"female\"\n    }\n  }\n]"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_sub_list",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "List Subscribers (Admin)",
+      "description": "Lista todos los suscriptores registrados.\n\nPermiso requerido: subscribers:read o subscribers:manage",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/subscriber/list",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_sublist_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_sub_search_by_id",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Get Subscriber By ID (Admin)",
+      "description": "Obtiene los datos completos de un suscriptor por su ID (UUID).\n\nPermiso requerido: subscribers:read o subscribers:manage\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "method": "GET",
+      "url": "{{ base_url }}/api/v1/subscriber/search/{{ subscriber_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_subgetid_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_sub_update",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Update Subscriber (Admin)",
+      "description": "Actualiza los datos de un suscriptor por su ID.\n\nPermiso requerido: subscribers:update o subscribers:manage\n\nTodos los campos son opcionales (PATCH parcial).\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/api/v1/subscriber/update/{{ subscriber_id }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_subupdate_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_subupdate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstName\": \"Ana Isabel\",\n  \"contactInformation\": {\n    \"phoneNumber\": \"+5215512345000\"\n  },\n  \"personalInformation\": {\n    \"gender\": \"female\"\n  }\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_sub_delete_logic",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Delete Subscriber Logical (Admin)",
+      "description": "Eliminación lógica (soft delete) de un suscriptor por su ID.\n\nEl registro permanece en la base de datos pero queda marcado como inactivo/eliminado. Se puede recuperar.\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/api/v1/subscriber/delete-logic/{{ subscriber_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_subdl_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_sub_delete_logic_bulk",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Delete Subscribers Logical Bulk (Admin)",
+      "description": "Eliminación lógica (soft delete) de múltiples suscriptores en una sola petición.\n\nEl body debe contener un array de IDs (UUIDs). Los registros quedan marcados como inactivos pero no se borran físicamente.\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 400 SUBSCRIBER_IDS_REQUIRED: array de IDs vacío.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/api/v1/subscriber/delete-logic-bulk",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_subdlb_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_subdlb_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -700
+    },
+    {
+      "_id": "req_sub_delete_physical",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Delete Subscriber Physical (Admin)",
+      "description": "Eliminación física (hard delete) permanente de un suscriptor por su ID.\n\n⚠️ IRREVERSIBLE. El registro se borra completamente de la base de datos.\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/api/v1/subscriber/delete/{{ subscriber_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "es", "id": "h_subdp_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -800
+    },
+    {
+      "_id": "req_sub_delete_physical_bulk",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Delete Subscribers Physical Bulk (Admin)",
+      "description": "Eliminación física (hard delete) permanente de múltiples suscriptores en una sola petición.\n\n⚠️ IRREVERSIBLE. Los registros se borran completamente de la base de datos.\n\nEl body debe contener un array de IDs (UUIDs).\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 400 SUBSCRIBER_IDS_REQUIRED: array de IDs vacío.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/api/v1/subscriber/delete-bulk",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_subdpb_1" },
+        { "name": "Accept-Language", "value": "es", "id": "h_subdpb_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -900
+    }
+  ]
+}
