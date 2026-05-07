@@ -21,6 +21,7 @@
         "host": "http://localhost:3200",
         "base_url": "http://localhost:3200/api/v1",
         "access_token": "",
+        "lang": "es",
         "user_id": "",
         "group_id": "",
         "subscriber_id": ""
@@ -103,7 +104,7 @@
       "method": "GET",
       "url": "{{ host }}/",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_welcome_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_welcome_1" }
       ],
       "parameters": [],
       "body": {},
@@ -119,7 +120,7 @@
       "method": "GET",
       "url": "{{ base_url }}/health",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_health_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_health_1" }
       ],
       "parameters": [],
       "body": {},
@@ -137,7 +138,7 @@
       "url": "{{ base_url }}/auth/login",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_login_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_login_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_login_2" }
       ],
       "parameters": [],
       "body": {
@@ -156,7 +157,7 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/refresh",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_refresh_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_refresh_1" }
       ],
       "parameters": [],
       "body": {},
@@ -172,7 +173,7 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/logout",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_logout_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_logout_1" }
       ],
       "parameters": [],
       "body": {},
@@ -188,7 +189,7 @@
       "method": "GET",
       "url": "{{ base_url }}/auth/verify-email/:token",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_verifyemail_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_verifyemail_1" }
       ],
       "parameters": [],
       "body": {},
@@ -205,7 +206,7 @@
       "url": "{{ base_url }}/auth/forgot-password",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_forgot_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_forgot_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_forgot_2" }
       ],
       "parameters": [],
       "body": {
@@ -225,7 +226,7 @@
       "url": "{{ base_url }}/auth/reset-password/:token",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_reset_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_reset_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_reset_2" }
       ],
       "parameters": [],
       "body": {
@@ -245,7 +246,7 @@
       "url": "{{ base_url }}/auth/change-password",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_changepw_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_changepw_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_changepw_2" }
       ],
       "parameters": [],
       "body": {
@@ -268,7 +269,7 @@
       "method": "GET",
       "url": "{{ base_url }}/auth/sessions",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_sessions_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_sessions_1" }
       ],
       "parameters": [],
       "body": {},
@@ -289,7 +290,7 @@
       "method": "GET",
       "url": "{{ base_url }}/users/me",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_mep_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_mep_1" }
       ],
       "parameters": [],
       "body": {},
@@ -310,7 +311,7 @@
       "url": "{{ base_url }}/users/me",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_meup_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_meup_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_meup_2" }
       ],
       "parameters": [],
       "body": {
@@ -334,7 +335,7 @@
       "url": "{{ base_url }}/users",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_ucreate_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_ucreate_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ucreate_2" }
       ],
       "parameters": [],
       "body": {
@@ -357,7 +358,7 @@
       "method": "GET",
       "url": "{{ base_url }}/users",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_ulist_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ulist_1" }
       ],
       "parameters": [
         { "name": "page", "value": "1", "disabled": false },
@@ -383,7 +384,7 @@
       "method": "GET",
       "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_ugetid_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugetid_1" }
       ],
       "parameters": [],
       "body": {},
@@ -404,7 +405,7 @@
       "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_uupdate_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_uupdate_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_uupdate_2" }
       ],
       "parameters": [],
       "body": {
@@ -427,7 +428,7 @@
       "method": "DELETE",
       "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_udelete_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_udelete_1" }
       ],
       "parameters": [],
       "body": {},
@@ -448,7 +449,7 @@
       "method": "GET",
       "url": "{{ base_url }}/permissions/catalog",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_permcat_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_permcat_1" }
       ],
       "parameters": [],
       "body": {},
@@ -469,7 +470,7 @@
       "url": "{{ base_url }}/user-groups",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_ugcreate_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_ugcreate_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugcreate_2" }
       ],
       "parameters": [],
       "body": {
@@ -492,7 +493,7 @@
       "method": "GET",
       "url": "{{ base_url }}/user-groups",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_uglist_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_uglist_1" }
       ],
       "parameters": [
         { "name": "page", "value": "1", "disabled": false },
@@ -517,7 +518,7 @@
       "method": "GET",
       "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_uggetid_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_uggetid_1" }
       ],
       "parameters": [],
       "body": {},
@@ -538,7 +539,7 @@
       "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_ugupdate_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_ugupdate_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugupdate_2" }
       ],
       "parameters": [],
       "body": {
@@ -561,7 +562,7 @@
       "method": "DELETE",
       "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_ugdelete_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugdelete_1" }
       ],
       "parameters": [],
       "body": {},
@@ -583,7 +584,7 @@
       "url": "{{ base_url }}/subscriber/register",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subreg_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_subreg_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subreg_2" }
       ],
       "parameters": [],
       "body": {
@@ -603,7 +604,7 @@
       "url": "{{ base_url }}/subscriber/register-bulk",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subbulkreg_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_subbulkreg_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subbulkreg_2" }
       ],
       "parameters": [],
       "body": {
@@ -626,7 +627,7 @@
       "method": "GET",
       "url": "{{ base_url }}/subscriber/list",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_sublist_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_sublist_1" }
       ],
       "parameters": [],
       "body": {},
@@ -646,7 +647,7 @@
       "method": "GET",
       "url": "{{ base_url }}/subscriber/search/{{ subscriber_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_subgetid_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subgetid_1" }
       ],
       "parameters": [],
       "body": {},
@@ -667,7 +668,7 @@
       "url": "{{ base_url }}/subscriber/update/{{ subscriber_id }}",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subupdate_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_subupdate_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subupdate_2" }
       ],
       "parameters": [],
       "body": {
@@ -690,7 +691,7 @@
       "method": "DELETE",
       "url": "{{ base_url }}/subscriber/delete-logic/{{ subscriber_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_subdl_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdl_1" }
       ],
       "parameters": [],
       "body": {},
@@ -711,7 +712,7 @@
       "url": "{{ base_url }}/subscriber/delete-logic-bulk",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subdlb_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_subdlb_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdlb_2" }
       ],
       "parameters": [],
       "body": {
@@ -734,7 +735,7 @@
       "method": "DELETE",
       "url": "{{ base_url }}/subscriber/delete/{{ subscriber_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "es", "id": "h_subdp_1" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdp_1" }
       ],
       "parameters": [],
       "body": {},
@@ -755,7 +756,7 @@
       "url": "{{ base_url }}/subscriber/delete-bulk",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subdpb_1" },
-        { "name": "Accept-Language", "value": "es", "id": "h_subdpb_2" }
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdpb_2" }
       ],
       "parameters": [],
       "body": {
