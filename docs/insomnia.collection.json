@@ -8,7 +8,7 @@
       "_id": "wrk_firstbackend",
       "_type": "workspace",
       "name": "First Backend API",
-      "description": "API REST para First Backend — Node.js + TypeScript + Express + MongoDB.\n\nBase URL: http://localhost:3200\nVersión de API: v1 (/api/v1)\n\nAutenticación: Bearer Token (JWT de corta vida, 15 min).\nEl access token se obtiene en POST /auth/login y se renueva en POST /auth/refresh (via cookie httpOnly).",
+      "description": "# 🚀 First Backend API\n\nAPI REST construida con **Node.js + TypeScript + Express + MongoDB**.\n\n---\n\n## 🌐 Ambientes\n\n| Ambiente | URL Base |\n|---|---|\n| Development | `http://localhost:3200/api/v1` |\n| Production (Vercel) | `https://first-backend.vercel.app/api/v1` |\n\n---\n\n## 🔐 Autenticación\n\nEsta API usa **JWT (JSON Web Tokens)** con un modelo de triple secreto:\n\n| Token | Duración | Uso |\n|---|---|---|\n| `access_token` | 15 min | Header `Authorization: Bearer <token>` |\n| `refresh_token` | 7 días | Cookie `httpOnly` — se gestiona automáticamente |\n| `email_token` | 24 h | Verificación de correo |\n| `reset_token` | 1 h | Restablecimiento de contraseña |\n\n### Flujo de autenticación\n\n1. `POST /auth/login` → guarda `access_token` en la variable de entorno\n2. Las rutas protegidas usan `Bearer {{ access_token }}` automáticamente\n3. Al expirar, `POST /auth/refresh` renueva el token usando la cookie httpOnly\n\n---\n\n## 🛡️ Permisos (RBAC)\n\nCada usuario pertenece a un **grupo de usuario** que define sus permisos:\n\n| Módulo | Permisos disponibles |\n|---|---|\n| Perfil propio | `profile:read`, `profile:update` |\n| Usuarios | `users:read`, `users:create`, `users:update`, `users:delete`, `users:manage` |\n| Grupos | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:manage` |\n| Suscriptores | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:manage` |\n\n> 💡 Los permisos `*:manage` son comodín e incluyen todas las operaciones del módulo.\n\n---\n\n## 🌍 Internacionalización\n\nTodas las rutas aceptan el header `Accept-Language` para respuestas y emails en el idioma del usuario.\n\n**Idiomas soportados:** `es`, `en`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`",
       "scope": "collection"
     },
 
@@ -18,7 +18,8 @@
       "parentId": "wrk_firstbackend",
       "name": "Base Environment",
       "data": {
-        "base_url": "http://localhost:3200",
+        "host": "http://localhost:3200",
+        "base_url": "http://localhost:3200/api/v1",
         "access_token": "",
         "user_id": "",
         "group_id": "",
@@ -33,7 +34,8 @@
       "parentId": "env_base",
       "name": "Development",
       "data": {
-        "base_url": "http://localhost:3200"
+        "host": "http://localhost:3200",
+        "base_url": "http://localhost:3200/api/v1"
       },
       "color": "#7C3AED",
       "isPrivate": false
@@ -44,7 +46,8 @@
       "parentId": "env_base",
       "name": "Production (Vercel)",
       "data": {
-        "base_url": "https://first-backend.vercel.app"
+        "host": "https://first-backend.vercel.app",
+        "base_url": "https://first-backend.vercel.app/api/v1"
       },
       "color": "#059669",
       "isPrivate": false
@@ -54,40 +57,40 @@
       "_id": "fld_general",
       "_type": "request_group",
       "parentId": "wrk_firstbackend",
-      "name": "General",
-      "description": "Endpoints de bienvenida y estado del servicio.",
+      "name": "🏠 General",
+      "description": "## 🏠 General\n\nEndpoints de bienvenida y monitoreo del servicio.\n\n| Endpoint | Auth | Descripción |\n|---|---|---|\n| `GET /` | ❌ Público | Información básica de la API |\n| `GET /api/v1/health` | ❌ Público | Estado del servicio y la base de datos |",
       "metaSortKey": -1000
     },
     {
       "_id": "fld_auth",
       "_type": "request_group",
       "parentId": "wrk_firstbackend",
-      "name": "Auth",
-      "description": "Autenticación y gestión de sesiones.\n\nFlujo típico:\n1. POST /auth/login → guarda el access_token en la variable de entorno.\n2. Las rutas protegidas usan Bearer {{ access_token }} automáticamente.\n3. POST /auth/refresh renueva el access token usando la cookie httpOnly.",
+      "name": "🔐 Auth",
+      "description": "## 🔐 Autenticación y Sesiones\n\nGestión completa del ciclo de vida de la autenticación: login, refresh, logout y recuperación de contraseña.\n\n### Flujo típico de uso\n\n```\n1. POST /auth/login          → obtén access_token + refresh_token (cookie)\n2. [rutas protegidas]        → usa Bearer {{ access_token }}\n3. POST /auth/refresh        → renueva el access_token sin re-login\n4. POST /auth/logout         → cierra la sesión y limpia la cookie\n```\n\n### Flujo de recuperación de contraseña\n\n```\n1. POST /auth/forgot-password   → envía email con token (expira en 1h)\n2. POST /auth/reset-password    → restablece con el token del email\n```\n\n### Notas de seguridad\n\n- El `refresh_token` viaja exclusivamente en cookie **httpOnly** — nunca en el body\n- La rotación de tokens invalida el token anterior en cada refresh\n- Si se detecta reutilización de un token, **todas las sesiones del usuario son revocadas** (protección anti-robo)",
       "metaSortKey": -900
     },
     {
       "_id": "fld_users",
       "_type": "request_group",
       "parentId": "wrk_firstbackend",
-      "name": "Users",
-      "description": "Gestión de usuarios del sistema.\n\nRutas de perfil propio: solo requieren estar autenticado.\nRutas administrativas: requieren permiso users:read / users:create / users:update / users:delete (o users:manage para todo).",
+      "name": "👤 Users",
+      "description": "## 👤 Usuarios\n\nGestión de usuarios del sistema. Distingue entre rutas de perfil propio y rutas administrativas.\n\n### Rutas de perfil propio\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `GET /users/me` | ✅ Bearer | Solo autenticado |\n| `PATCH /users/me` | ✅ Bearer | Solo autenticado |\n\n### Rutas administrativas\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `POST /users` | ✅ Bearer | `users:create` o `users:manage` |\n| `GET /users` | ✅ Bearer | `users:read` o `users:manage` |\n| `GET /users/:id` | ✅ Bearer | `users:read` o `users:manage` |\n| `PATCH /users/:id` | ✅ Bearer | `users:update` o `users:manage` |\n| `DELETE /users/:id` | ✅ Bearer | `users:delete` o `users:manage` |\n\n### Reglas de contraseña\n\n- Mínimo **8 caracteres**\n- Al menos **1 letra mayúscula**\n- Al menos **1 número**",
       "metaSortKey": -800
     },
     {
       "_id": "fld_usergroups",
       "_type": "request_group",
       "parentId": "wrk_firstbackend",
-      "name": "User Groups",
-      "description": "Gestión de grupos de usuarios y sus permisos (RBAC).\n\nCada usuario pertenece a un grupo. El grupo define qué permisos tiene el usuario en el sistema.\n\nRequiere permiso user-groups:read / create / update / delete (o user-groups:manage).",
+      "name": "👥 User Groups",
+      "description": "## 👥 Grupos de Usuarios (RBAC)\n\nGestión de grupos y sus permisos. Cada usuario pertenece a un grupo que define sus capacidades en el sistema.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `GET /permissions/catalog` | ✅ Bearer | Solo autenticado |\n| `POST /user-groups` | ✅ Bearer | `user-groups:create` o `user-groups:manage` |\n| `GET /user-groups` | ✅ Bearer | `user-groups:read` o `user-groups:manage` |\n| `GET /user-groups/:id` | ✅ Bearer | `user-groups:read` o `user-groups:manage` |\n| `PATCH /user-groups/:id` | ✅ Bearer | `user-groups:update` o `user-groups:manage` |\n| `DELETE /user-groups/:id` | ✅ Bearer | `user-groups:delete` o `user-groups:manage` |\n\n### ⚠️ Grupos del sistema\n\nLos grupos marcados con `isSystem: true` son **protegidos** — no pueden modificarse ni eliminarse.",
       "metaSortKey": -700
     },
     {
       "_id": "fld_subscribers",
       "_type": "request_group",
       "parentId": "wrk_firstbackend",
-      "name": "Subscribers",
-      "description": "Gestión de suscriptores (newsletter / formulario público).\n\nPública: POST /subscriber/register (formulario de suscripción).\nAdmin: el resto de rutas requieren autenticación y permiso subscribers:read / create / update / delete (o subscribers:manage).",
+      "name": "📧 Subscribers",
+      "description": "## 📧 Suscriptores\n\nGestión de la lista de suscriptores (newsletter). Distingue entre la ruta pública del formulario y las rutas de administración.\n\n### Ruta pública\n\n| Endpoint | Auth | Descripción |\n|---|---|---|\n| `POST /subscriber/register` | ❌ Público | Formulario de suscripción |\n\n### Rutas administrativas\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `POST /subscriber/register-bulk` | ✅ Bearer | `subscribers:create` o `subscribers:manage` |\n| `GET /subscriber/list` | ✅ Bearer | `subscribers:read` o `subscribers:manage` |\n| `GET /subscriber/search/:id` | ✅ Bearer | `subscribers:read` o `subscribers:manage` |\n| `PATCH /subscriber/update/:id` | ✅ Bearer | `subscribers:update` o `subscribers:manage` |\n| `DELETE /subscriber/delete-logic/:id` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n| `DELETE /subscriber/delete-logic-bulk` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n| `DELETE /subscriber/delete/:id` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n| `DELETE /subscriber/delete-bulk` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n\n### Tipos de eliminación\n\n| Tipo | Reversible | Descripción |\n|---|---|---|\n| **Lógica** (soft delete) | ✅ Sí | Marca el registro como eliminado, permanece en DB |\n| **Física** (hard delete) | ❌ No | Elimina el registro permanentemente de la DB |",
       "metaSortKey": -600
     },
 
@@ -96,9 +99,9 @@
       "_type": "request",
       "parentId": "fld_general",
       "name": "Welcome",
-      "description": "Endpoint raíz de bienvenida. Retorna información básica de la API (nombre y versión). No requiere autenticación.",
+      "description": "## 🏠 Welcome\n\nEndpoint raíz de bienvenida. Retorna información básica de la API.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere autenticación.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"name\": \"first-backend\",\n  \"version\": \"1.0.0\"\n}\n```",
       "method": "GET",
-      "url": "{{ base_url }}/",
+      "url": "{{ host }}/",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_welcome_1" }
       ],
@@ -112,9 +115,9 @@
       "_type": "request",
       "parentId": "fld_general",
       "name": "Health Check",
-      "description": "Verifica el estado del servicio y la conexión a la base de datos MongoDB.\n\nRespuestas:\n- 200 OK: servicio y DB operativos. `data.db` = \"connected\".\n- 503 Service Unavailable: DB desconectada. `data.db` = \"disconnected\" | \"connecting\".\n\nNo requiere autenticación.",
+      "description": "## 🩺 Health Check\n\nVerifica el estado del servicio y la conexión a la base de datos MongoDB. Útil para monitoreo y readiness probes en contenedores.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere autenticación.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"status\": \"ok\",\n  \"data\": {\n    \"db\": \"connected\"\n  }\n}\n```\n\n### ❌ Respuesta de error `503 Service Unavailable`\n\n```json\n{\n  \"status\": \"error\",\n  \"data\": {\n    \"db\": \"disconnected\"\n  }\n}\n```\n\n---\n\n### 📋 Estados posibles de `data.db`\n\n| Estado | Significado |\n|---|---|\n| `connected` | MongoDB operativo ✅ |\n| `disconnected` | Sin conexión a MongoDB ❌ |\n| `connecting` | Reconectando a MongoDB ⏳ |",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/health",
+      "url": "{{ base_url }}/health",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_health_1" }
       ],
@@ -129,9 +132,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Login",
-      "description": "Inicia sesión con email y contraseña.\n\nRetorna:\n- `accessToken`: JWT de 15 min para usar en el header Authorization.\n- `refreshToken`: se guarda como cookie httpOnly automáticamente (no visible en la respuesta).\n- `user`: datos básicos del usuario + array `permissions` con los permisos del grupo.\n\nReglas de contraseña: mínimo 8 caracteres, al menos una mayúscula y un número.\n\nErrores comunes:\n- 401 INVALID_CREDENTIALS: email o contraseña incorrectos.\n- 401 EMAIL_NOT_VERIFIED: el usuario no ha verificado su correo.",
+      "description": "## 🔑 Login\n\nInicia sesión con email y contraseña. Retorna un `access_token` JWT y establece el `refresh_token` en una cookie httpOnly.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere autenticación previa.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `email` | `string` | ✅ | Email registrado del usuario |\n| `password` | `string` | ✅ | Contraseña (mín. 8 chars, 1 mayúscula, 1 número) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiJ9...\",\n  \"user\": {\n    \"id\": \"uuid\",\n    \"email\": \"user@example.com\",\n    \"firstName\": \"José\",\n    \"lastName\": \"García\",\n    \"permissions\": [\"users:read\", \"profile:read\", \"profile:update\"]\n  }\n}\n```\n\n> 💡 Guarda el `accessToken` en la variable de entorno `access_token` para usarlo en las demás peticiones.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `INVALID_CREDENTIALS` | Email o contraseña incorrectos |\n| `401` | `EMAIL_NOT_VERIFIED` | El usuario no ha verificado su correo electrónico |\n| `422` | `VALIDATION_SCHEMA_ERROR` | El body no cumple el esquema de validación |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/auth/login",
+      "url": "{{ base_url }}/auth/login",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_login_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_login_2" }
@@ -149,9 +152,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Refresh Token",
-      "description": "Renueva el access token usando el refresh token almacenado en la cookie httpOnly `refresh_token`.\n\nNo requiere body ni Authorization header. La cookie se envía automáticamente por el navegador/cliente.\n\nRetorna un nuevo `accessToken` y rota el refresh token (el anterior queda inválido).\n\nErrores:\n- 401 UNAUTHORIZED: no existe cookie de refresh token.\n- 401 INVALID_TOKEN: refresh token inválido, expirado o revocado.\n- 401 TOKEN_REUSE_DETECTED: se detectó reutilización de un token ya usado (posible robo de sesión). Se revocan TODAS las sesiones del usuario.",
+      "description": "## 🔄 Refresh Token\n\nRenueva el `access_token` usando el `refresh_token` almacenado en la cookie httpOnly. Implementa **rotación de tokens**: el refresh token anterior queda inválido y se emite uno nuevo.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere `Authorization` header. La cookie `refresh_token` se envía automáticamente por el cliente.\n\n---\n\n### 📤 Request Body\n\nNo requiere body.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"accessToken\": \"eyJhbGciOiJIUzI1NiJ9...\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `UNAUTHORIZED` | No existe cookie de refresh token |\n| `401` | `INVALID_TOKEN` | Token inválido, expirado o revocado |\n| `401` | `TOKEN_REUSE_DETECTED` | ⚠️ Se detectó reutilización — **todas las sesiones del usuario son revocadas** |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/auth/refresh",
+      "url": "{{ base_url }}/auth/refresh",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_refresh_1" }
       ],
@@ -165,9 +168,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Logout",
-      "description": "Cierra la sesión actual revocando el refresh token de la cookie httpOnly.\n\nNo requiere body. Limpia la cookie en el cliente.\n\nSi no existe cookie de refresh token, responde igualmente con 200 (operación idempotente).",
+      "description": "## 🚪 Logout\n\nCierra la sesión actual revocando el refresh token y limpiando la cookie httpOnly en el cliente.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere `Authorization` header. Opera sobre la cookie `refresh_token`.\n\n---\n\n### 📤 Request Body\n\nNo requiere body.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Sesión cerrada correctamente\"\n}\n```\n\n> 💡 Esta operación es **idempotente** — si no existe cookie de refresh token, responde igualmente con `200 OK`.",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/auth/logout",
+      "url": "{{ base_url }}/auth/logout",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_logout_1" }
       ],
@@ -181,9 +184,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Verify Email",
-      "description": "Verifica el correo electrónico de un usuario mediante el token enviado por email al crear la cuenta.\n\nEl token va en la URL como path parameter. Expira en 24 horas.\n\nTras verificar exitosamente, se envía un email de bienvenida al usuario.\n\nErrores:\n- 400 MISSING_TOKEN: falta el token en la URL.\n- 401 INVALID_TOKEN: token inválido, expirado o de tipo incorrecto.\n- 404 USER_NOT_FOUND: el usuario ya estaba verificado o no existe.",
+      "description": "## ✉️ Verify Email\n\nVerifica el correo electrónico de un usuario mediante el token enviado al registrarse. Tras la verificación exitosa, se envía un **email de bienvenida** al usuario.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere autenticación. El token va como **path parameter** en la URL.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `token` | `string` | Token JWT de verificación recibido por email (expira en **24 h**) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Email verificado correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `MISSING_TOKEN` | No se proporcionó token en la URL |\n| `401` | `INVALID_TOKEN` | Token inválido, expirado o de tipo incorrecto |\n| `404` | `USER_NOT_FOUND` | El usuario no existe o ya fue verificado |",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/auth/verify-email/:token",
+      "url": "{{ base_url }}/auth/verify-email/:token",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_verifyemail_1" }
       ],
@@ -197,9 +200,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Forgot Password",
-      "description": "Solicita el envío de un email de restablecimiento de contraseña.\n\nPor seguridad, siempre responde 200 independientemente de si el email existe en el sistema (evita enumeración de usuarios).\n\nEl token enviado por email expira en 1 hora.",
+      "description": "## 🔓 Forgot Password\n\nSolicita el envío de un email de restablecimiento de contraseña.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere autenticación.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `email` | `string` | ✅ | Email del usuario |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Si el correo existe, recibirás instrucciones para restablecer tu contraseña\"\n}\n```\n\n> 🛡️ **Seguridad anti-enumeración**: siempre responde `200 OK` independientemente de si el email existe en el sistema. El token incluido en el email expira en **1 hora**.",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/auth/forgot-password",
+      "url": "{{ base_url }}/auth/forgot-password",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_forgot_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_forgot_2" }
@@ -217,9 +220,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Reset Password",
-      "description": "Restablece la contraseña usando el token recibido por email en el flujo de Forgot Password.\n\nEl token va en la URL como path parameter. Expira en 1 hora.\n\nTras el reset exitoso, todas las sesiones activas del usuario son invalidadas.\n\nReglas de contraseña: mínimo 8 caracteres, al menos una mayúscula y un número.\n\nErrores:\n- 401 INVALID_TOKEN: token inválido, expirado o de tipo incorrecto.\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "description": "## 🔏 Reset Password\n\nRestablece la contraseña usando el token recibido por email en el flujo de **Forgot Password**. Tras el reset exitoso, **todas las sesiones activas del usuario son invalidadas**.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere autenticación. El token va como **path parameter** en la URL.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `token` | `string` | Token JWT de reset recibido por email (expira en **1 h**) |\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `password` | `string` | ✅ | Nueva contraseña (mín. 8 chars, 1 mayúscula, 1 número) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Contraseña restablecida correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `INVALID_TOKEN` | Token inválido, expirado o de tipo incorrecto |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Contraseña no cumple los requisitos |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/auth/reset-password/:token",
+      "url": "{{ base_url }}/auth/reset-password/:token",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_reset_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_reset_2" }
@@ -237,9 +240,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Change Password",
-      "description": "Cambia la contraseña del usuario autenticado. Requiere proporcionar la contraseña actual para confirmación.\n\nTras el cambio exitoso, todas las sesiones activas (excepto la actual) son invalidadas y se debe volver a hacer login.\n\nRequiere: Bearer Token (access token)\n\nReglas de nueva contraseña: mínimo 8 caracteres, al menos una mayúscula y un número.\n\nErrores:\n- 401 UNAUTHORIZED: no autenticado.\n- 401 INVALID_CREDENTIALS: contraseña actual incorrecta.\n- 422 VALIDATION_SCHEMA_ERROR: formato inválido.",
+      "description": "## 🔐 Change Password\n\nCambia la contraseña del usuario autenticado. Requiere la contraseña actual como confirmación. Tras el cambio exitoso, **todas las sesiones activas son invalidadas** y el usuario debe volver a hacer login.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** (access token) requerido.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `currentPassword` | `string` | ✅ | Contraseña actual del usuario |\n| `newPassword` | `string` | ✅ | Nueva contraseña (mín. 8 chars, 1 mayúscula, 1 número) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Contraseña actualizada correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `UNAUTHORIZED` | No autenticado |\n| `401` | `INVALID_CREDENTIALS` | Contraseña actual incorrecta |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Nueva contraseña no cumple los requisitos |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/auth/change-password",
+      "url": "{{ base_url }}/auth/change-password",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_changepw_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_changepw_2" }
@@ -261,9 +264,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Get Active Sessions",
-      "description": "Retorna la lista de sesiones activas del usuario autenticado (dispositivos donde hay una sesión abierta).\n\nCada sesión incluye: user agent, IP, fecha de último acceso.\n\nRequiere: Bearer Token (access token)",
+      "description": "## 📱 Active Sessions\n\nRetorna la lista de sesiones activas del usuario autenticado — los dispositivos o clientes donde hay una sesión abierta.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** (access token) requerido.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"userAgent\": \"Mozilla/5.0 ...\",\n      \"ip\": \"192.168.1.1\",\n      \"lastUsedAt\": \"2026-05-06T12:00:00.000Z\",\n      \"createdAt\": \"2026-05-01T08:00:00.000Z\"\n    }\n  ]\n}\n```\n\n---\n\n### 📋 Campos de la sesión\n\n| Campo | Descripción |\n|---|---|\n| `id` | Identificador único de la sesión |\n| `userAgent` | Navegador / cliente que abrió la sesión |\n| `ip` | Dirección IP de origen |\n| `lastUsedAt` | Última vez que se usó el refresh token |\n| `createdAt` | Fecha de inicio de la sesión |",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/auth/sessions",
+      "url": "{{ base_url }}/auth/sessions",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_sessions_1" }
       ],
@@ -282,9 +285,9 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Get My Profile",
-      "description": "Retorna el perfil completo del usuario autenticado.\n\nIncluye: datos personales, dirección, grupo asignado, estado de verificación de email.\n\nRequiere: Bearer Token (access token)",
+      "description": "## 👤 Get My Profile\n\nRetorna el perfil completo del usuario autenticado.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** requerido. No requiere permiso específico.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": {\n    \"id\": \"uuid\",\n    \"email\": \"user@example.com\",\n    \"firstName\": \"José\",\n    \"lastName\": \"García\",\n    \"phone\": \"+52 55 1234 5678\",\n    \"gender\": \"male\",\n    \"dateOfBirth\": \"1990-06-15\",\n    \"profilePictureUrl\": null,\n    \"emailVerified\": true,\n    \"status\": \"active\",\n    \"group\": {\n      \"id\": \"uuid\",\n      \"name\": \"Administradores\",\n      \"permissions\": [\"users:manage\"]\n    },\n    \"address\": {\n      \"street\": \"Av. Insurgentes Sur 123\",\n      \"city\": \"Ciudad de México\",\n      \"state\": \"CDMX\",\n      \"country\": \"México\",\n      \"postalCode\": \"06600\"\n    },\n    \"createdAt\": \"2026-01-01T00:00:00.000Z\"\n  }\n}\n```",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/users/me",
+      "url": "{{ base_url }}/users/me",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_mep_1" }
       ],
@@ -302,9 +305,9 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Update My Profile",
-      "description": "Actualiza los datos del perfil del usuario autenticado.\n\nCampos actualizables: firstName, lastName, dateOfBirth, gender, phone, profilePictureUrl, address.\nNO se puede cambiar email ni password por esta ruta.\n\nTodos los campos son opcionales (PATCH parcial).\n\nRequiere: Bearer Token (access token)",
+      "description": "## ✏️ Update My Profile\n\nActualiza los datos del perfil del usuario autenticado. Actualización parcial — solo se modifican los campos enviados.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** requerido. No requiere permiso específico.\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Validación |\n|---|---|---|\n| `firstName` | `string` | 2–50 caracteres |\n| `lastName` | `string` | 2–100 caracteres |\n| `phone` | `string` | Máx. 30 caracteres |\n| `gender` | `string` | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `dateOfBirth` | `string` | Formato `YYYY-MM-DD` |\n| `profilePictureUrl` | `string` | URL válida |\n| `address.street` | `string` | — |\n| `address.city` | `string` | — |\n| `address.state` | `string` | — |\n| `address.country` | `string` | — |\n| `address.postalCode` | `string` | — |\n\n> ⚠️ **No se puede cambiar** `email` ni `password` por esta ruta. Usa `/auth/change-password` para la contraseña.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\nRetorna el perfil actualizado con la misma estructura que **Get My Profile**.",
       "method": "PATCH",
-      "url": "{{ base_url }}/api/v1/users/me",
+      "url": "{{ base_url }}/users/me",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_meup_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_meup_2" }
@@ -326,9 +329,9 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Create User (Admin)",
-      "description": "Crea un nuevo usuario en el sistema.\n\nTras la creación, se envía un email de verificación al usuario. El usuario no podrá hacer login hasta que verifique su correo.\n\nPermiso requerido: users:create o users:manage\n\nCampos:\n- email (requerido): dirección de correo (única en el sistema)\n- password (requerido): mín. 8 chars, al menos 1 mayúscula y 1 número\n- firstName (requerido): 2-50 caracteres\n- lastName (requerido): 2-100 caracteres\n- dateOfBirth (opcional): formato YYYY-MM-DD\n- gender (opcional): female | male | other | prefer_not_to_say\n- phone (opcional): máx. 30 caracteres\n- profilePictureUrl (opcional): URL válida\n- address (opcional): objeto con street, city, state, country, postalCode\n- groupId (opcional): ID del grupo de usuario\n- status (opcional): active | inactive (default: active)\n\nErrores:\n- 409 EMAIL_ALREADY_EXISTS: el email ya está registrado.",
+      "description": "## ➕ Create User\n\nCrea un nuevo usuario en el sistema. Tras la creación, se envía un **email de verificación** al usuario. El usuario no podrá hacer login hasta que verifique su correo.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:create` o `users:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Validación |\n|---|---|---|---|\n| `email` | `string` | ✅ | Email válido, único en el sistema |\n| `password` | `string` | ✅ | Mín. 8 chars, 1 mayúscula, 1 número |\n| `firstName` | `string` | ✅ | 2–50 caracteres |\n| `lastName` | `string` | ✅ | 2–100 caracteres |\n| `dateOfBirth` | `string` | ❌ | Formato `YYYY-MM-DD` |\n| `gender` | `string` | ❌ | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `phone` | `string` | ❌ | Máx. 30 caracteres |\n| `profilePictureUrl` | `string` | ❌ | URL válida |\n| `address` | `object` | ❌ | `street`, `city`, `state`, `country`, `postalCode` |\n| `groupId` | `string` | ❌ | UUID del grupo de usuario |\n| `status` | `string` | ❌ | `active` \\| `inactive` (default: `active`) |\n\n---\n\n### ✅ Respuesta exitosa `201 Created`\n\nRetorna el usuario creado (sin `password`).\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `UNAUTHORIZED` | No autenticado |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `409` | `EMAIL_ALREADY_EXISTS` | El email ya está registrado |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Campos inválidos |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/users",
+      "url": "{{ base_url }}/users",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_ucreate_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_ucreate_2" }
@@ -350,9 +353,9 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "List Users (Admin)",
-      "description": "Lista todos los usuarios con paginación y filtros.\n\nPermiso requerido: users:read o users:manage\n\nQuery params:\n- page (default: 1): número de página\n- limit (default: 20, máx: 100): resultados por página\n- status (opcional): active | inactive\n- search (opcional): búsqueda por nombre o email\n- groupId (opcional): filtrar por grupo",
+      "description": "## 📋 List Users\n\nLista todos los usuarios del sistema con paginación y filtros opcionales.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:read` o `users:manage`.\n\n---\n\n### 🔍 Query Parameters\n\n| Parámetro | Tipo | Default | Descripción |\n|---|---|---|---|\n| `page` | `number` | `1` | Número de página |\n| `limit` | `number` | `20` | Resultados por página (máx. `100`) |\n| `status` | `string` | — | Filtrar por estado: `active` \\| `inactive` |\n| `search` | `string` | — | Búsqueda por nombre o email |\n| `groupId` | `string` | — | Filtrar por UUID de grupo |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [...],\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 20,\n    \"total\": 150,\n    \"totalPages\": 8\n  }\n}\n```",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/users",
+      "url": "{{ base_url }}/users",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_ulist_1" }
       ],
@@ -376,9 +379,9 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Get User By ID (Admin)",
-      "description": "Obtiene los datos completos de un usuario por su ID (UUID).\n\nPermiso requerido: users:read o users:manage\n\nErrores:\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "description": "## 🔎 Get User By ID\n\nObtiene los datos completos de un usuario por su ID (UUID).\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:read` o `users:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del usuario |\n\n> 💡 Usa la variable de entorno `{{ user_id }}` para no tener que escribir el UUID manualmente.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `UNAUTHORIZED` | No autenticado |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/users/{{ user_id }}",
+      "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_ugetid_1" }
       ],
@@ -396,9 +399,9 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Update User (Admin)",
-      "description": "Actualiza los datos de un usuario por su ID.\n\nPermiso requerido: users:update o users:manage\n\nCampos actualizables: firstName, lastName, dateOfBirth, gender, phone, profilePictureUrl, address, groupId, status.\nNO se puede cambiar email ni password por esta ruta.\n\nTodos los campos son opcionales (PATCH parcial).\n\nErrores:\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "description": "## ✏️ Update User\n\nActualiza los datos de un usuario por su ID. Actualización parcial — solo se modifican los campos enviados.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:update` o `users:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del usuario |\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `firstName` | `string` | 2–50 caracteres |\n| `lastName` | `string` | 2–100 caracteres |\n| `phone` | `string` | Máx. 30 caracteres |\n| `gender` | `string` | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `dateOfBirth` | `string` | Formato `YYYY-MM-DD` |\n| `profilePictureUrl` | `string` | URL válida |\n| `address` | `object` | Objeto de dirección |\n| `groupId` | `string` | UUID del nuevo grupo |\n| `status` | `string` | `active` \\| `inactive` |\n\n> ⚠️ No se puede cambiar `email` ni `password` por esta ruta.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |",
       "method": "PATCH",
-      "url": "{{ base_url }}/api/v1/users/{{ user_id }}",
+      "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_uupdate_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_uupdate_2" }
@@ -420,9 +423,9 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Delete User (Admin)",
-      "description": "Elimina un usuario del sistema por su ID.\n\nPermiso requerido: users:delete o users:manage\n\nErrores:\n- 404 USER_NOT_FOUND: usuario no encontrado.",
+      "description": "## 🗑️ Delete User\n\nElimina un usuario del sistema por su ID.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:delete` o `users:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del usuario a eliminar |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Usuario eliminado correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |",
       "method": "DELETE",
-      "url": "{{ base_url }}/api/v1/users/{{ user_id }}",
+      "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_udelete_1" }
       ],
@@ -441,9 +444,9 @@
       "_type": "request",
       "parentId": "fld_usergroups",
       "name": "Get Permissions Catalog",
-      "description": "Retorna el catálogo completo de permisos disponibles en el sistema.\n\nÚtil para poblar el selector de permisos al crear o editar grupos.\n\nRequiere: Bearer Token (access token). No requiere permiso específico de user-groups.",
+      "description": "## 📚 Permissions Catalog\n\nRetorna el catálogo completo de permisos disponibles en el sistema. Útil para poblar selectores al crear o editar grupos de usuarios.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** requerido. No requiere permiso específico de `user-groups`.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [\n    { \"key\": \"users:read\", \"module\": \"users\", \"action\": \"read\" },\n    { \"key\": \"users:create\", \"module\": \"users\", \"action\": \"create\" },\n    { \"key\": \"users:manage\", \"module\": \"users\", \"action\": \"manage\" },\n    ...\n  ]\n}\n```\n\n---\n\n### 📋 Módulos y permisos\n\n| Módulo | Permisos |\n|---|---|\n| `profile` | `read`, `update` |\n| `users` | `read`, `create`, `update`, `delete`, `manage` |\n| `user-groups` | `read`, `create`, `update`, `delete`, `manage` |\n| `subscribers` | `read`, `create`, `update`, `delete`, `manage` |",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/permissions/catalog",
+      "url": "{{ base_url }}/permissions/catalog",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_permcat_1" }
       ],
@@ -461,9 +464,9 @@
       "_type": "request",
       "parentId": "fld_usergroups",
       "name": "Create User Group",
-      "description": "Crea un nuevo grupo de usuarios con sus permisos asignados.\n\nPermiso requerido: user-groups:create o user-groups:manage\n\nCampos:\n- name (requerido): 2-80 caracteres. Se genera un slug único automáticamente.\n- description (opcional): máx. 255 caracteres\n- permissions (opcional): array de permisos válidos del catálogo. Default: []\n- color (opcional): color hex (#RRGGBB). Default: #6366f1\n- status (opcional): active | inactive. Default: active\n\nErrores:\n- 409 USER_GROUP_SLUG_CONFLICT: ya existe un grupo con ese nombre.",
+      "description": "## ➕ Create User Group\n\nCrea un nuevo grupo de usuarios con sus permisos asignados. El **slug** se genera automáticamente a partir del nombre.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `user-groups:create` o `user-groups:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Validación / Default |\n|---|---|---|---|\n| `name` | `string` | ✅ | 2–80 caracteres. Genera slug único automáticamente |\n| `description` | `string` | ❌ | Máx. 255 caracteres |\n| `permissions` | `string[]` | ❌ | Array de permisos del catálogo. Default: `[]` |\n| `color` | `string` | ❌ | Hex `#RRGGBB`. Default: `#6366f1` |\n| `status` | `string` | ❌ | `active` \\| `inactive`. Default: `active` |\n\n---\n\n### ✅ Respuesta exitosa `201 Created`\n\n```json\n{\n  \"data\": {\n    \"id\": \"uuid\",\n    \"name\": \"Administradores\",\n    \"slug\": \"administradores\",\n    \"description\": \"Grupo con acceso completo\",\n    \"permissions\": [\"users:manage\"],\n    \"color\": \"#dc2626\",\n    \"status\": \"active\",\n    \"isSystem\": false\n  }\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `409` | `USER_GROUP_SLUG_CONFLICT` | Ya existe un grupo con ese nombre |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/user-groups",
+      "url": "{{ base_url }}/user-groups",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_ugcreate_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_ugcreate_2" }
@@ -485,9 +488,9 @@
       "_type": "request",
       "parentId": "fld_usergroups",
       "name": "List User Groups",
-      "description": "Lista todos los grupos de usuarios con paginación y filtros.\n\nPermiso requerido: user-groups:read o user-groups:manage\n\nQuery params:\n- page (default: 1): número de página\n- limit (default: 20, máx: 100): resultados por página\n- status (opcional): active | inactive\n- search (opcional): búsqueda por nombre o slug",
+      "description": "## 📋 List User Groups\n\nLista todos los grupos de usuarios con paginación y filtros opcionales.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `user-groups:read` o `user-groups:manage`.\n\n---\n\n### 🔍 Query Parameters\n\n| Parámetro | Tipo | Default | Descripción |\n|---|---|---|---|\n| `page` | `number` | `1` | Número de página |\n| `limit` | `number` | `20` | Resultados por página (máx. `100`) |\n| `status` | `string` | — | Filtrar: `active` \\| `inactive` |\n| `search` | `string` | — | Búsqueda por nombre o slug |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [...],\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 20,\n    \"total\": 5,\n    \"totalPages\": 1\n  }\n}\n```",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/user-groups",
+      "url": "{{ base_url }}/user-groups",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_uglist_1" }
       ],
@@ -510,9 +513,9 @@
       "_type": "request",
       "parentId": "fld_usergroups",
       "name": "Get User Group By ID",
-      "description": "Obtiene los datos completos de un grupo de usuarios por su ID (UUID).\n\nPermiso requerido: user-groups:read o user-groups:manage\n\nErrores:\n- 404 USER_GROUP_NOT_FOUND: grupo no encontrado.",
+      "description": "## 🔎 Get User Group By ID\n\nObtiene los datos completos de un grupo de usuarios por su ID (UUID), incluyendo todos sus permisos asignados.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `user-groups:read` o `user-groups:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del grupo |\n\n> 💡 Usa la variable de entorno `{{ group_id }}` para no escribir el UUID manualmente.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_GROUP_NOT_FOUND` | Grupo no encontrado |",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/user-groups/{{ group_id }}",
+      "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_uggetid_1" }
       ],
@@ -530,9 +533,9 @@
       "_type": "request",
       "parentId": "fld_usergroups",
       "name": "Update User Group",
-      "description": "Actualiza los datos de un grupo de usuarios por su ID.\n\nPermiso requerido: user-groups:update o user-groups:manage\n\nTodos los campos son opcionales (PATCH parcial). El slug se regenera automáticamente si cambia el nombre.\n\nNOTA: Los grupos del sistema (isSystem: true) no pueden ser modificados.\n\nErrores:\n- 404 USER_GROUP_NOT_FOUND: grupo no encontrado.\n- 409 USER_GROUP_SLUG_CONFLICT: nombre ya usado por otro grupo.\n- 403 USER_GROUP_SYSTEM_PROTECTED: el grupo es del sistema.",
+      "description": "## ✏️ Update User Group\n\nActualiza los datos de un grupo de usuarios por su ID. El slug se regenera automáticamente si cambia el nombre.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `user-groups:update` o `user-groups:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del grupo |\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `name` | `string` | 2–80 caracteres |\n| `description` | `string` | Máx. 255 caracteres |\n| `permissions` | `string[]` | Reemplaza la lista completa de permisos |\n| `color` | `string` | Hex `#RRGGBB` |\n| `status` | `string` | `active` \\| `inactive` |\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `403` | `USER_GROUP_SYSTEM_PROTECTED` | ⚠️ El grupo es del sistema y no puede modificarse |\n| `404` | `USER_GROUP_NOT_FOUND` | Grupo no encontrado |\n| `409` | `USER_GROUP_SLUG_CONFLICT` | Nombre ya usado por otro grupo |",
       "method": "PATCH",
-      "url": "{{ base_url }}/api/v1/user-groups/{{ group_id }}",
+      "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_ugupdate_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_ugupdate_2" }
@@ -554,9 +557,9 @@
       "_type": "request",
       "parentId": "fld_usergroups",
       "name": "Delete User Group",
-      "description": "Elimina un grupo de usuarios por su ID.\n\nPermiso requerido: user-groups:delete o user-groups:manage\n\nNOTA: Los grupos del sistema (isSystem: true) no pueden ser eliminados.\n\nErrores:\n- 404 USER_GROUP_NOT_FOUND: grupo no encontrado.\n- 403 USER_GROUP_SYSTEM_PROTECTED: el grupo es del sistema.",
+      "description": "## 🗑️ Delete User Group\n\nElimina un grupo de usuarios por su ID.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `user-groups:delete` o `user-groups:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del grupo a eliminar |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Grupo eliminado correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `403` | `USER_GROUP_SYSTEM_PROTECTED` | ⚠️ El grupo es del sistema y no puede eliminarse |\n| `404` | `USER_GROUP_NOT_FOUND` | Grupo no encontrado |",
       "method": "DELETE",
-      "url": "{{ base_url }}/api/v1/user-groups/{{ group_id }}",
+      "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_ugdelete_1" }
       ],
@@ -575,9 +578,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Register Subscriber (Público)",
-      "description": "Registra un nuevo suscriptor desde el formulario público de suscripción.\n\nEsta es la ÚNICA ruta pública del módulo. No requiere autenticación.\n\nCampos:\n- firstName (requerido): 2-50 caracteres\n- lastName (requerido): 2-100 caracteres\n- contactInformation (requerido):\n  - email (requerido): dirección de correo válida\n  - phoneNumber (opcional): 9-15 caracteres\n  - address (opcional): 10-300 caracteres\n- personalInformation (requerido):\n  - gender (requerido): female | male | other | prefer_not_to_say\n  - dateOfBirth (opcional): fecha\n  - profilePictureUrl (opcional): URL válida\n- status (opcional): estado del registro\n\nErrores:\n- 409 ERROR_DUPLICATE_SUBSCRIBER: el email ya está suscrito.\n- 422 VALIDATION_SCHEMA_ERROR: campos inválidos.",
+      "description": "## 📩 Register Subscriber\n\nRegistra un nuevo suscriptor desde el formulario público de suscripción. Es la **única ruta pública** del módulo — no requiere autenticación.\n\n---\n\n### 🔓 Autenticación\n\nNo requiere autenticación.\n\n---\n\n### 📤 Request Body\n\n**`contactInformation`**\n\n| Campo | Tipo | Requerido | Validación |\n|---|---|---|---|\n| `email` | `string` | ✅ | Email válido |\n| `phoneNumber` | `string` | ❌ | 9–15 caracteres |\n| `address` | `string` | ❌ | 10–300 caracteres |\n\n**`personalInformation`**\n\n| Campo | Tipo | Requerido | Validación |\n|---|---|---|---|\n| `gender` | `string` | ✅ | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `dateOfBirth` | `string` | ❌ | Formato `YYYY-MM-DD` |\n| `profilePictureUrl` | `string` | ❌ | URL válida |\n\n**Campos raíz**\n\n| Campo | Tipo | Requerido | Validación |\n|---|---|---|---|\n| `firstName` | `string` | ✅ | 2–50 caracteres |\n| `lastName` | `string` | ✅ | 2–100 caracteres |\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `409` | `ERROR_DUPLICATE_SUBSCRIBER` | El email ya está suscrito |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Campos inválidos |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/subscriber/register",
+      "url": "{{ base_url }}/subscriber/register",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subreg_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_subreg_2" }
@@ -595,9 +598,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Register Subscribers Bulk (Admin)",
-      "description": "Registra múltiples suscriptores en una sola petición.\n\nPermiso requerido: subscribers:create o subscribers:manage\n\nEl body es un array de objetos con el mismo esquema que el registro individual.\nSe procesan en lote — si alguno falla validación, se reporta por separado.\n\nErrores:\n- 400 ERROR_NO_SUBSCRIBERS_PROVIDED: array vacío.\n- 422 ERROR_VALIDATION_FAILED: uno o más elementos inválidos.",
+      "description": "## 📦 Register Subscribers Bulk\n\nRegistra múltiples suscriptores en una sola petición. Ideal para importaciones masivas desde archivos CSV o migraciones.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:create` o `subscribers:manage`.\n\n---\n\n### 📤 Request Body\n\nArray de objetos con el mismo esquema que **Register Subscriber** individual.\n\n```json\n[\n  { \"firstName\": \"...\", \"contactInformation\": { \"email\": \"...\" }, ... },\n  { \"firstName\": \"...\", \"contactInformation\": { \"email\": \"...\" }, ... }\n]\n```\n\n> 💡 Los elementos que fallen validación se reportan individualmente sin interrumpir el resto del lote.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `ERROR_NO_SUBSCRIBERS_PROVIDED` | El array está vacío |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `422` | `ERROR_VALIDATION_FAILED` | Uno o más elementos del array son inválidos |",
       "method": "POST",
-      "url": "{{ base_url }}/api/v1/subscriber/register-bulk",
+      "url": "{{ base_url }}/subscriber/register-bulk",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subbulkreg_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_subbulkreg_2" }
@@ -619,9 +622,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "List Subscribers (Admin)",
-      "description": "Lista todos los suscriptores registrados.\n\nPermiso requerido: subscribers:read o subscribers:manage",
+      "description": "## 📋 List Subscribers\n\nLista todos los suscriptores registrados en el sistema.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:read` o `subscribers:manage`.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"firstName\": \"Ana\",\n      \"lastName\": \"Martínez\",\n      \"contactInformation\": { \"email\": \"ana@example.com\" },\n      \"personalInformation\": { \"gender\": \"female\" },\n      \"status\": \"active\",\n      \"createdAt\": \"2026-05-06T00:00:00.000Z\"\n    }\n  ]\n}\n```",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/subscriber/list",
+      "url": "{{ base_url }}/subscriber/list",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_sublist_1" }
       ],
@@ -639,9 +642,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Get Subscriber By ID (Admin)",
-      "description": "Obtiene los datos completos de un suscriptor por su ID (UUID).\n\nPermiso requerido: subscribers:read o subscribers:manage\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "description": "## 🔎 Get Subscriber By ID\n\nObtiene los datos completos de un suscriptor por su ID (UUID).\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:read` o `subscribers:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del suscriptor |\n\n> 💡 Usa la variable de entorno `{{ subscriber_id }}` para no escribir el UUID manualmente.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `SUBSCRIBER_NOT_FOUND` | Suscriptor no encontrado |",
       "method": "GET",
-      "url": "{{ base_url }}/api/v1/subscriber/search/{{ subscriber_id }}",
+      "url": "{{ base_url }}/subscriber/search/{{ subscriber_id }}",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_subgetid_1" }
       ],
@@ -659,9 +662,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Update Subscriber (Admin)",
-      "description": "Actualiza los datos de un suscriptor por su ID.\n\nPermiso requerido: subscribers:update o subscribers:manage\n\nTodos los campos son opcionales (PATCH parcial).\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "description": "## ✏️ Update Subscriber\n\nActualiza los datos de un suscriptor por su ID. Actualización parcial — solo se modifican los campos enviados.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:update` o `subscribers:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del suscriptor |\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `firstName` | `string` | 2–50 caracteres |\n| `lastName` | `string` | 2–100 caracteres |\n| `contactInformation.email` | `string` | Email válido |\n| `contactInformation.phoneNumber` | `string` | 9–15 caracteres |\n| `contactInformation.address` | `string` | 10–300 caracteres |\n| `personalInformation.gender` | `string` | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `personalInformation.dateOfBirth` | `string` | `YYYY-MM-DD` |\n| `personalInformation.profilePictureUrl` | `string` | URL válida |\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `SUBSCRIBER_NOT_FOUND` | Suscriptor no encontrado |",
       "method": "PATCH",
-      "url": "{{ base_url }}/api/v1/subscriber/update/{{ subscriber_id }}",
+      "url": "{{ base_url }}/subscriber/update/{{ subscriber_id }}",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subupdate_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_subupdate_2" }
@@ -683,9 +686,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Delete Subscriber Logical (Admin)",
-      "description": "Eliminación lógica (soft delete) de un suscriptor por su ID.\n\nEl registro permanece en la base de datos pero queda marcado como inactivo/eliminado. Se puede recuperar.\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "description": "## 🗂️ Delete Subscriber — Soft Delete\n\nEliminación **lógica** (soft delete) de un suscriptor. El registro permanece en la base de datos pero queda marcado como eliminado. **Se puede recuperar** si es necesario.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:delete` o `subscribers:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del suscriptor |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Suscriptor eliminado correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `SUBSCRIBER_NOT_FOUND` | Suscriptor no encontrado |",
       "method": "DELETE",
-      "url": "{{ base_url }}/api/v1/subscriber/delete-logic/{{ subscriber_id }}",
+      "url": "{{ base_url }}/subscriber/delete-logic/{{ subscriber_id }}",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_subdl_1" }
       ],
@@ -703,9 +706,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Delete Subscribers Logical Bulk (Admin)",
-      "description": "Eliminación lógica (soft delete) de múltiples suscriptores en una sola petición.\n\nEl body debe contener un array de IDs (UUIDs). Los registros quedan marcados como inactivos pero no se borran físicamente.\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 400 SUBSCRIBER_IDS_REQUIRED: array de IDs vacío.",
+      "description": "## 🗂️ Delete Subscribers Bulk — Soft Delete\n\nEliminación **lógica** (soft delete) de múltiples suscriptores en una sola petición. Los registros quedan marcados como eliminados pero permanecen en la base de datos. **Se pueden recuperar**.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:delete` o `subscribers:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `ids` | `string[]` | ✅ | Array de UUIDs de suscriptores a eliminar |\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `SUBSCRIBER_IDS_REQUIRED` | El array de IDs está vacío |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
       "method": "DELETE",
-      "url": "{{ base_url }}/api/v1/subscriber/delete-logic-bulk",
+      "url": "{{ base_url }}/subscriber/delete-logic-bulk",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subdlb_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_subdlb_2" }
@@ -727,9 +730,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Delete Subscriber Physical (Admin)",
-      "description": "Eliminación física (hard delete) permanente de un suscriptor por su ID.\n\n⚠️ IRREVERSIBLE. El registro se borra completamente de la base de datos.\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 404 SUBSCRIBER_NOT_FOUND: suscriptor no encontrado.",
+      "description": "## 🗑️ Delete Subscriber — Hard Delete\n\nEliminación **física** (hard delete) permanente de un suscriptor. El registro se borra completamente de la base de datos.\n\n> ⚠️ **IRREVERSIBLE.** Esta operación no se puede deshacer.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:delete` o `subscribers:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del suscriptor |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Suscriptor eliminado permanentemente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `SUBSCRIBER_NOT_FOUND` | Suscriptor no encontrado |",
       "method": "DELETE",
-      "url": "{{ base_url }}/api/v1/subscriber/delete/{{ subscriber_id }}",
+      "url": "{{ base_url }}/subscriber/delete/{{ subscriber_id }}",
       "headers": [
         { "name": "Accept-Language", "value": "es", "id": "h_subdp_1" }
       ],
@@ -747,9 +750,9 @@
       "_type": "request",
       "parentId": "fld_subscribers",
       "name": "Delete Subscribers Physical Bulk (Admin)",
-      "description": "Eliminación física (hard delete) permanente de múltiples suscriptores en una sola petición.\n\n⚠️ IRREVERSIBLE. Los registros se borran completamente de la base de datos.\n\nEl body debe contener un array de IDs (UUIDs).\n\nPermiso requerido: subscribers:delete o subscribers:manage\n\nErrores:\n- 400 SUBSCRIBER_IDS_REQUIRED: array de IDs vacío.",
+      "description": "## 🗑️ Delete Subscribers Bulk — Hard Delete\n\nEliminación **física** (hard delete) permanente de múltiples suscriptores. Los registros se borran completamente de la base de datos.\n\n> ⚠️ **IRREVERSIBLE.** Esta operación no se puede deshacer.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `subscribers:delete` o `subscribers:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `ids` | `string[]` | ✅ | Array de UUIDs de suscriptores a eliminar permanentemente |\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `SUBSCRIBER_IDS_REQUIRED` | El array de IDs está vacío |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
       "method": "DELETE",
-      "url": "{{ base_url }}/api/v1/subscriber/delete-bulk",
+      "url": "{{ base_url }}/subscriber/delete-bulk",
       "headers": [
         { "name": "Content-Type", "value": "application/json", "id": "h_subdpb_1" },
         { "name": "Accept-Language", "value": "es", "id": "h_subdpb_2" }
