@@ -36,12 +36,13 @@ const EnvSchema = z.object({
 const parsed = EnvSchema.safeParse(process.env);
 
 if (!parsed.success) {
-	logError('[ENV] Missing or invalid environment variables:');
+	// Use console.error unconditionally — logError is a no-op outside development.
+	console.error('[ENV] Missing or invalid environment variables:');
 	const fieldErrors = parsed.error.flatten(
 		(issue) => issue.message,
 	).fieldErrors;
 	Object.entries(fieldErrors).forEach(([key, messages]) => {
-		logError(`  ${key}: ${messages?.join(', ')}`);
+		console.error(`  ${key}: ${messages?.join(', ')}`);
 	});
 	process.exit(1);
 }
@@ -58,7 +59,7 @@ if (ENV.NODE_ENV === 'production') {
 		insecureDefaults.has(ENV.JWT_ACCESS_SECRET) ||
 		insecureDefaults.has(ENV.JWT_REFRESH_SECRET)
 	) {
-		logError('[ENV] FATAL: JWT secrets must be changed in production');
+		console.error('[ENV] FATAL: JWT secrets must be changed in production');
 		process.exit(1);
 	}
 }
