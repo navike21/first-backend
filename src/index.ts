@@ -8,7 +8,7 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 const app = express();
 
-// Fast setup: i18n + routes. Never touches the DB so it never rejects.
+// Fast setup: i18n + routes. Never touches the DB so it should not reject.
 export const appReady = initApp(app);
 
 // Re-exported so api/index.js can call it independently and retry on failure.
