@@ -1,7 +1,7 @@
 import dns from 'node:dns';
 import { Server } from 'node:http';
 import express from 'express';
-import { initializeApp } from '@Config/mainServer';
+import { initApp, connectToDatabase } from '@Config/mainServer';
 import { initSocketServer } from '@Shared/infrastructure/SocketServer';
 import { ENV } from '@Constants/environments';
 import { logError, logInfo } from '@Helpers/log';
@@ -12,7 +12,8 @@ const app = express();
 let server: Server;
 let isShuttingDown = false;
 
-initializeApp(app)
+initApp(app)
+	.then(() => connectToDatabase())
 	.then(() => {
 		server = app.listen(ENV.PORT, () => {
 			logInfo(`Server running on port ${ENV.PORT} in ${ENV.NODE_ENV} mode.`);
