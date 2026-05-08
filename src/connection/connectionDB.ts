@@ -5,9 +5,13 @@ import mongoose, { type ConnectOptions } from 'mongoose';
 const mongoOptions: ConnectOptions = {
 	dbName: ENV.MONGO_DATABASE,
 	appName: ENV.MONGO_APP_NAME,
-	maxPoolSize: 10,
+	// Keep pool small in serverless: each function instance opens its own pool,
+	// and Atlas free-tier caps total connections at 500.
+	maxPoolSize: 5,
 	serverSelectionTimeoutMS: 5000,
 	socketTimeoutMS: 45000,
+	// Fail immediately instead of buffering indefinitely if not connected.
+	bufferCommands: false,
 	serverApi: {
 		version: '1',
 		strict: true,

@@ -5,11 +5,12 @@ import { initI18n } from './i18n';
 import mainRouter from '@Routes/routes';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 
-export async function initializeApp(app: Express): Promise<void> {
+// Sets up i18n, middleware and routes — no DB needed, safe to call at module load.
+export async function initApp(app: Express): Promise<void> {
 	await initI18n();
-	await connectToDatabase();
-
 	configApp(app);
 	app.use(mainRouter());
 	app.use(errorMiddleware);
 }
+
+export { connectToDatabase };
