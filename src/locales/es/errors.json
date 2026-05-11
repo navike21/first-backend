@@ -21,5 +21,16 @@
 	"MISSING_TOKEN": "Se requiere el token",
 	"USER_GROUP_NOT_FOUND": "Grupo de usuarios no encontrado",
 	"USER_GROUP_SLUG_CONFLICT": "Ya existe un grupo de usuarios con este nombre",
-	"USER_GROUP_SYSTEM_PROTECTED": "Los grupos del sistema no pueden ser modificados ni eliminados"
+	"USER_GROUP_SYSTEM_PROTECTED": "Los grupos del sistema no pueden ser modificados ni eliminados",
+	"FILE_REQUIRED": "No se proporcionó ningún archivo",
+	"FILE_TYPE_NOT_ALLOWED": "El tipo de archivo no está permitido",
+	"MIME_TYPE_MISMATCH": "El contenido del archivo no coincide con el tipo declarado",
+	"FILE_SIZE_EXCEEDED": "El tamaño del archivo supera el límite permitido",
+	"TOO_MANY_FILES": "Se subieron demasiados archivos a la vez",
+	"UPLOAD_FAILED": "La carga del archivo falló",
+	"DELETE_FAILED": "La eliminación del archivo falló",
+	"DRIVER_NOT_CONFIGURED": "El controlador de almacenamiento no está configurado",
+	"AUDIT_LOG_NOT_FOUND": "Entrada de auditoría no encontrada",
+	"APP_SETTINGS_NOT_FOUND": "Configuración de la aplicación no encontrada",
+	"APP_SETTINGS_EMPTY_UPDATE": "Se debe proporcionar al menos una categoría de configuración"
 }

@@ -21,5 +21,16 @@
 	"MISSING_TOKEN": "토큰이 필요합니다",
 	"USER_GROUP_NOT_FOUND": "사용자 그룹을 찾을 수 없습니다",
 	"USER_GROUP_SLUG_CONFLICT": "이 이름의 사용자 그룹이 이미 존재합니다",
-	"USER_GROUP_SYSTEM_PROTECTED": "시스템 그룹은 수정하거나 삭제할 수 없습니다"
+	"USER_GROUP_SYSTEM_PROTECTED": "시스템 그룹은 수정하거나 삭제할 수 없습니다",
+	"FILE_REQUIRED": "파일이 제공되지 않았습니다",
+	"FILE_TYPE_NOT_ALLOWED": "허용되지 않는 파일 유형입니다",
+	"MIME_TYPE_MISMATCH": "파일 내용이 선언된 유형과 일치하지 않습니다",
+	"FILE_SIZE_EXCEEDED": "파일 크기가 허용 한도를 초과합니다",
+	"TOO_MANY_FILES": "한 번에 너무 많은 파일이 업로드되었습니다",
+	"UPLOAD_FAILED": "파일 업로드에 실패했습니다",
+	"DELETE_FAILED": "파일 삭제에 실패했습니다",
+	"DRIVER_NOT_CONFIGURED": "스토리지 드라이버가 구성되지 않았습니다",
+	"AUDIT_LOG_NOT_FOUND": "감사 로그 항목을 찾을 수 없습니다",
+	"APP_SETTINGS_NOT_FOUND": "애플리케이션 설정을 찾을 수 없습니다",
+	"APP_SETTINGS_EMPTY_UPDATE": "최소 하나의 설정 카테고리를 제공해야 합니다"
 }

@@ -21,5 +21,16 @@
 	"MISSING_TOKEN": "Le token est requis",
 	"USER_GROUP_NOT_FOUND": "Groupe d'utilisateurs introuvable",
 	"USER_GROUP_SLUG_CONFLICT": "Un groupe d'utilisateurs avec ce nom existe déjà",
-	"USER_GROUP_SYSTEM_PROTECTED": "Les groupes système ne peuvent pas être modifiés ou supprimés"
+	"USER_GROUP_SYSTEM_PROTECTED": "Les groupes système ne peuvent pas être modifiés ou supprimés",
+	"FILE_REQUIRED": "Aucun fichier n'a été fourni",
+	"FILE_TYPE_NOT_ALLOWED": "Ce type de fichier n'est pas autorisé",
+	"MIME_TYPE_MISMATCH": "Le contenu du fichier ne correspond pas au type déclaré",
+	"FILE_SIZE_EXCEEDED": "La taille du fichier dépasse la limite autorisée",
+	"TOO_MANY_FILES": "Trop de fichiers téléchargés en même temps",
+	"UPLOAD_FAILED": "L'envoi du fichier a échoué",
+	"DELETE_FAILED": "La suppression du fichier a échoué",
+	"DRIVER_NOT_CONFIGURED": "Le pilote de stockage n'est pas configuré",
+	"AUDIT_LOG_NOT_FOUND": "Entrée du journal d'audit introuvable",
+	"APP_SETTINGS_NOT_FOUND": "Paramètres de l'application introuvables",
+	"APP_SETTINGS_EMPTY_UPDATE": "Au moins une catégorie de paramètres doit être fournie"
 }

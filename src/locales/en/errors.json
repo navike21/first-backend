@@ -21,5 +21,16 @@
 	"MISSING_TOKEN": "Token is required",
 	"USER_GROUP_NOT_FOUND": "User group not found",
 	"USER_GROUP_SLUG_CONFLICT": "A user group with this name already exists",
-	"USER_GROUP_SYSTEM_PROTECTED": "System groups cannot be modified or deleted"
+	"USER_GROUP_SYSTEM_PROTECTED": "System groups cannot be modified or deleted",
+	"FILE_REQUIRED": "No file was provided",
+	"FILE_TYPE_NOT_ALLOWED": "File type is not allowed",
+	"MIME_TYPE_MISMATCH": "File content does not match the declared type",
+	"FILE_SIZE_EXCEEDED": "File size exceeds the allowed limit",
+	"TOO_MANY_FILES": "Too many files uploaded at once",
+	"UPLOAD_FAILED": "File upload failed",
+	"DELETE_FAILED": "File deletion failed",
+	"DRIVER_NOT_CONFIGURED": "Storage driver is not configured",
+	"AUDIT_LOG_NOT_FOUND": "Audit log entry not found",
+	"APP_SETTINGS_NOT_FOUND": "Application settings not found",
+	"APP_SETTINGS_EMPTY_UPDATE": "At least one settings category must be provided"
 }
