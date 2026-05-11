@@ -20,6 +20,17 @@ export const PERMISSIONS = {
 	PROFILE_READ: 'profile:read',
 	PROFILE_UPDATE: 'profile:update',
 
+	STORAGE_UPLOAD: 'storage:upload',
+	STORAGE_DELETE: 'storage:delete',
+	STORAGE_MANAGE: 'storage:manage',
+
+	AUDIT_LOGS_READ: 'audit-logs:read',
+	AUDIT_LOGS_MANAGE: 'audit-logs:manage',
+
+	APP_SETTINGS_READ: 'app-settings:read',
+	APP_SETTINGS_UPDATE: 'app-settings:update',
+	APP_SETTINGS_MANAGE: 'app-settings:manage',
+
 	ALL: '*:*',
 } as const;
 

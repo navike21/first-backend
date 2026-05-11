@@ -21,5 +21,16 @@
 	"MISSING_TOKEN": "トークンが必要です",
 	"USER_GROUP_NOT_FOUND": "ユーザーグループが見つかりません",
 	"USER_GROUP_SLUG_CONFLICT": "この名前のユーザーグループは既に存在します",
-	"USER_GROUP_SYSTEM_PROTECTED": "システムグループは変更または削除できません"
+	"USER_GROUP_SYSTEM_PROTECTED": "システムグループは変更または削除できません",
+	"FILE_REQUIRED": "ファイルが提供されていません",
+	"FILE_TYPE_NOT_ALLOWED": "このファイル形式は許可されていません",
+	"MIME_TYPE_MISMATCH": "ファイルの内容が宣言された形式と一致しません",
+	"FILE_SIZE_EXCEEDED": "ファイルサイズが許可された上限を超えています",
+	"TOO_MANY_FILES": "一度にアップロードするファイルが多すぎます",
+	"UPLOAD_FAILED": "ファイルのアップロードに失敗しました",
+	"DELETE_FAILED": "ファイルの削除に失敗しました",
+	"DRIVER_NOT_CONFIGURED": "ストレージドライバーが設定されていません",
+	"AUDIT_LOG_NOT_FOUND": "監査ログエントリが見つかりません",
+	"APP_SETTINGS_NOT_FOUND": "アプリケーション設定が見つかりません",
+	"APP_SETTINGS_EMPTY_UPDATE": "少なくとも1つの設定カテゴリを指定する必要があります"
 }

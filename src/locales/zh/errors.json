@@ -21,5 +21,16 @@
 	"MISSING_TOKEN": "令牌是必需的",
 	"USER_GROUP_NOT_FOUND": "未找到用户组",
 	"USER_GROUP_SLUG_CONFLICT": "已存在同名的用户组",
-	"USER_GROUP_SYSTEM_PROTECTED": "系统组不能被修改或删除"
+	"USER_GROUP_SYSTEM_PROTECTED": "系统组不能被修改或删除",
+	"FILE_REQUIRED": "未提供文件",
+	"FILE_TYPE_NOT_ALLOWED": "不允许此文件类型",
+	"MIME_TYPE_MISMATCH": "文件内容与声明的类型不匹配",
+	"FILE_SIZE_EXCEEDED": "文件大小超过允许的限制",
+	"TOO_MANY_FILES": "一次上传文件过多",
+	"UPLOAD_FAILED": "文件上传失败",
+	"DELETE_FAILED": "文件删除失败",
+	"DRIVER_NOT_CONFIGURED": "存储驱动程序未配置",
+	"AUDIT_LOG_NOT_FOUND": "未找到审计日志条目",
+	"APP_SETTINGS_NOT_FOUND": "未找到应用程序设置",
+	"APP_SETTINGS_EMPTY_UPDATE": "至少必须提供一个设置类别"
 }
