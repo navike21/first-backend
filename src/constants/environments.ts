@@ -1,4 +1,3 @@
-import { logError } from '@Helpers/log';
 import { z } from 'zod';
 
 const EnvSchema = z.object({
@@ -31,17 +30,29 @@ const EnvSchema = z.object({
 	EMAIL_USER: z.string().optional(),
 	EMAIL_PASS: z.string().optional(),
 	EMAIL_FROM: z.string().default('noreply@first-backend.com'),
+
+	// DNS — public resolvers as fallback for MongoDB Atlas SRV in some environments
+	DNS_SERVERS: z.string().default('8.8.8.8,1.1.1.1'),
+
+	// Storage
+	STORAGE_DRIVER: z
+		.enum(['vercel-blob', 's3', 'gcs', 'azure-blob'])
+		.default('vercel-blob'),
+	BLOB_READ_WRITE_TOKEN: z.string().optional(),
+	STORAGE_MAX_FILE_SIZE_BYTES: z.coerce.number().default(10 * 1024 * 1024),
+	STORAGE_MAX_FILES_BULK: z.coerce.number().int().min(1).max(20).default(10),
 });
 
 const parsed = EnvSchema.safeParse(process.env);
 
 if (!parsed.success) {
-	// Use console.error unconditionally — logError is a no-op outside development.
+	// eslint-disable-next-line no-console
 	console.error('[ENV] Missing or invalid environment variables:');
 	const fieldErrors = parsed.error.flatten(
 		(issue) => issue.message,
 	).fieldErrors;
 	Object.entries(fieldErrors).forEach(([key, messages]) => {
+		// eslint-disable-next-line no-console
 		console.error(`  ${key}: ${messages?.join(', ')}`);
 	});
 	process.exit(1);
@@ -59,6 +70,7 @@ if (ENV.NODE_ENV === 'production') {
 		insecureDefaults.has(ENV.JWT_ACCESS_SECRET) ||
 		insecureDefaults.has(ENV.JWT_REFRESH_SECRET)
 	) {
+		// eslint-disable-next-line no-console
 		console.error('[ENV] FATAL: JWT secrets must be changed in production');
 		process.exit(1);
 	}

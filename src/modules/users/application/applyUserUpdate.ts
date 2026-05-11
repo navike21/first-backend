@@ -16,6 +16,7 @@ export async function applyUserUpdate(id: string, input: UpdateInput) {
 	Object.assign(user, { ...input, ...(dateOfBirth && { dateOfBirth }) });
 	await user.save();
 
+	// eslint-disable-next-line sonarjs/no-unused-vars
 	const { password: _pwd, ...safeUser } = user.toObject();
 	return safeUser;
 }

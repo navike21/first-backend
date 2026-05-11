@@ -6,7 +6,7 @@ import { initSocketServer } from '@Shared/infrastructure/SocketServer';
 import { ENV } from '@Constants/environments';
 import { logError, logInfo } from '@Helpers/log';
 
-dns.setServers(['8.8.8.8', '1.1.1.1']);
+dns.setServers(ENV.DNS_SERVERS.split(','));
 
 const app = express();
 let server: Server;
