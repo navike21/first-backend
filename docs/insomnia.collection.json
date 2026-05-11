@@ -8,7 +8,7 @@
       "_id": "wrk_firstbackend",
       "_type": "workspace",
       "name": "First Backend API",
-      "description": "# 🚀 First Backend API\n\nAPI REST construida con **Node.js + TypeScript + Express + MongoDB**.\n\n---\n\n## 🌐 Ambientes\n\n| Ambiente | URL Base |\n|---|---|\n| Development | `http://localhost:3200/api/v1` |\n| Production (Vercel) | `https://first-backend.vercel.app/api/v1` |\n\n---\n\n## 🔐 Autenticación\n\nEsta API usa **JWT (JSON Web Tokens)** con un modelo de triple secreto:\n\n| Token | Duración | Uso |\n|---|---|---|\n| `access_token` | 15 min | Header `Authorization: Bearer <token>` |\n| `refresh_token` | 7 días | Cookie `httpOnly` — se gestiona automáticamente |\n| `email_token` | 24 h | Verificación de correo |\n| `reset_token` | 1 h | Restablecimiento de contraseña |\n\n### Flujo de autenticación\n\n1. `POST /auth/login` → guarda `access_token` en la variable de entorno\n2. Las rutas protegidas usan `Bearer {{ access_token }}` automáticamente\n3. Al expirar, `POST /auth/refresh` renueva el token usando la cookie httpOnly\n\n---\n\n## 🛡️ Permisos (RBAC)\n\nCada usuario pertenece a un **grupo de usuario** que define sus permisos:\n\n| Módulo | Permisos disponibles |\n|---|---|\n| Perfil propio | `profile:read`, `profile:update` |\n| Usuarios | `users:read`, `users:create`, `users:update`, `users:delete`, `users:manage` |\n| Grupos | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:manage` |\n| Suscriptores | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:manage` |\n\n> 💡 Los permisos `*:manage` son comodín e incluyen todas las operaciones del módulo.\n\n---\n\n## 🌍 Internacionalización\n\nTodas las rutas aceptan el header `Accept-Language` para respuestas y emails en el idioma del usuario.\n\n**Idiomas soportados:** `es`, `en`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`",
+      "description": "# 🚀 First Backend API\n\nAPI REST construida con **Node.js + TypeScript + Express + MongoDB**.\n\n---\n\n## 🌐 Ambientes\n\n| Ambiente | URL Base |\n|---|---|\n| Development | `http://localhost:3200/api/v1` |\n| Production (Vercel) | `https://first-backend.vercel.app/api/v1` |\n\n---\n\n## 🔐 Autenticación\n\nEsta API usa **JWT (JSON Web Tokens)** con un modelo de triple secreto:\n\n| Token | Duración | Uso |\n|---|---|---|\n| `access_token` | 15 min | Header `Authorization: Bearer <token>` |\n| `refresh_token` | 7 días | Cookie `httpOnly` — se gestiona automáticamente |\n| `email_token` | 24 h | Verificación de correo |\n| `reset_token` | 1 h | Restablecimiento de contraseña |\n\n### Flujo de autenticación\n\n1. `POST /auth/login` → guarda `access_token` en la variable de entorno\n2. Las rutas protegidas usan `Bearer {{ access_token }}` automáticamente\n3. Al expirar, `POST /auth/refresh` renueva el token usando la cookie httpOnly\n\n---\n\n## 🛡️ Permisos (RBAC)\n\nCada usuario pertenece a un **grupo de usuario** que define sus permisos:\n\n| Módulo | Permisos disponibles |\n|---|---|\n| Perfil propio | `profile:read`, `profile:update` |\n| Usuarios | `users:read`, `users:create`, `users:update`, `users:delete`, `users:manage` |\n| Grupos | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:manage` |\n| Suscriptores | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:manage` |\n| Almacenamiento | `storage:upload`, `storage:delete`, `storage:manage` |\n| Audit Logs | `audit-logs:read`, `audit-logs:manage` |\n| App Settings | `app-settings:read`, `app-settings:update`, `app-settings:manage` |\n\n> 💡 Los permisos `*:manage` son comodín e incluyen todas las operaciones del módulo.\n\n---\n\n## 🌍 Internacionalización\n\nTodas las rutas aceptan el header `Accept-Language` para respuestas y emails en el idioma del usuario.\n\n**Idiomas soportados:** `es`, `en`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`",
       "scope": "collection"
     },
 
@@ -24,7 +24,8 @@
         "lang": "es",
         "user_id": "",
         "group_id": "",
-        "subscriber_id": ""
+        "subscriber_id": "",
+        "audit_log_id": ""
       },
       "color": null,
       "isPrivate": false
@@ -445,7 +446,7 @@
       "_type": "request",
       "parentId": "fld_usergroups",
       "name": "Get Permissions Catalog",
-      "description": "## 📚 Permissions Catalog\n\nRetorna el catálogo completo de permisos disponibles en el sistema. Útil para poblar selectores al crear o editar grupos de usuarios.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** requerido. No requiere permiso específico de `user-groups`.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [\n    { \"key\": \"users:read\", \"module\": \"users\", \"action\": \"read\" },\n    { \"key\": \"users:create\", \"module\": \"users\", \"action\": \"create\" },\n    { \"key\": \"users:manage\", \"module\": \"users\", \"action\": \"manage\" },\n    ...\n  ]\n}\n```\n\n---\n\n### 📋 Módulos y permisos\n\n| Módulo | Permisos |\n|---|---|\n| `profile` | `read`, `update` |\n| `users` | `read`, `create`, `update`, `delete`, `manage` |\n| `user-groups` | `read`, `create`, `update`, `delete`, `manage` |\n| `subscribers` | `read`, `create`, `update`, `delete`, `manage` |",
+      "description": "## 📚 Permissions Catalog\n\nRetorna el catálogo completo de permisos disponibles en el sistema. Útil para poblar selectores al crear o editar grupos de usuarios.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** requerido. No requiere permiso específico de `user-groups`.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [\n    { \"key\": \"users:read\", \"module\": \"users\", \"action\": \"read\" },\n    { \"key\": \"users:create\", \"module\": \"users\", \"action\": \"create\" },\n    { \"key\": \"users:manage\", \"module\": \"users\", \"action\": \"manage\" },\n    ...\n  ]\n}\n```\n\n---\n\n### 📋 Módulos y permisos\n\n| Módulo | Permisos |\n|---|---|\n| `profile` | `read`, `update` |\n| `users` | `read`, `create`, `update`, `delete`, `manage` |\n| `user-groups` | `read`, `create`, `update`, `delete`, `manage` |\n| `subscribers` | `read`, `create`, `update`, `delete`, `manage` |\n| `storage` | `upload`, `delete`, `manage` |\n| `audit-logs` | `read`, `manage` |\n| `app-settings` | `read`, `update`, `manage` |",
       "method": "GET",
       "url": "{{ base_url }}/permissions/catalog",
       "headers": [
@@ -769,6 +770,206 @@
         "disabled": false
       },
       "metaSortKey": -900
+    },
+
+    {
+      "_id": "fld_storage",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "🗄️ Storage",
+      "description": "## 🗄️ Almacenamiento de Archivos\n\nGestión de archivos en la nube. Soporta subida individual, subida masiva y eliminación de archivos.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `POST /storage/upload` | ✅ Bearer | `storage:upload` o `storage:manage` |\n| `POST /storage/upload-bulk` | ✅ Bearer | `storage:upload` o `storage:manage` |\n| `DELETE /storage/delete` | ✅ Bearer | `storage:delete` o `storage:manage` |\n\n### Drivers soportados\n\n| Driver | Variable de entorno |\n|---|---|\n| `vercel-blob` | `BLOB_READ_WRITE_TOKEN` |\n| `s3` | Credenciales AWS |\n| `gcs` | Credenciales Google Cloud |\n| `azure-blob` | Credenciales Azure |\n\n### Límites por defecto\n\n- Tamaño máximo por archivo: **10 MB** (`STORAGE_MAX_FILE_SIZE_BYTES`)\n- Máximo archivos en bulk: **10** (`STORAGE_MAX_FILES_BULK`)\n- Tipos permitidos: imágenes (`jpeg`, `png`, `gif`, `webp`), PDF, texto",
+      "metaSortKey": -500
+    },
+    {
+      "_id": "fld_auditlogs",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "📋 Audit Logs",
+      "description": "## 📋 Registros de Auditoría\n\nConsulta del historial de acciones realizadas en el sistema. Solo lectura — los registros se crean automáticamente por la aplicación.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `GET /audit-logs` | ✅ Bearer | `audit-logs:read` o `audit-logs:manage` |\n| `GET /audit-logs/:id` | ✅ Bearer | `audit-logs:read` o `audit-logs:manage` |\n\n### Campos de un registro\n\n| Campo | Descripción |\n|---|---|\n| `id` | UUID del registro |\n| `userId` | UUID del usuario que realizó la acción |\n| `action` | Acción realizada (e.g. `USER_CREATED`, `LOGIN`) |\n| `resource` | Módulo o recurso afectado |\n| `details` | Datos adicionales de contexto |\n| `occurredAt` | Fecha y hora del evento |",
+      "metaSortKey": -400
+    },
+    {
+      "_id": "fld_appsettings",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "⚙️ App Settings",
+      "description": "## ⚙️ Configuración de la Aplicación\n\nGestión de la configuración global de la aplicación. Las settings se almacenan en MongoDB y se cachean en memoria con TTL de 5 minutos.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `GET /app-settings` | ✅ Bearer | `app-settings:read` o `app-settings:manage` |\n| `PATCH /app-settings` | ✅ Bearer | `app-settings:update` o `app-settings:manage` |\n\n### Categorías de configuración\n\n| Categoría | Campos |\n|---|---|\n| `general` | `appName`, `defaultLanguage`, `timezone`, `maintenanceMode` |\n| `notifications` | `emailSenderName`, `emailSenderAddress`, `welcomeEmailEnabled`, `notificationsEnabled` |\n| `appearance` | `logoUrl`, `primaryColor`, `faviconUrl` |\n\n> 💡 Si no hay configuración guardada, se devuelven los valores por defecto del sistema.",
+      "metaSortKey": -300
+    },
+
+    {
+      "_id": "req_storage_upload",
+      "_type": "request",
+      "parentId": "fld_storage",
+      "name": "Upload File",
+      "description": "## 📤 Upload File\n\nSube un archivo al almacenamiento en la nube. Acepta `multipart/form-data` con el archivo y metadatos opcionales.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `storage:upload` o `storage:manage`.\n\n---\n\n### 📤 Form Data\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `file` | `File` | ✅ | Archivo a subir (máx. 10 MB) |\n| `entityType` | `string` | ❌ | Tipo de entidad asociada (e.g. `user`, `product`) |\n| `entityId` | `string` | ❌ | UUID de la entidad asociada |\n| `quality` | `number` | ❌ | Calidad de compresión para imágenes (1–100) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": {\n    \"url\": \"https://storage.example.com/uploads/image.jpg\",\n    \"size\": 204800,\n    \"mimeType\": \"image/jpeg\"\n  }\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `FILE_REQUIRED` | No se proporcionó archivo |\n| `400` | `FILE_TYPE_NOT_ALLOWED` | Tipo de archivo no permitido |\n| `400` | `FILE_TOO_LARGE` | El archivo supera el tamaño máximo |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
+      "method": "POST",
+      "url": "{{ base_url }}/storage/upload",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_stu_1" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "file", "value": "", "type": "file", "disabled": false },
+          { "name": "entityType", "value": "user", "type": "text", "disabled": true },
+          { "name": "entityId", "value": "{{ user_id }}", "type": "text", "disabled": true },
+          { "name": "quality", "value": "80", "type": "text", "disabled": true }
+        ]
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_storage_upload_bulk",
+      "_type": "request",
+      "parentId": "fld_storage",
+      "name": "Upload Files Bulk",
+      "description": "## 📦 Upload Files Bulk\n\nSube múltiples archivos en una sola petición. Acepta `multipart/form-data` con el campo `files` (múltiple).\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `storage:upload` o `storage:manage`.\n\n---\n\n### 📤 Form Data\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `files` | `File[]` | ✅ | Archivos a subir (máx. 10 por petición, 10 MB c/u) |\n| `entityType` | `string` | ❌ | Tipo de entidad asociada |\n| `entityId` | `string` | ❌ | UUID de la entidad asociada |\n| `quality` | `number` | ❌ | Calidad de compresión para imágenes (1–100) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [\n    { \"url\": \"https://storage.example.com/uploads/img1.jpg\", \"size\": 102400, \"mimeType\": \"image/jpeg\" },\n    { \"url\": \"https://storage.example.com/uploads/img2.png\", \"size\": 204800, \"mimeType\": \"image/png\" }\n  ]\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `FILES_REQUIRED` | No se proporcionaron archivos |\n| `400` | `TOO_MANY_FILES` | Se supera el límite de archivos por petición |\n| `400` | `FILE_TYPE_NOT_ALLOWED` | Tipo de archivo no permitido |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
+      "method": "POST",
+      "url": "{{ base_url }}/storage/upload-bulk",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_stub_1" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "files", "value": "", "type": "file", "disabled": false },
+          { "name": "entityType", "value": "product", "type": "text", "disabled": true },
+          { "name": "entityId", "value": "", "type": "text", "disabled": true },
+          { "name": "quality", "value": "80", "type": "text", "disabled": true }
+        ]
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_storage_delete",
+      "_type": "request",
+      "parentId": "fld_storage",
+      "name": "Delete Files",
+      "description": "## 🗑️ Delete Files\n\nElimina uno o varios archivos del almacenamiento por sus URLs.\n\n> ⚠️ **IRREVERSIBLE.** Los archivos se eliminan permanentemente del almacenamiento.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `storage:delete` o `storage:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `urls` | `string[]` | ✅ | Array de URLs de los archivos a eliminar |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": {\n    \"deleted\": 2\n  }\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `URLS_REQUIRED` | El array de URLs está vacío |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
+      "method": "DELETE",
+      "url": "{{ base_url }}/storage/delete",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_std_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_std_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"urls\": [\n    \"https://storage.example.com/uploads/image1.jpg\",\n    \"https://storage.example.com/uploads/image2.png\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+
+    {
+      "_id": "req_auditlogs_list",
+      "_type": "request",
+      "parentId": "fld_auditlogs",
+      "name": "List Audit Logs",
+      "description": "## 📋 List Audit Logs\n\nLista los registros de auditoría con filtros y paginación.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `audit-logs:read` o `audit-logs:manage`.\n\n---\n\n### 🔍 Query Parameters\n\n| Parámetro | Tipo | Default | Descripción |\n|---|---|---|---|\n| `page` | `number` | `1` | Número de página |\n| `limit` | `number` | `20` | Resultados por página (máx. `100`) |\n| `userId` | `string` | — | Filtrar por UUID de usuario |\n| `action` | `string` | — | Filtrar por acción (e.g. `USER_CREATED`) |\n| `resource` | `string` | — | Filtrar por módulo/recurso |\n| `dateFrom` | `string` | — | Fecha de inicio — formato `YYYY-MM-DD` |\n| `dateTo` | `string` | — | Fecha de fin — formato `YYYY-MM-DD` |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": [\n    {\n      \"id\": \"uuid\",\n      \"userId\": \"uuid\",\n      \"action\": \"USER_CREATED\",\n      \"resource\": \"users\",\n      \"details\": {},\n      \"occurredAt\": \"2026-05-11T10:00:00.000Z\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"limit\": 20,\n    \"total\": 42,\n    \"totalPages\": 3\n  }\n}\n```",
+      "method": "GET",
+      "url": "{{ base_url }}/audit-logs",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_allist_1" }
+      ],
+      "parameters": [
+        { "name": "page", "value": "1", "disabled": false },
+        { "name": "limit", "value": "20", "disabled": false },
+        { "name": "userId", "value": "", "disabled": true },
+        { "name": "action", "value": "", "disabled": true },
+        { "name": "resource", "value": "", "disabled": true },
+        { "name": "dateFrom", "value": "", "disabled": true },
+        { "name": "dateTo", "value": "", "disabled": true }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_auditlogs_get_by_id",
+      "_type": "request",
+      "parentId": "fld_auditlogs",
+      "name": "Get Audit Log By ID",
+      "description": "## 🔎 Get Audit Log By ID\n\nObtiene el detalle completo de un registro de auditoría por su ID (UUID).\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `audit-logs:read` o `audit-logs:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del registro de auditoría |\n\n> 💡 Usa la variable de entorno `{{ audit_log_id }}` para no escribir el UUID manualmente.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": {\n    \"id\": \"uuid\",\n    \"userId\": \"uuid\",\n    \"action\": \"USER_CREATED\",\n    \"resource\": \"users\",\n    \"details\": { \"email\": \"newuser@example.com\" },\n    \"occurredAt\": \"2026-05-11T10:00:00.000Z\"\n  }\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `AUDIT_LOG_NOT_FOUND` | Registro no encontrado |",
+      "method": "GET",
+      "url": "{{ base_url }}/audit-logs/{{ audit_log_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_algetid_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+
+    {
+      "_id": "req_appsettings_get",
+      "_type": "request",
+      "parentId": "fld_appsettings",
+      "name": "Get App Settings",
+      "description": "## ⚙️ Get App Settings\n\nObtiene la configuración global actual de la aplicación. Si no hay configuración guardada en base de datos, devuelve los valores por defecto del sistema.\n\nLas settings se cachean en memoria con un **TTL de 5 minutos** para minimizar consultas a la base de datos.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `app-settings:read` o `app-settings:manage`.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": {\n    \"general\": {\n      \"appName\": \"First Backend\",\n      \"defaultLanguage\": \"es\",\n      \"timezone\": \"UTC\",\n      \"maintenanceMode\": false\n    },\n    \"notifications\": {\n      \"emailSenderName\": \"First Backend\",\n      \"emailSenderAddress\": \"noreply@first-backend.com\",\n      \"welcomeEmailEnabled\": true,\n      \"notificationsEnabled\": true\n    },\n    \"appearance\": {\n      \"logoUrl\": null,\n      \"primaryColor\": \"#6366f1\",\n      \"faviconUrl\": null\n    }\n  }\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
+      "method": "GET",
+      "url": "{{ base_url }}/app-settings",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_asget_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_appsettings_patch",
+      "_type": "request",
+      "parentId": "fld_appsettings",
+      "name": "Update App Settings",
+      "description": "## ✏️ Update App Settings\n\nActualiza la configuración global de la aplicación. Actualización parcial por categoría — solo se modifican los campos enviados. Se requiere enviar **al menos una categoría** (`general`, `notifications` o `appearance`).\n\nTras una actualización exitosa, el **caché de settings se invalida** inmediatamente.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `app-settings:update` o `app-settings:manage`.\n\n---\n\n### 📤 Request Body (al menos una categoría requerida)\n\n**`general`** (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `appName` | `string` | Nombre de la aplicación (1–100 caracteres) |\n| `defaultLanguage` | `string` | Código de idioma (`es`, `en`, `de`, ...) |\n| `timezone` | `string` | Zona horaria IANA (e.g. `America/Mexico_City`) |\n| `maintenanceMode` | `boolean` | Activar modo mantenimiento |\n\n**`notifications`** (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `emailSenderName` | `string` | Nombre del remitente de emails |\n| `emailSenderAddress` | `string` | Email válido del remitente |\n| `welcomeEmailEnabled` | `boolean` | Enviar email de bienvenida al registrarse |\n| `notificationsEnabled` | `boolean` | Habilitar notificaciones globales |\n\n**`appearance`** (todos opcionales, `null` para limpiar)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `logoUrl` | `string \\| null` | URL del logo (o `null` para eliminar) |\n| `primaryColor` | `string` | Color hex `#RRGGBB` |\n| `faviconUrl` | `string \\| null` | URL del favicon (o `null` para eliminar) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\nRetorna la configuración actualizada con la misma estructura que **Get App Settings**.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Campos inválidos o body vacío |",
+      "method": "PATCH",
+      "url": "{{ base_url }}/app-settings",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_aspatch_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_aspatch_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"general\": {\n    \"appName\": \"Mi Aplicación\",\n    \"defaultLanguage\": \"es\",\n    \"timezone\": \"America/Mexico_City\",\n    \"maintenanceMode\": false\n  },\n  \"notifications\": {\n    \"emailSenderName\": \"Soporte\",\n    \"emailSenderAddress\": \"soporte@miapp.com\",\n    \"welcomeEmailEnabled\": true,\n    \"notificationsEnabled\": true\n  },\n  \"appearance\": {\n    \"logoUrl\": \"https://cdn.miapp.com/logo.png\",\n    \"primaryColor\": \"#6366f1\",\n    \"faviconUrl\": null\n  }\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
     }
   ]
 }
