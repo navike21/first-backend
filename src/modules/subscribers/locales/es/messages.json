@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SUBSCRIBER_REGISTER": "Suscriptor registrado exitosamente",
+	"SUCCESS_SUBSCRIBERS_REGISTER_BULK": "Suscriptores registrados exitosamente",
+	"SUCCESS_SUBSCRIBER_LIST": "Lista de suscriptores obtenida exitosamente",
+	"SUCCESS_SUBSCRIBER_FOUND": "Suscriptor encontrado exitosamente",
+	"SUCCESS_SUBSCRIBER_UPDATE": "Suscriptor actualizado exitosamente",
+	"SUCCESS_SUBSCRIBER_DELETED": "Suscriptor eliminado exitosamente",
+	"SUCCESS_SUBSCRIBER_DELETED_PHYSICAL": "Suscriptor eliminado permanentemente",
+	"SUCCESS_SUBSCRIBERS_DELETED": "Suscriptores eliminados exitosamente",
+	"SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED": "Suscriptores eliminados parcialmente",
+	"SUCCESS_NO_SUBSCRIBERS_DELETED": "No se eliminó ningún suscriptor"
+}

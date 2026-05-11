@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SUBSCRIBER_REGISTER": "Подписчик успешно зарегистрирован",
+	"SUCCESS_SUBSCRIBERS_REGISTER_BULK": "Подписчики успешно зарегистрированы",
+	"SUCCESS_SUBSCRIBER_LIST": "Список подписчиков успешно получен",
+	"SUCCESS_SUBSCRIBER_FOUND": "Подписчик найден",
+	"SUCCESS_SUBSCRIBER_UPDATE": "Подписчик успешно обновлён",
+	"SUCCESS_SUBSCRIBER_DELETED": "Подписчик успешно удалён",
+	"SUCCESS_SUBSCRIBER_DELETED_PHYSICAL": "Подписчик удалён навсегда",
+	"SUCCESS_SUBSCRIBERS_DELETED": "Подписчики успешно удалены",
+	"SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED": "Подписчики удалены частично",
+	"SUCCESS_NO_SUBSCRIBERS_DELETED": "Ни один подписчик не был удалён"
+}

@@ -1,0 +1,10 @@
+{
+	"AUTH_LOGIN_SUCCESS": "Anmeldung erfolgreich",
+	"AUTH_LOGOUT_SUCCESS": "Erfolgreich abgemeldet",
+	"AUTH_REFRESH_SUCCESS": "Token erneuert",
+	"AUTH_EMAIL_VERIFIED": "E-Mail erfolgreich verifiziert",
+	"AUTH_PASSWORD_CHANGED": "Passwort erfolgreich geändert. Bitte melden Sie sich auf allen Geräten erneut an.",
+	"AUTH_PASSWORD_RESET": "Passwort erfolgreich zurückgesetzt. Bitte melden Sie sich mit Ihrem neuen Passwort an.",
+	"AUTH_FORGOT_PASSWORD_SENT": "Wenn diese E-Mail registriert ist, erhalten Sie in Kürze einen Zurücksetzungslink.",
+	"AUTH_SESSIONS_LIST": "Aktive Sitzungen abgerufen"
+}
