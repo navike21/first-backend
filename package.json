@@ -5,8 +5,12 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"dev": "nodemon",
-		"build": "tsc && tsc-alias",
-		"vercel-build": "tsc && tsc-alias"
+		"build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+		"vercel-build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+		"lint": "eslint src/ --ext .ts",
+		"format": "prettier --write src/",
+		"typecheck": "tsc -p tsconfig.build.json --noEmit",
+		"test": "vitest run --config vitest.config.ts --coverage"
 	},
 	"repository": {
 		"type": "git",
@@ -27,29 +31,56 @@
 		"url": "https://github.com/navike21/first-backend/issues"
 	},
 	"homepage": "https://github.com/navike21/first-backend#readme",
+	"engines": {
+		"node": ">=24.x"
+	},
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
 		"@types/compression": "^1.8.1",
 		"@types/cookie-parser": "^1.4.10",
 		"@types/cors": "^2.8.19",
 		"@types/express": "^5.0.6",
-		"@types/node": "^25.2.0",
-		"nodemon": "^3.1.11",
-		"prettier": "^3.8.1",
+		"@types/jsonwebtoken": "^9.0.10",
+		"@types/multer": "^2.1.0",
+		"@types/node": "^25.6.0",
+		"@types/nodemailer": "^8.0.0",
+		"@types/supertest": "^6.0.0",
+		"@typescript-eslint/eslint-plugin": "^8.59.1",
+		"@typescript-eslint/parser": "^8.59.1",
+		"@vitest/coverage-istanbul": "^4.1.5",
+		"@vitest/coverage-v8": "^4.1.5",
+		"eslint": "^10.3.0",
+		"eslint-plugin-sonarjs": "^4.0.3",
+		"globals": "^17.6.0",
+		"nodemon": "^3.1.14",
+		"prettier": "^3.8.3",
+		"supertest": "^6.3.4",
 		"ts-node": "^10.9.2",
-		"tsc-alias": "^1.8.16",
+		"tsc-alias": "^1.8.17",
 		"tsconfig-paths": "^4.2.0",
 		"tsx": "^4.21.0",
-		"typescript": "^5.9.3"
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.5"
 	},
 	"dependencies": {
+		"@vercel/blob": "^2.3.3",
+		"bcryptjs": "^3.0.3",
 		"compression": "^1.8.1",
 		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.6",
 		"date-fns": "^4.1.0",
 		"express": "^5.2.1",
-		"express-rate-limit": "^8.2.1",
+		"express-rate-limit": "^8.4.1",
+		"file-type": "^16.5.4",
 		"helmet": "^8.1.0",
-		"mongoose": "^9.1.6",
-		"zod": "^4.3.6"
+		"i18next": "^26.0.8",
+		"i18next-fs-backend": "^2.6.5",
+		"jsonwebtoken": "^9.0.3",
+		"mongoose": "^9.6.1",
+		"multer": "^2.1.1",
+		"nodemailer": "^8.0.7",
+		"sharp": "^0.34.5",
+		"socket.io": "^4.8.3",
+		"zod": "^4.4.2"
 	}
 }

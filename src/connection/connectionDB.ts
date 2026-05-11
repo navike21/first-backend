@@ -1,15 +1,17 @@
-import configEnvironment from '@Constants/environments';
+import { ENV } from '@Constants/environments';
 import { logError, logInfo } from '@Helpers/log';
 import mongoose, { type ConnectOptions } from 'mongoose';
 
-let isConnected = false;
-
 const mongoOptions: ConnectOptions = {
-	dbName: configEnvironment.MONGO_DATABASE,
-	appName: configEnvironment.MONGO_APP_NAME,
-	maxPoolSize: 10,
+	dbName: ENV.MONGO_DATABASE,
+	appName: ENV.MONGO_APP_NAME,
+	// Keep pool small in serverless: each function instance opens its own pool,
+	// and Atlas free-tier caps total connections at 500.
+	maxPoolSize: 5,
 	serverSelectionTimeoutMS: 5000,
 	socketTimeoutMS: 45000,
+	// Fail immediately instead of buffering indefinitely if not connected.
+	bufferCommands: false,
 	serverApi: {
 		version: '1',
 		strict: true,
@@ -18,20 +20,22 @@ const mongoOptions: ConnectOptions = {
 };
 
 export async function connectToDatabase(): Promise<void> {
-	if (isConnected) {
+	if (mongoose.connection.readyState === 1) {
 		logInfo('MongoDB already connected.');
 		return;
 	}
 
-	if (!configEnvironment.MONGO_URI) {
-		logError('MONGO_URI is not defined in environment variables.');
-		throw new Error('MONGO_URI is not defined.');
-	}
-
 	try {
-		await mongoose.connect(configEnvironment.MONGO_URI, mongoOptions);
-		isConnected = true;
+		await mongoose.connect(ENV.MONGO_URI, mongoOptions);
 		logInfo('Connected to MongoDB successfully.');
+
+		mongoose.connection.on('disconnected', () =>
+			logError('MongoDB disconnected.'),
+		);
+		mongoose.connection.on('reconnected', () =>
+			logInfo('MongoDB reconnected.'),
+		);
+		mongoose.connection.on('error', (err) => logError(`MongoDB error: ${err}`));
 	} catch (error) {
 		logError(`Database connection error: ${error as Error}`);
 		throw error;
@@ -39,11 +43,10 @@ export async function connectToDatabase(): Promise<void> {
 }
 
 export async function disconnectFromDatabase(): Promise<void> {
-	if (!isConnected) return;
+	if (mongoose.connection.readyState === 0) return;
 
 	try {
 		await mongoose.disconnect();
-		isConnected = false;
 		logInfo('Disconnected from MongoDB successfully.');
 	} catch (error) {
 		logError(`Database disconnection error: ${error as Error}`);

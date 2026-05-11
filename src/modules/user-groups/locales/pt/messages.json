@@ -1,0 +1,8 @@
+{
+	"USER_GROUP_CREATED": "Grupo de usuários criado com sucesso",
+	"USER_GROUP_UPDATED": "Grupo de usuários atualizado com sucesso",
+	"USER_GROUP_DELETED": "Grupo de usuários excluído com sucesso",
+	"USER_GROUP_FOUND": "Grupo de usuários recuperado",
+	"USER_GROUPS_LISTED": "Grupos de usuários recuperados",
+	"PERMISSIONS_CATALOG": "Permissões disponíveis"
+}

@@ -1,0 +1,10 @@
+{
+	"AUTH_LOGIN_SUCCESS": "로그인에 성공했습니다",
+	"AUTH_LOGOUT_SUCCESS": "로그아웃되었습니다",
+	"AUTH_REFRESH_SUCCESS": "토큰이 갱신되었습니다",
+	"AUTH_EMAIL_VERIFIED": "이메일이 인증되었습니다",
+	"AUTH_PASSWORD_CHANGED": "비밀번호가 변경되었습니다. 모든 기기에서 다시 로그인해 주세요.",
+	"AUTH_PASSWORD_RESET": "비밀번호가 재설정되었습니다. 새 비밀번호로 로그인해 주세요.",
+	"AUTH_FORGOT_PASSWORD_SENT": "해당 이메일이 등록되어 있으면 잠시 후 재설정 링크를 받게 됩니다.",
+	"AUTH_SESSIONS_LIST": "활성 세션 목록을 가져왔습니다"
+}

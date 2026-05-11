@@ -1,0 +1,8 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"checkJs": false
+	},
+	"include": ["api/**/*.js", "*.js", "*.cjs"],
+	"exclude": ["node_modules", "dist"]
+}
