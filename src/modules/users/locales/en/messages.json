@@ -1,0 +1,9 @@
+{
+	"USER_CREATED": "User created. Verification email sent.",
+	"USER_UPDATED": "User updated successfully",
+	"USER_DELETED": "User deleted successfully",
+	"USER_FOUND": "User retrieved",
+	"USERS_LISTED": "Users retrieved",
+	"PROFILE_FOUND": "Profile retrieved",
+	"PROFILE_UPDATED": "Profile updated successfully"
+}

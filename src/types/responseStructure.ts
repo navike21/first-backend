@@ -18,6 +18,7 @@ export interface QueryMeta extends MetaInformation {
 export interface SuccessResponseOptions<T> {
 	data: T;
 	message?: string;
+	ns?: string;
 	statusCode?: number;
 	code?: string;
 	meta?: MetaInformation;
