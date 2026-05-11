@@ -1,0 +1,8 @@
+{
+	"USER_GROUP_CREATED": "사용자 그룹이 생성되었습니다",
+	"USER_GROUP_UPDATED": "사용자 그룹이 업데이트되었습니다",
+	"USER_GROUP_DELETED": "사용자 그룹이 삭제되었습니다",
+	"USER_GROUP_FOUND": "사용자 그룹을 가져왔습니다",
+	"USER_GROUPS_LISTED": "사용자 그룹 목록을 가져왔습니다",
+	"PERMISSIONS_CATALOG": "사용 가능한 권한"
+}

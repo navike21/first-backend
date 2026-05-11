@@ -1,0 +1,39 @@
+import i18next from 'i18next';
+import { locales, SUPPORTED_LANGS } from '../locales';
+import { authLocales } from '../modules/auth/locales';
+import { usersLocales } from '../modules/users/locales';
+import { userGroupsLocales } from '../modules/user-groups/locales';
+import { subscribersLocales } from '../modules/subscribers/locales';
+import { storageLocales } from '../modules/storage/locales';
+import { auditLogLocales } from '../modules/audit-log/locales';
+import { appSettingsLocales } from '../modules/app-settings/locales';
+
+export async function initI18n(): Promise<void> {
+	const resources = Object.fromEntries(
+		SUPPORTED_LANGS.map((lang) => [
+			lang,
+			{
+				errors: locales[lang],
+				auth: authLocales[lang],
+				users: usersLocales[lang],
+				'user-groups': userGroupsLocales[lang],
+				subscribers: subscribersLocales[lang],
+				storage: storageLocales[lang],
+				'audit-log': auditLogLocales[lang],
+				'app-settings': appSettingsLocales[lang],
+			},
+		]),
+	);
+
+	await i18next.init({
+		lng: 'en',
+		fallbackLng: 'en',
+		supportedLngs: SUPPORTED_LANGS,
+		resources,
+		interpolation: { escapeValue: false },
+		ns: ['errors', 'auth', 'users', 'user-groups', 'subscribers', 'storage', 'audit-log', 'app-settings'],
+		defaultNS: 'errors',
+	});
+}
+
+export default i18next;
