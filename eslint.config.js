@@ -3,10 +3,12 @@ const js = require('@eslint/js');
 const tsPlugin = require('@typescript-eslint/eslint-plugin');
 const tsParser = require('@typescript-eslint/parser');
 const globals = require('globals');
+const sonarjs = require('eslint-plugin-sonarjs');
 
 /** @type {import('eslint').Linter.Config[]} */
 module.exports = [
 	js.configs.recommended,
+	sonarjs.configs.recommended,
 	{
 		languageOptions: {
 			globals: {
@@ -40,6 +42,21 @@ module.exports = [
 			'no-console': 'warn',
 			'no-unused-vars': 'off',
 			'no-undef': 'off',
+		},
+	},
+	{
+		files: ['src/**/__tests__/**/*.ts', 'src/**/*.test.ts'],
+		rules: {
+			'sonarjs/no-hardcoded-ip': 'off',
+			'sonarjs/no-clear-text-protocols': 'off',
+			'sonarjs/no-undefined-argument': 'off',
+			'sonarjs/no-unused-vars': 'off',
+		},
+	},
+	{
+		rules: {
+			// Action-name strings like 'auth:password_changed' are not passwords
+			'sonarjs/no-hardcoded-passwords': 'off',
 		},
 	},
 	{
