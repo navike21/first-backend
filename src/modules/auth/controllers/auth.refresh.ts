@@ -23,7 +23,7 @@ export const authRefresh = asyncHandler(async (req, res) => {
 	const userAgent = req.headers['user-agent'] ?? '';
 
 	const { accessToken, refreshToken, refreshExpiresMs } =
-		await rotateRefreshToken(token, ip, userAgent);
+		await rotateRefreshToken(token!, userAgent, ip);
 
 	res.cookie(REFRESH_COOKIE, refreshToken, {
 		httpOnly: true,

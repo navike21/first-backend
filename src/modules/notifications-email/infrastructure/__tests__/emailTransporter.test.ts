@@ -7,7 +7,6 @@ describe('email transporter', () => {
 	});
 
 	it('creates an SMTP transporter in production and caches it on repeated calls', async () => {
-		// Arrange
 		const mockTransporter = { sendMail: vi.fn() } as unknown as Transporter;
 		vi.doMock('nodemailer', () => ({
 			default: {
@@ -30,17 +29,15 @@ describe('email transporter', () => {
 			await import('@Modules/notifications-email/infrastructure/emailTransporter');
 		const nodemailerModule = await import('nodemailer');
 
-		// Act — first call creates the transporter
 		const first = await getEmailTransporter();
-		// Act — second call returns the cached instance
 		const second = await getEmailTransporter();
 
-		// Assert
 		expect(nodemailerModule.default.createTransport).toHaveBeenCalledTimes(1);
 		expect(nodemailerModule.default.createTransport).toHaveBeenCalledWith({
 			host: 'smtp.example.com',
 			port: 587,
 			secure: false,
+			requireTLS: true,
 			auth: { user: 'user', pass: 'pass' },
 		});
 		expect(first).toBe(mockTransporter);
@@ -48,8 +45,11 @@ describe('email transporter', () => {
 	});
 
 	it('creates an Ethereal transporter in development when SMTP is not configured', async () => {
-		// Arrange
-		const testAccount = { user: 'dev@ethereal.email', pass: 'devpass' };
+		const testAccount = {
+			user: 'dev@ethereal.email',
+			pass: 'devpass',
+			smtp: { host: 'smtp.ethereal.email', port: 587, secure: false },
+		};
 		const mockTransporter = { sendMail: vi.fn() } as unknown as Transporter;
 		vi.doMock('nodemailer', () => ({
 			default: {
@@ -71,14 +71,13 @@ describe('email transporter', () => {
 			await import('@Modules/notifications-email/infrastructure/emailTransporter');
 		const nodemailerModule = await import('nodemailer');
 
-		// Act
 		const result = await getEmailTransporter();
 
-		// Assert
 		expect(nodemailerModule.default.createTestAccount).toHaveBeenCalledTimes(1);
 		expect(nodemailerModule.default.createTransport).toHaveBeenCalledWith({
-			host: 'smtp.ethereal.email',
-			port: 587,
+			host: testAccount.smtp.host,
+			port: testAccount.smtp.port,
+			secure: testAccount.smtp.secure,
 			auth: { user: testAccount.user, pass: testAccount.pass },
 		});
 		expect(result).toBe(mockTransporter);

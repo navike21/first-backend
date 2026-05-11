@@ -43,8 +43,8 @@ describe('authRefresh', () => {
 		await authRefresh(req, res, next);
 		expect(rotateRefreshToken).toHaveBeenCalledWith(
 			'oldref',
-			'10.0.0.1',
 			'test-agent',
+			'10.0.0.1',
 		);
 		expect(res.cookie).toHaveBeenCalled();
 		expect(successResponse).toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('authRefresh', () => {
 		const res = makeRes();
 		const next = vi.fn();
 		await authRefresh(req, res, next);
-		expect(rotateRefreshToken).toHaveBeenCalledWith('oldref', '127.0.0.1', '');
+		expect(rotateRefreshToken).toHaveBeenCalledWith('oldref', '', '127.0.0.1');
 		expect(successResponse).toHaveBeenCalled();
 	});
 
