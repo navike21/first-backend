@@ -25,7 +25,7 @@ export const validateUpdateSchema =
 		if (!success) {
 			setThrowError({
 				code: 'VALIDATION_SCHEMA_ERROR',
-				statusCode: 300,
+				statusCode: 422,
 				details: {
 					validation: error.issues.map((issue) => ({
 						path: issue.path.join('.'),

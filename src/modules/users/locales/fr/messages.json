@@ -1,0 +1,9 @@
+{
+	"USER_CREATED": "Utilisateur créé. Email de vérification envoyé.",
+	"USER_UPDATED": "Utilisateur mis à jour avec succès",
+	"USER_DELETED": "Utilisateur supprimé avec succès",
+	"USER_FOUND": "Utilisateur récupéré",
+	"USERS_LISTED": "Utilisateurs récupérés",
+	"PROFILE_FOUND": "Profil récupéré",
+	"PROFILE_UPDATED": "Profil mis à jour avec succès"
+}

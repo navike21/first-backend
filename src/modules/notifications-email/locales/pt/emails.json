@@ -1,0 +1,23 @@
+{
+  "verifyEmail": {
+    "subject": "Verifique seu endereço de e-mail",
+    "heading": "Olá {{firstName}},",
+    "body": "Verifique seu endereço de e-mail para ativar sua conta. Este link expira em 24 horas.",
+    "button": "Verificar e-mail",
+    "safety": "Se você não criou uma conta, pode ignorar este e-mail com segurança."
+  },
+  "passwordReset": {
+    "subject": "Redefina sua senha",
+    "heading": "Olá {{firstName}},",
+    "body": "Recebemos uma solicitação para redefinir sua senha. Clique no botão abaixo para criar uma nova. Este link expira em 1 hora.",
+    "button": "Redefinir senha",
+    "safety": "Se você não solicitou uma redefinição de senha, pode ignorar este e-mail com segurança. Sua senha não será alterada."
+  },
+  "welcomeEmail": {
+    "subject": "Bem-vindo ao First Backend!",
+    "heading": "Bem-vindo, {{firstName}}!",
+    "body": "Sua conta foi verificada e está agora totalmente ativa. Você está pronto para começar.",
+    "thanks": "Obrigado por se juntar a nós."
+  },
+  "footer": "© {{year}} First Backend. Todos os direitos reservados."
+}
