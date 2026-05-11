@@ -1,81 +1,41 @@
-import { logInfo } from '@Helpers/log';
-import { errorResponse as errorResponseSend } from '@Helpers/responseStructure';
-import { ErrorResponseOptions } from '@Types/responseStructure';
+import { AppError } from '@Shared/domain/AppError';
+import { logError } from '@Helpers/log';
+import { errorResponse } from '@Helpers/responseStructure';
 import type { NextFunction, Request, Response } from 'express';
-
-interface CustomError extends ErrorResponseOptions {
-	errorResponse: unknown;
-}
+import i18next from '@Config/i18n';
 
 export const errorMiddleware = (
 	error: unknown,
-	_: Request,
+	_req: Request,
 	res: Response,
 	_next: NextFunction,
 ) => {
-	logInfo(
-		`Error captured by errorMiddleware: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
-	);
-
-	// Intentar parsear como error estructurado (Mongoose, custom errors)
-	try {
-		const errorData = JSON.stringify(error);
-		const errorDataMongoose = JSON.parse(errorData) as CustomError;
-
-		if (Object.keys(errorDataMongoose).length) {
-			const { code, statusCode, message, details, errorResponse } =
-				errorDataMongoose;
-			return errorResponseSend(res, {
-				statusCode: statusCode || 500,
-				code,
-				message,
-				details:
-					message ||
-					(error instanceof Error && error.message) ||
-					errorResponse ||
-					details,
-			});
-		}
-	} catch {
-		// Si falla el parse, continuar con el siguiente intento
-	}
-
-	// Intentar parsear el mensaje como JSON (custom errors con JSON en el mensaje)
-	if (error instanceof Error) {
-		try {
-			const errorDataGeneric = JSON.parse(
-				error.message,
-			) as ErrorResponseOptions;
-
-			if (Object.keys(errorDataGeneric).length) {
-				const { code, message, statusCode, details } = errorDataGeneric;
-				return errorResponseSend(res, {
-					statusCode: statusCode || 500,
-					code,
-					message,
-					details,
-				});
-			}
-		} catch {
-			// Si falla el parse, es un error estándar - continuar al fallback
-		}
-	}
-
-	// Fallback para errores estándar (CORS, validación, etc.)
-	if (error instanceof Error) {
-		return errorResponseSend(res, {
-			statusCode: 403,
-			code: 'FORBIDDEN',
-			message: error.message,
-			details: error.message,
+	const lang = typeof res.locals.lang === 'string' ? res.locals.lang : 'en';
+	if (error instanceof AppError) {
+		const message = i18next.t(error.code, {
+			lng: lang,
+			defaultValue: error.message,
+		});
+		return errorResponse(res, {
+			statusCode: error.statusCode,
+			code: error.code,
+			message,
+			details: error.details,
 		});
 	}
 
-	// Fallback genérico para errores desconocidos
-	return errorResponseSend(res, {
+	const errorMessage =
+		error instanceof Error ? `${error.message}\n${error.stack}` : String(error);
+
+	logError(`Unhandled error: ${errorMessage}`);
+
+	const message = i18next.t('INTERNAL_SERVER_ERROR', {
+		lng: lang,
+		defaultValue: 'An unexpected error occurred',
+	});
+	return errorResponse(res, {
 		statusCode: 500,
 		code: 'INTERNAL_SERVER_ERROR',
-		message: 'An unexpected error occurred',
-		details: String(error),
+		message,
 	});
 };

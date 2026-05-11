@@ -1,0 +1,23 @@
+{
+  "verifyEmail": {
+    "subject": "Vérifiez votre adresse e-mail",
+    "heading": "Bonjour {{firstName}},",
+    "body": "Veuillez vérifier votre adresse e-mail pour activer votre compte. Ce lien expire dans 24 heures.",
+    "button": "Vérifier l'e-mail",
+    "safety": "Si vous n'avez pas créé de compte, vous pouvez ignorer cet e-mail en toute sécurité."
+  },
+  "passwordReset": {
+    "subject": "Réinitialisez votre mot de passe",
+    "heading": "Bonjour {{firstName}},",
+    "body": "Nous avons reçu une demande de réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour en créer un nouveau. Ce lien expire dans 1 heure.",
+    "button": "Réinitialiser le mot de passe",
+    "safety": "Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail. Votre mot de passe ne changera pas."
+  },
+  "welcomeEmail": {
+    "subject": "Bienvenue sur First Backend !",
+    "heading": "Bienvenue, {{firstName}} !",
+    "body": "Votre compte a été vérifié et est maintenant entièrement actif. Vous êtes prêt à commencer.",
+    "thanks": "Merci de nous avoir rejoints."
+  },
+  "footer": "© {{year}} First Backend. Tous droits réservés."
+}

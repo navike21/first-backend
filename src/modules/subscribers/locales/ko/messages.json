@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SUBSCRIBER_REGISTER": "구독자가 등록되었습니다",
+	"SUCCESS_SUBSCRIBERS_REGISTER_BULK": "구독자들이 일괄 등록되었습니다",
+	"SUCCESS_SUBSCRIBER_LIST": "구독자 목록을 가져왔습니다",
+	"SUCCESS_SUBSCRIBER_FOUND": "구독자를 찾았습니다",
+	"SUCCESS_SUBSCRIBER_UPDATE": "구독자가 업데이트되었습니다",
+	"SUCCESS_SUBSCRIBER_DELETED": "구독자가 삭제되었습니다",
+	"SUCCESS_SUBSCRIBER_DELETED_PHYSICAL": "구독자가 영구 삭제되었습니다",
+	"SUCCESS_SUBSCRIBERS_DELETED": "구독자들이 삭제되었습니다",
+	"SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED": "구독자들이 부분적으로 삭제되었습니다",
+	"SUCCESS_NO_SUBSCRIBERS_DELETED": "삭제된 구독자가 없습니다"
+}

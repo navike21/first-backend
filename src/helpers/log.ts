@@ -12,12 +12,14 @@ function formatMessage(message: Log): string {
 
 export function logInfo(message: Log): void {
 	if (isDevelopment) {
+		// eslint-disable-next-line no-console
 		console.log(`INFO: ${formatMessage(message)}`);
 	}
 }
 
 export function logError(message: Log): void {
 	if (isDevelopment) {
+		// eslint-disable-next-line no-console
 		console.error(`ERROR: ${formatMessage(message)}`);
 	}
 }
