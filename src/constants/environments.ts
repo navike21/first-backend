@@ -46,11 +46,15 @@ const EnvSchema = z.object({
 const parsed = EnvSchema.safeParse(process.env);
 
 if (!parsed.success) {
+	// eslint-disable-next-line no-console
+	console.error('[ENV] Missing or invalid environment variables:');
 	const fieldErrors = parsed.error.flatten(
 		(issue) => issue.message,
 	).fieldErrors;
-	// eslint-disable-next-line no-console
-	console.error('[ENV] Missing or invalid environment variables: ' + JSON.stringify(fieldErrors));
+	Object.entries(fieldErrors).forEach(([key, messages]) => {
+		// eslint-disable-next-line no-console
+		console.error(`  ${key}: ${messages?.join(', ')}`);
+	});
 	process.exit(1);
 }
 
