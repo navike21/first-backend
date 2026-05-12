@@ -1,0 +1,9 @@
+{
+	"USER_CREATED": "ユーザーを作成しました。確認メールを送信しました。",
+	"USER_UPDATED": "ユーザーを更新しました",
+	"USER_DELETED": "ユーザーを削除しました",
+	"USER_FOUND": "ユーザーを取得しました",
+	"USERS_LISTED": "ユーザー一覧を取得しました",
+	"PROFILE_FOUND": "プロフィールを取得しました",
+	"PROFILE_UPDATED": "プロフィールを更新しました"
+}

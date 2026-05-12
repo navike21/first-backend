@@ -1,0 +1,9 @@
+{
+	"USER_CREATED": "用户已创建。验证邮件已发送。",
+	"USER_UPDATED": "用户更新成功",
+	"USER_DELETED": "用户删除成功",
+	"USER_FOUND": "已获取用户",
+	"USERS_LISTED": "已获取用户列表",
+	"PROFILE_FOUND": "已获取个人资料",
+	"PROFILE_UPDATED": "个人资料更新成功"
+}

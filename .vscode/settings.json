@@ -1,5 +1,6 @@
 {
   "license.author": "navike21",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "cSpell.words": [
     "frameguard"
   ]

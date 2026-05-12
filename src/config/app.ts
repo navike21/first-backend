@@ -4,11 +4,14 @@ import express, { type Express } from 'express';
 import helmet from 'helmet';
 import { corsConfig } from './cors';
 import { globalLimiter } from './limiter';
+import { i18nMiddleware } from '@Middlewares/i18nMiddleware';
 
 export const configApp = (app: Express) => {
 	app.use(express.json());
 
 	app.use(corsConfig);
+
+	app.use(i18nMiddleware);
 
 	app.use(express.urlencoded({ extended: true }));
 

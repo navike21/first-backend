@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SUBSCRIBER_REGISTER": "サブスクライバーを登録しました",
+	"SUCCESS_SUBSCRIBERS_REGISTER_BULK": "サブスクライバーを一括登録しました",
+	"SUCCESS_SUBSCRIBER_LIST": "サブスクライバー一覧を取得しました",
+	"SUCCESS_SUBSCRIBER_FOUND": "サブスクライバーを見つけました",
+	"SUCCESS_SUBSCRIBER_UPDATE": "サブスクライバーを更新しました",
+	"SUCCESS_SUBSCRIBER_DELETED": "サブスクライバーを削除しました",
+	"SUCCESS_SUBSCRIBER_DELETED_PHYSICAL": "サブスクライバーを完全に削除しました",
+	"SUCCESS_SUBSCRIBERS_DELETED": "サブスクライバーを削除しました",
+	"SUCCESS_SUBSCRIBERS_PARTIALLY_DELETED": "サブスクライバーを部分的に削除しました",
+	"SUCCESS_NO_SUBSCRIBERS_DELETED": "削除されたサブスクライバーはいません"
+}

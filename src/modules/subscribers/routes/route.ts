@@ -12,6 +12,10 @@ import {
 	SUBSCRIBER_PATH_UPDATE,
 } from '../constants/paths';
 
+import { authenticate } from '@Modules/auth';
+import { authorize } from '@Modules/auth';
+import { PERMISSIONS } from '@Constants/permissions';
+
 import { validateSchema } from '../middlewares/validateSchema';
 import { validateSchemaArray } from '../middlewares/validateSchemaArray';
 
@@ -30,27 +34,64 @@ import { subscriberUpdate } from '../controllers/subscriber.update';
 import { validateUpdateSchema } from '../middlewares/validateUpdateSchema';
 
 export function subscribersApi(router: Router) {
+	// Public — subscribe form
 	router.post(
 		SUBSCRIBER_PATH_REGISTER,
 		validateSchema(SubscriberRegisterSchema),
 		subscriberRegister,
 	);
+
+	// Admin — protected routes
 	router.post(
 		SUBSCRIBER_PATH_REGISTER_BULK,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_CREATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
 		validateSchemaArray(SubscriberRegisterSchema),
 		subscriberRegisterBulk,
 	);
 
-	router.get(SUBSCRIBER_PATH_LIST, subscriberListAll);
-	router.get(SUBSCRIBER_PATH_SEARCH_BY_ID, subscriberSearchById);
+	router.get(
+		SUBSCRIBER_PATH_LIST,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_READ, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		subscriberListAll,
+	);
+	router.get(
+		SUBSCRIBER_PATH_SEARCH_BY_ID,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_READ, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		subscriberSearchById,
+	);
 
-	router.delete(SUBSCRIBER_PATH_DELETE_LOGIC, subscriberDeleteLogical);
-	router.delete(SUBSCRIBER_PATH_DELETE_LOGIC_BULK, subscriberDeleteLogicalBulk);
-	router.delete(SUBSCRIBER_PATH_DELETE, subscriberDeletePhysical);
-	router.delete(SUBSCRIBER_PATH_DELETE_BULK, subscriberDeletePhysicalBulk);
+	router.delete(
+		SUBSCRIBER_PATH_DELETE_LOGIC,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		subscriberDeleteLogical,
+	);
+	router.delete(
+		SUBSCRIBER_PATH_DELETE_LOGIC_BULK,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		subscriberDeleteLogicalBulk,
+	);
+	router.delete(
+		SUBSCRIBER_PATH_DELETE,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		subscriberDeletePhysical,
+	);
+	router.delete(
+		SUBSCRIBER_PATH_DELETE_BULK,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		subscriberDeletePhysicalBulk,
+	);
 
 	router.patch(
 		SUBSCRIBER_PATH_UPDATE,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
 		validateUpdateSchema(SubscriberUpdateSchema),
 		subscriberUpdate,
 	);

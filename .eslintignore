@@ -1,8 +1,0 @@
-LICENSE
-CHANGELOG.md
-README.md
-node_modules
-dist
-.vercel
-coverage
-prisma/migrations

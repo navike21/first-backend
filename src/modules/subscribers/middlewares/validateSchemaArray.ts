@@ -10,7 +10,7 @@ export const validateSchemaArray =
 		if (!Array.isArray(req.body)) {
 			setThrowError({
 				code: 'VALIDATION_SCHEMA_ARRAY_ERROR',
-				statusCode: 300,
+				statusCode: 422,
 				message: 'Request body must be an array',
 			});
 		}
@@ -35,7 +35,7 @@ export const validateSchemaArray =
 		if (!success) {
 			setThrowError({
 				code: 'VALIDATION_SCHEMA_ARRAY_ERROR',
-				statusCode: 300,
+				statusCode: 422,
 				details: {
 					validation: error.issues.map((issue) => ({
 						index: issue.path[0],
