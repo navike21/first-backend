@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAGE_CREATE": "Seite erfolgreich erstellt",
+	"SUCCESS_PAGE_LIST": "Seiten erfolgreich abgerufen",
+	"SUCCESS_PAGE_FOUND": "Seite erfolgreich gefunden",
+	"SUCCESS_PAGE_UPDATE": "Seite erfolgreich aktualisiert",
+	"SUCCESS_PAGE_DELETED": "Seite erfolgreich gelöscht",
+	"SUCCESS_PAGE_SECTION_ADDED": "Abschnitt erfolgreich hinzugefügt",
+	"SUCCESS_PAGE_SECTION_UPDATED": "Abschnitt erfolgreich aktualisiert",
+	"SUCCESS_PAGE_SECTION_DELETED": "Abschnitt erfolgreich gelöscht",
+	"SUCCESS_PAGE_SECTIONS_REORDERED": "Abschnitte erfolgreich neu angeordnet",
+	"PAGE_NOT_FOUND": "Seite nicht gefunden",
+	"PAGE_SLUG_CONFLICT": "Eine Seite mit diesem Slug existiert bereits",
+	"PAGE_SECTION_NOT_FOUND": "Abschnitt nicht gefunden"
+}

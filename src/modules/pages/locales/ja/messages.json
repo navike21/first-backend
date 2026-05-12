@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAGE_CREATE": "ページが正常に作成されました",
+	"SUCCESS_PAGE_LIST": "ページが正常に取得されました",
+	"SUCCESS_PAGE_FOUND": "ページが正常に見つかりました",
+	"SUCCESS_PAGE_UPDATE": "ページが正常に更新されました",
+	"SUCCESS_PAGE_DELETED": "ページが正常に削除されました",
+	"SUCCESS_PAGE_SECTION_ADDED": "セクションが正常に追加されました",
+	"SUCCESS_PAGE_SECTION_UPDATED": "セクションが正常に更新されました",
+	"SUCCESS_PAGE_SECTION_DELETED": "セクションが正常に削除されました",
+	"SUCCESS_PAGE_SECTIONS_REORDERED": "セクションが正常に並べ替えられました",
+	"PAGE_NOT_FOUND": "ページが見つかりません",
+	"PAGE_SLUG_CONFLICT": "このスラッグを持つページはすでに存在します",
+	"PAGE_SECTION_NOT_FOUND": "セクションが見つかりません"
+}
