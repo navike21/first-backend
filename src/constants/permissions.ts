@@ -50,6 +50,18 @@ export const PERMISSIONS = {
 	PORTFOLIO_DELETE: 'portfolio:delete',
 	PORTFOLIO_MANAGE: 'portfolio:manage',
 
+	PAGES_READ: 'pages:read',
+	PAGES_CREATE: 'pages:create',
+	PAGES_UPDATE: 'pages:update',
+	PAGES_DELETE: 'pages:delete',
+	PAGES_MANAGE: 'pages:manage',
+
+	TEAM_READ: 'team:read',
+	TEAM_CREATE: 'team:create',
+	TEAM_UPDATE: 'team:update',
+	TEAM_DELETE: 'team:delete',
+	TEAM_MANAGE: 'team:manage',
+
 	ALL: '*:*',
 } as const;
 

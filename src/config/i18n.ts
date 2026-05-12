@@ -10,6 +10,8 @@ import { appSettingsLocales } from '../modules/app-settings/locales';
 import { clientsLocales } from '../modules/clients/locales';
 import { servicesLocales } from '../modules/services/locales';
 import { portfolioLocales } from '../modules/portfolio/locales';
+import { pagesLocales } from '../modules/pages/locales';
+import { teamLocales } from '../modules/team/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -27,6 +29,8 @@ export async function initI18n(): Promise<void> {
 				clients: clientsLocales[lang],
 				services: servicesLocales[lang],
 				portfolio: portfolioLocales[lang],
+				pages: pagesLocales[lang],
+				team: teamLocales[lang],
 			},
 		]),
 	);
@@ -49,6 +53,8 @@ export async function initI18n(): Promise<void> {
 			'clients',
 			'services',
 			'portfolio',
+			'pages',
+			'team',
 		],
 		defaultNS: 'errors',
 	});

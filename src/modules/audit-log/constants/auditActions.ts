@@ -27,6 +27,14 @@ export const AUDIT_ACTIONS = {
 	PORTFOLIO_CREATED: 'portfolio:created',
 	PORTFOLIO_UPDATED: 'portfolio:updated',
 	PORTFOLIO_SOFT_DELETED: 'portfolio:soft_deleted',
+
+	PAGES_CREATED: 'pages:created',
+	PAGES_UPDATED: 'pages:updated',
+	PAGES_SOFT_DELETED: 'pages:soft_deleted',
+
+	TEAM_MEMBER_CREATED: 'team:created',
+	TEAM_MEMBER_UPDATED: 'team:updated',
+	TEAM_MEMBER_SOFT_DELETED: 'team:soft_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];
