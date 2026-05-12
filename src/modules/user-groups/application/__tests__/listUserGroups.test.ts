@@ -26,14 +26,20 @@ describe('listUserGroups', () => {
 	});
 
 	it('paginates correctly', async () => {
-		await Promise.all([seed(), seed(), seed(), seed(), seed()]);
+		await seed();
+		await seed();
+		await seed();
+		await seed();
+		await seed();
 
 		const page1 = await listUserGroups({ page: 1, limit: 2 });
 		const page2 = await listUserGroups({ page: 2, limit: 2 });
 
 		expect(page1.items).toHaveLength(2);
 		expect(page2.items.length).toBeGreaterThanOrEqual(1);
-		expect(page1.items[0].id).not.toBe(page2.items[0].id);
+		const page1Ids = new Set(page1.items.map((g) => g.id));
+		const page2Ids = page2.items.map((g) => g.id);
+		expect(page2Ids.some((id) => !page1Ids.has(id))).toBe(true);
 	});
 
 	it('filters by status', async () => {

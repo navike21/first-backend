@@ -17,7 +17,7 @@ export const CreateSectionSchema = z.object({
 	type: z.enum(SECTION_TYPES),
 	order: z.coerce.number().int().default(0),
 	settings: SectionSettingsSchema,
-	content: z.record(z.unknown()).default({}),
+	content: z.record(z.string(), z.unknown()).default({}),
 });
 
 export const UpdateSectionSchema = CreateSectionSchema.omit({

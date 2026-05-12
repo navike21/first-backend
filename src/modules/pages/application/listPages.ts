@@ -12,7 +12,7 @@ export async function listPages({
 	limit,
 	adminView = false,
 }: ListPagesOptions) {
-	const filter = adminView
+	const filter: Record<string, unknown> = adminView
 		? { status: { $ne: 'deleted' } }
 		: { status: 'published', isPublished: true };
 

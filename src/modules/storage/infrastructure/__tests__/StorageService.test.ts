@@ -10,6 +10,24 @@ vi.mock('../drivers/VercelBlobDriver', () => ({
 		delete = vi.fn();
 	},
 }));
+vi.mock('../drivers/S3Driver', () => ({
+	S3Driver: class {
+		uploadBuffer = vi.fn();
+		delete = vi.fn();
+	},
+}));
+vi.mock('../drivers/GCSDriver', () => ({
+	GCSDriver: class {
+		uploadBuffer = vi.fn();
+		delete = vi.fn();
+	},
+}));
+vi.mock('../drivers/AzureBlobDriver', () => ({
+	AzureBlobDriver: class {
+		uploadBuffer = vi.fn();
+		delete = vi.fn();
+	},
+}));
 
 import { getStorageDriver } from '../StorageService';
 
@@ -21,14 +39,42 @@ describe('getStorageDriver', () => {
 		expect(typeof driver.delete).toBe('function');
 	});
 
+	it('returns an S3Driver for s3', async () => {
+		vi.doMock('@Constants/environments', () => ({
+			ENV: { STORAGE_DRIVER: 's3' },
+		}));
+		vi.resetModules();
+		const { getStorageDriver: get } = await import('../StorageService');
+		const driver = get();
+		expect(driver).toBeDefined();
+	});
+
+	it('returns a GCSDriver for gcs', async () => {
+		vi.doMock('@Constants/environments', () => ({
+			ENV: { STORAGE_DRIVER: 'gcs' },
+		}));
+		vi.resetModules();
+		const { getStorageDriver: get } = await import('../StorageService');
+		const driver = get();
+		expect(driver).toBeDefined();
+	});
+
+	it('returns an AzureBlobDriver for azure-blob', async () => {
+		vi.doMock('@Constants/environments', () => ({
+			ENV: { STORAGE_DRIVER: 'azure-blob' },
+		}));
+		vi.resetModules();
+		const { getStorageDriver: get } = await import('../StorageService');
+		const driver = get();
+		expect(driver).toBeDefined();
+	});
+
 	it('throws with DRIVER_NOT_CONFIGURED for an unknown driver', async () => {
 		vi.doMock('@Constants/environments', () => ({
 			ENV: { STORAGE_DRIVER: 'unknown-driver' },
 		}));
 		vi.resetModules();
-
 		const { getStorageDriver: freshGet } = await import('../StorageService');
-
 		expect(() => freshGet()).toThrow('Unknown storage driver');
 	});
 });
