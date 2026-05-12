@@ -38,9 +38,25 @@ const EnvSchema = z.object({
 	STORAGE_DRIVER: z
 		.enum(['vercel-blob', 's3', 'gcs', 'azure-blob'])
 		.default('vercel-blob'),
-	BLOB_READ_WRITE_TOKEN: z.string().optional(),
 	STORAGE_MAX_FILE_SIZE_BYTES: z.coerce.number().default(10 * 1024 * 1024),
 	STORAGE_MAX_FILES_BULK: z.coerce.number().int().min(1).max(20).default(10),
+
+	// Storage — Vercel Blob
+	BLOB_READ_WRITE_TOKEN: z.string().optional(),
+
+	// Storage — AWS S3
+	AWS_ACCESS_KEY_ID: z.string().optional(),
+	AWS_SECRET_ACCESS_KEY: z.string().optional(),
+	AWS_REGION: z.string().optional(),
+	AWS_S3_BUCKET: z.string().optional(),
+
+	// Storage — Google Cloud Storage (GCS_CREDENTIALS: base64-encoded service-account JSON)
+	GCS_BUCKET: z.string().optional(),
+	GCS_CREDENTIALS: z.string().optional(),
+
+	// Storage — Azure Blob Storage
+	AZURE_STORAGE_CONNECTION_STRING: z.string().optional(),
+	AZURE_STORAGE_CONTAINER: z.string().optional(),
 });
 
 const parsed = EnvSchema.safeParse(process.env);
