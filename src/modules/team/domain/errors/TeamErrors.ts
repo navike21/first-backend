@@ -6,7 +6,6 @@ export class TeamMemberNotFoundError extends AppError {
 			statusCode: 404,
 			code: 'TEAM_MEMBER_NOT_FOUND',
 			message: 'TEAM_MEMBER_NOT_FOUND',
-			ns: 'team',
 		});
 	}
 }

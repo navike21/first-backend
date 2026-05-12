@@ -12,7 +12,7 @@ export async function listTeamMembers({
 	limit,
 	adminView = false,
 }: ListTeamOptions) {
-	const filter = adminView
+	const filter: Record<string, unknown> = adminView
 		? { status: { $ne: 'deleted' } }
 		: { status: 'active', isActive: true };
 
