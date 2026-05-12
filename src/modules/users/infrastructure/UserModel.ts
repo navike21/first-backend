@@ -15,6 +15,9 @@ export interface AddressDocument {
 	postalCode?: string;
 }
 
+export type PresenceStatus = 'available' | 'busy' | 'away' | 'offline';
+export const PRESENCE_STATUS_ARRAY: PresenceStatus[] = ['available', 'busy', 'away', 'offline'];
+
 export interface UserDocument {
 	id: string;
 	email: string;
@@ -29,6 +32,8 @@ export interface UserDocument {
 	groupId?: string;
 	isEmailVerified: boolean;
 	status: StatusRegister;
+	presenceStatus: PresenceStatus;
+	lastSeenAt?: Date;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -82,6 +87,13 @@ const userSchema = new Schema<UserDocument>(
 			enum: STATUS_REGISTER_ARRAY,
 			default: ACTIVE,
 		},
+		presenceStatus: {
+			type: String,
+			required: true,
+			enum: PRESENCE_STATUS_ARRAY,
+			default: 'offline',
+		},
+		lastSeenAt: { type: Date },
 	},
 	{ timestamps: true },
 );

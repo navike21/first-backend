@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 
 export const StorageUploadBodySchema = z.object({
 	entityType: z
@@ -22,16 +23,24 @@ export const StorageUploadBodySchema = z.object({
 });
 
 export const StorageDeleteSchema = z.object({
-	urls: z
-		.array(z.url({ message: 'STORAGE_URL_INVALID' }), {
+	ids: z
+		.array(z.uuid({ message: 'STORAGE_ID_INVALID' }), {
 			error: (iss) =>
-				iss.input === undefined
-					? 'STORAGE_URLS_REQUIRED'
-					: 'STORAGE_URLS_INVALID',
+				iss.input === undefined ? 'STORAGE_IDS_REQUIRED' : 'STORAGE_IDS_INVALID',
 		})
-		.min(1, { message: 'STORAGE_URLS_MIN' })
-		.max(20, { message: 'STORAGE_URLS_MAX' }),
+		.min(1, { message: 'STORAGE_IDS_MIN' })
+		.max(20, { message: 'STORAGE_IDS_MAX' }),
+});
+
+export const StorageListQuerySchema = z.object({
+	page: z.coerce.number().int().min(1).optional().default(1),
+	limit: z.coerce.number().int().min(1).max(100).optional().default(20),
+	status: z.enum(STATUS_REGISTER_ARRAY as [string, ...string[]]).optional(),
+	entityType: z.string().max(50).optional(),
+	entityId: z.uuid().optional(),
+	uploadedBy: z.uuid().optional(),
 });
 
 export type StorageUploadBody = z.infer<typeof StorageUploadBodySchema>;
 export type StorageDeleteBody = z.infer<typeof StorageDeleteSchema>;
+export type StorageListQuery = z.infer<typeof StorageListQuerySchema>;

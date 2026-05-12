@@ -20,6 +20,7 @@ export const PERMISSIONS = {
 	PROFILE_READ: 'profile:read',
 	PROFILE_UPDATE: 'profile:update',
 
+	STORAGE_READ: 'storage:read',
 	STORAGE_UPLOAD: 'storage:upload',
 	STORAGE_DELETE: 'storage:delete',
 	STORAGE_MANAGE: 'storage:manage',
