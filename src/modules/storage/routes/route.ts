@@ -5,6 +5,8 @@ import { authenticate, authorize } from '@Modules/auth';
 import { ALL_ALLOWED_MIME_TYPES } from '../constants/allowedMimeTypes';
 import {
 	STORAGE_PATH_DELETE,
+	STORAGE_PATH_DELETE_PERMANENT,
+	STORAGE_PATH_FILES,
 	STORAGE_PATH_UPLOAD,
 	STORAGE_PATH_UPLOAD_BULK,
 } from '../constants/paths';
@@ -13,23 +15,20 @@ import {
 	storageUploadController,
 } from '../controllers/storage.upload';
 import { storageDeleteController } from '../controllers/storage.delete';
+import { storageDeletePermanentController } from '../controllers/storage.deletePermanent';
+import { storageListController } from '../controllers/storage.list';
 import { createMulterArray, createMulterSingle } from '../middlewares/multerUpload';
 import { validateFileType } from '../middlewares/validateFileType';
 import { captureAudit, AUDIT_ACTIONS } from '@Modules/audit-log';
 
 export function storageApi(router: Router) {
-	const multerSingle = createMulterSingle(
-		'file',
-		ENV.STORAGE_MAX_FILE_SIZE_BYTES,
-	);
+	const multerSingle = createMulterSingle('file', ENV.STORAGE_MAX_FILE_SIZE_BYTES);
 	const multerArray = createMulterArray(
 		'files',
 		ENV.STORAGE_MAX_FILES_BULK,
 		ENV.STORAGE_MAX_FILE_SIZE_BYTES,
 	);
-	const validateAll = validateFileType({
-		allowedMimeTypes: ALL_ALLOWED_MIME_TYPES,
-	});
+	const validateAll = validateFileType({ allowedMimeTypes: ALL_ALLOWED_MIME_TYPES });
 	const validateAllBulk = validateFileType({
 		allowedMimeTypes: ALL_ALLOWED_MIME_TYPES,
 		field: 'files',
@@ -55,11 +54,32 @@ export function storageApi(router: Router) {
 		storageUploadBulkController,
 	);
 
+	router.get(
+		STORAGE_PATH_FILES,
+		authenticate,
+		authorize(PERMISSIONS.STORAGE_READ, PERMISSIONS.STORAGE_MANAGE),
+		storageListController,
+	);
+
+	router.delete(
+		STORAGE_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.STORAGE_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.STORAGE_PERMANENTLY_DELETED,
+			resource: 'storage',
+		}),
+		storageDeletePermanentController,
+	);
+
 	router.delete(
 		STORAGE_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.STORAGE_DELETE, PERMISSIONS.STORAGE_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.STORAGE_DELETED, resource: 'storage' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.STORAGE_SOFT_DELETED,
+			resource: 'storage',
+		}),
 		storageDeleteController,
 	);
 }
