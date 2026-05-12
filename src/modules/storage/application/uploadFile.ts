@@ -1,8 +1,10 @@
 import generateUUID from '@Helpers/uuid';
+import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { isRasterImage, isSvg, isImageMimeType } from '../constants/allowedMimeTypes';
 import { processRasterImage } from '../infrastructure/ImageProcessor';
 import { getStorageDriver } from '../infrastructure/StorageService';
-import type { UploadResult } from '../domain/StorageDriver';
+import StorageFileModel from '../infrastructure/StorageFileModel';
+import type { StorageFileDocument } from '../infrastructure/StorageFileModel';
 
 export interface UploadInput {
 	buffer: Buffer;
@@ -11,6 +13,7 @@ export interface UploadInput {
 	entityType: string;
 	entityId: string;
 	quality?: number;
+	uploadedBy?: string;
 }
 
 const DEFAULT_QUALITY = 80;
@@ -21,13 +24,12 @@ const ORIGINAL_EXT_MAP: Record<string, string> = {
 	'image/svg+xml': 'svg',
 	'application/pdf': 'pdf',
 	'application/msword': 'doc',
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-		'docx',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
 	'application/vnd.ms-excel': 'xls',
 	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
 };
 
-export async function uploadFile(input: UploadInput): Promise<UploadResult> {
+export async function uploadFile(input: UploadInput): Promise<StorageFileDocument> {
 	const driver = getStorageDriver();
 	const quality = input.quality ?? DEFAULT_QUALITY;
 	const uuid = generateUUID();
@@ -40,29 +42,35 @@ export async function uploadFile(input: UploadInput): Promise<UploadResult> {
 		input.mimeType,
 	);
 
+	let full: { pathname: string; url: string } | undefined;
+	let thumb: { pathname: string; url: string } | undefined;
+	const isImage = isImageMimeType(input.mimeType) || isSvg(input.mimeType);
+
 	if (isRasterImage(input.mimeType)) {
 		const { full: fullBuf, thumb: thumbBuf } = await processRasterImage(
 			input.buffer,
 			quality,
 		);
-		const [full, thumb] = await Promise.all([
+		const [fullUploaded, thumbUploaded] = await Promise.all([
 			driver.uploadBuffer(fullBuf, `${base}/full.webp`, 'image/webp'),
 			driver.uploadBuffer(thumbBuf, `${base}/thumb.webp`, 'image/webp'),
 		]);
-		return {
-			original,
-			full,
-			thumb,
-			mimeType: input.mimeType,
-			size: input.buffer.length,
-			isImage: true,
-		};
+		full = fullUploaded;
+		thumb = thumbUploaded;
 	}
 
-	return {
-		original,
+	const record = await StorageFileModel.create({
+		entityType: input.entityType,
+		entityId: input.entityId,
+		originalName: input.originalName,
 		mimeType: input.mimeType,
 		size: input.buffer.length,
-		isImage: isImageMimeType(input.mimeType) || isSvg(input.mimeType),
-	};
+		isImage,
+		original,
+		full,
+		thumb,
+		uploadedBy: input.uploadedBy,
+	});
+
+	return cleanMongoFields(record.toObject());
 }

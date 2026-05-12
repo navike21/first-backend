@@ -1,10 +1,10 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
 import setThrowError from '@Helpers/setThrowError';
-import { deleteFilesLogical } from '../application/deleteFilesLogical';
+import { deleteFilesPermanent } from '../application/deleteFilesPermanent';
 import { StorageDeleteSchema } from '../schemas/storage.schema';
 
-export const storageDeleteController = asyncHandler(async (req, res) => {
+export const storageDeletePermanentController = asyncHandler(async (req, res) => {
 	const parsed = StorageDeleteSchema.safeParse(req.body);
 	if (!parsed.success) {
 		setThrowError({
@@ -18,12 +18,12 @@ export const storageDeleteController = asyncHandler(async (req, res) => {
 		});
 	}
 
-	await deleteFilesLogical(parsed.data!.ids);
+	await deleteFilesPermanent(parsed.data!.ids);
 
 	successResponse(res, {
 		statusCode: 200,
-		code: 'SUCCESS_STORAGE_SOFT_DELETED',
-		message: 'SUCCESS_STORAGE_SOFT_DELETED',
+		code: 'SUCCESS_STORAGE_PERMANENTLY_DELETED',
+		message: 'SUCCESS_STORAGE_PERMANENTLY_DELETED',
 		ns: 'storage',
 		data: null,
 	});

@@ -6,6 +6,7 @@ import { listUserGroupsController } from '../controllers/userGroup.list';
 import { getUserGroupByIdController } from '../controllers/userGroup.getById';
 import { updateUserGroupController } from '../controllers/userGroup.update';
 import { deleteUserGroupController } from '../controllers/userGroup.delete';
+import { deleteUserGroupLogicalController } from '../controllers/userGroup.deleteLogical';
 import { listPermissionCatalogController } from '../controllers/userGroup.permissions';
 
 export function userGroupsApi(router: Router) {
@@ -38,6 +39,12 @@ export function userGroupsApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_UPDATE, PERMISSIONS.USER_GROUPS_MANAGE),
 		updateUserGroupController,
+	);
+	router.delete(
+		'/user-groups/:id/soft',
+		authenticate,
+		authorize(PERMISSIONS.USER_GROUPS_DELETE, PERMISSIONS.USER_GROUPS_MANAGE),
+		deleteUserGroupLogicalController,
 	);
 	router.delete(
 		'/user-groups/:id',

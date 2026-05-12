@@ -37,6 +37,7 @@ export const storageUploadController = asyncHandler(async (req, res) => {
 		entityType: body.entityType,
 		entityId: body.entityId,
 		quality: body.quality,
+		uploadedBy: res.locals.userId as string | undefined,
 	});
 
 	successResponse(res, {
@@ -81,6 +82,7 @@ export const storageUploadBulkController = asyncHandler(async (req, res) => {
 				entityType: body.entityType,
 				entityId: body.entityId,
 				quality: body.quality,
+				uploadedBy: res.locals.userId as string | undefined,
 			}),
 		),
 	);
