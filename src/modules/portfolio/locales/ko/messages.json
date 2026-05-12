@@ -1,0 +1,7 @@
+{
+	"SUCCESS_PORTFOLIO_CREATE": "포트폴리오 항목이 성공적으로 생성되었습니다",
+	"SUCCESS_PORTFOLIO_LIST": "포트폴리오 목록이 성공적으로 조회되었습니다",
+	"SUCCESS_PORTFOLIO_FOUND": "포트폴리오 항목을 성공적으로 찾았습니다",
+	"SUCCESS_PORTFOLIO_UPDATE": "포트폴리오 항목이 성공적으로 업데이트되었습니다",
+	"SUCCESS_PORTFOLIO_DELETED": "포트폴리오 항목이 성공적으로 삭제되었습니다"
+}

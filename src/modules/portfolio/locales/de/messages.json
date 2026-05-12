@@ -1,0 +1,7 @@
+{
+	"SUCCESS_PORTFOLIO_CREATE": "Portfolio-Eintrag erfolgreich erstellt",
+	"SUCCESS_PORTFOLIO_LIST": "Portfolio-Liste erfolgreich abgerufen",
+	"SUCCESS_PORTFOLIO_FOUND": "Portfolio-Eintrag erfolgreich gefunden",
+	"SUCCESS_PORTFOLIO_UPDATE": "Portfolio-Eintrag erfolgreich aktualisiert",
+	"SUCCESS_PORTFOLIO_DELETED": "Portfolio-Eintrag erfolgreich gelöscht"
+}

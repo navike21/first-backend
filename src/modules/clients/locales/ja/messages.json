@@ -1,0 +1,7 @@
+{
+	"SUCCESS_CLIENT_CREATE": "クライアントが正常に作成されました",
+	"SUCCESS_CLIENT_LIST": "クライアント一覧が正常に取得されました",
+	"SUCCESS_CLIENT_FOUND": "クライアントが正常に見つかりました",
+	"SUCCESS_CLIENT_UPDATE": "クライアントが正常に更新されました",
+	"SUCCESS_CLIENT_DELETED": "クライアントが正常に削除されました"
+}

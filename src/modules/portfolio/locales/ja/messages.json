@@ -1,0 +1,7 @@
+{
+	"SUCCESS_PORTFOLIO_CREATE": "ポートフォリオが正常に作成されました",
+	"SUCCESS_PORTFOLIO_LIST": "ポートフォリオ一覧が正常に取得されました",
+	"SUCCESS_PORTFOLIO_FOUND": "ポートフォリオが正常に見つかりました",
+	"SUCCESS_PORTFOLIO_UPDATE": "ポートフォリオが正常に更新されました",
+	"SUCCESS_PORTFOLIO_DELETED": "ポートフォリオが正常に削除されました"
+}

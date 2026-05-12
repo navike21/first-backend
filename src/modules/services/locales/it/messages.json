@@ -1,0 +1,7 @@
+{
+	"SUCCESS_SERVICE_CREATE": "Servizio creato con successo",
+	"SUCCESS_SERVICE_LIST": "Lista servizi recuperata con successo",
+	"SUCCESS_SERVICE_FOUND": "Servizio trovato con successo",
+	"SUCCESS_SERVICE_UPDATE": "Servizio aggiornato con successo",
+	"SUCCESS_SERVICE_DELETED": "Servizio eliminato con successo"
+}
