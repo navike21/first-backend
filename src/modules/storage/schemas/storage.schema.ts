@@ -26,7 +26,9 @@ export const StorageDeleteSchema = z.object({
 	ids: z
 		.array(z.uuid({ message: 'STORAGE_ID_INVALID' }), {
 			error: (iss) =>
-				iss.input === undefined ? 'STORAGE_IDS_REQUIRED' : 'STORAGE_IDS_INVALID',
+				iss.input === undefined
+					? 'STORAGE_IDS_REQUIRED'
+					: 'STORAGE_IDS_INVALID',
 		})
 		.min(1, { message: 'STORAGE_IDS_MIN' })
 		.max(20, { message: 'STORAGE_IDS_MAX' }),

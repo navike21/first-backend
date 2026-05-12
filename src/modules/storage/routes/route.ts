@@ -17,18 +17,26 @@ import {
 import { storageDeleteController } from '../controllers/storage.delete';
 import { storageDeletePermanentController } from '../controllers/storage.deletePermanent';
 import { storageListController } from '../controllers/storage.list';
-import { createMulterArray, createMulterSingle } from '../middlewares/multerUpload';
+import {
+	createMulterArray,
+	createMulterSingle,
+} from '../middlewares/multerUpload';
 import { validateFileType } from '../middlewares/validateFileType';
 import { captureAudit, AUDIT_ACTIONS } from '@Modules/audit-log';
 
 export function storageApi(router: Router) {
-	const multerSingle = createMulterSingle('file', ENV.STORAGE_MAX_FILE_SIZE_BYTES);
+	const multerSingle = createMulterSingle(
+		'file',
+		ENV.STORAGE_MAX_FILE_SIZE_BYTES,
+	);
 	const multerArray = createMulterArray(
 		'files',
 		ENV.STORAGE_MAX_FILES_BULK,
 		ENV.STORAGE_MAX_FILE_SIZE_BYTES,
 	);
-	const validateAll = validateFileType({ allowedMimeTypes: ALL_ALLOWED_MIME_TYPES });
+	const validateAll = validateFileType({
+		allowedMimeTypes: ALL_ALLOWED_MIME_TYPES,
+	});
 	const validateAllBulk = validateFileType({
 		allowedMimeTypes: ALL_ALLOWED_MIME_TYPES,
 		field: 'files',
@@ -40,7 +48,10 @@ export function storageApi(router: Router) {
 		authorize(PERMISSIONS.STORAGE_UPLOAD, PERMISSIONS.STORAGE_MANAGE),
 		multerSingle,
 		validateAll,
-		captureAudit({ action: AUDIT_ACTIONS.STORAGE_UPLOADED, resource: 'storage' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.STORAGE_UPLOADED,
+			resource: 'storage',
+		}),
 		storageUploadController,
 	);
 
@@ -50,7 +61,10 @@ export function storageApi(router: Router) {
 		authorize(PERMISSIONS.STORAGE_UPLOAD, PERMISSIONS.STORAGE_MANAGE),
 		multerArray,
 		validateAllBulk,
-		captureAudit({ action: AUDIT_ACTIONS.STORAGE_UPLOADED, resource: 'storage' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.STORAGE_UPLOADED,
+			resource: 'storage',
+		}),
 		storageUploadBulkController,
 	);
 
