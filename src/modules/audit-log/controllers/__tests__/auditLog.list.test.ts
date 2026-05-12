@@ -20,7 +20,8 @@ function run(query: object = {}): Promise<void> {
 	return new Promise((resolve, reject) => {
 		mockSuccessResponse.mockReset();
 		mockSuccessResponse.mockImplementationOnce(() => resolve());
-		const next: NextFunction = (err?: unknown) => (err ? reject(err) : resolve());
+		const next: NextFunction = (err?: unknown) =>
+			err ? reject(err) : resolve();
 		auditLogListController(
 			{ query } as unknown as Request,
 			{} as Response,
@@ -56,7 +57,11 @@ describe('auditLogListController', () => {
 		mockListAuditLogs.mockResolvedValue({ data: [], meta: {} });
 		await run({ userId: 'u1', action: 'auth:login', resource: 'auth' });
 		expect(mockListAuditLogs).toHaveBeenCalledWith(
-			expect.objectContaining({ userId: 'u1', action: 'auth:login', resource: 'auth' }),
+			expect.objectContaining({
+				userId: 'u1',
+				action: 'auth:login',
+				resource: 'auth',
+			}),
 		);
 	});
 

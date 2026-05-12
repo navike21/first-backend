@@ -20,7 +20,8 @@ function run(body: object = {}): Promise<void> {
 	return new Promise((resolve, reject) => {
 		mockSuccessResponse.mockReset();
 		mockSuccessResponse.mockImplementationOnce(() => resolve());
-		const next: NextFunction = (err?: unknown) => (err ? reject(err) : resolve());
+		const next: NextFunction = (err?: unknown) =>
+			err ? reject(err) : resolve();
 		appSettingsUpdateController(
 			{ body } as unknown as Request,
 			{} as Response,
@@ -60,6 +61,8 @@ describe('appSettingsUpdateController', () => {
 
 	it('passes error to next when updateAppSettings rejects', async () => {
 		mockUpdateAppSettings.mockRejectedValue(new Error('db error'));
-		await expect(run({ general: { appName: 'X' } })).rejects.toThrow('db error');
+		await expect(run({ general: { appName: 'X' } })).rejects.toThrow(
+			'db error',
+		);
 	});
 });

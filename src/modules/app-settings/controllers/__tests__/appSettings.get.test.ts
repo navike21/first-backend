@@ -20,7 +20,8 @@ function run(): Promise<void> {
 	return new Promise((resolve, reject) => {
 		mockSuccessResponse.mockReset();
 		mockSuccessResponse.mockImplementationOnce(() => resolve());
-		const next: NextFunction = (err?: unknown) => (err ? reject(err) : resolve());
+		const next: NextFunction = (err?: unknown) =>
+			err ? reject(err) : resolve();
 		appSettingsGetController({} as Request, {} as Response, next);
 	});
 }

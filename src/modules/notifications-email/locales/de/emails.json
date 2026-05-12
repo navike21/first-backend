@@ -1,23 +1,23 @@
 {
-  "verifyEmail": {
-    "subject": "E-Mail-Adresse bestätigen",
-    "heading": "Hallo {{firstName}},",
-    "body": "Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren. Dieser Link läuft in 24 Stunden ab.",
-    "button": "E-Mail bestätigen",
-    "safety": "Falls Sie kein Konto erstellt haben, können Sie diese E-Mail ignorieren."
-  },
-  "passwordReset": {
-    "subject": "Passwort zurücksetzen",
-    "heading": "Hallo {{firstName}},",
-    "body": "Wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen. Klicken Sie auf die Schaltfläche unten, um ein neues zu erstellen. Dieser Link läuft in 1 Stunde ab.",
-    "button": "Passwort zurücksetzen",
-    "safety": "Falls Sie keine Passwortrücksetzung angefordert haben, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert."
-  },
-  "welcomeEmail": {
-    "subject": "Willkommen bei First Backend!",
-    "heading": "Willkommen, {{firstName}}!",
-    "body": "Ihr Konto wurde verifiziert und ist jetzt vollständig aktiv. Alles ist bereit für den Start.",
-    "thanks": "Danke, dass Sie bei uns sind."
-  },
-  "footer": "© {{year}} First Backend. Alle Rechte vorbehalten."
+	"verifyEmail": {
+		"subject": "E-Mail-Adresse bestätigen",
+		"heading": "Hallo {{firstName}},",
+		"body": "Bitte bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren. Dieser Link läuft in 24 Stunden ab.",
+		"button": "E-Mail bestätigen",
+		"safety": "Falls Sie kein Konto erstellt haben, können Sie diese E-Mail ignorieren."
+	},
+	"passwordReset": {
+		"subject": "Passwort zurücksetzen",
+		"heading": "Hallo {{firstName}},",
+		"body": "Wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen. Klicken Sie auf die Schaltfläche unten, um ein neues zu erstellen. Dieser Link läuft in 1 Stunde ab.",
+		"button": "Passwort zurücksetzen",
+		"safety": "Falls Sie keine Passwortrücksetzung angefordert haben, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert."
+	},
+	"welcomeEmail": {
+		"subject": "Willkommen bei First Backend!",
+		"heading": "Willkommen, {{firstName}}!",
+		"body": "Ihr Konto wurde verifiziert und ist jetzt vollständig aktiv. Alles ist bereit für den Start.",
+		"thanks": "Danke, dass Sie bei uns sind."
+	},
+	"footer": "© {{year}} First Backend. Alle Rechte vorbehalten."
 }

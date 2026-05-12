@@ -2,26 +2,28 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Request, Response, NextFunction } from 'express';
 import { STORAGE_ERRORS } from '../../domain/errors/StorageErrors';
 
-const { mockSingle, mockArray, FakeMulterError, multerFn } =
-	vi.hoisted(() => {
-		class FakeMulterError extends Error {
-			constructor(public code: string) {
-				super(code);
-				this.name = 'MulterError';
-			}
+const { mockSingle, mockArray, FakeMulterError, multerFn } = vi.hoisted(() => {
+	class FakeMulterError extends Error {
+		constructor(public code: string) {
+			super(code);
+			this.name = 'MulterError';
 		}
+	}
 
-		const mockSingle = vi.fn();
-		const mockArray = vi.fn();
-		const mockMemoryStorage = vi.fn(() => ({}));
-		const multerInstance = { single: mockSingle, array: mockArray };
-		const multerFn = Object.assign(vi.fn(() => multerInstance), {
+	const mockSingle = vi.fn();
+	const mockArray = vi.fn();
+	const mockMemoryStorage = vi.fn(() => ({}));
+	const multerInstance = { single: mockSingle, array: mockArray };
+	const multerFn = Object.assign(
+		vi.fn(() => multerInstance),
+		{
 			memoryStorage: mockMemoryStorage,
 			MulterError: FakeMulterError,
-		});
+		},
+	);
 
-		return { mockSingle, mockArray, FakeMulterError, multerFn };
-	});
+	return { mockSingle, mockArray, FakeMulterError, multerFn };
+});
 
 vi.mock('multer', () => ({ default: multerFn }));
 
@@ -49,16 +51,16 @@ describe('createMulterSingle', () => {
 	beforeEach(() => vi.clearAllMocks());
 
 	it('calls next() when multer processes the file without error', async () => {
-		mockSingle.mockReturnValue(
-			makeInner((next) => (next as NextFunction)()),
-		);
+		mockSingle.mockReturnValue(makeInner((next) => (next as NextFunction)()));
 		const handler = createMulterSingle('file', 10 * 1024 * 1024);
 		await expect(run(handler)).resolves.toBeUndefined();
 	});
 
 	it('converts LIMIT_FILE_SIZE MulterError to AppError 413', async () => {
 		const err = new FakeMulterError('LIMIT_FILE_SIZE');
-		mockSingle.mockReturnValue(makeInner((next) => (next as NextFunction)(err)));
+		mockSingle.mockReturnValue(
+			makeInner((next) => (next as NextFunction)(err)),
+		);
 		const handler = createMulterSingle('file', 1024);
 		await expect(run(handler)).rejects.toMatchObject({
 			statusCode: 413,
@@ -68,7 +70,9 @@ describe('createMulterSingle', () => {
 
 	it('converts LIMIT_FILE_COUNT MulterError to AppError 400 TOO_MANY_FILES', async () => {
 		const err = new FakeMulterError('LIMIT_FILE_COUNT');
-		mockSingle.mockReturnValue(makeInner((next) => (next as NextFunction)(err)));
+		mockSingle.mockReturnValue(
+			makeInner((next) => (next as NextFunction)(err)),
+		);
 		const handler = createMulterSingle('file', 1024);
 		await expect(run(handler)).rejects.toMatchObject({
 			statusCode: 400,
@@ -78,7 +82,9 @@ describe('createMulterSingle', () => {
 
 	it('converts unknown MulterError code to AppError UPLOAD_FAILED', async () => {
 		const err = new FakeMulterError('LIMIT_UNEXPECTED_FILE');
-		mockSingle.mockReturnValue(makeInner((next) => (next as NextFunction)(err)));
+		mockSingle.mockReturnValue(
+			makeInner((next) => (next as NextFunction)(err)),
+		);
 		const handler = createMulterSingle('file', 1024);
 		await expect(run(handler)).rejects.toMatchObject({
 			code: STORAGE_ERRORS.UPLOAD_FAILED,

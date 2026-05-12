@@ -10,8 +10,12 @@ describe('APP_SETTINGS_DEFAULTS', () => {
 	});
 
 	it('has correct notifications defaults', () => {
-		expect(APP_SETTINGS_DEFAULTS.notifications.emailSenderName).toBe('No Reply');
-		expect(APP_SETTINGS_DEFAULTS.notifications.emailSenderAddress).toBe('noreply@example.com');
+		expect(APP_SETTINGS_DEFAULTS.notifications.emailSenderName).toBe(
+			'No Reply',
+		);
+		expect(APP_SETTINGS_DEFAULTS.notifications.emailSenderAddress).toBe(
+			'noreply@example.com',
+		);
 		expect(APP_SETTINGS_DEFAULTS.notifications.welcomeEmailEnabled).toBe(true);
 		expect(APP_SETTINGS_DEFAULTS.notifications.notificationsEnabled).toBe(true);
 	});

@@ -25,7 +25,10 @@ export const updatePresenceController = asyncHandler(async (req, res) => {
 	}
 
 	const userId = res.locals.userId as string;
-	const data = await updatePresence(userId, parsed.data!.status as PresenceStatus);
+	const data = await updatePresence(
+		userId,
+		parsed.data!.status as PresenceStatus,
+	);
 
 	emitPresenceChange(userId, parsed.data!.status);
 

@@ -37,11 +37,15 @@ describe('VercelBlobDriver', () => {
 				'image/jpeg',
 			);
 
-			expect(put).toHaveBeenCalledWith('users/123/original.jpg', expect.any(Buffer), {
-				access: 'public',
-				contentType: 'image/jpeg',
-				token: 'test-token',
-			});
+			expect(put).toHaveBeenCalledWith(
+				'users/123/original.jpg',
+				expect.any(Buffer),
+				{
+					access: 'public',
+					contentType: 'image/jpeg',
+					token: 'test-token',
+				},
+			);
 			expect(result.pathname).toBe('users/123/original.jpg');
 			expect(result.url).toBe(
 				'https://blob.vercel-storage.com/users/123/original.jpg',
