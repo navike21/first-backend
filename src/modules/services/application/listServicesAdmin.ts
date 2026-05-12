@@ -8,7 +8,10 @@ interface ListServicesAdminParams {
 	limit: number;
 }
 
-export async function listServicesAdmin({ page, limit }: ListServicesAdminParams) {
+export async function listServicesAdmin({
+	page,
+	limit,
+}: ListServicesAdminParams) {
 	const skip = (page - 1) * limit;
 	const query = { status: 'active' };
 

@@ -19,7 +19,9 @@ describe('deleteClientLogical', () => {
 			id: '1',
 			status: 'active',
 			save: saveFn,
-			toObject: vi.fn().mockReturnValue({ id: '1', status: 'deleted', _id: 'mongo1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ id: '1', status: 'deleted', _id: 'mongo1' }),
 		};
 		vi.mocked(ClientModel.findOne).mockResolvedValue(clientDoc as never);
 
@@ -33,6 +35,8 @@ describe('deleteClientLogical', () => {
 	it('throws ClientNotFoundError when client does not exist', async () => {
 		vi.mocked(ClientModel.findOne).mockResolvedValue(null as never);
 
-		await expect(deleteClientLogical('not-found')).rejects.toThrow(ClientNotFoundError);
+		await expect(deleteClientLogical('not-found')).rejects.toThrow(
+			ClientNotFoundError,
+		);
 	});
 });

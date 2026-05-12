@@ -11,5 +11,7 @@ export async function createService(input: CreateServiceInput) {
 	if (existing) throw new ServiceSlugConflictError();
 
 	const service = await ServiceModel.create({ ...input, slug });
-	return cleanMongoFields(service.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		service.toObject({ versionKey: false, getters: true }),
+	);
 }

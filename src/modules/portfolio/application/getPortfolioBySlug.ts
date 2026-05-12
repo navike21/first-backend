@@ -14,7 +14,10 @@ export async function getPortfolioBySlug(slug: string) {
 	const cleaned = cleanMongoFields(portfolio);
 
 	const clientDoc = portfolio.clientId
-		? await ClientModel.findOne({ id: portfolio.clientId, status: { $ne: 'deleted' } })
+		? await ClientModel.findOne({
+				id: portfolio.clientId,
+				status: { $ne: 'deleted' },
+			})
 				.select({ businessName: 1, logoUrl: 1, website: 1 })
 				.lean()
 		: null;
@@ -22,7 +25,10 @@ export async function getPortfolioBySlug(slug: string) {
 
 	const rawServiceDocs =
 		portfolio.serviceIds.length > 0
-			? await ServiceModel.find({ id: { $in: portfolio.serviceIds }, status: 'active' })
+			? await ServiceModel.find({
+					id: { $in: portfolio.serviceIds },
+					status: 'active',
+				})
 					.select({ id: 1, slug: 1, name: 1, shortDescription: 1, icon: 1 })
 					.lean()
 			: [];

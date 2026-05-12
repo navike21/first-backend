@@ -18,22 +18,34 @@ describe('client.schema', () => {
 	});
 
 	it('CreateClientSchema rejects missing businessName', () => {
-		const result = CreateClientSchema.safeParse({ clientType: 'company', country: 'PE' });
+		const result = CreateClientSchema.safeParse({
+			clientType: 'company',
+			country: 'PE',
+		});
 		expect(result.success).toBe(false);
 	});
 
 	it('CreateClientSchema rejects invalid clientType', () => {
-		const result = CreateClientSchema.safeParse({ ...validClient, clientType: 'invalid' });
+		const result = CreateClientSchema.safeParse({
+			...validClient,
+			clientType: 'invalid',
+		});
 		expect(result.success).toBe(false);
 	});
 
 	it('CreateClientSchema rejects country longer than 2 chars', () => {
-		const result = CreateClientSchema.safeParse({ ...validClient, country: 'PER' });
+		const result = CreateClientSchema.safeParse({
+			...validClient,
+			country: 'PER',
+		});
 		expect(result.success).toBe(false);
 	});
 
 	it('CreateClientSchema uppercases country', () => {
-		const result = CreateClientSchema.safeParse({ ...validClient, country: 'pe' });
+		const result = CreateClientSchema.safeParse({
+			...validClient,
+			country: 'pe',
+		});
 		expect(result.success).toBe(true);
 		if (result.success) expect(result.data.country).toBe('PE');
 	});
@@ -56,7 +68,10 @@ describe('client.schema', () => {
 	});
 
 	it('CreateClientSchema rejects invalid document type', () => {
-		const result = CreateClientSchema.safeParse({ ...validClient, documentType: 'INVALID_DOC' });
+		const result = CreateClientSchema.safeParse({
+			...validClient,
+			documentType: 'INVALID_DOC',
+		});
 		expect(result.success).toBe(false);
 	});
 

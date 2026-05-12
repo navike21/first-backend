@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { PORTFOLIO_STATUSES, PORTFOLIO_STATUSES_ARRAY } from '@Modules/portfolio/constants/portfolioStatus';
+import {
+	PORTFOLIO_STATUSES,
+	PORTFOLIO_STATUSES_ARRAY,
+} from '@Modules/portfolio/constants/portfolioStatus';
 
 describe('portfolioStatus constants', () => {
 	it('PORTFOLIO_STATUSES contains all statuses', () => {

@@ -25,11 +25,18 @@ function makeRes() {
 	} as unknown as Response;
 }
 
-const validBody = { businessName: 'Acme', clientType: 'company', country: 'PE' };
+const validBody = {
+	businessName: 'Acme',
+	clientType: 'company',
+	country: 'PE',
+};
 
 describe('clientCreateController', () => {
 	it('calls createClient and returns 201 on valid input', async () => {
-		vi.mocked(createClient).mockResolvedValue({ id: '1', businessName: 'Acme' } as never);
+		vi.mocked(createClient).mockResolvedValue({
+			id: '1',
+			businessName: 'Acme',
+		} as never);
 		const req = { body: validBody } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();

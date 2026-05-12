@@ -19,7 +19,9 @@ describe('deletePortfolioLogical', () => {
 			id: '1',
 			status: 'published',
 			save: saveFn,
-			toObject: vi.fn().mockReturnValue({ id: '1', status: 'deleted', _id: 'm1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ id: '1', status: 'deleted', _id: 'm1' }),
 		};
 		vi.mocked(PortfolioModel.findOne).mockResolvedValue(portfolioDoc as never);
 
@@ -33,6 +35,8 @@ describe('deletePortfolioLogical', () => {
 	it('throws PortfolioNotFoundError when not found', async () => {
 		vi.mocked(PortfolioModel.findOne).mockResolvedValue(null as never);
 
-		await expect(deletePortfolioLogical('not-found')).rejects.toThrow(PortfolioNotFoundError);
+		await expect(deletePortfolioLogical('not-found')).rejects.toThrow(
+			PortfolioNotFoundError,
+		);
 	});
 });

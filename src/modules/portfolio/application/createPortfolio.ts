@@ -11,5 +11,7 @@ export async function createPortfolio(input: CreatePortfolioInput) {
 	if (existing) throw new PortfolioSlugConflictError();
 
 	const portfolio = await PortfolioModel.create({ ...input, slug });
-	return cleanMongoFields(portfolio.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		portfolio.toObject({ versionKey: false, getters: true }),
+	);
 }

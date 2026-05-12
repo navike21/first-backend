@@ -27,7 +27,9 @@ export const CreatePortfolioSchema = z.object({
 	description: LocalizedStringSchema,
 
 	coverImageUrl: z.url({ message: 'PORTFOLIO_COVER_IMAGE_URL_INVALID' }),
-	gallery: z.array(z.url({ message: 'PORTFOLIO_GALLERY_URL_INVALID' })).default([]),
+	gallery: z
+		.array(z.url({ message: 'PORTFOLIO_GALLERY_URL_INVALID' }))
+		.default([]),
 
 	clientId: z.uuid({ message: 'PORTFOLIO_CLIENT_ID_INVALID' }).optional(),
 	serviceIds: z
@@ -65,4 +67,6 @@ export const ListPortfolioAdminQuerySchema = ListPortfolioQuerySchema.extend({
 export type CreatePortfolioInput = z.infer<typeof CreatePortfolioSchema>;
 export type UpdatePortfolioInput = z.infer<typeof UpdatePortfolioSchema>;
 export type ListPortfolioQuery = z.infer<typeof ListPortfolioQuerySchema>;
-export type ListPortfolioAdminQuery = z.infer<typeof ListPortfolioAdminQuerySchema>;
+export type ListPortfolioAdminQuery = z.infer<
+	typeof ListPortfolioAdminQuerySchema
+>;

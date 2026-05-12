@@ -44,7 +44,12 @@ describe('loginUser', () => {
 	it('creates a RefreshToken and Session in the database on successful login', async () => {
 		const user = await seedUser();
 
-		await loginUser({ email: user.email, password: 'any', userAgent: 'ua', ip: '1.2.3.4' });
+		await loginUser({
+			email: user.email,
+			password: 'any',
+			userAgent: 'ua',
+			ip: '1.2.3.4',
+		});
 
 		const rt = await RefreshTokenModel.findOne({ userId: user.id });
 		expect(rt).not.toBeNull();
@@ -58,7 +63,12 @@ describe('loginUser', () => {
 	it('returns accessToken, refreshToken, and user data', async () => {
 		const user = await seedUser();
 
-		const result = await loginUser({ email: user.email, password: 'any', userAgent: 'ua', ip: '127.0.0.1' });
+		const result = await loginUser({
+			email: user.email,
+			password: 'any',
+			userAgent: 'ua',
+			ip: '127.0.0.1',
+		});
 
 		expect(result.accessToken).toBe('ACCESS_TOKEN');
 		expect(result.refreshToken).toBe('REFRESH_TOKEN');
@@ -68,17 +78,28 @@ describe('loginUser', () => {
 
 	it('throws InvalidCredentialsError when user does not exist', async () => {
 		await expect(
-			loginUser({ email: 'nobody@test.com', password: 'any', userAgent: 'ua', ip: 'ip' }),
+			loginUser({
+				email: 'nobody@test.com',
+				password: 'any',
+				userAgent: 'ua',
+				ip: 'ip',
+			}),
 		).rejects.toBeInstanceOf(InvalidCredentialsError);
 	});
 
 	it('throws InvalidCredentialsError when password is wrong', async () => {
-		const { HashedPassword } = await import('@Modules/auth/domain/value-objects/HashedPassword');
+		const { HashedPassword } =
+			await import('@Modules/auth/domain/value-objects/HashedPassword');
 		vi.mocked(HashedPassword.compare).mockResolvedValueOnce(false);
 		const user = await seedUser();
 
 		await expect(
-			loginUser({ email: user.email, password: 'wrong', userAgent: 'ua', ip: 'ip' }),
+			loginUser({
+				email: user.email,
+				password: 'wrong',
+				userAgent: 'ua',
+				ip: 'ip',
+			}),
 		).rejects.toBeInstanceOf(InvalidCredentialsError);
 	});
 
@@ -86,7 +107,12 @@ describe('loginUser', () => {
 		const user = await seedUser({ isEmailVerified: false });
 
 		await expect(
-			loginUser({ email: user.email, password: 'any', userAgent: 'ua', ip: 'ip' }),
+			loginUser({
+				email: user.email,
+				password: 'any',
+				userAgent: 'ua',
+				ip: 'ip',
+			}),
 		).rejects.toBeInstanceOf(EmailNotVerifiedError);
 	});
 });

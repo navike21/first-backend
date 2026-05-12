@@ -8,7 +8,10 @@ interface ListServicesPublicParams {
 	limit: number;
 }
 
-export async function listServicesPublic({ page, limit }: ListServicesPublicParams) {
+export async function listServicesPublic({
+	page,
+	limit,
+}: ListServicesPublicParams) {
 	const skip = (page - 1) * limit;
 	const query = { isActive: true, status: 'active' };
 

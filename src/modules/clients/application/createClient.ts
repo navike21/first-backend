@@ -11,5 +11,7 @@ export async function createClient(input: CreateClientInput) {
 	if (existing) throw new ClientBusinessNameConflictError();
 
 	const client = await ClientModel.create(input);
-	return cleanMongoFields(client.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		client.toObject({ versionKey: false, getters: true }),
+	);
 }

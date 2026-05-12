@@ -9,14 +9,20 @@ vi.mock('@Helpers/responseStructure', () => ({
 	successResponse: vi.fn(),
 	errorResponse: vi.fn(),
 }));
-vi.mock('@Modules/portfolio/application/listPortfolioAdmin', () => ({ listPortfolioAdmin: vi.fn() }));
+vi.mock('@Modules/portfolio/application/listPortfolioAdmin', () => ({
+	listPortfolioAdmin: vi.fn(),
+}));
 
 import { portfolioListAdminController } from '@Modules/portfolio/controllers/portfolio.listAdmin';
 import { listPortfolioAdmin } from '@Modules/portfolio/application/listPortfolioAdmin';
 import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes() {
-	return { locals: {}, status: vi.fn().mockReturnThis(), json: vi.fn().mockReturnThis() } as unknown as Response;
+	return {
+		locals: {},
+		status: vi.fn().mockReturnThis(),
+		json: vi.fn().mockReturnThis(),
+	} as unknown as Response;
 }
 
 describe('portfolioListAdminController', () => {

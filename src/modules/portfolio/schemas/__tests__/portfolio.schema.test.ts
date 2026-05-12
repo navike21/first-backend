@@ -6,7 +6,18 @@ import {
 	ListPortfolioAdminQuerySchema,
 } from '@Modules/portfolio/schemas/portfolio.schema';
 
-const ls = { en: 'a', es: 'b', de: 'c', fr: 'd', it: 'e', ja: 'f', ko: 'g', pt: 'h', ru: 'i', zh: 'j' };
+const ls = {
+	en: 'a',
+	es: 'b',
+	de: 'c',
+	fr: 'd',
+	it: 'e',
+	ja: 'f',
+	ko: 'g',
+	pt: 'h',
+	ru: 'i',
+	zh: 'j',
+};
 
 const validPortfolio = {
 	name: ls,
@@ -30,12 +41,18 @@ describe('portfolio.schema', () => {
 	});
 
 	it('CreatePortfolioSchema rejects empty serviceIds', () => {
-		const result = CreatePortfolioSchema.safeParse({ ...validPortfolio, serviceIds: [] });
+		const result = CreatePortfolioSchema.safeParse({
+			...validPortfolio,
+			serviceIds: [],
+		});
 		expect(result.success).toBe(false);
 	});
 
 	it('CreatePortfolioSchema rejects invalid slug format', () => {
-		const result = CreatePortfolioSchema.safeParse({ ...validPortfolio, slug: 'Invalid Slug!' });
+		const result = CreatePortfolioSchema.safeParse({
+			...validPortfolio,
+			slug: 'Invalid Slug!',
+		});
 		expect(result.success).toBe(false);
 	});
 
@@ -70,12 +87,16 @@ describe('portfolio.schema', () => {
 	});
 
 	it('ListPortfolioAdminQuerySchema accepts status filter', () => {
-		const result = ListPortfolioAdminQuerySchema.safeParse({ status: 'published' });
+		const result = ListPortfolioAdminQuerySchema.safeParse({
+			status: 'published',
+		});
 		expect(result.success).toBe(true);
 	});
 
 	it('ListPortfolioAdminQuerySchema rejects invalid status', () => {
-		const result = ListPortfolioAdminQuerySchema.safeParse({ status: 'invalid-status' });
+		const result = ListPortfolioAdminQuerySchema.safeParse({
+			status: 'invalid-status',
+		});
 		expect(result.success).toBe(false);
 	});
 });

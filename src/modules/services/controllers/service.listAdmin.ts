@@ -5,7 +5,10 @@ import { ListServicesQuerySchema } from '../schemas/service.schema';
 
 export const serviceListAdminController = asyncHandler(async (req, res) => {
 	const query = ListServicesQuerySchema.parse(req.query);
-	const { data, meta } = await listServicesAdmin({ page: query.page, limit: query.limit });
+	const { data, meta } = await listServicesAdmin({
+		page: query.page,
+		limit: query.limit,
+	});
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_SERVICE_LIST',

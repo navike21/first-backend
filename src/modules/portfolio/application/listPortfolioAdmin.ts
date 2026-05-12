@@ -10,7 +10,11 @@ interface ListPortfolioAdminParams {
 	status?: PortfolioStatus;
 }
 
-export async function listPortfolioAdmin({ page, limit, status }: ListPortfolioAdminParams) {
+export async function listPortfolioAdmin({
+	page,
+	limit,
+	status,
+}: ListPortfolioAdminParams) {
 	const skip = (page - 1) * limit;
 	const query: Record<string, unknown> = { status: { $ne: 'deleted' } };
 	if (status) query.status = status;

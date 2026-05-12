@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { DOCUMENT_TYPES, DOCUMENT_TYPES_ARRAY } from '@Modules/clients/constants/documentTypes';
+import {
+	DOCUMENT_TYPES,
+	DOCUMENT_TYPES_ARRAY,
+} from '@Modules/clients/constants/documentTypes';
 
 describe('documentTypes constants', () => {
 	it('DOCUMENT_TYPES contains expected entries', () => {

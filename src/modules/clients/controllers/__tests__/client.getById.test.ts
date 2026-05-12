@@ -27,7 +27,10 @@ function makeRes() {
 
 describe('clientGetByIdController', () => {
 	it('calls getClientById and returns 200', async () => {
-		vi.mocked(getClientById).mockResolvedValue({ id: '1', businessName: 'Acme' } as never);
+		vi.mocked(getClientById).mockResolvedValue({
+			id: '1',
+			businessName: 'Acme',
+		} as never);
 		const req = { params: { id: '1' } } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();

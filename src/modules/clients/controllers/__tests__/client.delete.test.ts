@@ -27,7 +27,10 @@ function makeRes() {
 
 describe('clientDeleteController', () => {
 	it('calls deleteClientLogical and returns 200', async () => {
-		vi.mocked(deleteClientLogical).mockResolvedValue({ id: '1', status: 'deleted' } as never);
+		vi.mocked(deleteClientLogical).mockResolvedValue({
+			id: '1',
+			status: 'deleted',
+		} as never);
 		const req = { params: { id: '1' } } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();

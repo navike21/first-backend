@@ -9,19 +9,28 @@ vi.mock('@Helpers/responseStructure', () => ({
 	successResponse: vi.fn(),
 	errorResponse: vi.fn(),
 }));
-vi.mock('@Modules/portfolio/application/getPortfolioBySlug', () => ({ getPortfolioBySlug: vi.fn() }));
+vi.mock('@Modules/portfolio/application/getPortfolioBySlug', () => ({
+	getPortfolioBySlug: vi.fn(),
+}));
 
 import { portfolioGetBySlugController } from '@Modules/portfolio/controllers/portfolio.getBySlug';
 import { getPortfolioBySlug } from '@Modules/portfolio/application/getPortfolioBySlug';
 import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes() {
-	return { locals: {}, status: vi.fn().mockReturnThis(), json: vi.fn().mockReturnThis() } as unknown as Response;
+	return {
+		locals: {},
+		status: vi.fn().mockReturnThis(),
+		json: vi.fn().mockReturnThis(),
+	} as unknown as Response;
 }
 
 describe('portfolioGetBySlugController', () => {
 	it('returns portfolio by slug', async () => {
-		vi.mocked(getPortfolioBySlug).mockResolvedValue({ id: '1', slug: 'project' } as never);
+		vi.mocked(getPortfolioBySlug).mockResolvedValue({
+			id: '1',
+			slug: 'project',
+		} as never);
 		const req = { params: { slug: 'project' } } as unknown as Request;
 		const res = makeRes();
 		await portfolioGetBySlugController(req, res, vi.fn());

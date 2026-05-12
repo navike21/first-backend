@@ -11,11 +11,16 @@ export async function updateService(id: string, input: UpdateServiceInput) {
 	if (!service) throw new ServiceNotFoundError();
 
 	if (input.slug) {
-		const conflict = await ServiceModel.findOne({ slug: input.slug, id: { $ne: id } });
+		const conflict = await ServiceModel.findOne({
+			slug: input.slug,
+			id: { $ne: id },
+		});
 		if (conflict) throw new ServiceSlugConflictError();
 	}
 
 	Object.assign(service, input);
 	await service.save();
-	return cleanMongoFields(service.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		service.toObject({ versionKey: false, getters: true }),
+	);
 }

@@ -29,7 +29,11 @@ describe('getActiveSessions', () => {
 		const userId = `u-${crypto.randomUUID().slice(0, 8)}`;
 		const otherId = `u-${crypto.randomUUID().slice(0, 8)}`;
 		await SessionModel.create({ userId, userAgent: 'ua', ip: '1.1.1.1' });
-		await SessionModel.create({ userId: otherId, userAgent: 'ua', ip: '2.2.2.2' });
+		await SessionModel.create({
+			userId: otherId,
+			userAgent: 'ua',
+			ip: '2.2.2.2',
+		});
 
 		const result = await getActiveSessions(userId);
 

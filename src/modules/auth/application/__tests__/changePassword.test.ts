@@ -29,7 +29,11 @@ describe('changePassword', () => {
 	it('updates the password hash in the database', async () => {
 		const user = await seedUser();
 
-		await changePassword({ userId: user.id, currentPassword: 'old', newPassword: 'New1!' });
+		await changePassword({
+			userId: user.id,
+			currentPassword: 'old',
+			newPassword: 'New1!',
+		});
 
 		const updated = await UserModel.findOne({ id: user.id });
 		expect(updated!.password).toBe('new-hashed-pw');
@@ -42,9 +46,17 @@ describe('changePassword', () => {
 			userId: user.id,
 			expiresAt: new Date(Date.now() + 86400000),
 		});
-		await SessionModel.create({ userId: user.id, userAgent: 'ua', ip: '1.1.1.1' });
+		await SessionModel.create({
+			userId: user.id,
+			userAgent: 'ua',
+			ip: '1.1.1.1',
+		});
 
-		await changePassword({ userId: user.id, currentPassword: 'old', newPassword: 'New1!' });
+		await changePassword({
+			userId: user.id,
+			currentPassword: 'old',
+			newPassword: 'New1!',
+		});
 
 		const rt = await RefreshTokenModel.findOne({ jti: 'active-jti' });
 		expect(rt!.revokedAt).toBeInstanceOf(Date);
@@ -54,18 +66,27 @@ describe('changePassword', () => {
 	});
 
 	it('throws InvalidCredentialsError when current password is wrong', async () => {
-		const { HashedPassword } = await import('@Modules/auth/domain/value-objects/HashedPassword');
+		const { HashedPassword } =
+			await import('@Modules/auth/domain/value-objects/HashedPassword');
 		vi.mocked(HashedPassword.compare).mockResolvedValueOnce(false);
 		const user = await seedUser();
 
 		await expect(
-			changePassword({ userId: user.id, currentPassword: 'wrong', newPassword: 'New1!' }),
+			changePassword({
+				userId: user.id,
+				currentPassword: 'wrong',
+				newPassword: 'New1!',
+			}),
 		).rejects.toBeInstanceOf(InvalidCredentialsError);
 	});
 
 	it('throws UserNotFoundError when user does not exist', async () => {
 		await expect(
-			changePassword({ userId: 'nonexistent', currentPassword: 'any', newPassword: 'New1!' }),
+			changePassword({
+				userId: 'nonexistent',
+				currentPassword: 'any',
+				newPassword: 'New1!',
+			}),
 		).rejects.toBeInstanceOf(UserNotFoundError);
 	});
 });

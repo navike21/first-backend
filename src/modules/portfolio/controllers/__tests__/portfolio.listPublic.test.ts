@@ -9,14 +9,20 @@ vi.mock('@Helpers/responseStructure', () => ({
 	successResponse: vi.fn(),
 	errorResponse: vi.fn(),
 }));
-vi.mock('@Modules/portfolio/application/listPortfolioPublic', () => ({ listPortfolioPublic: vi.fn() }));
+vi.mock('@Modules/portfolio/application/listPortfolioPublic', () => ({
+	listPortfolioPublic: vi.fn(),
+}));
 
 import { portfolioListPublicController } from '@Modules/portfolio/controllers/portfolio.listPublic';
 import { listPortfolioPublic } from '@Modules/portfolio/application/listPortfolioPublic';
 import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes() {
-	return { locals: {}, status: vi.fn().mockReturnThis(), json: vi.fn().mockReturnThis() } as unknown as Response;
+	return {
+		locals: {},
+		status: vi.fn().mockReturnThis(),
+		json: vi.fn().mockReturnThis(),
+	} as unknown as Response;
 }
 
 describe('portfolioListPublicController', () => {

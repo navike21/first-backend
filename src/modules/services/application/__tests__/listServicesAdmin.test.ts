@@ -20,7 +20,9 @@ const mockQB = (items: unknown[]) => ({
 
 describe('listServicesAdmin', () => {
 	it('returns all active services', async () => {
-		vi.mocked(ServiceModel.find).mockReturnValue(mockQB([{ id: '1', slug: 'web', _id: 'm1' }]) as never);
+		vi.mocked(ServiceModel.find).mockReturnValue(
+			mockQB([{ id: '1', slug: 'web', _id: 'm1' }]) as never,
+		);
 		vi.mocked(ServiceModel.countDocuments).mockResolvedValue(1);
 
 		const result = await listServicesAdmin({ page: 1, limit: 10 });

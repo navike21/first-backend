@@ -9,7 +9,11 @@ interface ListPortfolioPublicParams {
 	featured?: boolean;
 }
 
-export async function listPortfolioPublic({ page, limit, featured }: ListPortfolioPublicParams) {
+export async function listPortfolioPublic({
+	page,
+	limit,
+	featured,
+}: ListPortfolioPublicParams) {
 	const skip = (page - 1) * limit;
 	const query: Record<string, unknown> = { status: 'published' };
 	if (featured !== undefined) query.featured = featured;
