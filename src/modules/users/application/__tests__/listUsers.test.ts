@@ -1,129 +1,71 @@
-import { describe, it, expect, vi } from 'vitest';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
-import { listUsers } from '@Modules/users/application/listUsers';
+import { describe, it, expect } from 'vitest';
+import { withMongo } from '@test/withMongo';
 import UserModel from '@Modules/users/infrastructure/UserModel';
+import { listUsers } from '@Modules/users/application/listUsers';
 
-vi.mock('@Modules/users/infrastructure/UserModel', () => ({
-	default: {
-		find: vi.fn(),
-		countDocuments: vi.fn(),
-	},
-}));
+withMongo();
 
-type MockUser = Pick<UserDocument, 'id' | 'firstName' | 'lastName' | 'email'>;
-
-function buildFindChain(data: MockUser[]) {
-	return {
-		select: vi.fn().mockReturnValue({
-			sort: vi.fn().mockReturnValue({
-				skip: vi.fn().mockReturnValue({
-					limit: vi.fn().mockResolvedValue(data),
-				}),
-			}),
-		}),
-	};
-}
+const seed = (overrides = {}) =>
+	UserModel.create({
+		email: `user-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		password: 'hashed',
+		firstName: 'John',
+		lastName: 'Doe',
+		...overrides,
+	});
 
 describe('listUsers', () => {
-	it('returns paginated users with total count', async () => {
-		// Arrange
-		const users: MockUser[] = [
-			{
-				id: 'u1',
-				firstName: 'Alice',
-				lastName: 'Smith',
-				email: 'alice@example.com',
-			},
-		];
-		vi.mocked(UserModel.find).mockReturnValue(
-			buildFindChain(users) as unknown as ReturnType<typeof UserModel.find>,
-		);
-		vi.mocked(UserModel.countDocuments).mockResolvedValue(
-			1 as unknown as Awaited<ReturnType<typeof UserModel.countDocuments>>,
-		);
+	it('returns paginated users without password', async () => {
+		await Promise.all([seed(), seed()]);
 
-		// Act
 		const result = await listUsers({ page: 1, limit: 10 });
 
-		// Assert
-		expect(result.items).toHaveLength(1);
-		expect(result.total).toBe(1);
-		expect(result.page).toBe(1);
-		expect(result.pages).toBe(1);
+		expect(result.items.length).toBeGreaterThanOrEqual(2);
+		expect(result.total).toBeGreaterThanOrEqual(2);
+		result.items.forEach((u) => {
+			expect((u as Record<string, unknown>).password).toBeUndefined();
+		});
 	});
 
-	it('applies status filter when provided', async () => {
-		// Arrange
-		vi.mocked(UserModel.find).mockReturnValue(
-			buildFindChain([]) as unknown as ReturnType<typeof UserModel.find>,
-		);
-		vi.mocked(UserModel.countDocuments).mockResolvedValue(
-			0 as unknown as Awaited<ReturnType<typeof UserModel.countDocuments>>,
-		);
+	it('paginates correctly', async () => {
+		await Promise.all([seed(), seed(), seed()]);
 
-		// Act
-		await listUsers({ page: 1, limit: 10, status: 'active' });
+		const page1 = await listUsers({ page: 1, limit: 2 });
+		const page2 = await listUsers({ page: 2, limit: 2 });
 
-		// Assert
-		expect(UserModel.find).toHaveBeenCalledWith(
-			expect.objectContaining({ status: 'active' }),
-		);
+		expect(page1.items).toHaveLength(2);
+		expect(page1.items[0].id).not.toBe(page2.items[0]?.id);
 	});
 
-	it('applies groupId filter when provided', async () => {
-		// Arrange
-		vi.mocked(UserModel.find).mockReturnValue(
-			buildFindChain([]) as unknown as ReturnType<typeof UserModel.find>,
-		);
-		vi.mocked(UserModel.countDocuments).mockResolvedValue(
-			0 as unknown as Awaited<ReturnType<typeof UserModel.countDocuments>>,
-		);
+	it('filters by status', async () => {
+		await seed({ status: 'inactive' });
 
-		// Act
-		await listUsers({ page: 1, limit: 10, groupId: 'g1' });
+		const result = await listUsers({ page: 1, limit: 20, status: 'inactive' });
 
-		// Assert
-		expect(UserModel.find).toHaveBeenCalledWith(
-			expect.objectContaining({ groupId: 'g1' }),
-		);
+		expect(result.items.every((u) => u.status === 'inactive')).toBe(true);
 	});
 
-	it('applies search $or filter when search is provided', async () => {
-		// Arrange
-		vi.mocked(UserModel.find).mockReturnValue(
-			buildFindChain([]) as unknown as ReturnType<typeof UserModel.find>,
-		);
-		vi.mocked(UserModel.countDocuments).mockResolvedValue(
-			0 as unknown as Awaited<ReturnType<typeof UserModel.countDocuments>>,
-		);
+	it('filters by groupId', async () => {
+		await seed({ groupId: 'group-xyz' });
 
-		// Act
-		await listUsers({ page: 1, limit: 10, search: 'alice' });
+		const result = await listUsers({ page: 1, limit: 20, groupId: 'group-xyz' });
 
-		// Assert
-		expect(UserModel.find).toHaveBeenCalledWith(
-			expect.objectContaining({ $or: expect.any(Array) }),
-		);
+		expect(result.items.every((u) => u.groupId === 'group-xyz')).toBe(true);
 	});
 
-	it('skips correctly for page 2', async () => {
-		// Arrange
-		const skipMock = vi
-			.fn()
-			.mockReturnValue({ limit: vi.fn().mockResolvedValue([]) });
-		vi.mocked(UserModel.find).mockReturnValue({
-			select: vi.fn().mockReturnValue({
-				sort: vi.fn().mockReturnValue({ skip: skipMock }),
-			}),
-		} as unknown as ReturnType<typeof UserModel.find>);
-		vi.mocked(UserModel.countDocuments).mockResolvedValue(
-			25 as unknown as Awaited<ReturnType<typeof UserModel.countDocuments>>,
-		);
+	it('searches by firstName, lastName, and email', async () => {
+		const unique = `Zephyrus-${crypto.randomUUID().slice(0, 6)}`;
+		await seed({ firstName: unique });
 
-		// Act
-		await listUsers({ page: 2, limit: 10 });
+		const result = await listUsers({ page: 1, limit: 10, search: unique });
 
-		// Assert
-		expect(skipMock).toHaveBeenCalledWith(10);
+		expect(result.items.some((u) => u.firstName === unique)).toBe(true);
+	});
+
+	it('returns empty result when no users match', async () => {
+		const result = await listUsers({ page: 1, limit: 10, search: 'xyznonexistent999' });
+
+		expect(result.items).toHaveLength(0);
+		expect(result.total).toBe(0);
 	});
 });

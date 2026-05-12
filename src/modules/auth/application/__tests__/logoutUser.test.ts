@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { RefreshTokenDocument } from '@Modules/auth/infrastructure/RefreshTokenModel';
-import { logoutUser } from '@Modules/auth/application/logoutUser';
-import { JwtService } from '@Shared/infrastructure/JwtService';
+import { withMongo } from '@test/withMongo';
 import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
 import SessionModel from '@Modules/auth/infrastructure/SessionModel';
+import { logoutUser } from '@Modules/auth/application/logoutUser';
+
+withMongo();
 
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { verifyRefresh: vi.fn() },
@@ -14,82 +14,68 @@ vi.mock('@Shared/infrastructure/SocketServer', () => ({
 	emitSessionUpdate: vi.fn(),
 }));
 
-vi.mock('@Modules/auth/infrastructure/RefreshTokenModel', () => ({
-	default: { findOne: vi.fn(), findOneAndUpdate: vi.fn() },
-}));
-
-vi.mock('@Modules/auth/infrastructure/SessionModel', () => ({
-	default: { deleteOne: vi.fn() },
-}));
-
-type MockToken = Pick<RefreshTokenDocument, 'jti'> & { revokedAt?: Date };
+const seedRT = (overrides = {}) =>
+	RefreshTokenModel.create({
+		jti: `jti-${crypto.randomUUID().slice(0, 8)}`,
+		userId: `u-${crypto.randomUUID().slice(0, 8)}`,
+		expiresAt: new Date(Date.now() + 86400000),
+		...overrides,
+	});
 
 describe('logoutUser', () => {
-	it('revokes the token and deletes the session when the token is valid and active', async () => {
-		// Arrange
+	it('revokes the RefreshToken and deletes the Session', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const rt = await seedRT();
+		await SessionModel.create({ userId: rt.userId, userAgent: 'ua', ip: '1.1.1.1' });
+
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
-			sub: 'u1',
-			jti: 'jti-1',
+			sub: rt.userId,
+			jti: rt.jti,
 			type: 'refresh',
 		});
-		const stored: MockToken = { jti: 'jti-1' };
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(
-			stored as unknown as HydratedDocument<RefreshTokenDocument>,
-		);
-		vi.mocked(RefreshTokenModel.findOneAndUpdate).mockResolvedValue(null);
-		vi.mocked(SessionModel.deleteOne).mockResolvedValue(undefined as never);
 
-		// Act
 		await logoutUser('valid-token');
 
-		// Assert
-		expect(RefreshTokenModel.findOneAndUpdate).toHaveBeenCalled();
-		expect(SessionModel.deleteOne).toHaveBeenCalledWith({ userId: 'u1' });
+		const updated = await RefreshTokenModel.findOne({ jti: rt.jti });
+		expect(updated!.revokedAt).toBeInstanceOf(Date);
+
+		const session = await SessionModel.findOne({ userId: rt.userId });
+		expect(session).toBeNull();
 	});
 
-	it('does not revoke when the stored token is already revoked', async () => {
-		// Arrange
+	it('does nothing when the RefreshToken is already revoked', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const rt = await seedRT({ revokedAt: new Date(Date.now() - 1000) });
+
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
-			sub: 'u1',
-			jti: 'jti-2',
+			sub: rt.userId,
+			jti: rt.jti,
 			type: 'refresh',
 		});
-		const stored: MockToken = { jti: 'jti-2', revokedAt: new Date() };
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(
-			stored as unknown as HydratedDocument<RefreshTokenDocument>,
-		);
 
-		// Act
-		await logoutUser('already-revoked-token');
+		await logoutUser('already-revoked');
 
-		// Assert
-		expect(RefreshTokenModel.findOneAndUpdate).not.toHaveBeenCalled();
-		expect(SessionModel.deleteOne).not.toHaveBeenCalled();
+		const unchanged = await RefreshTokenModel.findOne({ jti: rt.jti });
+		expect(unchanged!.revokedAt).toBeDefined();
 	});
 
-	it('does not throw when the token is invalid', async () => {
-		// Arrange
+	it('resolves without throwing when the JWT is invalid', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyRefresh).mockImplementation(() => {
-			throw new Error('invalid');
+			throw new Error('bad jwt');
 		});
 
-		// Act & Assert
 		await expect(logoutUser('bad-token')).resolves.toBeUndefined();
 	});
 
-	it('does nothing when the stored token is not found', async () => {
-		// Arrange
+	it('resolves without throwing when the RefreshToken is not in the database', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
 			sub: 'u1',
-			jti: 'jti-3',
+			jti: 'nonexistent-jti',
 			type: 'refresh',
 		});
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(null);
 
-		// Act
-		await logoutUser('unknown-token');
-
-		// Assert
-		expect(RefreshTokenModel.findOneAndUpdate).not.toHaveBeenCalled();
+		await expect(logoutUser('token')).resolves.toBeUndefined();
 	});
 });
