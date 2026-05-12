@@ -21,7 +21,8 @@
 			"@Modules/*": ["src/modules/*"],
 			"@Shared/*": ["src/shared/*"],
 			"@Types/*": ["src/types/*"],
-			"@Routes/*": ["src/routes/*"]
+			"@Routes/*": ["src/routes/*"],
+			"@test/*": ["src/test/*"]
 		}
 	},
 	"include": ["src/**/*"],
