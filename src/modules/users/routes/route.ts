@@ -6,14 +6,17 @@ import { listUsersController } from '../controllers/user.list';
 import { getUserByIdController } from '../controllers/user.getById';
 import { updateUserController } from '../controllers/user.update';
 import { deleteUserController } from '../controllers/user.delete';
+import { deleteUserLogicalController } from '../controllers/user.deleteLogical';
 import {
 	getMyProfileController,
 	updateMyProfileController,
 } from '../controllers/user.profile';
+import { updatePresenceController } from '../controllers/user.presence';
 
 export function usersApi(router: Router) {
 	router.get('/users/me', authenticate, getMyProfileController);
 	router.patch('/users/me', authenticate, updateMyProfileController);
+	router.patch('/users/me/presence', authenticate, updatePresenceController);
 
 	router.post(
 		'/users',
@@ -38,6 +41,12 @@ export function usersApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
 		updateUserController,
+	);
+	router.delete(
+		'/users/:id/soft',
+		authenticate,
+		authorize(PERMISSIONS.USERS_DELETE, PERMISSIONS.USERS_MANAGE),
+		deleteUserLogicalController,
 	);
 	router.delete(
 		'/users/:id',

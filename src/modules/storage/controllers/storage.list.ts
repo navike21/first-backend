@@ -1,11 +1,11 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
 import setThrowError from '@Helpers/setThrowError';
-import { deleteFilesLogical } from '../application/deleteFilesLogical';
-import { StorageDeleteSchema } from '../schemas/storage.schema';
+import { listStorageFiles } from '../application/listStorageFiles';
+import { StorageListQuerySchema } from '../schemas/storage.schema';
 
-export const storageDeleteController = asyncHandler(async (req, res) => {
-	const parsed = StorageDeleteSchema.safeParse(req.body);
+export const storageListController = asyncHandler(async (req, res) => {
+	const parsed = StorageListQuerySchema.safeParse(req.query);
 	if (!parsed.success) {
 		setThrowError({
 			statusCode: 422,
@@ -18,13 +18,13 @@ export const storageDeleteController = asyncHandler(async (req, res) => {
 		});
 	}
 
-	await deleteFilesLogical(parsed.data!.ids);
+	const result = await listStorageFiles(parsed.data!);
 
 	successResponse(res, {
 		statusCode: 200,
-		code: 'SUCCESS_STORAGE_SOFT_DELETED',
-		message: 'SUCCESS_STORAGE_SOFT_DELETED',
+		code: 'SUCCESS_STORAGE_LIST',
+		message: 'SUCCESS_STORAGE_LIST',
 		ns: 'storage',
-		data: null,
+		data: result,
 	});
 });
