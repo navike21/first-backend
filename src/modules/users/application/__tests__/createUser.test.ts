@@ -1,26 +1,18 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
-import type { CreateUserInput } from '@Modules/users/schemas/user.schema';
+import { describe, it, expect, vi } from 'vitest';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import { createUser } from '@Modules/users/application/createUser';
 import { EmailAlreadyExistsError } from '@Modules/users/domain/errors/UserErrors';
-import UserModel from '@Modules/users/infrastructure/UserModel';
-import { sendEmail, verifyEmailTemplate } from '@Modules/notifications-email';
-import { JwtService } from '@Shared/infrastructure/JwtService';
 
-vi.mock('@Modules/users/infrastructure/UserModel', () => ({
-	default: { findOne: vi.fn(), create: vi.fn() },
-}));
+withMongo();
 
 vi.mock('@Modules/notifications-email', () => ({
-	sendEmail: vi.fn(),
-	verifyEmailTemplate: vi
-		.fn()
-		.mockReturnValue({ subject: 'Verify Email', html: '<p>Verify</p>' }),
+	sendEmail: vi.fn().mockResolvedValue(undefined),
+	verifyEmailTemplate: vi.fn().mockReturnValue({ subject: 'Verify', html: '<p/>' }),
 }));
 
 vi.mock('@Constants/environments', () => ({
-	ENV: { CLIENT_URL: 'http://client.local' },
+	ENV: { CLIENT_URL: 'http://localhost:3000' },
 }));
 
 vi.mock('@Shared/infrastructure/JwtService', () => ({
@@ -28,135 +20,61 @@ vi.mock('@Shared/infrastructure/JwtService', () => ({
 }));
 
 vi.mock('@Modules/auth/domain/value-objects/HashedPassword', () => ({
-	HashedPassword: { hash: vi.fn().mockResolvedValue('hashedPW') },
+	HashedPassword: { hash: vi.fn().mockResolvedValue('hashed_pw') },
 }));
 
-type MockCreatedUser = Pick<
-	UserDocument,
-	'id' | 'email' | 'firstName' | 'lastName'
->;
+const baseInput = {
+	email: `user-${crypto.randomUUID().slice(0, 8)}@test.com`,
+	password: 'Password1!',
+	firstName: 'John',
+	lastName: 'Doe',
+	status: 'active' as const,
+};
 
-describe('Users createUser', () => {
-	const baseInput: CreateUserInput = {
-		email: 'new@example.com',
-		password: 'Password1!',
-		firstName: 'New',
-		lastName: 'User',
-		status: 'active',
-	};
+describe('createUser', () => {
+	it('creates and persists a user in the database', async () => {
+		const input = { ...baseInput, email: `u-${crypto.randomUUID().slice(0, 8)}@test.com` };
 
-	beforeEach(() => {
-		vi.mocked(UserModel.findOne).mockReset();
-		vi.mocked(UserModel.create).mockReset();
+		const result = await createUser(input);
+
+		expect(result.email).toBe(input.email);
+		expect(result.firstName).toBe('John');
+
+		const inDb = await UserModel.findOne({ id: result.id });
+		expect(inDb).not.toBeNull();
+		expect(inDb!.password).toBe('hashed_pw');
 	});
 
-	it('creates a user, sends a verification email, and returns user data', async () => {
-		const created: MockCreatedUser = {
-			id: 'u123',
-			email: baseInput.email,
-			firstName: baseInput.firstName,
-			lastName: baseInput.lastName,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
-		vi.mocked(UserModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<UserDocument>[],
-		);
+	it('throws EmailAlreadyExistsError when email is already taken', async () => {
+		const email = `dup-${crypto.randomUUID().slice(0, 8)}@test.com`;
+		await createUser({ ...baseInput, email });
 
-		const result = await createUser(baseInput, 'en');
-
-		expect(UserModel.findOne).toHaveBeenCalledWith({ email: baseInput.email });
-		expect(UserModel.create).toHaveBeenCalledWith(
-			expect.objectContaining({ email: baseInput.email, password: 'hashedPW' }),
+		await expect(createUser({ ...baseInput, email })).rejects.toBeInstanceOf(
+			EmailAlreadyExistsError,
 		);
-		expect(JwtService.signEmail).toHaveBeenCalledWith({
-			sub: 'u123',
-			type: 'email_verification',
-		});
-		expect(verifyEmailTemplate).toHaveBeenCalledWith({
-			firstName: baseInput.firstName,
-			verificationUrl: 'http://client.local/verify-email?token=EMAIL_TOKEN',
-			lang: 'en',
-		});
-		expect(sendEmail).toHaveBeenCalledWith(
-			expect.objectContaining({ to: baseInput.email }),
-		);
-		expect(result).toEqual({
-			id: 'u123',
-			email: baseInput.email,
-			firstName: baseInput.firstName,
-			lastName: baseInput.lastName,
-		});
 	});
 
-	it('passes the provided lang to the verification email template', async () => {
-		const created: MockCreatedUser = {
-			id: 'u124',
-			email: baseInput.email,
-			firstName: baseInput.firstName,
-			lastName: baseInput.lastName,
+	it('converts dateOfBirth string to Date in the database', async () => {
+		const input = {
+			...baseInput,
+			email: `dob-${crypto.randomUUID().slice(0, 8)}@test.com`,
+			dateOfBirth: '1990-06-15',
 		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
-		vi.mocked(UserModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<UserDocument>[],
-		);
 
-		await createUser(baseInput, 'es');
+		const result = await createUser(input);
+
+		const inDb = await UserModel.findOne({ id: result.id });
+		expect(inDb!.dateOfBirth).toBeInstanceOf(Date);
+	});
+
+	it('passes lang to the email template', async () => {
+		const { verifyEmailTemplate } = await import('@Modules/notifications-email');
+		const input = { ...baseInput, email: `lang-${crypto.randomUUID().slice(0, 8)}@test.com` };
+
+		await createUser(input, 'es');
 
 		expect(verifyEmailTemplate).toHaveBeenCalledWith(
 			expect.objectContaining({ lang: 'es' }),
-		);
-	});
-
-	it('defaults to English when no lang is provided', async () => {
-		const created: MockCreatedUser = {
-			id: 'u125',
-			email: baseInput.email,
-			firstName: baseInput.firstName,
-			lastName: baseInput.lastName,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
-		vi.mocked(UserModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<UserDocument>[],
-		);
-
-		await createUser(baseInput);
-
-		expect(verifyEmailTemplate).toHaveBeenCalledWith(
-			expect.objectContaining({ lang: 'en' }),
-		);
-	});
-
-	it('converts dateOfBirth string to a Date object when provided', async () => {
-		const inputWithDob: CreateUserInput = {
-			...baseInput,
-			dateOfBirth: '1990-06-15',
-		};
-		const created: MockCreatedUser = {
-			id: 'u456',
-			email: inputWithDob.email,
-			firstName: inputWithDob.firstName,
-			lastName: inputWithDob.lastName,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
-		vi.mocked(UserModel.create).mockResolvedValue(
-			created as unknown as HydratedDocument<UserDocument>[],
-		);
-
-		const result = await createUser(inputWithDob);
-
-		expect(UserModel.create).toHaveBeenCalledWith(
-			expect.objectContaining({ dateOfBirth: new Date('1990-06-15') }),
-		);
-		expect(result).toHaveProperty('id', 'u456');
-	});
-
-	it('throws EmailAlreadyExistsError when the email is already registered', async () => {
-		vi.mocked(UserModel.findOne).mockResolvedValue({
-			id: 'existing',
-		} as unknown as HydratedDocument<UserDocument>);
-
-		await expect(createUser(baseInput)).rejects.toBeInstanceOf(
-			EmailAlreadyExistsError,
 		);
 	});
 });

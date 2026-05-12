@@ -1,52 +1,33 @@
-import { describe, it, expect, vi } from 'vitest';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
+import { describe, it, expect } from 'vitest';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import { getUserById } from '@Modules/users/application/getUserById';
 import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
-import UserModel from '@Modules/users/infrastructure/UserModel';
 
-vi.mock('@Modules/users/infrastructure/UserModel', () => ({
-	default: { findOne: vi.fn() },
-}));
+withMongo();
 
-type MockUser = Pick<UserDocument, 'id' | 'firstName' | 'lastName' | 'email'>;
-
-function buildFindOneChain(data: MockUser | null) {
-	return { select: vi.fn().mockResolvedValue(data) };
-}
-
-describe('getUserById', () => {
-	it('returns the user when found', async () => {
-		// Arrange
-		const mockUser: MockUser = {
-			id: 'u1',
-			firstName: 'Alice',
-			lastName: 'Smith',
-			email: 'a@b.c',
-		};
-		vi.mocked(UserModel.findOne).mockReturnValue(
-			buildFindOneChain(mockUser) as unknown as ReturnType<
-				typeof UserModel.findOne
-			>,
-		);
-
-		// Act
-		const result = await getUserById('u1');
-
-		// Assert
-		expect(result).toEqual(mockUser);
-		expect(UserModel.findOne).toHaveBeenCalledWith({ id: 'u1' });
+const seed = (overrides = {}) =>
+	UserModel.create({
+		email: `user-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		password: 'hashed',
+		firstName: 'John',
+		lastName: 'Doe',
+		...overrides,
 	});
 
-	it('throws UserNotFoundError when the user is not found', async () => {
-		// Arrange
-		vi.mocked(UserModel.findOne).mockReturnValue(
-			buildFindOneChain(null) as unknown as ReturnType<
-				typeof UserModel.findOne
-			>,
-		);
+describe('getUserById', () => {
+	it('returns the user without the password field', async () => {
+		const created = await seed();
 
-		// Act & Assert
-		await expect(getUserById('missing')).rejects.toBeInstanceOf(
+		const result = await getUserById(created.id);
+
+		expect(result.id).toBe(created.id);
+		expect(result.email).toBe(created.email);
+		expect((result as Record<string, unknown>).password).toBeUndefined();
+	});
+
+	it('throws UserNotFoundError when user does not exist', async () => {
+		await expect(getUserById('nonexistent-id')).rejects.toBeInstanceOf(
 			UserNotFoundError,
 		);
 	});

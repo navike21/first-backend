@@ -1,64 +1,45 @@
-import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserGroupDocument } from '@Modules/user-groups/infrastructure/UserGroupModel';
+import { describe, it, expect } from 'vitest';
+import { withMongo } from '@test/withMongo';
+import UserGroupModel from '@Modules/user-groups/infrastructure/UserGroupModel';
 import { deleteUserGroup } from '@Modules/user-groups/application/deleteUserGroup';
 import {
 	UserGroupNotFoundError,
 	SystemGroupModificationError,
 } from '@Modules/user-groups/domain/errors/UserGroupErrors';
-import UserGroupModel from '@Modules/user-groups/infrastructure/UserGroupModel';
 
-vi.mock('@Modules/user-groups/infrastructure/UserGroupModel', () => ({
-	default: { findOne: vi.fn() },
-}));
+withMongo();
 
-type MockGroupDoc = Pick<UserGroupDocument, 'id' | 'isSystem'> & {
-	deleteOne: () => Promise<void>;
-};
-
-describe('deleteUserGroup', () => {
-	it('deletes the group when it exists and is not a system group', async () => {
-		// Arrange
-		const mockGroup: MockGroupDoc = {
-			id: 'g1',
-			isSystem: false,
-			deleteOne: vi.fn().mockResolvedValue(undefined),
-		};
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(
-			mockGroup as unknown as HydratedDocument<UserGroupDocument>,
-		);
-
-		// Act
-		await deleteUserGroup('g1');
-
-		// Assert
-		expect(mockGroup.deleteOne).toHaveBeenCalled();
+const seed = (overrides = {}) =>
+	UserGroupModel.create({
+		name: `Group ${crypto.randomUUID().slice(0, 8)}`,
+		slug: `group-${crypto.randomUUID().slice(0, 8)}`,
+		...overrides,
 	});
 
-	it('throws UserGroupNotFoundError when the group does not exist', async () => {
-		// Arrange
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(null);
+describe('deleteUserGroup', () => {
+	it('deletes the group from the database', async () => {
+		const group = await seed();
 
-		// Act & Assert
-		await expect(deleteUserGroup('missing')).rejects.toBeInstanceOf(
+		await deleteUserGroup(group.id);
+
+		const inDb = await UserGroupModel.findOne({ id: group.id });
+		expect(inDb).toBeNull();
+	});
+
+	it('throws UserGroupNotFoundError when group does not exist', async () => {
+		await expect(deleteUserGroup('nonexistent-id')).rejects.toBeInstanceOf(
 			UserGroupNotFoundError,
 		);
 	});
 
 	it('throws SystemGroupModificationError for system groups', async () => {
-		// Arrange
-		const systemGroup: MockGroupDoc = {
-			id: 'g-sys',
-			isSystem: true,
-			deleteOne: vi.fn(),
-		};
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(
-			systemGroup as unknown as HydratedDocument<UserGroupDocument>,
-		);
+		const group = await seed({ isSystem: true });
 
-		// Act & Assert
-		await expect(deleteUserGroup('g-sys')).rejects.toBeInstanceOf(
+		await expect(deleteUserGroup(group.id)).rejects.toBeInstanceOf(
 			SystemGroupModificationError,
 		);
+
+		const inDb = await UserGroupModel.findOne({ id: group.id });
+		expect(inDb).not.toBeNull();
 	});
 });

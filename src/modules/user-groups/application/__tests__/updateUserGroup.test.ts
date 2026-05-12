@@ -1,122 +1,69 @@
-import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserGroupDocument } from '@Modules/user-groups/infrastructure/UserGroupModel';
+import { describe, it, expect, beforeAll } from 'vitest';
+import { withMongo } from '@test/withMongo';
+import UserGroupModel from '@Modules/user-groups/infrastructure/UserGroupModel';
 import { updateUserGroup } from '@Modules/user-groups/application/updateUserGroup';
 import {
 	UserGroupNotFoundError,
 	SystemGroupModificationError,
 	UserGroupSlugConflictError,
 } from '@Modules/user-groups/domain/errors/UserGroupErrors';
-import UserGroupModel from '@Modules/user-groups/infrastructure/UserGroupModel';
 
-vi.mock('@Modules/user-groups/infrastructure/UserGroupModel', () => ({
-	default: { findOne: vi.fn() },
-}));
+withMongo();
 
-type MockGroupDoc = Pick<
-	UserGroupDocument,
-	'id' | 'name' | 'slug' | 'isSystem'
-> & {
-	save: () => Promise<void>;
-};
+beforeAll(async () => {
+	await UserGroupModel.syncIndexes();
+});
+
+const seed = (overrides = {}) =>
+	UserGroupModel.create({
+		name: `Group ${crypto.randomUUID().slice(0, 8)}`,
+		slug: `group-${crypto.randomUUID().slice(0, 8)}`,
+		...overrides,
+	});
 
 describe('updateUserGroup', () => {
-	it('updates and saves the group when it exists and is not a system group', async () => {
-		// Arrange
-		const mockGroup: MockGroupDoc = {
-			id: 'g1',
-			name: 'Users',
-			slug: 'users',
-			isSystem: false,
-			save: vi.fn().mockResolvedValue(undefined),
-		};
-		vi.mocked(UserGroupModel.findOne)
-			.mockResolvedValueOnce(
-				mockGroup as unknown as HydratedDocument<UserGroupDocument>,
-			)
-			.mockResolvedValueOnce(null);
+	it('renames a group and updates the slug', async () => {
+		const group = await seed();
 
-		// Act
-		const result = await updateUserGroup('g1', { name: 'Updated Users' });
+		const result = await updateUserGroup(group.id, { name: 'New Name Here' });
 
-		// Assert
-		expect(mockGroup.save).toHaveBeenCalled();
-		expect(result).toBe(mockGroup);
+		expect(result.name).toBe('New Name Here');
+		expect(result.slug).toBe('new-name-here');
+
+		const inDb = await UserGroupModel.findOne({ id: group.id });
+		expect(inDb!.slug).toBe('new-name-here');
 	});
 
-	it('updates without slug change when no name is provided in the input', async () => {
-		// Arrange
-		const mockGroup: MockGroupDoc = {
-			id: 'g1',
-			name: 'Users',
-			slug: 'users',
-			isSystem: false,
-			save: vi.fn().mockResolvedValue(undefined),
-		};
-		vi.mocked(UserGroupModel.findOne).mockResolvedValueOnce(
-			mockGroup as unknown as HydratedDocument<UserGroupDocument>,
-		);
+	it('updates fields without renaming when no name is provided', async () => {
+		const group = await seed();
+		const originalSlug = group.slug;
 
-		// Act
-		const result = await updateUserGroup('g1', {
-			description: 'Updated description',
-		});
+		await updateUserGroup(group.id, { description: 'Updated description' });
 
-		// Assert
-		expect(mockGroup.save).toHaveBeenCalled();
-		expect(result).toBe(mockGroup);
-		expect(UserGroupModel.findOne).toHaveBeenCalledTimes(1);
+		const inDb = await UserGroupModel.findOne({ id: group.id });
+		expect(inDb!.slug).toBe(originalSlug);
 	});
 
-	it('throws UserGroupNotFoundError when the group does not exist', async () => {
-		// Arrange
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(null);
-
-		// Act & Assert
+	it('throws UserGroupNotFoundError when group does not exist', async () => {
 		await expect(
-			updateUserGroup('missing', { name: 'X' }),
+			updateUserGroup('nonexistent-id', { name: 'X' }),
 		).rejects.toBeInstanceOf(UserGroupNotFoundError);
 	});
 
 	it('throws SystemGroupModificationError for system groups', async () => {
-		// Arrange
-		const systemGroup: MockGroupDoc = {
-			id: 'g-sys',
-			name: 'System',
-			slug: 'system',
-			isSystem: true,
-			save: vi.fn(),
-		};
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(
-			systemGroup as unknown as HydratedDocument<UserGroupDocument>,
-		);
+		const group = await seed({ isSystem: true });
 
-		// Act & Assert
 		await expect(
-			updateUserGroup('g-sys', { name: 'Changed' }),
+			updateUserGroup(group.id, { name: 'Changed' }),
 		).rejects.toBeInstanceOf(SystemGroupModificationError);
 	});
 
-	it('throws UserGroupSlugConflictError when renaming would create a slug conflict', async () => {
-		// Arrange
-		const mockGroup: MockGroupDoc = {
-			id: 'g1',
-			name: 'Users',
-			slug: 'users',
-			isSystem: false,
-			save: vi.fn(),
-		};
-		vi.mocked(UserGroupModel.findOne)
-			.mockResolvedValueOnce(
-				mockGroup as unknown as HydratedDocument<UserGroupDocument>,
-			)
-			.mockResolvedValueOnce({
-				id: 'g2',
-			} as unknown as HydratedDocument<UserGroupDocument>);
+	it('throws UserGroupSlugConflictError when new name conflicts with existing slug', async () => {
+		await seed({ name: 'Existing Name', slug: 'existing-name' });
+		const group = await seed();
 
-		// Act & Assert
 		await expect(
-			updateUserGroup('g1', { name: 'Admins' }),
+			updateUserGroup(group.id, { name: 'Existing Name' }),
 		).rejects.toBeInstanceOf(UserGroupSlugConflictError);
 	});
 });
