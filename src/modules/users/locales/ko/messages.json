@@ -1,0 +1,9 @@
+{
+	"USER_CREATED": "사용자가 생성되었습니다. 인증 이메일이 전송되었습니다.",
+	"USER_UPDATED": "사용자가 업데이트되었습니다",
+	"USER_DELETED": "사용자가 삭제되었습니다",
+	"USER_FOUND": "사용자를 가져왔습니다",
+	"USERS_LISTED": "사용자 목록을 가져왔습니다",
+	"PROFILE_FOUND": "프로필을 가져왔습니다",
+	"PROFILE_UPDATED": "프로필이 업데이트되었습니다"
+}

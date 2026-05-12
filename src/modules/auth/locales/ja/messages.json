@@ -1,0 +1,10 @@
+{
+	"AUTH_LOGIN_SUCCESS": "ログインに成功しました",
+	"AUTH_LOGOUT_SUCCESS": "ログアウトしました",
+	"AUTH_REFRESH_SUCCESS": "トークンを更新しました",
+	"AUTH_EMAIL_VERIFIED": "メールアドレスを確認しました",
+	"AUTH_PASSWORD_CHANGED": "パスワードを変更しました。すべてのデバイスで再ログインしてください。",
+	"AUTH_PASSWORD_RESET": "パスワードをリセットしました。新しいパスワードでログインしてください。",
+	"AUTH_FORGOT_PASSWORD_SENT": "そのメールアドレスが登録されている場合、まもなくリセットリンクが届きます。",
+	"AUTH_SESSIONS_LIST": "アクティブセッションを取得しました"
+}

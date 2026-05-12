@@ -1,0 +1,10 @@
+{
+	"AUTH_LOGIN_SUCCESS": "Inicio de sesión exitoso",
+	"AUTH_LOGOUT_SUCCESS": "Sesión cerrada exitosamente",
+	"AUTH_REFRESH_SUCCESS": "Token actualizado",
+	"AUTH_EMAIL_VERIFIED": "Correo verificado exitosamente",
+	"AUTH_PASSWORD_CHANGED": "Contraseña cambiada exitosamente. Por favor inicia sesión nuevamente en todos tus dispositivos.",
+	"AUTH_PASSWORD_RESET": "Contraseña restablecida exitosamente. Por favor inicia sesión con tu nueva contraseña.",
+	"AUTH_FORGOT_PASSWORD_SENT": "Si ese correo está registrado, recibirás un enlace de restablecimiento en breve.",
+	"AUTH_SESSIONS_LIST": "Sesiones activas obtenidas"
+}

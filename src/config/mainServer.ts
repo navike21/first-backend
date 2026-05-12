@@ -1,47 +1,16 @@
-import { Server } from 'node:http';
 import type { Express } from 'express';
 import { configApp } from './app';
-import { disconnectFromDatabase } from '@Connection/connectionDB';
-import { logError, logInfo } from '@Helpers/log';
-import configEnvironment from '@Constants/environments';
-import { dbConnectedMiddleware } from '@Middlewares/dbConnected';
+import { connectToDatabase } from '@Connection/connectionDB';
+import { initI18n } from './i18n';
 import mainRouter from '@Routes/routes';
 import { errorMiddleware } from '@Middlewares/errorMiddleware';
 
-let server: Server;
-let isShuttingDown = false;
-
-export async function startServer(app: Express): Promise<void> {
-	try {
-		configApp(app);
-		app.use(dbConnectedMiddleware);
-		app.use(mainRouter());
-		app.use(errorMiddleware);
-
-		server = app.listen(configEnvironment.PORT, () => {
-			logInfo(
-				`Server is running on port ${configEnvironment.PORT} in ${configEnvironment.PORT} mode.`,
-			);
-		});
-	} catch (error) {
-		logError(`Failed to start server: ${error as Error}`);
-		process.exit(1);
-	}
+// Sets up i18n, middleware and routes — no DB needed, safe to call at module load.
+export async function initApp(app: Express): Promise<void> {
+	await initI18n();
+	configApp(app);
+	app.use(mainRouter());
+	app.use(errorMiddleware);
 }
 
-export async function handleServerShutdown(): Promise<void> {
-	if (isShuttingDown) return;
-	isShuttingDown = true;
-
-	logInfo('Shutting down server gracefully...');
-
-	server.close(async () => {
-		try {
-			await disconnectFromDatabase();
-			process.exit(0);
-		} catch (error) {
-			logError(`Error during server shutdown: ${error as Error}`);
-			process.exit(1);
-		}
-	});
-}
+export { connectToDatabase };

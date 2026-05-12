@@ -1,0 +1,8 @@
+{
+	"USER_GROUP_CREATED": "User group created successfully",
+	"USER_GROUP_UPDATED": "User group updated successfully",
+	"USER_GROUP_DELETED": "User group deleted successfully",
+	"USER_GROUP_FOUND": "User group retrieved",
+	"USER_GROUPS_LISTED": "User groups retrieved",
+	"PERMISSIONS_CATALOG": "Available permissions"
+}
