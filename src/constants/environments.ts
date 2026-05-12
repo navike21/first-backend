@@ -49,6 +49,9 @@ if (!parsed.success) {
 	const fieldErrors = parsed.error.flatten(
 		(issue) => issue.message,
 	).fieldErrors;
+	const keys = Object.keys(fieldErrors).join(',');
+	// eslint-disable-next-line no-console
+	console.error('[ENV_FAIL] ' + keys);
 	// eslint-disable-next-line no-console
 	console.error('[ENV] Missing or invalid environment variables: ' + JSON.stringify(fieldErrors));
 	process.exit(1);
