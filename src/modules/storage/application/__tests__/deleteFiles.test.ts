@@ -3,7 +3,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const mockDelete = vi.fn();
 
 vi.mock('@Modules/storage/infrastructure/StorageService', () => ({
-	getStorageDriver: vi.fn(() => ({ delete: mockDelete, uploadBuffer: vi.fn() })),
+	getStorageDriver: vi.fn(() => ({
+		delete: mockDelete,
+		uploadBuffer: vi.fn(),
+	})),
 }));
 
 import { deleteFiles } from '../deleteFiles';
