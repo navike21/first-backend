@@ -10,5 +10,7 @@ export async function deleteClientLogical(id: string) {
 	client.deletedAt = new Date();
 	await client.save();
 
-	return cleanMongoFields(client.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		client.toObject({ versionKey: false, getters: true }),
+	);
 }

@@ -49,7 +49,11 @@ describe('resetPassword', () => {
 			userId: user.id,
 			expiresAt: new Date(Date.now() + 86400000),
 		});
-		await SessionModel.create({ userId: user.id, userAgent: 'ua', ip: '1.1.1.1' });
+		await SessionModel.create({
+			userId: user.id,
+			userAgent: 'ua',
+			ip: '1.1.1.1',
+		});
 
 		vi.mocked(JwtService.verifyEmail).mockReturnValue({
 			sub: user.id,

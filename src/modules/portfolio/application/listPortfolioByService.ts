@@ -10,8 +10,15 @@ interface ListPortfolioByServiceParams {
 	limit: number;
 }
 
-export async function listPortfolioByService({ serviceSlug, page, limit }: ListPortfolioByServiceParams) {
-	const service = await ServiceModel.findOne({ slug: serviceSlug, status: 'active' }).lean();
+export async function listPortfolioByService({
+	serviceSlug,
+	page,
+	limit,
+}: ListPortfolioByServiceParams) {
+	const service = await ServiceModel.findOne({
+		slug: serviceSlug,
+		status: 'active',
+	}).lean();
 	if (!service) {
 		setThrowError({
 			statusCode: 404,

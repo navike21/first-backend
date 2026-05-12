@@ -11,7 +11,9 @@ vi.mock('@Shared/infrastructure/JwtService', () => ({
 
 vi.mock('@Modules/notifications-email', () => ({
 	sendEmail: vi.fn().mockResolvedValue(undefined),
-	passwordResetTemplate: vi.fn().mockReturnValue({ subject: 'Reset', html: '<p/>' }),
+	passwordResetTemplate: vi
+		.fn()
+		.mockReturnValue({ subject: 'Reset', html: '<p/>' }),
 }));
 
 vi.mock('@Constants/environments', () => ({

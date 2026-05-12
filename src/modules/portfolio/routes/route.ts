@@ -39,7 +39,10 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_CREATE, PERMISSIONS.PORTFOLIO_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_CREATED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_CREATED,
+			resource: 'portfolio',
+		}),
 		portfolioCreateController,
 	);
 
@@ -47,7 +50,10 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_UPDATE, PERMISSIONS.PORTFOLIO_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_UPDATED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_UPDATED,
+			resource: 'portfolio',
+		}),
 		portfolioUpdateController,
 	);
 
@@ -55,7 +61,10 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_DELETE, PERMISSIONS.PORTFOLIO_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_SOFT_DELETED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_SOFT_DELETED,
+			resource: 'portfolio',
+		}),
 		portfolioDeleteController,
 	);
 }

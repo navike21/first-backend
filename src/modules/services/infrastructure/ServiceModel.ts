@@ -38,7 +38,12 @@ const serviceSchema = new Schema<ServiceDocument>(
 		tags: [{ type: String }],
 		order: { type: Number, default: 0 },
 		isActive: { type: Boolean, default: true },
-		status: { type: String, required: true, default: 'active', enum: ['active', 'deleted'] },
+		status: {
+			type: String,
+			required: true,
+			default: 'active',
+			enum: ['active', 'deleted'],
+		},
 		deletedAt: { type: Date },
 	},
 	{ timestamps: true },

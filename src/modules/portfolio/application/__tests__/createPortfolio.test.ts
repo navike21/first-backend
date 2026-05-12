@@ -15,7 +15,18 @@ import { createPortfolio } from '@Modules/portfolio/application/createPortfolio'
 import PortfolioModel from '@Modules/portfolio/infrastructure/PortfolioModel';
 import { PortfolioSlugConflictError } from '@Modules/portfolio/domain/errors/PortfolioErrors';
 
-const ls = { en: 'a', es: 'b', de: 'c', fr: 'd', it: 'e', ja: 'f', ko: 'g', pt: 'h', ru: 'i', zh: 'j' };
+const ls = {
+	en: 'a',
+	es: 'b',
+	de: 'c',
+	fr: 'd',
+	it: 'e',
+	ja: 'f',
+	ko: 'g',
+	pt: 'h',
+	ru: 'i',
+	zh: 'j',
+};
 const validInput = {
 	name: ls,
 	shortDescription: ls,
@@ -38,7 +49,9 @@ describe('createPortfolio', () => {
 			...validInput,
 			id: 'uuid-1',
 			slug: 'project-name',
-			toObject: vi.fn().mockReturnValue({ ...validInput, id: 'uuid-1', _id: 'mongo-1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ ...validInput, id: 'uuid-1', _id: 'mongo-1' }),
 		} as never);
 
 		const result = await createPortfolio(validInput);
@@ -48,8 +61,12 @@ describe('createPortfolio', () => {
 	});
 
 	it('throws PortfolioSlugConflictError when slug exists', async () => {
-		vi.mocked(PortfolioModel.findOne).mockResolvedValue({ id: 'existing' } as never);
+		vi.mocked(PortfolioModel.findOne).mockResolvedValue({
+			id: 'existing',
+		} as never);
 
-		await expect(createPortfolio(validInput)).rejects.toThrow(PortfolioSlugConflictError);
+		await expect(createPortfolio(validInput)).rejects.toThrow(
+			PortfolioSlugConflictError,
+		);
 	});
 });

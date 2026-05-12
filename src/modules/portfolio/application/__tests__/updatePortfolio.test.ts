@@ -22,7 +22,9 @@ describe('updatePortfolio', () => {
 			id: '1',
 			status: 'draft',
 			save: saveFn,
-			toObject: vi.fn().mockReturnValue({ id: '1', status: 'published', _id: 'm1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ id: '1', status: 'published', _id: 'm1' }),
 		};
 		vi.mocked(PortfolioModel.findOne).mockResolvedValue(portfolioDoc as never);
 
@@ -35,7 +37,9 @@ describe('updatePortfolio', () => {
 	it('throws PortfolioNotFoundError when not found', async () => {
 		vi.mocked(PortfolioModel.findOne).mockResolvedValue(null as never);
 
-		await expect(updatePortfolio('not-found', {})).rejects.toThrow(PortfolioNotFoundError);
+		await expect(updatePortfolio('not-found', {})).rejects.toThrow(
+			PortfolioNotFoundError,
+		);
 	});
 
 	it('throws PortfolioSlugConflictError on duplicate slug', async () => {
@@ -45,6 +49,8 @@ describe('updatePortfolio', () => {
 			.mockResolvedValueOnce(portfolioDoc as never)
 			.mockResolvedValueOnce(conflict as never);
 
-		await expect(updatePortfolio('1', { slug: 'taken' })).rejects.toThrow(PortfolioSlugConflictError);
+		await expect(updatePortfolio('1', { slug: 'taken' })).rejects.toThrow(
+			PortfolioSlugConflictError,
+		);
 	});
 });

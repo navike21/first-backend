@@ -21,5 +21,7 @@ export async function updateClient(id: string, input: UpdateClientInput) {
 
 	Object.assign(client, input);
 	await client.save();
-	return cleanMongoFields(client.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		client.toObject({ versionKey: false, getters: true }),
+	);
 }

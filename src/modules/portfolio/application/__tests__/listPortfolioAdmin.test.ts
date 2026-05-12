@@ -20,7 +20,9 @@ const mockQB = (items: unknown[]) => ({
 
 describe('listPortfolioAdmin', () => {
 	it('returns all non-deleted portfolio items', async () => {
-		vi.mocked(PortfolioModel.find).mockReturnValue(mockQB([{ id: '1', slug: 'proj', _id: 'm1' }]) as never);
+		vi.mocked(PortfolioModel.find).mockReturnValue(
+			mockQB([{ id: '1', slug: 'proj', _id: 'm1' }]) as never,
+		);
 		vi.mocked(PortfolioModel.countDocuments).mockResolvedValue(1);
 
 		const result = await listPortfolioAdmin({ page: 1, limit: 10 });
@@ -29,10 +31,16 @@ describe('listPortfolioAdmin', () => {
 	});
 
 	it('filters by status when provided', async () => {
-		vi.mocked(PortfolioModel.find).mockReturnValue(mockQB([{ id: '1', _id: 'm1' }]) as never);
+		vi.mocked(PortfolioModel.find).mockReturnValue(
+			mockQB([{ id: '1', _id: 'm1' }]) as never,
+		);
 		vi.mocked(PortfolioModel.countDocuments).mockResolvedValue(1);
 
-		const result = await listPortfolioAdmin({ page: 1, limit: 10, status: 'published' });
+		const result = await listPortfolioAdmin({
+			page: 1,
+			limit: 10,
+			status: 'published',
+		});
 		expect(result.data).toHaveLength(1);
 	});
 

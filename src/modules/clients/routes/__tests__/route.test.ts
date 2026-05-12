@@ -11,11 +11,21 @@ vi.mock('@Helpers/responseStructure', () => ({
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { verifyAccess: vi.fn() },
 }));
-vi.mock('@Modules/clients/application/createClient', () => ({ createClient: vi.fn() }));
-vi.mock('@Modules/clients/application/listClients', () => ({ listClients: vi.fn() }));
-vi.mock('@Modules/clients/application/getClientById', () => ({ getClientById: vi.fn() }));
-vi.mock('@Modules/clients/application/updateClient', () => ({ updateClient: vi.fn() }));
-vi.mock('@Modules/clients/application/deleteClientLogical', () => ({ deleteClientLogical: vi.fn() }));
+vi.mock('@Modules/clients/application/createClient', () => ({
+	createClient: vi.fn(),
+}));
+vi.mock('@Modules/clients/application/listClients', () => ({
+	listClients: vi.fn(),
+}));
+vi.mock('@Modules/clients/application/getClientById', () => ({
+	getClientById: vi.fn(),
+}));
+vi.mock('@Modules/clients/application/updateClient', () => ({
+	updateClient: vi.fn(),
+}));
+vi.mock('@Modules/clients/application/deleteClientLogical', () => ({
+	deleteClientLogical: vi.fn(),
+}));
 
 import { Router } from 'express';
 import { clientsApi } from '@Modules/clients/routes/route';

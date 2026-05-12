@@ -35,7 +35,10 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_CREATE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_CREATED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_CREATED,
+			resource: 'services',
+		}),
 		serviceCreateController,
 	);
 
@@ -43,7 +46,10 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_UPDATED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_UPDATED,
+			resource: 'services',
+		}),
 		serviceUpdateController,
 	);
 
@@ -51,7 +57,10 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_DELETE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_SOFT_DELETED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_SOFT_DELETED,
+			resource: 'services',
+		}),
 		serviceDeleteController,
 	);
 }

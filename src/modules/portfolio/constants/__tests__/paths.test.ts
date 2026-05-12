@@ -13,7 +13,9 @@ describe('portfolio paths constants', () => {
 	it('exports expected path strings', () => {
 		expect(PORTFOLIO_PATH_LIST_PUBLIC).toBe('/portfolio');
 		expect(PORTFOLIO_PATH_LIST_ADMIN).toBe('/portfolio/admin');
-		expect(PORTFOLIO_PATH_BY_SERVICE).toBe('/portfolio/by-service/:serviceSlug');
+		expect(PORTFOLIO_PATH_BY_SERVICE).toBe(
+			'/portfolio/by-service/:serviceSlug',
+		);
 		expect(PORTFOLIO_PATH_GET_BY_SLUG).toBe('/portfolio/:slug');
 		expect(PORTFOLIO_PATH_CREATE).toBe('/portfolio');
 		expect(PORTFOLIO_PATH_UPDATE).toBe('/portfolio/:id');

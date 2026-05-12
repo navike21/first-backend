@@ -21,7 +21,9 @@ const mockQueryBuilder = (items: unknown[]) => ({
 describe('listClients', () => {
 	it('returns paginated clients', async () => {
 		const clients = [{ id: '1', businessName: 'Acme', _id: 'mongo1' }];
-		vi.mocked(ClientModel.find).mockReturnValue(mockQueryBuilder(clients) as never);
+		vi.mocked(ClientModel.find).mockReturnValue(
+			mockQueryBuilder(clients) as never,
+		);
 		vi.mocked(ClientModel.countDocuments).mockResolvedValue(1);
 
 		const result = await listClients({ page: 1, limit: 10 });
@@ -40,7 +42,9 @@ describe('listClients', () => {
 
 	it('applies search filter when provided', async () => {
 		const clients = [{ id: '1', businessName: 'Acme', _id: 'mongo1' }];
-		vi.mocked(ClientModel.find).mockReturnValue(mockQueryBuilder(clients) as never);
+		vi.mocked(ClientModel.find).mockReturnValue(
+			mockQueryBuilder(clients) as never,
+		);
 		vi.mocked(ClientModel.countDocuments).mockResolvedValue(1);
 
 		const result = await listClients({ page: 1, limit: 10, search: 'Acme' });

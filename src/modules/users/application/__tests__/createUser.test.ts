@@ -8,7 +8,9 @@ withMongo();
 
 vi.mock('@Modules/notifications-email', () => ({
 	sendEmail: vi.fn().mockResolvedValue(undefined),
-	verifyEmailTemplate: vi.fn().mockReturnValue({ subject: 'Verify', html: '<p/>' }),
+	verifyEmailTemplate: vi
+		.fn()
+		.mockReturnValue({ subject: 'Verify', html: '<p/>' }),
 }));
 
 vi.mock('@Constants/environments', () => ({
@@ -33,7 +35,10 @@ const baseInput = {
 
 describe('createUser', () => {
 	it('creates and persists a user in the database', async () => {
-		const input = { ...baseInput, email: `u-${crypto.randomUUID().slice(0, 8)}@test.com` };
+		const input = {
+			...baseInput,
+			email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		};
 
 		const result = await createUser(input);
 
@@ -68,8 +73,12 @@ describe('createUser', () => {
 	});
 
 	it('passes lang to the email template', async () => {
-		const { verifyEmailTemplate } = await import('@Modules/notifications-email');
-		const input = { ...baseInput, email: `lang-${crypto.randomUUID().slice(0, 8)}@test.com` };
+		const { verifyEmailTemplate } =
+			await import('@Modules/notifications-email');
+		const input = {
+			...baseInput,
+			email: `lang-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		};
 
 		await createUser(input, 'es');
 

@@ -18,7 +18,13 @@ const mockQueryBuilder = (result: unknown) => ({
 
 describe('getClientById', () => {
 	it('returns client data when found', async () => {
-		vi.mocked(ClientModel.findOne).mockReturnValue(mockQueryBuilder({ id: '1', businessName: 'Acme', _id: 'mongo1' }) as never);
+		vi.mocked(ClientModel.findOne).mockReturnValue(
+			mockQueryBuilder({
+				id: '1',
+				businessName: 'Acme',
+				_id: 'mongo1',
+			}) as never,
+		);
 
 		const result = await getClientById('1');
 
@@ -27,8 +33,12 @@ describe('getClientById', () => {
 	});
 
 	it('throws ClientNotFoundError when not found', async () => {
-		vi.mocked(ClientModel.findOne).mockReturnValue(mockQueryBuilder(null) as never);
+		vi.mocked(ClientModel.findOne).mockReturnValue(
+			mockQueryBuilder(null) as never,
+		);
 
-		await expect(getClientById('not-found')).rejects.toThrow(ClientNotFoundError);
+		await expect(getClientById('not-found')).rejects.toThrow(
+			ClientNotFoundError,
+		);
 	});
 });

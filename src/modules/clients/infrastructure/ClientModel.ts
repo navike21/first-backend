@@ -15,7 +15,12 @@ export interface ClientDocument extends Omit<CreateClientInput, 'status'> {
 const clientSchema = new Schema<ClientDocument>(
 	{
 		id: { type: String, required: true, unique: true, default: generateUUID },
-		businessName: { type: String, required: true, maxLength: 200, minLength: 2 },
+		businessName: {
+			type: String,
+			required: true,
+			maxLength: 200,
+			minLength: 2,
+		},
 		clientType: {
 			type: String,
 			required: true,

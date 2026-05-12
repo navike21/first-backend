@@ -19,7 +19,9 @@ describe('deleteServiceLogical', () => {
 			id: '1',
 			status: 'active',
 			save: saveFn,
-			toObject: vi.fn().mockReturnValue({ id: '1', status: 'deleted', _id: 'm1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ id: '1', status: 'deleted', _id: 'm1' }),
 		};
 		vi.mocked(ServiceModel.findOne).mockResolvedValue(serviceDoc as never);
 
@@ -33,6 +35,8 @@ describe('deleteServiceLogical', () => {
 	it('throws ServiceNotFoundError when not found', async () => {
 		vi.mocked(ServiceModel.findOne).mockResolvedValue(null as never);
 
-		await expect(deleteServiceLogical('not-found')).rejects.toThrow(ServiceNotFoundError);
+		await expect(deleteServiceLogical('not-found')).rejects.toThrow(
+			ServiceNotFoundError,
+		);
 	});
 });

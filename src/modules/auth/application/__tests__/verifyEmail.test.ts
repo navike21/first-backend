@@ -13,7 +13,9 @@ vi.mock('@Shared/infrastructure/JwtService', () => ({
 
 vi.mock('@Modules/notifications-email', () => ({
 	sendEmail: vi.fn().mockResolvedValue(undefined),
-	welcomeEmailTemplate: vi.fn().mockReturnValue({ subject: 'Welcome', html: '<p/>' }),
+	welcomeEmailTemplate: vi
+		.fn()
+		.mockReturnValue({ subject: 'Welcome', html: '<p/>' }),
 }));
 
 const seedUser = (overrides = {}) =>
@@ -63,7 +65,9 @@ describe('verifyEmail', () => {
 			throw new Error('bad jwt');
 		});
 
-		await expect(verifyEmail('bad-token')).rejects.toBeInstanceOf(InvalidTokenError);
+		await expect(verifyEmail('bad-token')).rejects.toBeInstanceOf(
+			InvalidTokenError,
+		);
 	});
 
 	it('throws InvalidTokenError when token type is not email_verification', async () => {
@@ -73,7 +77,9 @@ describe('verifyEmail', () => {
 			type: 'password_reset',
 		});
 
-		await expect(verifyEmail('wrong-type-token')).rejects.toBeInstanceOf(InvalidTokenError);
+		await expect(verifyEmail('wrong-type-token')).rejects.toBeInstanceOf(
+			InvalidTokenError,
+		);
 	});
 
 	it('throws UserNotFoundError when user is already verified or does not exist', async () => {

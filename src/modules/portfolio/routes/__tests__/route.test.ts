@@ -11,13 +11,27 @@ vi.mock('@Helpers/responseStructure', () => ({
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { verifyAccess: vi.fn() },
 }));
-vi.mock('@Modules/portfolio/application/createPortfolio', () => ({ createPortfolio: vi.fn() }));
-vi.mock('@Modules/portfolio/application/listPortfolioPublic', () => ({ listPortfolioPublic: vi.fn() }));
-vi.mock('@Modules/portfolio/application/listPortfolioAdmin', () => ({ listPortfolioAdmin: vi.fn() }));
-vi.mock('@Modules/portfolio/application/listPortfolioByService', () => ({ listPortfolioByService: vi.fn() }));
-vi.mock('@Modules/portfolio/application/getPortfolioBySlug', () => ({ getPortfolioBySlug: vi.fn() }));
-vi.mock('@Modules/portfolio/application/updatePortfolio', () => ({ updatePortfolio: vi.fn() }));
-vi.mock('@Modules/portfolio/application/deletePortfolioLogical', () => ({ deletePortfolioLogical: vi.fn() }));
+vi.mock('@Modules/portfolio/application/createPortfolio', () => ({
+	createPortfolio: vi.fn(),
+}));
+vi.mock('@Modules/portfolio/application/listPortfolioPublic', () => ({
+	listPortfolioPublic: vi.fn(),
+}));
+vi.mock('@Modules/portfolio/application/listPortfolioAdmin', () => ({
+	listPortfolioAdmin: vi.fn(),
+}));
+vi.mock('@Modules/portfolio/application/listPortfolioByService', () => ({
+	listPortfolioByService: vi.fn(),
+}));
+vi.mock('@Modules/portfolio/application/getPortfolioBySlug', () => ({
+	getPortfolioBySlug: vi.fn(),
+}));
+vi.mock('@Modules/portfolio/application/updatePortfolio', () => ({
+	updatePortfolio: vi.fn(),
+}));
+vi.mock('@Modules/portfolio/application/deletePortfolioLogical', () => ({
+	deletePortfolioLogical: vi.fn(),
+}));
 
 import { Router } from 'express';
 import { portfolioApi } from '@Modules/portfolio/routes/route';

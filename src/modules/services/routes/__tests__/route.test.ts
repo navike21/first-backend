@@ -11,12 +11,24 @@ vi.mock('@Helpers/responseStructure', () => ({
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { verifyAccess: vi.fn() },
 }));
-vi.mock('@Modules/services/application/createService', () => ({ createService: vi.fn() }));
-vi.mock('@Modules/services/application/listServicesPublic', () => ({ listServicesPublic: vi.fn() }));
-vi.mock('@Modules/services/application/listServicesAdmin', () => ({ listServicesAdmin: vi.fn() }));
-vi.mock('@Modules/services/application/getServiceBySlug', () => ({ getServiceBySlug: vi.fn() }));
-vi.mock('@Modules/services/application/updateService', () => ({ updateService: vi.fn() }));
-vi.mock('@Modules/services/application/deleteServiceLogical', () => ({ deleteServiceLogical: vi.fn() }));
+vi.mock('@Modules/services/application/createService', () => ({
+	createService: vi.fn(),
+}));
+vi.mock('@Modules/services/application/listServicesPublic', () => ({
+	listServicesPublic: vi.fn(),
+}));
+vi.mock('@Modules/services/application/listServicesAdmin', () => ({
+	listServicesAdmin: vi.fn(),
+}));
+vi.mock('@Modules/services/application/getServiceBySlug', () => ({
+	getServiceBySlug: vi.fn(),
+}));
+vi.mock('@Modules/services/application/updateService', () => ({
+	updateService: vi.fn(),
+}));
+vi.mock('@Modules/services/application/deleteServiceLogical', () => ({
+	deleteServiceLogical: vi.fn(),
+}));
 
 import { Router } from 'express';
 import { servicesApi } from '@Modules/services/routes/route';

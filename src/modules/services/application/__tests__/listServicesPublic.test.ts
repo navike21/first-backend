@@ -20,7 +20,9 @@ const mockQB = (items: unknown[]) => ({
 
 describe('listServicesPublic', () => {
 	it('returns paginated services', async () => {
-		vi.mocked(ServiceModel.find).mockReturnValue(mockQB([{ id: '1', slug: 'web', _id: 'm1' }]) as never);
+		vi.mocked(ServiceModel.find).mockReturnValue(
+			mockQB([{ id: '1', slug: 'web', _id: 'm1' }]) as never,
+		);
 		vi.mocked(ServiceModel.countDocuments).mockResolvedValue(1);
 
 		const result = await listServicesPublic({ page: 1, limit: 10 });

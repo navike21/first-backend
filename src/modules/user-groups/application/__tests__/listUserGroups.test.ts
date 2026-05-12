@@ -40,7 +40,11 @@ describe('listUserGroups', () => {
 		await seed({ status: 'inactive' });
 		await seed({ status: 'active' });
 
-		const result = await listUserGroups({ page: 1, limit: 20, status: 'inactive' });
+		const result = await listUserGroups({
+			page: 1,
+			limit: 20,
+			status: 'inactive',
+		});
 
 		expect(result.items.every((g) => g.status === 'inactive')).toBe(true);
 	});
@@ -49,13 +53,21 @@ describe('listUserGroups', () => {
 		const uniqueName = `Zephyr-${crypto.randomUUID().slice(0, 6)}`;
 		await seed({ name: uniqueName, slug: uniqueName.toLowerCase() });
 
-		const result = await listUserGroups({ page: 1, limit: 10, search: 'Zephyr' });
+		const result = await listUserGroups({
+			page: 1,
+			limit: 10,
+			search: 'Zephyr',
+		});
 
 		expect(result.items.some((g) => g.name === uniqueName)).toBe(true);
 	});
 
 	it('returns empty list when no groups match', async () => {
-		const result = await listUserGroups({ page: 1, limit: 10, search: 'xyznonexistent999' });
+		const result = await listUserGroups({
+			page: 1,
+			limit: 10,
+			search: 'xyznonexistent999',
+		});
 
 		expect(result.items).toHaveLength(0);
 		expect(result.total).toBe(0);

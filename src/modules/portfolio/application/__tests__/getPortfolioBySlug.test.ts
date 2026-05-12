@@ -30,14 +30,20 @@ const mockPortfolio = {
 
 describe('getPortfolioBySlug', () => {
 	it('returns portfolio with client and services', async () => {
-		vi.mocked(PortfolioModel.findOne).mockReturnValue({ lean: vi.fn().mockResolvedValue(mockPortfolio) } as never);
+		vi.mocked(PortfolioModel.findOne).mockReturnValue({
+			lean: vi.fn().mockResolvedValue(mockPortfolio),
+		} as never);
 		vi.mocked(ClientModel.findOne).mockReturnValue({
 			select: vi.fn().mockReturnThis(),
-			lean: vi.fn().mockResolvedValue({ businessName: 'Acme', logoUrl: null, _id: 'm2' }),
+			lean: vi
+				.fn()
+				.mockResolvedValue({ businessName: 'Acme', logoUrl: null, _id: 'm2' }),
 		} as never);
 		vi.mocked(ServiceModel.find).mockReturnValue({
 			select: vi.fn().mockReturnThis(),
-			lean: vi.fn().mockResolvedValue([{ id: 'svc-uuid', slug: 'web', _id: 'm3' }]),
+			lean: vi
+				.fn()
+				.mockResolvedValue([{ id: 'svc-uuid', slug: 'web', _id: 'm3' }]),
 		} as never);
 
 		const result = await getPortfolioBySlug('project');
@@ -48,8 +54,14 @@ describe('getPortfolioBySlug', () => {
 	});
 
 	it('returns null client when clientId missing', async () => {
-		const portfolioNoClient = { ...mockPortfolio, clientId: undefined, serviceIds: [] };
-		vi.mocked(PortfolioModel.findOne).mockReturnValue({ lean: vi.fn().mockResolvedValue(portfolioNoClient) } as never);
+		const portfolioNoClient = {
+			...mockPortfolio,
+			clientId: undefined,
+			serviceIds: [],
+		};
+		vi.mocked(PortfolioModel.findOne).mockReturnValue({
+			lean: vi.fn().mockResolvedValue(portfolioNoClient),
+		} as never);
 		vi.mocked(ServiceModel.find).mockReturnValue({
 			select: vi.fn().mockReturnThis(),
 			lean: vi.fn().mockResolvedValue([]),
@@ -62,8 +74,12 @@ describe('getPortfolioBySlug', () => {
 	});
 
 	it('throws PortfolioNotFoundError when not found', async () => {
-		vi.mocked(PortfolioModel.findOne).mockReturnValue({ lean: vi.fn().mockResolvedValue(null) } as never);
+		vi.mocked(PortfolioModel.findOne).mockReturnValue({
+			lean: vi.fn().mockResolvedValue(null),
+		} as never);
 
-		await expect(getPortfolioBySlug('not-found')).rejects.toThrow(PortfolioNotFoundError);
+		await expect(getPortfolioBySlug('not-found')).rejects.toThrow(
+			PortfolioNotFoundError,
+		);
 	});
 });

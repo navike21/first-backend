@@ -21,7 +21,9 @@ const mockQB = (items: unknown[]) => ({
 
 describe('listPortfolioPublic', () => {
 	it('returns paginated portfolio items', async () => {
-		vi.mocked(PortfolioModel.find).mockReturnValue(mockQB([{ id: '1', slug: 'proj', _id: 'm1' }]) as never);
+		vi.mocked(PortfolioModel.find).mockReturnValue(
+			mockQB([{ id: '1', slug: 'proj', _id: 'm1' }]) as never,
+		);
 		vi.mocked(PortfolioModel.countDocuments).mockResolvedValue(1);
 
 		const result = await listPortfolioPublic({ page: 1, limit: 10 });
@@ -31,10 +33,16 @@ describe('listPortfolioPublic', () => {
 	});
 
 	it('applies featured filter', async () => {
-		vi.mocked(PortfolioModel.find).mockReturnValue(mockQB([{ id: '1', _id: 'm1' }]) as never);
+		vi.mocked(PortfolioModel.find).mockReturnValue(
+			mockQB([{ id: '1', _id: 'm1' }]) as never,
+		);
 		vi.mocked(PortfolioModel.countDocuments).mockResolvedValue(1);
 
-		const result = await listPortfolioPublic({ page: 1, limit: 10, featured: true });
+		const result = await listPortfolioPublic({
+			page: 1,
+			limit: 10,
+			featured: true,
+		});
 		expect(result.data).toHaveLength(1);
 	});
 

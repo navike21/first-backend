@@ -15,8 +15,23 @@ import { createService } from '@Modules/services/application/createService';
 import ServiceModel from '@Modules/services/infrastructure/ServiceModel';
 import { ServiceSlugConflictError } from '@Modules/services/domain/errors/ServiceErrors';
 
-const locStr = { en: 'a', es: 'b', de: 'c', fr: 'd', it: 'e', ja: 'f', ko: 'g', pt: 'h', ru: 'i', zh: 'j' };
-const validInput = { name: locStr, shortDescription: locStr, description: locStr };
+const locStr = {
+	en: 'a',
+	es: 'b',
+	de: 'c',
+	fr: 'd',
+	it: 'e',
+	ja: 'f',
+	ko: 'g',
+	pt: 'h',
+	ru: 'i',
+	zh: 'j',
+};
+const validInput = {
+	name: locStr,
+	shortDescription: locStr,
+	description: locStr,
+};
 
 describe('createService', () => {
 	it('creates service and returns cleaned data', async () => {
@@ -25,7 +40,12 @@ describe('createService', () => {
 			...validInput,
 			id: 'uuid-1',
 			slug: 'web-development',
-			toObject: vi.fn().mockReturnValue({ ...validInput, id: 'uuid-1', slug: 'web-development', _id: 'mongo-1' }),
+			toObject: vi.fn().mockReturnValue({
+				...validInput,
+				id: 'uuid-1',
+				slug: 'web-development',
+				_id: 'mongo-1',
+			}),
 		} as never);
 
 		const result = await createService(validInput);
@@ -39,16 +59,24 @@ describe('createService', () => {
 		vi.mocked(ServiceModel.create).mockResolvedValue({
 			...validInput,
 			slug: 'custom-slug',
-			toObject: vi.fn().mockReturnValue({ slug: 'custom-slug', _id: 'mongo-1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ slug: 'custom-slug', _id: 'mongo-1' }),
 		} as never);
 
 		await createService({ ...validInput, slug: 'custom-slug' });
-		expect(ServiceModel.create).toHaveBeenCalledWith(expect.objectContaining({ slug: 'custom-slug' }));
+		expect(ServiceModel.create).toHaveBeenCalledWith(
+			expect.objectContaining({ slug: 'custom-slug' }),
+		);
 	});
 
 	it('throws ServiceSlugConflictError when slug exists', async () => {
-		vi.mocked(ServiceModel.findOne).mockResolvedValue({ id: 'existing' } as never);
+		vi.mocked(ServiceModel.findOne).mockResolvedValue({
+			id: 'existing',
+		} as never);
 
-		await expect(createService(validInput)).rejects.toThrow(ServiceSlugConflictError);
+		await expect(createService(validInput)).rejects.toThrow(
+			ServiceSlugConflictError,
+		);
 	});
 });

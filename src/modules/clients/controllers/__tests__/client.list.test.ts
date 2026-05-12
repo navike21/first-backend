@@ -27,7 +27,10 @@ function makeRes() {
 
 describe('clientListController', () => {
 	it('calls listClients and returns 200', async () => {
-		vi.mocked(listClients).mockResolvedValue({ data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 0 } });
+		vi.mocked(listClients).mockResolvedValue({
+			data: [],
+			meta: { page: 1, limit: 10, total: 0, totalPages: 0 },
+		});
 		const req = { query: {} } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();

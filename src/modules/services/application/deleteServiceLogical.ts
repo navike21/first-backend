@@ -10,5 +10,7 @@ export async function deleteServiceLogical(id: string) {
 	service.deletedAt = new Date();
 	await service.save();
 
-	return cleanMongoFields(service.toObject({ versionKey: false, getters: true }));
+	return cleanMongoFields(
+		service.toObject({ versionKey: false, getters: true }),
+	);
 }

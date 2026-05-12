@@ -24,7 +24,9 @@ describe('createClient', () => {
 		vi.mocked(ClientModel.create).mockResolvedValue({
 			...validInput,
 			id: 'uuid-1',
-			toObject: vi.fn().mockReturnValue({ ...validInput, id: 'uuid-1', _id: 'mongo-1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ ...validInput, id: 'uuid-1', _id: 'mongo-1' }),
 		} as never);
 
 		const result = await createClient(validInput);
@@ -34,8 +36,12 @@ describe('createClient', () => {
 	});
 
 	it('throws ClientBusinessNameConflictError when name exists', async () => {
-		vi.mocked(ClientModel.findOne).mockResolvedValue({ id: 'existing' } as never);
+		vi.mocked(ClientModel.findOne).mockResolvedValue({
+			id: 'existing',
+		} as never);
 
-		await expect(createClient(validInput)).rejects.toThrow(ClientBusinessNameConflictError);
+		await expect(createClient(validInput)).rejects.toThrow(
+			ClientBusinessNameConflictError,
+		);
 	});
 });

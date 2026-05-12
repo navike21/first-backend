@@ -48,7 +48,11 @@ describe('listUsers', () => {
 	it('filters by groupId', async () => {
 		await seed({ groupId: 'group-xyz' });
 
-		const result = await listUsers({ page: 1, limit: 20, groupId: 'group-xyz' });
+		const result = await listUsers({
+			page: 1,
+			limit: 20,
+			groupId: 'group-xyz',
+		});
 
 		expect(result.items.every((u) => u.groupId === 'group-xyz')).toBe(true);
 	});
@@ -63,7 +67,11 @@ describe('listUsers', () => {
 	});
 
 	it('returns empty result when no users match', async () => {
-		const result = await listUsers({ page: 1, limit: 10, search: 'xyznonexistent999' });
+		const result = await listUsers({
+			page: 1,
+			limit: 10,
+			search: 'xyznonexistent999',
+		});
 
 		expect(result.items).toHaveLength(0);
 		expect(result.total).toBe(0);

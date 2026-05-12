@@ -21,7 +21,9 @@ describe('updateService', () => {
 		const serviceDoc = {
 			id: '1',
 			save: saveFn,
-			toObject: vi.fn().mockReturnValue({ id: '1', isActive: false, _id: 'm1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ id: '1', isActive: false, _id: 'm1' }),
 		};
 		vi.mocked(ServiceModel.findOne).mockResolvedValue(serviceDoc as never);
 
@@ -34,7 +36,9 @@ describe('updateService', () => {
 	it('throws ServiceNotFoundError when not found', async () => {
 		vi.mocked(ServiceModel.findOne).mockResolvedValue(null as never);
 
-		await expect(updateService('not-found', {})).rejects.toThrow(ServiceNotFoundError);
+		await expect(updateService('not-found', {})).rejects.toThrow(
+			ServiceNotFoundError,
+		);
 	});
 
 	it('throws ServiceSlugConflictError on duplicate slug', async () => {
@@ -44,6 +48,8 @@ describe('updateService', () => {
 			.mockResolvedValueOnce(serviceDoc as never)
 			.mockResolvedValueOnce(conflict as never);
 
-		await expect(updateService('1', { slug: 'taken' })).rejects.toThrow(ServiceSlugConflictError);
+		await expect(updateService('1', { slug: 'taken' })).rejects.toThrow(
+			ServiceSlugConflictError,
+		);
 	});
 });
