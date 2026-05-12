@@ -22,7 +22,11 @@ export async function listStorageFiles(query: ListStorageFilesQuery) {
 	if (query.uploadedBy) filter.uploadedBy = query.uploadedBy;
 
 	const [items, total] = await Promise.all([
-		StorageFileModel.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+		StorageFileModel.find(filter)
+			.sort({ createdAt: -1 })
+			.skip(skip)
+			.limit(limit)
+			.lean(),
 		StorageFileModel.countDocuments(filter),
 	]);
 

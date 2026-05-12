@@ -5,7 +5,10 @@ interface WelcomeEmailData {
 	lang?: string;
 }
 
-export function welcomeEmailTemplate({ firstName, lang = 'en' }: WelcomeEmailData) {
+export function welcomeEmailTemplate({
+	firstName,
+	lang = 'en',
+}: WelcomeEmailData) {
 	const locale = getEmailLocale(lang);
 	const year = String(new Date().getFullYear());
 

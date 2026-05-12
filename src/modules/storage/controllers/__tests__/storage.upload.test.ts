@@ -48,6 +48,10 @@ function buildReq(overrides: Partial<Request> = {}): Request {
 	} as unknown as Request;
 }
 
+function buildRes(): Response {
+	return { locals: { userId: undefined } } as unknown as Response;
+}
+
 function run(
 	controller: (req: Request, res: Response, next: NextFunction) => void,
 	req: Request,
@@ -57,7 +61,7 @@ function run(
 		mockSuccessResponse.mockImplementationOnce(() => resolve());
 		const next: NextFunction = (err?: unknown) =>
 			err ? reject(err) : resolve();
-		controller(req, {} as Response, next);
+		controller(req, buildRes(), next);
 	});
 }
 
@@ -103,20 +107,23 @@ describe('storageUploadBulkController', () => {
 		const req = buildReq({
 			files: [] as Express.Multer.File[] as Request['files'],
 		});
-		await expect(
-			run(storageUploadBulkController, req),
-		).rejects.toBeInstanceOf(AppError);
+		await expect(run(storageUploadBulkController, req)).rejects.toBeInstanceOf(
+			AppError,
+		);
 	});
 
 	it('passes AppError to next when req.files is undefined', async () => {
 		const req = buildReq({ files: undefined });
-		await expect(
-			run(storageUploadBulkController, req),
-		).rejects.toBeInstanceOf(AppError);
+		await expect(run(storageUploadBulkController, req)).rejects.toBeInstanceOf(
+			AppError,
+		);
 	});
 
 	it('calls uploadFile for each file and returns 201', async () => {
-		const fakeResult = { original: { pathname: 'p', url: 'u' }, isImage: false };
+		const fakeResult = {
+			original: { pathname: 'p', url: 'u' },
+			isImage: false,
+		};
 		mockUploadFile.mockResolvedValue(fakeResult);
 
 		const files = [buildFile(), buildFile()] as Express.Multer.File[];
@@ -136,8 +143,8 @@ describe('storageUploadBulkController', () => {
 			files: files as Request['files'],
 			body: { entityType: '!!!', entityId: 'bad' },
 		});
-		await expect(
-			run(storageUploadBulkController, req),
-		).rejects.toBeInstanceOf(AppError);
+		await expect(run(storageUploadBulkController, req)).rejects.toBeInstanceOf(
+			AppError,
+		);
 	});
 });

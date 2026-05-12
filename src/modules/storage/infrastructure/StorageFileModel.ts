@@ -1,5 +1,9 @@
 import { model, Schema } from 'mongoose';
-import { ACTIVE, STATUS_REGISTER_ARRAY, StatusRegister } from '@Constants/statusRegister';
+import {
+	ACTIVE,
+	STATUS_REGISTER_ARRAY,
+	StatusRegister,
+} from '@Constants/statusRegister';
 import generateUUID from '@Helpers/uuid';
 
 export interface StorageVariant {

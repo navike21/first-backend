@@ -31,7 +31,16 @@ export async function initI18n(): Promise<void> {
 		supportedLngs: SUPPORTED_LANGS,
 		resources,
 		interpolation: { escapeValue: false },
-		ns: ['errors', 'auth', 'users', 'user-groups', 'subscribers', 'storage', 'audit-log', 'app-settings'],
+		ns: [
+			'errors',
+			'auth',
+			'users',
+			'user-groups',
+			'subscribers',
+			'storage',
+			'audit-log',
+			'app-settings',
+		],
 		defaultNS: 'errors',
 	});
 }

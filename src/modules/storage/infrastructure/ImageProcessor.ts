@@ -14,7 +14,10 @@ export async function processRasterImage(
 ): Promise<ImageVariants> {
 	const [full, thumb] = await Promise.all([
 		sharp(buffer)
-			.resize(FULL_MAX_PX, FULL_MAX_PX, { fit: 'inside', withoutEnlargement: true })
+			.resize(FULL_MAX_PX, FULL_MAX_PX, {
+				fit: 'inside',
+				withoutEnlargement: true,
+			})
 			.webp({ quality })
 			.toBuffer(),
 		sharp(buffer)

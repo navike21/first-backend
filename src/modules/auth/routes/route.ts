@@ -25,7 +25,10 @@ export function authApi(router: Router) {
 	router.post(
 		'/auth/change-password',
 		authenticate,
-		captureAudit({ action: AUDIT_ACTIONS.AUTH_PASSWORD_CHANGED, resource: 'auth' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.AUTH_PASSWORD_CHANGED,
+			resource: 'auth',
+		}),
 		authChangePassword,
 	);
 	router.get('/auth/sessions', authenticate, authGetSessions);

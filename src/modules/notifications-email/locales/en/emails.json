@@ -1,23 +1,23 @@
 {
-  "verifyEmail": {
-    "subject": "Verify your email address",
-    "heading": "Hi {{firstName}},",
-    "body": "Please verify your email address to activate your account. This link expires in 24 hours.",
-    "button": "Verify Email",
-    "safety": "If you didn't create an account, you can safely ignore this email."
-  },
-  "passwordReset": {
-    "subject": "Reset your password",
-    "heading": "Hi {{firstName}},",
-    "body": "We received a request to reset your password. Click the button below to create a new one. This link expires in 1 hour.",
-    "button": "Reset Password",
-    "safety": "If you didn't request a password reset, you can safely ignore this email. Your password won't change."
-  },
-  "welcomeEmail": {
-    "subject": "Welcome to First Backend!",
-    "heading": "Welcome, {{firstName}}!",
-    "body": "Your account has been verified and is now fully active. You're all set to get started.",
-    "thanks": "Thanks for joining us."
-  },
-  "footer": "© {{year}} First Backend. All rights reserved."
+	"verifyEmail": {
+		"subject": "Verify your email address",
+		"heading": "Hi {{firstName}},",
+		"body": "Please verify your email address to activate your account. This link expires in 24 hours.",
+		"button": "Verify Email",
+		"safety": "If you didn't create an account, you can safely ignore this email."
+	},
+	"passwordReset": {
+		"subject": "Reset your password",
+		"heading": "Hi {{firstName}},",
+		"body": "We received a request to reset your password. Click the button below to create a new one. This link expires in 1 hour.",
+		"button": "Reset Password",
+		"safety": "If you didn't request a password reset, you can safely ignore this email. Your password won't change."
+	},
+	"welcomeEmail": {
+		"subject": "Welcome to First Backend!",
+		"heading": "Welcome, {{firstName}}!",
+		"body": "Your account has been verified and is now fully active. You're all set to get started.",
+		"thanks": "Thanks for joining us."
+	},
+	"footer": "© {{year}} First Backend. All rights reserved."
 }

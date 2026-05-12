@@ -11,7 +11,9 @@ describe('AppSettingsUpdateSchema', () => {
 	});
 
 	it('succeeds with only general provided', () => {
-		const result = AppSettingsUpdateSchema.safeParse({ general: { appName: 'Test' } });
+		const result = AppSettingsUpdateSchema.safeParse({
+			general: { appName: 'Test' },
+		});
 		expect(result.success).toBe(true);
 	});
 

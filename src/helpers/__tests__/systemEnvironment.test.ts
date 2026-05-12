@@ -10,7 +10,8 @@ describe('isDevelopmentEnvironment', () => {
 
 	it('returns isDevelopment true when NODE_ENV is development', async () => {
 		process.env.NODE_ENV = SySTEM_ENVIRONMENT.DEVELOPMENT;
-		const { isDevelopmentEnvironment } = await import('@Helpers/systemEnvironment');
+		const { isDevelopmentEnvironment } =
+			await import('@Helpers/systemEnvironment');
 
 		const { isDevelopment } = isDevelopmentEnvironment();
 
@@ -19,7 +20,8 @@ describe('isDevelopmentEnvironment', () => {
 
 	it('returns isDevelopment false when NODE_ENV is production', async () => {
 		process.env.NODE_ENV = SySTEM_ENVIRONMENT.PRODUCTION;
-		const { isDevelopmentEnvironment } = await import('@Helpers/systemEnvironment');
+		const { isDevelopmentEnvironment } =
+			await import('@Helpers/systemEnvironment');
 
 		const { isDevelopment } = isDevelopmentEnvironment();
 

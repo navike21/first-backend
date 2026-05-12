@@ -15,6 +15,15 @@ vi.mock('@Modules/storage/infrastructure/ImageProcessor', () => ({
 
 vi.mock('@Helpers/uuid', () => ({ default: vi.fn(() => 'test-uuid') }));
 
+vi.mock('@Modules/storage/infrastructure/StorageFileModel', () => ({
+	default: {
+		create: vi.fn(async (data: unknown) => ({
+			...(data as object),
+			toObject: () => data,
+		})),
+	},
+}));
+
 import { uploadFile } from '../uploadFile';
 import { processRasterImage } from '@Modules/storage/infrastructure/ImageProcessor';
 
@@ -135,11 +144,13 @@ describe('uploadFile', () => {
 	});
 
 	it('propagates driver errors', async () => {
-		mockUploadBuffer.mockRejectedValue(new AppError({
-			statusCode: 500,
-			code: 'UPLOAD_FAILED',
-			message: 'Upload failed',
-		}));
+		mockUploadBuffer.mockRejectedValue(
+			new AppError({
+				statusCode: 500,
+				code: 'UPLOAD_FAILED',
+				message: 'Upload failed',
+			}),
+		);
 
 		await expect(uploadFile(baseInput)).rejects.toBeInstanceOf(AppError);
 	});

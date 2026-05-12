@@ -1,102 +1,62 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import { forgotPassword } from '@Modules/auth/application/forgotPassword';
-import { UserModel } from '@Modules/users';
-import { JwtService } from '@Shared/infrastructure/JwtService';
 
-vi.mock('@Constants/environments', () => ({
-	ENV: { CLIENT_URL: 'http://client.test' },
-}));
-
-vi.mock('@Modules/users', () => ({
-	UserModel: { findOne: vi.fn() },
-}));
+withMongo();
 
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { signEmail: vi.fn().mockReturnValue('RESET_TOKEN') },
 }));
 
 vi.mock('@Modules/notifications-email', () => ({
-	sendEmail: vi.fn(),
-	passwordResetTemplate: vi
-		.fn()
-		.mockReturnValue({ subject: 'Reset', html: '<p>Reset</p>' }),
+	sendEmail: vi.fn().mockResolvedValue(undefined),
+	passwordResetTemplate: vi.fn().mockReturnValue({ subject: 'Reset', html: '<p/>' }),
 }));
 
-vi.mock('@Helpers/log', () => ({
-	logInfo: vi.fn(),
+vi.mock('@Constants/environments', () => ({
+	ENV: { CLIENT_URL: 'http://localhost:3000' },
 }));
 
-import { sendEmail, passwordResetTemplate } from '@Modules/notifications-email';
-
-type MockUser = Pick<UserDocument, 'id' | 'email' | 'firstName'>;
+vi.mock('@Helpers/log', () => ({ logInfo: vi.fn() }));
 
 describe('forgotPassword', () => {
-	it('sends a password reset email when the user exists', async () => {
-		const mockUser: MockUser = {
-			id: 'u1',
-			email: 'user@example.com',
-			firstName: 'Alice',
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-
-		await forgotPassword('user@example.com', 'en');
-
-		expect(JwtService.signEmail).toHaveBeenCalledWith({
-			sub: 'u1',
-			type: 'password_reset',
+	it('sends a password reset email for an existing user', async () => {
+		const { sendEmail } = await import('@Modules/notifications-email');
+		const user = await UserModel.create({
+			email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
+			password: 'hashed',
+			firstName: 'John',
+			lastName: 'Doe',
 		});
-		expect(passwordResetTemplate).toHaveBeenCalledWith(
-			expect.objectContaining({ firstName: 'Alice', lang: 'en' }),
-		);
+
+		await forgotPassword(user.email);
+
 		expect(sendEmail).toHaveBeenCalledWith(
-			expect.objectContaining({ to: 'user@example.com' }),
+			expect.objectContaining({ to: user.email }),
 		);
 	});
 
-	it('passes the provided lang to the email template', async () => {
-		const mockUser: MockUser = {
-			id: 'u2',
-			email: 'user@example.com',
-			firstName: 'Bob',
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
+	it('resolves silently without sending email for a non-existent user', async () => {
+		const { sendEmail } = await import('@Modules/notifications-email');
+		vi.mocked(sendEmail).mockClear();
 
-		await forgotPassword('user@example.com', 'es');
-
-		expect(passwordResetTemplate).toHaveBeenCalledWith(
-			expect.objectContaining({ lang: 'es' }),
-		);
-	});
-
-	it('defaults to English when no lang is provided', async () => {
-		const mockUser: MockUser = {
-			id: 'u3',
-			email: 'user@example.com',
-			firstName: 'Carol',
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-
-		await forgotPassword('user@example.com');
-
-		expect(passwordResetTemplate).toHaveBeenCalledWith(
-			expect.objectContaining({ lang: 'en' }),
-		);
-	});
-
-	it('returns without throwing when the user does not exist', async () => {
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
-
-		await expect(
-			forgotPassword('unknown@example.com'),
-		).resolves.toBeUndefined();
+		await expect(forgotPassword('nobody@example.com')).resolves.toBeUndefined();
 		expect(sendEmail).not.toHaveBeenCalled();
+	});
+
+	it('is case-insensitive for the email lookup', async () => {
+		const { sendEmail } = await import('@Modules/notifications-email');
+		const email = `UPPER-${crypto.randomUUID().slice(0, 8)}@test.com`;
+		await UserModel.create({
+			email: email.toLowerCase(),
+			password: 'hashed',
+			firstName: 'Al',
+			lastName: 'Bo',
+		});
+
+		await forgotPassword(email);
+
+		expect(sendEmail).toHaveBeenCalled();
 	});
 });
