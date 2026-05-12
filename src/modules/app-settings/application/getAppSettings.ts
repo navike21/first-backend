@@ -1,5 +1,8 @@
 import AppSettingsModel from '../infrastructure/AppSettingsModel';
-import { APP_SETTINGS_DEFAULTS, type AppSettingsData } from '../constants/settingsDefaults';
+import {
+	APP_SETTINGS_DEFAULTS,
+	type AppSettingsData,
+} from '../constants/settingsDefaults';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 
 const CACHE_TTL_MS = 60_000;
@@ -13,7 +16,10 @@ export function clearSettingsCache(): void {
 function mergeWithDefaults(doc: Partial<AppSettingsData>): AppSettingsData {
 	return {
 		general: { ...APP_SETTINGS_DEFAULTS.general, ...doc.general },
-		notifications: { ...APP_SETTINGS_DEFAULTS.notifications, ...doc.notifications },
+		notifications: {
+			...APP_SETTINGS_DEFAULTS.notifications,
+			...doc.notifications,
+		},
 		appearance: { ...APP_SETTINGS_DEFAULTS.appearance, ...doc.appearance },
 	};
 }
@@ -24,7 +30,9 @@ export async function getAppSettings(): Promise<AppSettingsData> {
 	}
 
 	const doc = await AppSettingsModel.findOne({ id: 'singleton' }).lean();
-	const data = doc ? mergeWithDefaults(cleanMongoFields(doc) as AppSettingsData) : APP_SETTINGS_DEFAULTS;
+	const data = doc
+		? mergeWithDefaults(cleanMongoFields(doc) as AppSettingsData)
+		: APP_SETTINGS_DEFAULTS;
 
 	cache = { data, expiresAt: Date.now() + CACHE_TTL_MS };
 	return data;

@@ -9,8 +9,12 @@ vi.mock('@Helpers/responseStructure', () => ({
 	errorResponse: vi.fn(),
 }));
 vi.mock('@Modules/auth', () => ({
-	authenticate: vi.fn((_req: unknown, _res: unknown, next: () => void) => next()),
-	authorize: vi.fn(() => vi.fn((_req: unknown, _res: unknown, next: () => void) => next())),
+	authenticate: vi.fn((_req: unknown, _res: unknown, next: () => void) =>
+		next(),
+	),
+	authorize: vi.fn(() =>
+		vi.fn((_req: unknown, _res: unknown, next: () => void) => next()),
+	),
 }));
 vi.mock('@Modules/subscribers/application/registerSubscriber', () => ({
 	registerSubscriber: vi.fn(),

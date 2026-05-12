@@ -29,7 +29,11 @@ export async function createUser(input: CreateUserInput, lang = 'en') {
 
 	await sendEmail({
 		to: user.email,
-		...verifyEmailTemplate({ firstName: user.firstName, verificationUrl, lang }),
+		...verifyEmailTemplate({
+			firstName: user.firstName,
+			verificationUrl,
+			lang,
+		}),
 	});
 
 	return {

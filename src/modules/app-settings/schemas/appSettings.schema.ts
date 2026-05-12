@@ -2,19 +2,39 @@ import { z } from 'zod';
 
 const generalUpdateSchema = z
 	.object({
-		appName: z.string({ error: 'APP_SETTINGS_APP_NAME_INVALID' }).min(1).max(100).optional(),
-		defaultLanguage: z.string({ error: 'APP_SETTINGS_LANG_INVALID' }).min(2).max(10).optional(),
+		appName: z
+			.string({ error: 'APP_SETTINGS_APP_NAME_INVALID' })
+			.min(1)
+			.max(100)
+			.optional(),
+		defaultLanguage: z
+			.string({ error: 'APP_SETTINGS_LANG_INVALID' })
+			.min(2)
+			.max(10)
+			.optional(),
 		timezone: z.string({ error: 'APP_SETTINGS_TIMEZONE_INVALID' }).optional(),
-		maintenanceMode: z.boolean({ error: 'APP_SETTINGS_MAINTENANCE_INVALID' }).optional(),
+		maintenanceMode: z
+			.boolean({ error: 'APP_SETTINGS_MAINTENANCE_INVALID' })
+			.optional(),
 	})
 	.optional();
 
 const notificationsUpdateSchema = z
 	.object({
-		emailSenderName: z.string({ error: 'APP_SETTINGS_SENDER_NAME_INVALID' }).min(1).max(100).optional(),
-		emailSenderAddress: z.email({ message: 'APP_SETTINGS_EMAIL_INVALID' }).optional(),
-		welcomeEmailEnabled: z.boolean({ error: 'APP_SETTINGS_WELCOME_EMAIL_INVALID' }).optional(),
-		notificationsEnabled: z.boolean({ error: 'APP_SETTINGS_NOTIFICATIONS_INVALID' }).optional(),
+		emailSenderName: z
+			.string({ error: 'APP_SETTINGS_SENDER_NAME_INVALID' })
+			.min(1)
+			.max(100)
+			.optional(),
+		emailSenderAddress: z
+			.email({ message: 'APP_SETTINGS_EMAIL_INVALID' })
+			.optional(),
+		welcomeEmailEnabled: z
+			.boolean({ error: 'APP_SETTINGS_WELCOME_EMAIL_INVALID' })
+			.optional(),
+		notificationsEnabled: z
+			.boolean({ error: 'APP_SETTINGS_NOTIFICATIONS_INVALID' })
+			.optional(),
 	})
 	.optional();
 

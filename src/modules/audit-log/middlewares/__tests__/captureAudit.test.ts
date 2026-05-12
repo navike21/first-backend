@@ -12,7 +12,10 @@ vi.mock('../../application/createAuditEntry', () => ({
 
 import { captureAudit } from '../captureAudit';
 
-function buildRes(statusCode: number, locals: Record<string, unknown> = {}): Response {
+function buildRes(
+	statusCode: number,
+	locals: Record<string, unknown> = {},
+): Response {
 	const emitter = new EventEmitter();
 	return Object.assign(emitter, { statusCode, locals }) as unknown as Response;
 }
@@ -78,7 +81,10 @@ describe('captureAudit', () => {
 	it('falls back to socket.remoteAddress when x-forwarded-for is absent', async () => {
 		mockCreateAuditEntry.mockResolvedValue(undefined);
 		const res = buildRes(201);
-		const req = buildReq({ headers: {}, socket: { remoteAddress: '9.9.9.9' } as never });
+		const req = buildReq({
+			headers: {},
+			socket: { remoteAddress: '9.9.9.9' } as never,
+		});
 
 		captureAudit({ action: 'storage:uploaded', resource: 'storage' })(
 			req,
@@ -132,7 +138,9 @@ describe('captureAudit', () => {
 	it('calls getMetadata when provided', async () => {
 		mockCreateAuditEntry.mockResolvedValue(undefined);
 		const res = buildRes(200);
-		const req = buildReq({ body: { email: 'test@example.com' } } as Partial<Request>);
+		const req = buildReq({
+			body: { email: 'test@example.com' },
+		} as Partial<Request>);
 		const getMetadata = vi.fn().mockReturnValue({ email: 'test@example.com' });
 
 		captureAudit({ action: 'auth:login', resource: 'auth', getMetadata })(

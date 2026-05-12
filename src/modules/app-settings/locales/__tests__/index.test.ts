@@ -12,7 +12,8 @@ describe('appSettingsLocales', () => {
 	it('each locale has the required message keys', () => {
 		const keys = ['SUCCESS_APP_SETTINGS_FOUND', 'SUCCESS_APP_SETTINGS_UPDATED'];
 		for (const lang of Object.keys(appSettingsLocales)) {
-			const locale = appSettingsLocales[lang as keyof typeof appSettingsLocales];
+			const locale =
+				appSettingsLocales[lang as keyof typeof appSettingsLocales];
 			for (const key of keys) {
 				expect(locale).toHaveProperty(key);
 				expect(typeof (locale as Record<string, string>)[key]).toBe('string');
