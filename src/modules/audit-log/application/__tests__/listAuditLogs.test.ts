@@ -1,143 +1,137 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-
-const { mockFind, mockCountDocuments } = vi.hoisted(() => ({
-	mockFind: vi.fn(),
-	mockCountDocuments: vi.fn(),
-}));
-
-vi.mock('../../infrastructure/AuditLogModel', () => ({
-	default: { find: mockFind, countDocuments: mockCountDocuments },
-}));
-
+import { describe, it, expect, beforeEach } from 'vitest';
+import { withMongo } from '@test/withMongo';
 import { listAuditLogs } from '../listAuditLogs';
+import { createAuditEntry } from '../createAuditEntry';
 
-function chainedFind(docs: object[]) {
-	const chain = {
-		sort: vi.fn().mockReturnThis(),
-		skip: vi.fn().mockReturnThis(),
-		limit: vi.fn().mockReturnThis(),
-		lean: vi.fn().mockResolvedValue(docs),
-	};
-	mockFind.mockReturnValue(chain);
-	return chain;
+withMongo();
+
+async function seed() {
+	await createAuditEntry({
+		action: 'auth:login',
+		resource: 'auth',
+		userId: 'u1',
+		ipAddress: '1.1.1.1',
+	});
+	await createAuditEntry({
+		action: 'auth:logout',
+		resource: 'auth',
+		userId: 'u2',
+	});
+	await createAuditEntry({
+		action: 'users:create',
+		resource: 'users',
+		userId: 'u1',
+		resourceId: 'new-user',
+	});
+	await createAuditEntry({
+		action: 'storage:upload',
+		resource: 'storage',
+		userId: 'u3',
+	});
+	await createAuditEntry({
+		action: 'auth:login',
+		resource: 'auth',
+		userId: 'u3',
+	});
 }
 
 describe('listAuditLogs', () => {
-	beforeEach(() => vi.clearAllMocks());
+	beforeEach(seed);
 
-	it('returns data and meta with no filters', async () => {
-		chainedFind([{ id: '1', action: 'auth:login', resource: 'auth' }]);
-		mockCountDocuments.mockResolvedValue(1);
-
+	it('returns all logs with default pagination when no filters', async () => {
 		const result = await listAuditLogs({});
 
-		expect(mockFind).toHaveBeenCalledWith({});
-		expect(result.data).toHaveLength(1);
+		expect(result.data.length).toBe(5);
 		expect(result.meta).toBeDefined();
+		expect(result.meta.total).toBe(5);
+		expect(result.meta.page).toBe(1);
 	});
 
-	it('applies userId filter', async () => {
-		chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
+	it('filters by userId', async () => {
+		const result = await listAuditLogs({ userId: 'u1' });
 
-		await listAuditLogs({ userId: 'user-1' });
-
-		expect(mockFind).toHaveBeenCalledWith({ userId: 'user-1' });
+		expect(result.data.length).toBe(2);
+		expect(
+			result.data.every((d: { userId: string }) => d.userId === 'u1'),
+		).toBe(true);
 	});
 
-	it('applies action filter', async () => {
-		chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
+	it('filters by action', async () => {
+		const result = await listAuditLogs({ action: 'auth:login' });
 
-		await listAuditLogs({ action: 'auth:login' });
-
-		expect(mockFind).toHaveBeenCalledWith({ action: 'auth:login' });
+		expect(result.data.length).toBe(2);
+		expect(
+			result.data.every((d: { action: string }) => d.action === 'auth:login'),
+		).toBe(true);
 	});
 
-	it('applies resource filter', async () => {
-		chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
+	it('filters by resource', async () => {
+		const result = await listAuditLogs({ resource: 'auth' });
 
-		await listAuditLogs({ resource: 'auth' });
-
-		expect(mockFind).toHaveBeenCalledWith({ resource: 'auth' });
+		expect(result.data.length).toBe(3);
+		expect(
+			result.data.every((d: { resource: string }) => d.resource === 'auth'),
+		).toBe(true);
 	});
 
-	it('applies dateFrom filter only', async () => {
-		chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
+	it('filters by dateFrom (inclusive)', async () => {
+		const past = new Date(Date.now() - 1000).toISOString();
+		const result = await listAuditLogs({ dateFrom: past });
 
-		await listAuditLogs({ dateFrom: '2024-01-01T00:00:00Z' });
+		expect(result.data.length).toBe(5);
+	});
 
-		expect(mockFind).toHaveBeenCalledWith(
-			expect.objectContaining({
-				occurredAt: expect.objectContaining({ $gte: expect.any(Date) }),
-			}),
+	it('filters by dateTo (returns no results if in the past)', async () => {
+		const past = new Date(Date.now() - 60_000).toISOString();
+		const result = await listAuditLogs({ dateTo: past });
+
+		expect(result.data.length).toBe(0);
+	});
+
+	it('paginates correctly', async () => {
+		const page1 = await listAuditLogs({ page: 1, limit: 2 });
+		const page2 = await listAuditLogs({ page: 2, limit: 2 });
+
+		expect(page1.data.length).toBe(2);
+		expect(page2.data.length).toBe(2);
+		expect(page1.meta.total).toBe(5);
+
+		const ids1 = page1.data.map((d: { id: string }) => d.id);
+		const ids2 = page2.data.map((d: { id: string }) => d.id);
+		expect(ids1.every((id: string) => !ids2.includes(id))).toBe(true);
+	});
+
+	it('returns empty data when no matches', async () => {
+		const result = await listAuditLogs({ userId: 'nonexistent' });
+
+		expect(result.data.length).toBe(0);
+		expect(result.meta.total).toBe(0);
+	});
+
+	it('combines userId and resource filters', async () => {
+		const result = await listAuditLogs({ userId: 'u1', resource: 'auth' });
+
+		expect(result.data.length).toBe(1);
+		expect(result.data[0].action).toBe('auth:login');
+	});
+
+	it('returns logs sorted by occurredAt descending (most recent first)', async () => {
+		const result = await listAuditLogs({ limit: 5 });
+
+		const dates = result.data.map((d: { occurredAt: string | Date }) =>
+			new Date(d.occurredAt).getTime(),
 		);
+		for (let i = 0; i < dates.length - 1; i++) {
+			expect(dates[i]).toBeGreaterThanOrEqual(dates[i + 1]);
+		}
 	});
 
-	it('applies dateTo filter only', async () => {
-		chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
+	it('strips _id and __v from results', async () => {
+		const result = await listAuditLogs({});
 
-		await listAuditLogs({ dateTo: '2024-12-31T23:59:59Z' });
-
-		expect(mockFind).toHaveBeenCalledWith(
-			expect.objectContaining({
-				occurredAt: expect.objectContaining({ $lte: expect.any(Date) }),
-			}),
-		);
-	});
-
-	it('applies both dateFrom and dateTo filters', async () => {
-		chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
-
-		await listAuditLogs({
-			dateFrom: '2024-01-01T00:00:00Z',
-			dateTo: '2024-12-31T23:59:59Z',
-		});
-
-		const query = mockFind.mock.calls[0][0];
-		expect(query.occurredAt.$gte).toBeInstanceOf(Date);
-		expect(query.occurredAt.$lte).toBeInstanceOf(Date);
-	});
-
-	it('calculates correct skip for page 2', async () => {
-		const chain = chainedFind([]);
-		mockCountDocuments.mockResolvedValue(30);
-
-		await listAuditLogs({ page: 2, limit: 10 });
-
-		expect(chain.skip).toHaveBeenCalledWith(10);
-		expect(chain.limit).toHaveBeenCalledWith(10);
-	});
-
-	it('uses default page=1 and limit=20 when not provided', async () => {
-		const chain = chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
-
-		await listAuditLogs({});
-
-		expect(chain.skip).toHaveBeenCalledWith(0);
-		expect(chain.limit).toHaveBeenCalledWith(20);
-	});
-
-	it('applies all filters combined', async () => {
-		chainedFind([]);
-		mockCountDocuments.mockResolvedValue(0);
-
-		await listAuditLogs({
-			userId: 'u1',
-			action: 'auth:login',
-			resource: 'auth',
-			dateFrom: '2024-01-01T00:00:00Z',
-		});
-
-		const query = mockFind.mock.calls[0][0];
-		expect(query.userId).toBe('u1');
-		expect(query.action).toBe('auth:login');
-		expect(query.resource).toBe('auth');
-		expect(query.occurredAt.$gte).toBeInstanceOf(Date);
+		for (const entry of result.data) {
+			expect(entry).not.toHaveProperty('_id');
+			expect(entry).not.toHaveProperty('__v');
+		}
 	});
 });
