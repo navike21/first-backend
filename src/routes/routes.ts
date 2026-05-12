@@ -12,6 +12,8 @@ import { appSettingsApi } from '@Modules/app-settings';
 import { clientsApi } from '@Modules/clients';
 import { servicesApi } from '@Modules/services';
 import { portfolioApi } from '@Modules/portfolio';
+import { pagesApi } from '@Modules/pages';
+import { teamApi } from '@Modules/team';
 
 const router: Router = Router();
 
@@ -30,6 +32,8 @@ const mainRouter = () => {
 	clientsApi(v1Router);
 	servicesApi(v1Router);
 	portfolioApi(v1Router);
+	pagesApi(v1Router);
+	teamApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 

@@ -1,0 +1,8 @@
+{
+	"SUCCESS_TEAM_MEMBER_CREATE": "团队成员创建成功",
+	"SUCCESS_TEAM_MEMBER_LIST": "团队成员列表获取成功",
+	"SUCCESS_TEAM_MEMBER_FOUND": "团队成员查找成功",
+	"SUCCESS_TEAM_MEMBER_UPDATE": "团队成员更新成功",
+	"SUCCESS_TEAM_MEMBER_DELETED": "团队成员删除成功",
+	"TEAM_MEMBER_NOT_FOUND": "团队成员未找到"
+}

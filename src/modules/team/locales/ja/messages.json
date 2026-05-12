@@ -1,0 +1,8 @@
+{
+	"SUCCESS_TEAM_MEMBER_CREATE": "チームメンバーが正常に作成されました",
+	"SUCCESS_TEAM_MEMBER_LIST": "チームメンバー一覧が正常に取得されました",
+	"SUCCESS_TEAM_MEMBER_FOUND": "チームメンバーが正常に見つかりました",
+	"SUCCESS_TEAM_MEMBER_UPDATE": "チームメンバーが正常に更新されました",
+	"SUCCESS_TEAM_MEMBER_DELETED": "チームメンバーが正常に削除されました",
+	"TEAM_MEMBER_NOT_FOUND": "チームメンバーが見つかりません"
+}
