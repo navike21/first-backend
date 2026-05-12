@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAGE_CREATE": "Página criada com sucesso",
+	"SUCCESS_PAGE_LIST": "Páginas recuperadas com sucesso",
+	"SUCCESS_PAGE_FOUND": "Página encontrada com sucesso",
+	"SUCCESS_PAGE_UPDATE": "Página atualizada com sucesso",
+	"SUCCESS_PAGE_DELETED": "Página excluída com sucesso",
+	"SUCCESS_PAGE_SECTION_ADDED": "Seção adicionada com sucesso",
+	"SUCCESS_PAGE_SECTION_UPDATED": "Seção atualizada com sucesso",
+	"SUCCESS_PAGE_SECTION_DELETED": "Seção excluída com sucesso",
+	"SUCCESS_PAGE_SECTIONS_REORDERED": "Seções reordenadas com sucesso",
+	"PAGE_NOT_FOUND": "Página não encontrada",
+	"PAGE_SLUG_CONFLICT": "Já existe uma página com este slug",
+	"PAGE_SECTION_NOT_FOUND": "Seção não encontrada"
+}

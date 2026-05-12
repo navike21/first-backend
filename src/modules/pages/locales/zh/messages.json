@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAGE_CREATE": "页面创建成功",
+	"SUCCESS_PAGE_LIST": "页面检索成功",
+	"SUCCESS_PAGE_FOUND": "页面查找成功",
+	"SUCCESS_PAGE_UPDATE": "页面更新成功",
+	"SUCCESS_PAGE_DELETED": "页面删除成功",
+	"SUCCESS_PAGE_SECTION_ADDED": "部分添加成功",
+	"SUCCESS_PAGE_SECTION_UPDATED": "部分更新成功",
+	"SUCCESS_PAGE_SECTION_DELETED": "部分删除成功",
+	"SUCCESS_PAGE_SECTIONS_REORDERED": "部分重新排序成功",
+	"PAGE_NOT_FOUND": "页面未找到",
+	"PAGE_SLUG_CONFLICT": "具有此 slug 的页面已存在",
+	"PAGE_SECTION_NOT_FOUND": "部分未找到"
+}

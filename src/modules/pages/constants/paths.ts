@@ -1,0 +1,10 @@
+export const PAGES_PATH_LIST_PUBLIC = '/pages';
+export const PAGES_PATH_LIST_ADMIN = '/pages/admin';
+export const PAGES_PATH_GET_BY_SLUG = '/pages/:slug';
+export const PAGES_PATH_CREATE = '/pages';
+export const PAGES_PATH_UPDATE = '/pages/:slug';
+export const PAGES_PATH_DELETE = '/pages/:slug';
+export const PAGES_PATH_SECTION_ADD = '/pages/:slug/sections';
+export const PAGES_PATH_SECTION_UPDATE = '/pages/:slug/sections/:sectionId';
+export const PAGES_PATH_SECTION_DELETE = '/pages/:slug/sections/:sectionId';
+export const PAGES_PATH_SECTIONS_REORDER = '/pages/:slug/sections/reorder';
