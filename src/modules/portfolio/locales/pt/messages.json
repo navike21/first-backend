@@ -1,0 +1,7 @@
+{
+	"SUCCESS_PORTFOLIO_CREATE": "Item do portfólio criado com sucesso",
+	"SUCCESS_PORTFOLIO_LIST": "Lista do portfólio obtida com sucesso",
+	"SUCCESS_PORTFOLIO_FOUND": "Item do portfólio encontrado com sucesso",
+	"SUCCESS_PORTFOLIO_UPDATE": "Item do portfólio atualizado com sucesso",
+	"SUCCESS_PORTFOLIO_DELETED": "Item do portfólio excluído com sucesso"
+}

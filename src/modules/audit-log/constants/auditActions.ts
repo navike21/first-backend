@@ -18,6 +18,15 @@ export const AUDIT_ACTIONS = {
 	USER_GROUPS_CREATED: 'user-groups:created',
 	USER_GROUPS_UPDATED: 'user-groups:updated',
 	USER_GROUPS_DELETED: 'user-groups:deleted',
+	CLIENTS_CREATED: 'clients:created',
+	CLIENTS_UPDATED: 'clients:updated',
+	CLIENTS_SOFT_DELETED: 'clients:soft_deleted',
+	SERVICES_CREATED: 'services:created',
+	SERVICES_UPDATED: 'services:updated',
+	SERVICES_SOFT_DELETED: 'services:soft_deleted',
+	PORTFOLIO_CREATED: 'portfolio:created',
+	PORTFOLIO_UPDATED: 'portfolio:updated',
+	PORTFOLIO_SOFT_DELETED: 'portfolio:soft_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];
