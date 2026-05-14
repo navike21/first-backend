@@ -1,5 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 import { SubscriberSchema } from '../types/subscriber.schema';
 
@@ -18,25 +18,14 @@ export async function registerSubscriberBulk(data: SubscriberSchema[]) {
 		};
 
 		if (mongoError.code === 11000) {
-			setThrowError({
-				statusCode: 409,
-				message:
-					'One or more subscribers already exist with duplicate unique fields',
-				code: 'ERROR_DUPLICATE_SUBSCRIBER',
-				details: {
-					duplicateField: Object.keys(mongoError.keyPattern ?? {}),
-					duplicateValue: mongoError.keyValue,
-				},
+			AppError.conflict('ERROR_DUPLICATE_SUBSCRIBER', 'One or more subscribers already exist with duplicate unique fields', {
+				duplicateField: Object.keys(mongoError.keyPattern ?? {}),
+				duplicateValue: mongoError.keyValue,
 			});
 		}
 
 		if (mongoError.errors) {
-			setThrowError({
-				statusCode: 400,
-				message: 'Validation error in one or more subscribers',
-				code: 'ERROR_VALIDATION_FAILED',
-				details: mongoError.errors,
-			});
+			AppError.badRequest('ERROR_VALIDATION_FAILED', 'Validation error in one or more subscribers', mongoError.errors);
 		}
 
 		throw error;

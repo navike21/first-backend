@@ -1,19 +1,15 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { JwtService } from '@Shared/infrastructure/JwtService';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 
 export const authenticate = asyncHandler(async (req, res, next) => {
 	const authHeader = req.headers.authorization;
 
 	if (!authHeader?.startsWith('Bearer ')) {
-		setThrowError({
-			statusCode: 401,
-			code: 'UNAUTHORIZED',
-			message: 'Authentication required',
-		});
+		AppError.unauthorized('UNAUTHORIZED', 'Authentication required');
 	}
 
-	const token = authHeader!.split(' ')[1];
+	const token = authHeader.split(' ')[1];
 
 	try {
 		const payload = JwtService.verifyAccess(token);
@@ -21,10 +17,6 @@ export const authenticate = asyncHandler(async (req, res, next) => {
 		res.locals.permissions = payload.permissions ?? [];
 		next();
 	} catch {
-		setThrowError({
-			statusCode: 401,
-			code: 'INVALID_TOKEN',
-			message: 'Invalid or expired token',
-		});
+		AppError.unauthorized('INVALID_TOKEN', 'Invalid or expired token');
 	}
 });

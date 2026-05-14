@@ -1,6 +1,6 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import ServiceModel from '../infrastructure/ServiceModel';
 
 interface ListServicesPublicParams {
@@ -25,11 +25,7 @@ export async function listServicesPublic({
 	]);
 
 	if (data.length === 0) {
-		setThrowError({
-			statusCode: 404,
-			code: 'SERVICE_LIST_EMPTY',
-			message: 'Service list empty',
-		});
+		AppError.notFound('SERVICE_LIST_EMPTY', 'Service list empty');
 	}
 
 	return {

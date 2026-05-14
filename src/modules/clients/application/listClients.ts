@@ -2,7 +2,7 @@ import { QueryFilter } from 'mongoose';
 import { ACTIVE } from '@Constants/statusRegister';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import ClientModel from '../infrastructure/ClientModel';
 import type { ClientDocument } from '../infrastructure/ClientModel';
 
@@ -48,11 +48,7 @@ export async function listClients({
 	]);
 
 	if (data.length === 0) {
-		setThrowError({
-			statusCode: 404,
-			code: 'CLIENT_LIST_EMPTY',
-			message: 'Client list empty',
-		});
+		AppError.notFound('CLIENT_LIST_EMPTY', 'Client list empty');
 	}
 
 	return {

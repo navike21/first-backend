@@ -1,6 +1,6 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { BulkDeleteSubscriberSchema } from '../schemas/subscriberBulkDeleteSubscriberSchema';
 import { deleteSubscribersBulk } from '../application/deleteSubscribersBulk';
 
@@ -8,11 +8,7 @@ export const subscriberDeletePhysicalBulk = asyncHandler(async (req, res) => {
 	const parsed = BulkDeleteSubscriberSchema.safeParse(req.body);
 
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			message: parsed.error.issues.map((i) => i.message).join(', '),
-			code: 'ERROR_INVALID_BODY',
-		});
+		AppError.unprocessable('ERROR_INVALID_BODY', parsed.error.issues.map((i) => i.message).join(', '));
 	}
 
 	const data = await deleteSubscribersBulk(parsed.data.ids);

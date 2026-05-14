@@ -1,26 +1,21 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { createService } from '../application/createService';
 import { CreateServiceSchema } from '../schemas/service.schema';
 
 export const serviceCreateController = asyncHandler(async (req, res) => {
 	const parsed = CreateServiceSchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-			details: {
-				validation: parsed.error.issues.map((i) => ({
-					path: i.path.join('.'),
-					message: i.message,
-				})),
-			},
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
+			validation: parsed.error.issues.map((i) => ({
+				path: i.path.join('.'),
+				message: i.message,
+			})),
 		});
 	}
 
-	const data = await createService(parsed.data!);
+	const data = await createService(parsed.data);
 	successResponse(res, {
 		statusCode: 201,
 		code: 'SUCCESS_SERVICE_CREATE',

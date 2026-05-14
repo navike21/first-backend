@@ -45,5 +45,5 @@ export async function updateAppSettings(
 
 	clearSettingsCache();
 
-	return cleanMongoFields(updated!) as AppSettingsData;
+	return cleanMongoFields(updated) as AppSettingsData;
 }
