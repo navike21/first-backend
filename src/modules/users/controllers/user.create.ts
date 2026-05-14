@@ -1,22 +1,17 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { CreateUserSchema } from '../schemas/user.schema';
 import { createUser } from '../application/createUser';
 
 export const createUserController = asyncHandler(async (req, res) => {
 	const parsed = CreateUserSchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-			details: {
-				validation: parsed.error.issues.map((i) => ({
-					path: i.path.join('.'),
-					message: i.message,
-				})),
-			},
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
+			validation: parsed.error.issues.map((i) => ({
+				path: i.path.join('.'),
+				message: i.message,
+			})),
 		});
 	}
 

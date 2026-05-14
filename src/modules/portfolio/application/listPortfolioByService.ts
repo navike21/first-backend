@@ -1,6 +1,6 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import ServiceModel from '@Modules/services/infrastructure/ServiceModel';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
@@ -20,15 +20,11 @@ export async function listPortfolioByService({
 		status: 'active',
 	}).lean();
 	if (!service) {
-		setThrowError({
-			statusCode: 404,
-			code: 'SERVICE_NOT_FOUND',
-			message: 'Service not found',
-		});
+		AppError.notFound('SERVICE_NOT_FOUND', 'Service not found');
 	}
 
 	const skip = (page - 1) * limit;
-	const query = { serviceIds: service!.id, status: 'published' };
+	const query = { serviceIds: service.id, status: 'published' };
 
 	const [data, total] = await Promise.all([
 		PortfolioModel.find(query)
@@ -41,11 +37,7 @@ export async function listPortfolioByService({
 	]);
 
 	if (data.length === 0) {
-		setThrowError({
-			statusCode: 404,
-			code: 'PORTFOLIO_LIST_EMPTY',
-			message: 'Portfolio list empty',
-		});
+		AppError.notFound('PORTFOLIO_LIST_EMPTY', 'Portfolio list empty');
 	}
 
 	return {

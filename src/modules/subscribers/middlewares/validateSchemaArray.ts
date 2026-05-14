@@ -1,4 +1,4 @@
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import type { Request, Response, NextFunction } from 'express';
 import type { ZodType } from 'zod';
 import { isValidISODateString } from '@Helpers/isValidISODateString';
@@ -8,11 +8,7 @@ export const validateSchemaArray =
 	<T>(schema: ZodType<T>) =>
 	(req: Request, _: Response, next: NextFunction) => {
 		if (!Array.isArray(req.body)) {
-			setThrowError({
-				code: 'VALIDATION_SCHEMA_ARRAY_ERROR',
-				statusCode: 422,
-				message: 'Request body must be an array',
-			});
+			AppError.unprocessable('VALIDATION_SCHEMA_ARRAY_ERROR', 'Request body must be an array');
 		}
 
 		const parsedBody = req.body.map((item: SubscriberSchema) => {
@@ -33,17 +29,12 @@ export const validateSchemaArray =
 		const { data, success, error } = schema.array().safeParse(parsedBody);
 
 		if (!success) {
-			setThrowError({
-				code: 'VALIDATION_SCHEMA_ARRAY_ERROR',
-				statusCode: 422,
-				details: {
-					validation: error.issues.map((issue) => ({
-						index: issue.path[0],
-						path: issue.path.slice(1).join('.'),
-						message: issue.message,
-					})),
-				},
-				message: 'Validation failed for one or more subscribers',
+			AppError.unprocessable('VALIDATION_SCHEMA_ARRAY_ERROR', 'Validation failed for one or more subscribers', {
+				validation: error.issues.map((issue) => ({
+					index: issue.path[0],
+					path: issue.path.slice(1).join('.'),
+					message: issue.message,
+				})),
 			});
 		}
 

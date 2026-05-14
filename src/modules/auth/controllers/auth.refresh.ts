@@ -1,6 +1,6 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { ENV } from '@Constants/environments';
 import { rotateRefreshToken } from '../application/refreshToken';
 import { REFRESH_COOKIE, AUTH_COOKIE_PATH } from '../constants/authCookies';
@@ -9,11 +9,7 @@ export const authRefresh = asyncHandler(async (req, res) => {
 	const token = req.cookies?.[REFRESH_COOKIE] as string | undefined;
 
 	if (!token) {
-		setThrowError({
-			statusCode: 401,
-			code: 'UNAUTHORIZED',
-			message: 'Refresh token not found',
-		});
+		AppError.unauthorized('UNAUTHORIZED', 'Refresh token not found');
 	}
 
 	const ip =
@@ -23,7 +19,7 @@ export const authRefresh = asyncHandler(async (req, res) => {
 	const userAgent = req.headers['user-agent'] ?? '';
 
 	const { accessToken, refreshToken, refreshExpiresMs } =
-		await rotateRefreshToken(token!, userAgent, ip);
+		await rotateRefreshToken(token, userAgent, ip);
 
 	res.cookie(REFRESH_COOKIE, refreshToken, {
 		httpOnly: true,

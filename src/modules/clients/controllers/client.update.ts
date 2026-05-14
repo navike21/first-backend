@@ -2,26 +2,21 @@ import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
 import { updateClient } from '../application/updateClient';
 import { UpdateClientSchema } from '../schemas/client.schema';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 
 export const clientUpdateController = asyncHandler(async (req, res) => {
 	const id = String(req.params.id);
 	const parsed = UpdateClientSchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-			details: {
-				validation: parsed.error.issues.map((i) => ({
-					path: i.path.join('.'),
-					message: i.message,
-				})),
-			},
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
+			validation: parsed.error.issues.map((i) => ({
+				path: i.path.join('.'),
+				message: i.message,
+			})),
 		});
 	}
 
-	const data = await updateClient(id, parsed.data!);
+	const data = await updateClient(id, parsed.data);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_CLIENT_UPDATE',

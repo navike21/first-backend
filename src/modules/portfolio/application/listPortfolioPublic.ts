@@ -1,6 +1,6 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
 interface ListPortfolioPublicParams {
@@ -29,11 +29,7 @@ export async function listPortfolioPublic({
 	]);
 
 	if (data.length === 0) {
-		setThrowError({
-			statusCode: 404,
-			code: 'PORTFOLIO_LIST_EMPTY',
-			message: 'Portfolio list empty',
-		});
+		AppError.notFound('PORTFOLIO_LIST_EMPTY', 'Portfolio list empty');
 	}
 
 	return {
