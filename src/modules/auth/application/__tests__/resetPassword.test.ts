@@ -1,98 +1,105 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
+import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
+import SessionModel from '@Modules/auth/infrastructure/SessionModel';
 import { resetPassword } from '@Modules/auth/application/resetPassword';
 import { InvalidTokenError } from '@Modules/auth/domain/errors/AuthErrors';
 import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
-import { JwtService } from '@Shared/infrastructure/JwtService';
-import { UserModel } from '@Modules/users';
-import { HashedPassword } from '@Modules/auth/domain/value-objects/HashedPassword';
-import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
-import SessionModel from '@Modules/auth/infrastructure/SessionModel';
+
+withMongo();
 
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { verifyEmail: vi.fn() },
 }));
 
-vi.mock('@Modules/users', () => ({
-	UserModel: { findOne: vi.fn(), findOneAndUpdate: vi.fn() },
-}));
-
 vi.mock('@Modules/auth/domain/value-objects/HashedPassword', () => ({
-	HashedPassword: { hash: vi.fn().mockResolvedValue('new-hashed') },
+	HashedPassword: { hash: vi.fn().mockResolvedValue('new-hash') },
 }));
 
-vi.mock('@Modules/auth/infrastructure/RefreshTokenModel', () => ({
-	default: { updateMany: vi.fn() },
-}));
-
-vi.mock('@Modules/auth/infrastructure/SessionModel', () => ({
-	default: { deleteMany: vi.fn() },
-}));
-
-type MockUser = Pick<UserDocument, 'id'>;
+const seedUser = () =>
+	UserModel.create({
+		email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		password: 'old-hash',
+		firstName: 'John',
+		lastName: 'Doe',
+	});
 
 describe('resetPassword', () => {
-	it('resets the password and revokes all sessions when token is valid', async () => {
-		// Arrange
+	it('updates the password in the database', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const user = await seedUser();
+
 		vi.mocked(JwtService.verifyEmail).mockReturnValue({
-			sub: 'u1',
+			sub: user.id,
 			type: 'password_reset',
 		});
-		const mockUser: MockUser = { id: 'u1' };
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(UserModel.findOneAndUpdate).mockResolvedValue(null);
-		vi.mocked(RefreshTokenModel.updateMany).mockResolvedValue(
-			undefined as never,
-		);
-		vi.mocked(SessionModel.deleteMany).mockResolvedValue(undefined as never);
 
-		// Act
-		await resetPassword('valid-token', 'newpass');
+		await resetPassword('valid-token', 'NewPass1!');
 
-		// Assert
-		expect(HashedPassword.hash).toHaveBeenCalledWith('newpass');
-		expect(UserModel.findOneAndUpdate).toHaveBeenCalled();
-		expect(SessionModel.deleteMany).toHaveBeenCalledWith({ userId: 'u1' });
+		const updated = await UserModel.findOne({ id: user.id });
+		expect(updated!.password).toBe('new-hash');
+	});
+
+	it('revokes active RefreshTokens and deletes Sessions', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const user = await seedUser();
+		await RefreshTokenModel.create({
+			jti: 'active-jti',
+			userId: user.id,
+			expiresAt: new Date(Date.now() + 86400000),
+		});
+		await SessionModel.create({
+			userId: user.id,
+			userAgent: 'ua',
+			ip: '1.1.1.1',
+		});
+
+		vi.mocked(JwtService.verifyEmail).mockReturnValue({
+			sub: user.id,
+			type: 'password_reset',
+		});
+
+		await resetPassword('valid-token', 'NewPass1!');
+
+		const rt = await RefreshTokenModel.findOne({ jti: 'active-jti' });
+		expect(rt!.revokedAt).toBeInstanceOf(Date);
+
+		const session = await SessionModel.findOne({ userId: user.id });
+		expect(session).toBeNull();
 	});
 
 	it('throws InvalidTokenError when the JWT is invalid', async () => {
-		// Arrange
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyEmail).mockImplementation(() => {
-			throw new Error('bad');
+			throw new Error('bad jwt');
 		});
 
-		// Act & Assert
-		await expect(resetPassword('bad-token', 'pass')).rejects.toBeInstanceOf(
+		await expect(resetPassword('bad-token', 'any')).rejects.toBeInstanceOf(
 			InvalidTokenError,
 		);
 	});
 
-	it('throws InvalidTokenError when the token type is not password_reset', async () => {
-		// Arrange
+	it('throws InvalidTokenError when token type is not password_reset', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyEmail).mockReturnValue({
 			sub: 'u1',
 			type: 'email_verification',
 		});
 
-		// Act & Assert
-		await expect(resetPassword('wrong-type', 'pass')).rejects.toBeInstanceOf(
+		await expect(resetPassword('wrong-type', 'any')).rejects.toBeInstanceOf(
 			InvalidTokenError,
 		);
 	});
 
-	it('throws UserNotFoundError when the user is not found', async () => {
-		// Arrange
+	it('throws UserNotFoundError when user does not exist', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyEmail).mockReturnValue({
-			sub: 'u1',
+			sub: 'nonexistent-user',
 			type: 'password_reset',
 		});
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
 
-		// Act & Assert
-		await expect(resetPassword('valid-token', 'pass')).rejects.toBeInstanceOf(
+		await expect(resetPassword('valid-token', 'any')).rejects.toBeInstanceOf(
 			UserNotFoundError,
 		);
 	});

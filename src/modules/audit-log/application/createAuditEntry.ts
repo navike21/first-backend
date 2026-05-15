@@ -10,6 +10,8 @@ export interface AuditEntryPayload {
 	userAgent?: string;
 }
 
-export async function createAuditEntry(payload: AuditEntryPayload): Promise<void> {
+export async function createAuditEntry(
+	payload: AuditEntryPayload,
+): Promise<void> {
 	await AuditLogModel.create(payload);
 }

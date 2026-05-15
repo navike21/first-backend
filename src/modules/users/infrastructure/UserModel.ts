@@ -16,7 +16,12 @@ export interface AddressDocument {
 }
 
 export type PresenceStatus = 'available' | 'busy' | 'away' | 'offline';
-export const PRESENCE_STATUS_ARRAY: PresenceStatus[] = ['available', 'busy', 'away', 'offline'];
+export const PRESENCE_STATUS_ARRAY: PresenceStatus[] = [
+	'available',
+	'busy',
+	'away',
+	'offline',
+];
 
 export interface UserDocument {
 	id: string;

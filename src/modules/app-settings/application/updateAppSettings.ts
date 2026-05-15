@@ -8,12 +8,18 @@ function buildSetPayload(data: AppSettingsUpdate): Record<string, unknown> {
 	const set: Record<string, unknown> = {};
 
 	if (data.general) {
-		for (const [key, value] of Object.entries(data.general) as [string, unknown][]) {
+		for (const [key, value] of Object.entries(data.general) as [
+			string,
+			unknown,
+		][]) {
 			if (value !== undefined) set[`general.${key}`] = value;
 		}
 	}
 	if (data.notifications) {
-		for (const [key, value] of Object.entries(data.notifications) as [string, unknown][]) {
+		for (const [key, value] of Object.entries(data.notifications) as [
+			string,
+			unknown,
+		][]) {
 			if (value !== undefined) set[`notifications.${key}`] = value;
 		}
 	}
@@ -26,7 +32,9 @@ function buildSetPayload(data: AppSettingsUpdate): Record<string, unknown> {
 	return set;
 }
 
-export async function updateAppSettings(data: AppSettingsUpdate): Promise<AppSettingsData> {
+export async function updateAppSettings(
+	data: AppSettingsUpdate,
+): Promise<AppSettingsData> {
 	const set = buildSetPayload(data);
 
 	const updated = await AppSettingsModel.findOneAndUpdate(
@@ -37,5 +45,5 @@ export async function updateAppSettings(data: AppSettingsUpdate): Promise<AppSet
 
 	clearSettingsCache();
 
-	return cleanMongoFields(updated!) as AppSettingsData;
+	return cleanMongoFields(updated) as AppSettingsData;
 }

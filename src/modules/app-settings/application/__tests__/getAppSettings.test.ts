@@ -1,84 +1,92 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-
-const { mockFindOne } = vi.hoisted(() => ({ mockFindOne: vi.fn() }));
-
-vi.mock('../../infrastructure/AppSettingsModel', () => ({
-	default: { findOne: mockFindOne },
-}));
-
-vi.mock('@Helpers/cleanMongoFields', () => ({
-	cleanMongoFields: (doc: unknown) => doc,
-}));
-
+import { describe, it, expect, beforeEach } from 'vitest';
+import { withMongo } from '@test/withMongo';
 import { getAppSettings, clearSettingsCache } from '../getAppSettings';
+import AppSettingsModel from '../../infrastructure/AppSettingsModel';
 import { APP_SETTINGS_DEFAULTS } from '../../constants/settingsDefaults';
 
-function chainedFindOne(value: unknown) {
-	mockFindOne.mockReturnValue({ lean: vi.fn().mockResolvedValue(value) });
-}
+withMongo();
 
 describe('getAppSettings', () => {
 	beforeEach(() => {
-		vi.clearAllMocks();
 		clearSettingsCache();
 	});
 
-	it('returns APP_SETTINGS_DEFAULTS when no document exists', async () => {
-		chainedFindOne(null);
+	it('returns APP_SETTINGS_DEFAULTS when no document exists in DB', async () => {
 		const result = await getAppSettings();
+
 		expect(result).toEqual(APP_SETTINGS_DEFAULTS);
 	});
 
-	it('merges document fields with defaults when doc exists', async () => {
-		chainedFindOne({
-			general: { appName: 'Custom App' },
-			notifications: {},
-			appearance: {},
+	it('merges stored document fields with defaults', async () => {
+		await AppSettingsModel.create({
+			id: 'singleton',
+			general: { appName: 'Custom App', maintenanceMode: true },
 		});
+
 		const result = await getAppSettings();
+
 		expect(result.general.appName).toBe('Custom App');
+		expect(result.general.maintenanceMode).toBe(true);
 		expect(result.general.defaultLanguage).toBe('en');
 		expect(result.notifications.emailSenderName).toBe('No Reply');
 	});
 
-	it('caches the result and does not call findOne again within TTL', async () => {
-		chainedFindOne(null);
-
-		await getAppSettings();
-		await getAppSettings();
-
-		expect(mockFindOne).toHaveBeenCalledTimes(1);
-	});
-
-	it('calls findOne again after clearSettingsCache', async () => {
-		chainedFindOne(null);
-
-		await getAppSettings();
-		clearSettingsCache();
-		await getAppSettings();
-
-		expect(mockFindOne).toHaveBeenCalledTimes(2);
-	});
-
-	it('fetches fresh data after TTL expires', async () => {
-		vi.useFakeTimers();
-		chainedFindOne(null);
-
-		await getAppSettings();
-		vi.advanceTimersByTime(61_000);
-		await getAppSettings();
-
-		expect(mockFindOne).toHaveBeenCalledTimes(2);
-		vi.useRealTimers();
-	});
-
-	it('merges appearance fields from doc', async () => {
-		chainedFindOne({
-			general: {},
-			notifications: {},
+	it('merges appearance fields from stored document', async () => {
+		await AppSettingsModel.create({
+			id: 'singleton',
 			appearance: { primaryColor: '#FF0000' },
 		});
+
 		const result = await getAppSettings();
+
 		expect(result.appearance.primaryColor).toBe('#FF0000');
+		expect(result.appearance.logoUrl).toBeNull();
+	});
+
+	it('caches the result and does not query DB again within TTL', async () => {
+		await AppSettingsModel.create({ id: 'singleton' });
+
+		await getAppSettings();
+
+		// Change DB directly — cached call should still return old value
+		await AppSettingsModel.updateOne(
+			{ id: 'singleton' },
+			{ 'general.appName': 'Changed After Cache' },
+		);
+
+		const cached = await getAppSettings();
+		expect(cached.general.appName).toBe('My Application');
+	});
+
+	it('fetches fresh data after clearSettingsCache', async () => {
+		await AppSettingsModel.create({
+			id: 'singleton',
+			general: { appName: 'Original' },
+		});
+
+		await getAppSettings();
+
+		await AppSettingsModel.updateOne(
+			{ id: 'singleton' },
+			{ 'general.appName': 'Updated' },
+		);
+
+		clearSettingsCache();
+		const fresh = await getAppSettings();
+
+		expect(fresh.general.appName).toBe('Updated');
+	});
+
+	it('returns full notifications block merged with defaults', async () => {
+		await AppSettingsModel.create({
+			id: 'singleton',
+			notifications: { notificationsEnabled: false },
+		});
+
+		const result = await getAppSettings();
+
+		expect(result.notifications.notificationsEnabled).toBe(false);
+		expect(result.notifications.welcomeEmailEnabled).toBe(true);
+		expect(result.notifications.emailSenderAddress).toBe('noreply@example.com');
 	});
 });

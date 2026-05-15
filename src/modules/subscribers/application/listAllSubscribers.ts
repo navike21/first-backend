@@ -2,7 +2,7 @@ import { QueryFilter } from 'mongoose';
 import { ACTIVE, StatusRegister } from '@Constants/statusRegister';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 import { SubscriberSchema } from '../types/subscriber.schema';
 
@@ -38,11 +38,7 @@ export async function listAllSubscribers({
 	]);
 
 	if (data.length === 0) {
-		setThrowError({
-			statusCode: 404,
-			message: 'Subscriber list empty',
-			code: 'SUBSCRIBER_LIST_EMPTY',
-		});
+		AppError.notFound('SUBSCRIBER_LIST_EMPTY', 'Subscriber list empty');
 	}
 
 	return {

@@ -1,6 +1,10 @@
 import generateUUID from '@Helpers/uuid';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
-import { isRasterImage, isSvg, isImageMimeType } from '../constants/allowedMimeTypes';
+import {
+	isRasterImage,
+	isSvg,
+	isImageMimeType,
+} from '../constants/allowedMimeTypes';
 import { processRasterImage } from '../infrastructure/ImageProcessor';
 import { getStorageDriver } from '../infrastructure/StorageService';
 import StorageFileModel from '../infrastructure/StorageFileModel';
@@ -24,12 +28,15 @@ const ORIGINAL_EXT_MAP: Record<string, string> = {
 	'image/svg+xml': 'svg',
 	'application/pdf': 'pdf',
 	'application/msword': 'doc',
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+		'docx',
 	'application/vnd.ms-excel': 'xls',
 	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
 };
 
-export async function uploadFile(input: UploadInput): Promise<StorageFileDocument> {
+export async function uploadFile(
+	input: UploadInput,
+): Promise<StorageFileDocument> {
 	const driver = getStorageDriver();
 	const quality = input.quality ?? DEFAULT_QUALITY;
 	const uuid = generateUUID();

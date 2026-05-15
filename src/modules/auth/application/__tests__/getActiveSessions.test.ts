@@ -1,54 +1,42 @@
-import { describe, it, expect, vi } from 'vitest';
-import type { SessionDocument } from '@Modules/auth/infrastructure/SessionModel';
-import { getActiveSessions } from '@Modules/auth/application/getActiveSessions';
+import { describe, it, expect } from 'vitest';
+import { withMongo } from '@test/withMongo';
 import SessionModel from '@Modules/auth/infrastructure/SessionModel';
+import { getActiveSessions } from '@Modules/auth/application/getActiveSessions';
 
-vi.mock('@Modules/auth/infrastructure/SessionModel', () => ({
-	default: {
-		find: vi.fn(),
-	},
-}));
-
-type MockSession = Pick<SessionDocument, 'userAgent' | 'ip' | 'lastSeen'>;
-
-function buildFindChain(data: MockSession[]) {
-	return {
-		select: vi.fn().mockReturnValue({
-			lean: vi.fn().mockResolvedValue(data),
-		}),
-	};
-}
+withMongo();
 
 describe('getActiveSessions', () => {
 	it('returns sessions for the given userId', async () => {
-		// Arrange
-		const sessions: MockSession[] = [
-			{ userAgent: 'Chrome', ip: '1.2.3.4', lastSeen: new Date() },
-		];
-		vi.mocked(SessionModel.find).mockReturnValue(
-			buildFindChain(sessions) as unknown as ReturnType<
-				typeof SessionModel.find
-			>,
-		);
+		const userId = `u-${crypto.randomUUID().slice(0, 8)}`;
+		await SessionModel.create({ userId, userAgent: 'Chrome', ip: '1.2.3.4' });
+		await SessionModel.create({ userId, userAgent: 'Firefox', ip: '5.6.7.8' });
 
-		// Act
-		const result = await getActiveSessions('u1');
+		const result = await getActiveSessions(userId);
 
-		// Assert
-		expect(SessionModel.find).toHaveBeenCalledWith({ userId: 'u1' });
-		expect(result).toHaveLength(1);
+		expect(result).toHaveLength(2);
+		expect(result[0]).not.toHaveProperty('userId');
+		expect(result[0]).not.toHaveProperty('_id');
+		expect(result[0]).not.toHaveProperty('__v');
 	});
 
-	it('returns an empty array when no sessions exist', async () => {
-		// Arrange
-		vi.mocked(SessionModel.find).mockReturnValue(
-			buildFindChain([]) as unknown as ReturnType<typeof SessionModel.find>,
-		);
+	it('returns an empty array when no sessions exist for the userId', async () => {
+		const result = await getActiveSessions('nonexistent-user');
 
-		// Act
-		const result = await getActiveSessions('u-no-sessions');
-
-		// Assert
 		expect(result).toEqual([]);
+	});
+
+	it('only returns sessions belonging to the requested userId', async () => {
+		const userId = `u-${crypto.randomUUID().slice(0, 8)}`;
+		const otherId = `u-${crypto.randomUUID().slice(0, 8)}`;
+		await SessionModel.create({ userId, userAgent: 'ua', ip: '1.1.1.1' });
+		await SessionModel.create({
+			userId: otherId,
+			userAgent: 'ua',
+			ip: '2.2.2.2',
+		});
+
+		const result = await getActiveSessions(userId);
+
+		expect(result).toHaveLength(1);
 	});
 });

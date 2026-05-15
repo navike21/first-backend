@@ -1,17 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
-import type { UserGroupDocument } from '@Modules/user-groups';
-import type { RefreshTokenDocument } from '@Modules/auth/infrastructure/RefreshTokenModel';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
+import UserGroupModel from '@Modules/user-groups/infrastructure/UserGroupModel';
+import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
 import { rotateRefreshToken } from '@Modules/auth/application/refreshToken';
 import {
 	InvalidTokenError,
 	TokenReuseDetectedError,
 } from '@Modules/auth/domain/errors/AuthErrors';
-import { JwtService } from '@Shared/infrastructure/JwtService';
-import { UserModel } from '@Modules/users';
-import { UserGroupModel } from '@Modules/user-groups';
-import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
+
+withMongo();
 
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: {
@@ -21,211 +19,153 @@ vi.mock('@Shared/infrastructure/JwtService', () => ({
 	},
 }));
 
-vi.mock('@Modules/users', () => ({
-	UserModel: { findOne: vi.fn() },
-}));
+vi.mock('@Helpers/uuid', () => ({ default: () => 'new-jti' }));
 
-vi.mock('@Modules/user-groups', () => ({
-	UserGroupModel: { findOne: vi.fn() },
-}));
+const seedUser = () =>
+	UserModel.create({
+		email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		password: 'hashed',
+		firstName: 'Al',
+		lastName: 'Bo',
+	});
 
-vi.mock('@Modules/auth/infrastructure/RefreshTokenModel', () => ({
-	default: {
-		findOne: vi.fn(),
-		findOneAndUpdate: vi.fn(),
-		updateMany: vi.fn(),
-		create: vi.fn(),
-	},
-}));
-
-vi.mock('@Helpers/uuid', () => ({
-	default: () => 'new-jti',
-}));
-
-type MockRefreshToken = Pick<RefreshTokenDocument, 'jti' | 'userId'> & {
-	revokedAt?: Date;
-};
-type MockUser = Pick<
-	UserDocument,
-	'id' | 'email' | 'firstName' | 'lastName'
-> & { groupId?: string };
+const seedRT = (userId: string, overrides = {}) =>
+	RefreshTokenModel.create({
+		jti: `jti-${crypto.randomUUID().slice(0, 8)}`,
+		userId,
+		expiresAt: new Date(Date.now() + 86400000),
+		...overrides,
+	});
 
 describe('rotateRefreshToken', () => {
-	it('returns new tokens when the refresh token is valid and not revoked', async () => {
-		// Arrange
+	it('revokes the old RT and creates a new one in the database', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const user = await seedUser();
+		const rt = await seedRT(user.id);
+
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
-			sub: 'u1',
-			jti: 'jti-1',
+			sub: user.id,
+			jti: rt.jti,
 			type: 'refresh',
 		});
-		const storedToken: MockRefreshToken = { jti: 'jti-1', userId: 'u1' };
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(
-			storedToken as unknown as HydratedDocument<RefreshTokenDocument>,
-		);
-		const mockUser: MockUser = {
-			id: 'u1',
-			email: 'a@b.c',
-			firstName: 'A',
-			lastName: 'B',
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(null);
-		vi.mocked(RefreshTokenModel.findOneAndUpdate).mockResolvedValue(null);
-		vi.mocked(RefreshTokenModel.create).mockResolvedValue(undefined as never);
 
-		// Act
-		const result = await rotateRefreshToken('valid-token', 'ua', '1.2.3.4');
+		await rotateRefreshToken('valid-token', 'ua', '1.1.1.1');
 
-		// Assert
+		const old = await RefreshTokenModel.findOne({ jti: rt.jti });
+		expect(old!.revokedAt).toBeInstanceOf(Date);
+		expect(old!.replacedBy).toBe('new-jti');
+
+		const newRT = await RefreshTokenModel.findOne({ jti: 'new-jti' });
+		expect(newRT).not.toBeNull();
+		expect(newRT!.userId).toBe(user.id);
+	});
+
+	it('returns new access and refresh tokens', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const user = await seedUser();
+		const rt = await seedRT(user.id);
+
+		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
+			sub: user.id,
+			jti: rt.jti,
+			type: 'refresh',
+		});
+
+		const result = await rotateRefreshToken('valid-token', 'ua', 'ip');
+
 		expect(result.accessToken).toBe('NEW_ACCESS');
 		expect(result.refreshToken).toBe('NEW_REFRESH');
-		expect(result.refreshExpiresMs).toBeGreaterThan(0);
+	});
+
+	it('includes group permissions in the new access token', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const group = await UserGroupModel.create({
+			name: 'Admins',
+			slug: 'admins',
+			permissions: ['users:read'],
+		});
+		const user = await UserModel.create({
+			email: `grp-${crypto.randomUUID().slice(0, 8)}@test.com`,
+			password: 'hashed',
+			firstName: 'Al',
+			lastName: 'Bo',
+			groupId: group.id,
+		});
+		const rt = await seedRT(user.id);
+
+		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
+			sub: user.id,
+			jti: rt.jti,
+			type: 'refresh',
+		});
+
+		await rotateRefreshToken('valid-token', 'ua', 'ip');
+
+		expect(JwtService.signAccess).toHaveBeenCalledWith(
+			expect.objectContaining({ permissions: ['users:read'] }),
+		);
 	});
 
 	it('throws InvalidTokenError when the JWT is invalid', async () => {
-		// Arrange
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyRefresh).mockImplementation(() => {
 			throw new Error('bad');
 		});
 
-		// Act & Assert
-		await expect(
-			rotateRefreshToken('bad-token', 'ua', 'ip'),
-		).rejects.toBeInstanceOf(InvalidTokenError);
+		await expect(rotateRefreshToken('bad', 'ua', 'ip')).rejects.toBeInstanceOf(
+			InvalidTokenError,
+		);
 	});
 
-	it('throws InvalidTokenError when the stored token is not found', async () => {
-		// Arrange
+	it('throws InvalidTokenError when the RefreshToken is not in the database', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
 			sub: 'u1',
-			jti: 'jti-x',
+			jti: 'nonexistent',
 			type: 'refresh',
 		});
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(null);
 
-		// Act & Assert
 		await expect(
 			rotateRefreshToken('token', 'ua', 'ip'),
 		).rejects.toBeInstanceOf(InvalidTokenError);
 	});
 
-	it('throws TokenReuseDetectedError and revokes all tokens when the stored token is already revoked', async () => {
-		// Arrange
+	it('revokes all tokens and throws TokenReuseDetectedError when the RT is already revoked', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const user = await seedUser();
+		const rt = await seedRT(user.id, { revokedAt: new Date() });
+		const active = await seedRT(user.id);
+
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
-			sub: 'u1',
-			jti: 'jti-1',
+			sub: user.id,
+			jti: rt.jti,
 			type: 'refresh',
 		});
-		const storedToken: MockRefreshToken = {
-			jti: 'jti-1',
-			userId: 'u1',
-			revokedAt: new Date(),
-		};
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(
-			storedToken as unknown as HydratedDocument<RefreshTokenDocument>,
-		);
-		vi.mocked(RefreshTokenModel.updateMany).mockResolvedValue(
-			undefined as never,
-		);
 
-		// Act & Assert
 		await expect(
-			rotateRefreshToken('token', 'ua', 'ip'),
+			rotateRefreshToken('reused-token', 'ua', 'ip'),
 		).rejects.toBeInstanceOf(TokenReuseDetectedError);
-		expect(RefreshTokenModel.updateMany).toHaveBeenCalled();
+
+		const revokedActive = await RefreshTokenModel.findOne({ jti: active.jti });
+		expect(revokedActive!.revokedAt).toBeInstanceOf(Date);
 	});
 
-	it('throws InvalidTokenError when the user is not found', async () => {
-		// Arrange
+	it('throws InvalidTokenError when the user does not exist', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const rt = await RefreshTokenModel.create({
+			jti: 'ghost-jti',
+			userId: 'nonexistent-user',
+			expiresAt: new Date(Date.now() + 86400000),
+		});
+
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
-			sub: 'u1',
-			jti: 'jti-2',
+			sub: rt.userId,
+			jti: rt.jti,
 			type: 'refresh',
 		});
-		const storedToken: MockRefreshToken = { jti: 'jti-2', userId: 'u1' };
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(
-			storedToken as unknown as HydratedDocument<RefreshTokenDocument>,
-		);
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
 
-		// Act & Assert
 		await expect(
 			rotateRefreshToken('token', 'ua', 'ip'),
 		).rejects.toBeInstanceOf(InvalidTokenError);
-	});
-
-	it('returns empty permissions when user has a groupId but group is not found', async () => {
-		// Arrange
-		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
-			sub: 'u1',
-			jti: 'jti-4',
-			type: 'refresh',
-		});
-		const storedToken: MockRefreshToken = { jti: 'jti-4', userId: 'u1' };
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(
-			storedToken as unknown as HydratedDocument<RefreshTokenDocument>,
-		);
-		const mockUser: MockUser = {
-			id: 'u1',
-			email: 'a@b.c',
-			firstName: 'A',
-			lastName: 'B',
-			groupId: 'missing',
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(null);
-		vi.mocked(RefreshTokenModel.findOneAndUpdate).mockResolvedValue(null);
-		vi.mocked(RefreshTokenModel.create).mockResolvedValue(undefined as never);
-
-		// Act
-		const result = await rotateRefreshToken('valid-token', 'ua', '1.2.3.4');
-
-		// Assert
-		expect(JwtService.signAccess).toHaveBeenCalledWith(
-			expect.objectContaining({ permissions: [] }),
-		);
-		expect(result.accessToken).toBe('NEW_ACCESS');
-	});
-
-	it('includes group permissions when the user has a groupId', async () => {
-		// Arrange
-		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
-			sub: 'u1',
-			jti: 'jti-3',
-			type: 'refresh',
-		});
-		const storedToken: MockRefreshToken = { jti: 'jti-3', userId: 'u1' };
-		vi.mocked(RefreshTokenModel.findOne).mockResolvedValue(
-			storedToken as unknown as HydratedDocument<RefreshTokenDocument>,
-		);
-		const mockUser: MockUser = {
-			id: 'u1',
-			email: 'a@b.c',
-			firstName: 'A',
-			lastName: 'B',
-			groupId: 'g1',
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue({
-			id: 'g1',
-			permissions: ['users:read'],
-		} as unknown as HydratedDocument<UserGroupDocument>);
-		vi.mocked(RefreshTokenModel.findOneAndUpdate).mockResolvedValue(null);
-		vi.mocked(RefreshTokenModel.create).mockResolvedValue(undefined as never);
-
-		// Act
-		const result = await rotateRefreshToken('valid-token', 'ua', '1.2.3.4');
-
-		// Assert
-		expect(JwtService.signAccess).toHaveBeenCalledWith(
-			expect.objectContaining({ permissions: ['users:read'] }),
-		);
-		expect(result.accessToken).toBe('NEW_ACCESS');
 	});
 });

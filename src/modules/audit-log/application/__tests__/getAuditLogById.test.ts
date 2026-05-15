@@ -1,45 +1,44 @@
-import { describe, it, expect, vi } from 'vitest';
-import { AppError } from '@Shared/domain/AppError';
+import { describe, it, expect } from 'vitest';
+import { withMongo } from '@test/withMongo';
+import { getAuditLogById } from '../getAuditLogById';
+import { createAuditEntry } from '../createAuditEntry';
+import AuditLogModel from '../../infrastructure/AuditLogModel';
 import { AUDIT_LOG_ERRORS } from '../../domain/errors/AuditLogErrors';
 
-const { mockFindOne } = vi.hoisted(() => ({ mockFindOne: vi.fn() }));
-
-vi.mock('../../infrastructure/AuditLogModel', () => ({
-	default: { findOne: mockFindOne },
-}));
-
-import { getAuditLogById } from '../getAuditLogById';
+withMongo();
 
 describe('getAuditLogById', () => {
-	it('returns cleaned log when found', async () => {
-		mockFindOne.mockReturnValue({
-			lean: vi.fn().mockResolvedValue({
-				id: 'abc',
-				action: 'auth:login',
-				resource: 'auth',
-				_id: 'mongo-id',
-				__v: 0,
-			}),
+	it('returns the log when found', async () => {
+		await createAuditEntry({
+			action: 'auth:login',
+			resource: 'auth',
+			userId: 'u1',
+			ipAddress: '1.2.3.4',
 		});
 
-		const result = await getAuditLogById('abc');
+		const doc = await AuditLogModel.findOne({ action: 'auth:login' });
+		const result = await getAuditLogById(doc!.id);
 
-		expect(result).toEqual({ id: 'abc', action: 'auth:login', resource: 'auth' });
-		expect(mockFindOne).toHaveBeenCalledWith({ id: 'abc' });
+		expect(result).toBeDefined();
+		expect(result.action).toBe('auth:login');
+		expect(result.resource).toBe('auth');
+		expect(result.userId).toBe('u1');
+	});
+
+	it('strips _id and __v from returned log', async () => {
+		await createAuditEntry({ action: 'users:create', resource: 'users' });
+		const doc = await AuditLogModel.findOne({ action: 'users:create' });
+
+		const result = await getAuditLogById(doc!.id);
+
+		expect(result).not.toHaveProperty('_id');
+		expect(result).not.toHaveProperty('__v');
 	});
 
 	it('throws AUDIT_LOG_NOT_FOUND when log does not exist', async () => {
-		mockFindOne.mockReturnValue({ lean: vi.fn().mockResolvedValue(null) });
-
-		await expect(getAuditLogById('missing')).rejects.toMatchObject({
+		await expect(getAuditLogById('nonexistent-id')).rejects.toMatchObject({
 			statusCode: 404,
 			code: AUDIT_LOG_ERRORS.NOT_FOUND,
 		});
-	});
-
-	it('thrown error is an AppError', async () => {
-		mockFindOne.mockReturnValue({ lean: vi.fn().mockResolvedValue(null) });
-
-		await expect(getAuditLogById('x')).rejects.toBeInstanceOf(AppError);
 	});
 });

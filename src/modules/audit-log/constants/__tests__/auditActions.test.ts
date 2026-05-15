@@ -25,7 +25,9 @@ describe('AUDIT_ACTIONS', () => {
 	it('contains storage actions', () => {
 		expect(AUDIT_ACTIONS.STORAGE_UPLOADED).toBe('storage:uploaded');
 		expect(AUDIT_ACTIONS.STORAGE_SOFT_DELETED).toBe('storage:soft_deleted');
-		expect(AUDIT_ACTIONS.STORAGE_PERMANENTLY_DELETED).toBe('storage:permanently_deleted');
+		expect(AUDIT_ACTIONS.STORAGE_PERMANENTLY_DELETED).toBe(
+			'storage:permanently_deleted',
+		);
 	});
 
 	it('contains user group actions', () => {

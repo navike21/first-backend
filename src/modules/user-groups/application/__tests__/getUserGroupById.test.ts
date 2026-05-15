@@ -1,38 +1,26 @@
-import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserGroupDocument } from '@Modules/user-groups/infrastructure/UserGroupModel';
+import { describe, it, expect } from 'vitest';
+import { withMongo } from '@test/withMongo';
+import UserGroupModel from '@Modules/user-groups/infrastructure/UserGroupModel';
 import { getUserGroupById } from '@Modules/user-groups/application/getUserGroupById';
 import { UserGroupNotFoundError } from '@Modules/user-groups/domain/errors/UserGroupErrors';
-import UserGroupModel from '@Modules/user-groups/infrastructure/UserGroupModel';
 
-vi.mock('@Modules/user-groups/infrastructure/UserGroupModel', () => ({
-	default: { findOne: vi.fn() },
-}));
-
-type MockGroup = Pick<UserGroupDocument, 'id' | 'name' | 'slug'>;
+withMongo();
 
 describe('getUserGroupById', () => {
 	it('returns the group when found', async () => {
-		// Arrange
-		const mockGroup: MockGroup = { id: 'g1', name: 'Admin', slug: 'admin' };
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(
-			mockGroup as unknown as HydratedDocument<UserGroupDocument>,
-		);
+		const created = await UserGroupModel.create({
+			name: 'Admin',
+			slug: 'admin',
+		});
 
-		// Act
-		const result = await getUserGroupById('g1');
+		const result = await getUserGroupById(created.id);
 
-		// Assert
-		expect(result).toEqual(mockGroup);
-		expect(UserGroupModel.findOne).toHaveBeenCalledWith({ id: 'g1' });
+		expect(result.id).toBe(created.id);
+		expect(result.name).toBe('Admin');
 	});
 
-	it('throws UserGroupNotFoundError when the group is not found', async () => {
-		// Arrange
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(null);
-
-		// Act & Assert
-		await expect(getUserGroupById('missing')).rejects.toBeInstanceOf(
+	it('throws UserGroupNotFoundError when the group does not exist', async () => {
+		await expect(getUserGroupById('nonexistent-id')).rejects.toBeInstanceOf(
 			UserGroupNotFoundError,
 		);
 	});

@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { STORAGE_ERRORS } from '../domain/errors/StorageErrors';
 
 export interface ValidateFileTypeOptions {
@@ -14,21 +14,13 @@ async function validateSingleFile(
 	const declared = file.mimetype;
 
 	if (!allowedMimeTypes.includes(declared)) {
-		setThrowError({
-			statusCode: 415,
-			code: STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED,
-			message: 'File type is not allowed',
-		});
+		AppError.unsupportedMediaType(STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED, 'File type is not allowed');
 	}
 
 	if (declared === 'image/svg+xml') {
 		const snippet = file.buffer.toString('utf8', 0, 512);
 		if (!snippet.includes('<svg') && !snippet.includes('<?xml')) {
-			setThrowError({
-				statusCode: 415,
-				code: STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED,
-				message: 'File content does not match the declared SVG type',
-			});
+			AppError.unsupportedMediaType(STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED, 'File content does not match the declared SVG type');
 		}
 		return;
 	}
@@ -37,19 +29,11 @@ async function validateSingleFile(
 	const detected = await fromBuffer(file.buffer);
 
 	if (!detected) {
-		setThrowError({
-			statusCode: 415,
-			code: STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED,
-			message: 'Could not determine file type from content',
-		});
+		AppError.unsupportedMediaType(STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED, 'Could not determine file type from content');
 	}
 
-	if (detected!.mime !== declared) {
-		setThrowError({
-			statusCode: 415,
-			code: STORAGE_ERRORS.MIME_TYPE_MISMATCH,
-			message: 'Declared MIME type does not match file content',
-		});
+	if (detected.mime !== declared) {
+		AppError.unsupportedMediaType(STORAGE_ERRORS.MIME_TYPE_MISMATCH, 'Declared MIME type does not match file content');
 	}
 }
 
@@ -68,11 +52,7 @@ export function validateFileType(
 			}
 
 			if (files.length === 0) {
-				setThrowError({
-					statusCode: 400,
-					code: STORAGE_ERRORS.FILE_REQUIRED,
-					message: 'No file was provided',
-				});
+				AppError.badRequest(STORAGE_ERRORS.FILE_REQUIRED, 'No file was provided');
 			}
 
 			for (const file of files) {

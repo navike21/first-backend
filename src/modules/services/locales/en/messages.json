@@ -1,0 +1,7 @@
+{
+	"SUCCESS_SERVICE_CREATE": "Service created successfully",
+	"SUCCESS_SERVICE_LIST": "Service list retrieved successfully",
+	"SUCCESS_SERVICE_FOUND": "Service found successfully",
+	"SUCCESS_SERVICE_UPDATE": "Service updated successfully",
+	"SUCCESS_SERVICE_DELETED": "Service deleted successfully"
+}

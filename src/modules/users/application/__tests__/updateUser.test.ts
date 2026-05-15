@@ -1,89 +1,56 @@
-import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
+import { describe, it, expect } from 'vitest';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import { updateUser } from '@Modules/users/application/updateUser';
 import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
-import UserModel from '@Modules/users/infrastructure/UserModel';
 
-vi.mock('@Modules/users/infrastructure/UserModel', () => ({
-	default: { findOne: vi.fn() },
-}));
+withMongo();
 
-type MockUserDoc = Pick<
-	UserDocument,
-	'id' | 'firstName' | 'lastName' | 'email' | 'password'
-> & {
-	save: () => Promise<void>;
-	toObject: () => Record<string, unknown>;
-};
+const seed = (overrides = {}) =>
+	UserModel.create({
+		email: `user-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		password: 'hashed',
+		firstName: 'John',
+		lastName: 'Doe',
+		...overrides,
+	});
 
 describe('updateUser', () => {
-	it('updates user fields and returns the user without password', async () => {
-		// Arrange
-		const mockUser: MockUserDoc = {
-			id: 'u1',
-			firstName: 'Alice',
-			lastName: 'Smith',
-			email: 'a@b.c',
-			password: 'hashed',
-			save: vi.fn().mockResolvedValue(undefined),
-			toObject: vi.fn().mockReturnValue({
-				id: 'u1',
-				firstName: 'Alice Updated',
-				lastName: 'Smith',
-				email: 'a@b.c',
-				password: 'hashed',
-			}),
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
+	it('updates user fields and persists to DB', async () => {
+		const user = await seed();
 
-		// Act
-		const result = await updateUser('u1', { firstName: 'Alice Updated' });
+		const result = await updateUser(user.id, {
+			firstName: 'Updated',
+			lastName: 'Name',
+		});
 
-		// Assert
-		expect(mockUser.save).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('password');
-		expect(result.firstName).toBe('Alice Updated');
+		expect(result.firstName).toBe('Updated');
+		expect(result.lastName).toBe('Name');
+
+		const inDb = await UserModel.findOne({ id: user.id });
+		expect(inDb!.firstName).toBe('Updated');
 	});
 
-	it('converts dateOfBirth string to Date when provided', async () => {
-		// Arrange
-		const mockUser: MockUserDoc = {
-			id: 'u1',
-			firstName: 'Alice',
-			lastName: 'Smith',
-			email: 'a@b.c',
-			password: 'hashed',
-			save: vi.fn().mockResolvedValue(undefined),
-			toObject: vi.fn().mockReturnValue({
-				id: 'u1',
-				firstName: 'Alice',
-				lastName: 'Smith',
-				email: 'a@b.c',
-				dateOfBirth: new Date('1990-01-01'),
-				password: 'hashed',
-			}),
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
+	it('does not expose password in the returned object', async () => {
+		const user = await seed();
 
-		// Act
-		const result = await updateUser('u1', { dateOfBirth: '1990-01-01' });
+		const result = await updateUser(user.id, { firstName: 'Xi' });
 
-		// Assert
-		expect(result).not.toHaveProperty('password');
+		expect((result as Record<string, unknown>).password).toBeUndefined();
 	});
 
-	it('throws UserNotFoundError when the user does not exist', async () => {
-		// Arrange
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
+	it('converts dateOfBirth string to Date', async () => {
+		const user = await seed();
 
-		// Act & Assert
+		await updateUser(user.id, { dateOfBirth: '1990-05-15' });
+
+		const inDb = await UserModel.findOne({ id: user.id });
+		expect(inDb!.dateOfBirth).toBeInstanceOf(Date);
+	});
+
+	it('throws UserNotFoundError when user does not exist', async () => {
 		await expect(
-			updateUser('missing', { firstName: 'X' }),
+			updateUser('nonexistent-id', { firstName: 'X' }),
 		).rejects.toBeInstanceOf(UserNotFoundError);
 	});
 });

@@ -1,14 +1,14 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2026-05-06T00:00:00.000Z",
+  "__export_date": "2026-05-12T00:00:00.000Z",
   "__export_source": "first-backend.api",
   "resources": [
     {
       "_id": "wrk_firstbackend",
       "_type": "workspace",
       "name": "First Backend API",
-      "description": "# 🚀 First Backend API\n\nAPI REST construida con **Node.js + TypeScript + Express + MongoDB**.\n\n---\n\n## 🌐 Ambientes\n\n| Ambiente | URL Base |\n|---|---|\n| Development | `http://localhost:3200/api/v1` |\n| Production (Vercel) | `https://first-backend.vercel.app/api/v1` |\n\n---\n\n## 🔐 Autenticación\n\nEsta API usa **JWT (JSON Web Tokens)** con un modelo de triple secreto:\n\n| Token | Duración | Uso |\n|---|---|---|\n| `access_token` | 15 min | Header `Authorization: Bearer <token>` |\n| `refresh_token` | 7 días | Cookie `httpOnly` — se gestiona automáticamente |\n| `email_token` | 24 h | Verificación de correo |\n| `reset_token` | 1 h | Restablecimiento de contraseña |\n\n### Flujo de autenticación\n\n1. `POST /auth/login` → guarda `access_token` en la variable de entorno\n2. Las rutas protegidas usan `Bearer {{ access_token }}` automáticamente\n3. Al expirar, `POST /auth/refresh` renueva el token usando la cookie httpOnly\n\n---\n\n## 🛡️ Permisos (RBAC)\n\nCada usuario pertenece a un **grupo de usuario** que define sus permisos:\n\n| Módulo | Permisos disponibles |\n|---|---|\n| Perfil propio | `profile:read`, `profile:update` |\n| Usuarios | `users:read`, `users:create`, `users:update`, `users:delete`, `users:manage` |\n| Grupos | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:manage` |\n| Suscriptores | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:manage` |\n| Almacenamiento | `storage:upload`, `storage:delete`, `storage:manage` |\n| Audit Logs | `audit-logs:read`, `audit-logs:manage` |\n| App Settings | `app-settings:read`, `app-settings:update`, `app-settings:manage` |\n\n> 💡 Los permisos `*:manage` son comodín e incluyen todas las operaciones del módulo.\n\n---\n\n## 🌍 Internacionalización\n\nTodas las rutas aceptan el header `Accept-Language` para respuestas y emails en el idioma del usuario.\n\n**Idiomas soportados:** `es`, `en`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`",
+      "description": "# 🚀 First Backend API\n\nAPI REST construida con **Node.js + TypeScript + Express + MongoDB**.\n\n---\n\n## 🌐 Ambientes\n\n| Ambiente | URL Base |\n|---|---|\n| Development | `http://localhost:3200/api/v1` |\n| Production (Vercel) | `https://first-backend.vercel.app/api/v1` |\n\n---\n\n## 🔐 Autenticación\n\nEsta API usa **JWT (JSON Web Tokens)** con un modelo de triple secreto:\n\n| Token | Duración | Uso |\n|---|---|---|\n| `access_token` | 15 min | Header `Authorization: Bearer <token>` |\n| `refresh_token` | 7 días | Cookie `httpOnly` — se gestiona automáticamente |\n| `email_token` | 24 h | Verificación de correo |\n| `reset_token` | 1 h | Restablecimiento de contraseña |\n\n### Flujo de autenticación\n\n1. `POST /auth/login` → guarda `access_token` en la variable de entorno\n2. Las rutas protegidas usan `Bearer {{ access_token }}` automáticamente\n3. Al expirar, `POST /auth/refresh` renueva el token usando la cookie httpOnly\n\n---\n\n## 🛡️ Permisos (RBAC)\n\nCada usuario pertenece a un **grupo de usuario** que define sus permisos:\n\n| Módulo | Permisos disponibles |\n|---|---|\n| Perfil propio | `profile:read`, `profile:update` |\n| Usuarios | `users:read`, `users:create`, `users:update`, `users:delete`, `users:manage` |\n| Grupos | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:manage` |\n| Suscriptores | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:manage` |\n| Almacenamiento | `storage:upload`, `storage:delete`, `storage:manage` |\n| Audit Logs | `audit-logs:read`, `audit-logs:manage` |\n| App Settings | `app-settings:read`, `app-settings:update`, `app-settings:manage` |\n| Clientes | `clients:read`, `clients:create`, `clients:update`, `clients:delete`, `clients:manage` |\n| Servicios | `services:read`, `services:create`, `services:update`, `services:delete`, `services:manage` |\n| Portafolio | `portfolio:read`, `portfolio:create`, `portfolio:update`, `portfolio:delete`, `portfolio:manage` |\n\n> 💡 Los permisos `*:manage` son comodín e incluyen todas las operaciones del módulo.\n\n---\n\n## 🌍 Internacionalización\n\nTodas las rutas aceptan el header `Accept-Language` para respuestas y emails en el idioma del usuario.\n\n**Idiomas soportados:** `es`, `en`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`",
       "scope": "collection"
     },
 
@@ -25,7 +25,11 @@
         "user_id": "",
         "group_id": "",
         "subscriber_id": "",
-        "audit_log_id": ""
+        "audit_log_id": "",
+        "client_id": "",
+        "service_slug": "",
+        "portfolio_slug": "",
+        "portfolio_id": ""
       },
       "color": null,
       "isPrivate": false
@@ -970,6 +974,410 @@
         "disabled": false
       },
       "metaSortKey": -200
+    },
+
+    {
+      "_id": "fld_clients",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "🏢 Clients",
+      "description": "## 🏢 Clientes\n\nGestión de clientes (CRM). Todas las rutas requieren autenticación. Solo `businessName`, `logoUrl` y `website` se exponen en el contexto público del portafolio.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `POST /clients` | ✅ Bearer | `clients:create` o `clients:manage` |\n| `GET /clients` | ✅ Bearer | `clients:read` o `clients:manage` |\n| `GET /clients/:id` | ✅ Bearer | `clients:read` o `clients:manage` |\n| `PATCH /clients/:id` | ✅ Bearer | `clients:update` o `clients:manage` |\n| `DELETE /clients/:id` | ✅ Bearer | `clients:delete` o `clients:manage` |",
+      "metaSortKey": -500
+    },
+    {
+      "_id": "fld_services",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "🛠️ Services",
+      "description": "## 🛠️ Servicios\n\nGestión de los servicios de navike21 con contenido multiidioma. Las rutas GET son públicas; escritura requiere autenticación.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso | Descripción |\n|---|---|---|---|\n| `GET /services` | ❌ Público | — | Lista servicios activos |\n| `GET /services/admin` | ✅ Bearer | `services:read` o `services:manage` | Lista admin (incluye inactivos) |\n| `GET /services/:slug` | ❌ Público | — | Detalle por slug |\n| `POST /services` | ✅ Bearer | `services:create` o `services:manage` | Crear servicio |\n| `PATCH /services/:slug` | ✅ Bearer | `services:update` o `services:manage` | Actualizar |\n| `DELETE /services/:slug` | ✅ Bearer | `services:delete` o `services:manage` | Soft delete |",
+      "metaSortKey": -450
+    },
+    {
+      "_id": "fld_portfolio",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "🗂️ Portfolio",
+      "description": "## 🗂️ Portafolio\n\nMuestra de proyectos de navike21. Las rutas GET son públicas; escritura requiere autenticación.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso | Descripción |\n|---|---|---|---|\n| `GET /portfolio` | ❌ Público | — | Lista proyectos publicados |\n| `GET /portfolio/admin` | ✅ Bearer | `portfolio:read` o `portfolio:manage` | Lista admin |\n| `GET /portfolio/by-service/:serviceSlug` | ❌ Público | — | Filtra por servicio |\n| `GET /portfolio/:slug` | ❌ Público | — | Detalle con cliente y servicios |\n| `POST /portfolio` | ✅ Bearer | `portfolio:create` o `portfolio:manage` | Crear proyecto |\n| `PATCH /portfolio/:id` | ✅ Bearer | `portfolio:update` o `portfolio:manage` | Actualizar |\n| `DELETE /portfolio/:id` | ✅ Bearer | `portfolio:delete` o `portfolio:manage` | Soft delete |",
+      "metaSortKey": -400
+    },
+
+    {
+      "_id": "req_clients_create",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Create Client",
+      "description": "## ➕ Crear Cliente\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:create` o `clients:manage`.\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `businessName` | `string` | ✅ | Nombre de la empresa (único) |\n| `clientType` | `string` | ✅ | `company` \\| `freelancer` \\| `individual` \\| `government` \\| `ngo` \\| `other` |\n| `country` | `string` | ✅ | Código ISO alpha-2 (ej. `PE`, `MX`, `US`) |\n| `documentType` | `string` | — | `DNI` \\| `RUC` \\| `NIF` \\| `CNPJ` \\| etc. |\n| `documentNumber` | `string` | — | Número de documento |\n| `logoUrl` | `string` | — | URL del logo (sube con Storage primero) |\n| `website` | `string` | — | Sitio web |\n| `industry` | `string` | — | Industria/sector |\n| `primaryContact` | `object` | — | `{ name, email, phone?, position? }` |\n| `notes` | `string` | — | Notas internas |\n\n### ✅ Respuesta exitosa `201 Created`",
+      "method": "POST",
+      "url": "{{ base_url }}/clients",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_clcreate_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_clcreate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"businessName\": \"Acme Corporation\",\n  \"clientType\": \"company\",\n  \"country\": \"US\",\n  \"documentType\": \"EIN\",\n  \"documentNumber\": \"12-3456789\",\n  \"website\": \"https://acme.example.com\",\n  \"industry\": \"Technology\",\n  \"primaryContact\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john@acme.example.com\",\n    \"position\": \"CEO\"\n  }\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_clients_list",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "List Clients",
+      "description": "## 📋 Listar Clientes\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:read` o `clients:manage`.\n\n### 🔍 Query params\n\n| Param | Tipo | Default | Descripción |\n|---|---|---|---|\n| `page` | `number` | `1` | Página |\n| `limit` | `number` | `10` | Items por página (max 100) |\n| `search` | `string` | — | Buscar por nombre de empresa |",
+      "method": "GET",
+      "url": "{{ base_url }}/clients",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_cllist_1" }
+      ],
+      "parameters": [
+        { "name": "page", "value": "1", "id": "p_cllist_1" },
+        { "name": "limit", "value": "10", "id": "p_cllist_2" }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_clients_getbyid",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Get Client by ID",
+      "description": "## 🔍 Obtener Cliente por ID\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:read` o `clients:manage`.\n\n> Guarda el `id` de un cliente en la variable `client_id` del entorno.",
+      "method": "GET",
+      "url": "{{ base_url }}/clients/{{ client_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_clget_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_clients_update",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Update Client",
+      "description": "## ✏️ Actualizar Cliente\n\nActualización parcial — solo se modifican los campos enviados.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:update` o `clients:manage`.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/clients/{{ client_id }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_clupd_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_clupd_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"industry\": \"Ecommerce\",\n  \"notes\": \"Cliente VIP desde 2024\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_clients_delete",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Delete Client (Logical)",
+      "description": "## 🗑️ Eliminar Cliente (Soft Delete)\n\nMarca el cliente como `deleted`. No elimina físicamente de la base de datos.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:delete` o `clients:manage`.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/clients/{{ client_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_cldel_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+
+    {
+      "_id": "req_services_list_public",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "List Services (Public)",
+      "description": "## 📋 Listar Servicios (Público)\n\nRetorna todos los servicios activos. No requiere autenticación. Contenido en todos los idiomas (LocalizedString).\n\n### ✅ Respuesta exitosa `200 OK`\n\nCada servicio incluye: `id`, `slug`, `name`, `shortDescription`, `description`, `coverImageUrl`, `pillars`, `highlights`, `tags`, `order`.",
+      "method": "GET",
+      "url": "{{ base_url }}/services",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svlistpub_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_services_list_admin",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "List Services (Admin)",
+      "description": "## 📋 Listar Servicios (Admin)\n\nRetorna todos los servicios activos incluyendo los inactivos (`isActive: false`).\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:read` o `services:manage`.",
+      "method": "GET",
+      "url": "{{ base_url }}/services/admin",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svlistadm_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_services_getbyslug",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Get Service by Slug",
+      "description": "## 🔍 Obtener Servicio por Slug\n\nRetorna el detalle completo de un servicio activo. No requiere autenticación.\n\n> Guarda el slug de un servicio en la variable `service_slug` del entorno.",
+      "method": "GET",
+      "url": "{{ base_url }}/services/{{ service_slug }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svget_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_services_create",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Create Service",
+      "description": "## ➕ Crear Servicio\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:create` o `services:manage`.\n\n### 📤 Request Body\n\nTodos los campos `LocalizedString` requieren los 10 idiomas: `en`, `es`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`.\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `name` | `LocalizedString` | ✅ | Nombre del servicio |\n| `shortDescription` | `LocalizedString` | ✅ | Descripción corta |\n| `description` | `LocalizedString` | ✅ | Descripción completa |\n| `slug` | `string` | — | Auto-generado de `name.en` si no se especifica |\n| `coverImageUrl` | `string` | — | URL de imagen de portada |\n| `pillars` | `string[]` | — | Pilares de la empresa |\n| `highlights` | `LocalizedString[]` | — | Puntos destacados |\n| `tags` | `string[]` | — | Tags |\n| `order` | `number` | — | Orden de presentación |\n| `isActive` | `boolean` | — | Default `true` |",
+      "method": "POST",
+      "url": "{{ base_url }}/services",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_svcreate_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svcreate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": {\n    \"en\": \"Web Development\",\n    \"es\": \"Desarrollo Web\",\n    \"de\": \"Webentwicklung\",\n    \"fr\": \"Développement Web\",\n    \"it\": \"Sviluppo Web\",\n    \"ja\": \"ウェブ開発\",\n    \"ko\": \"웹 개발\",\n    \"pt\": \"Desenvolvimento Web\",\n    \"ru\": \"Веб-разработка\",\n    \"zh\": \"网页开发\"\n  },\n  \"shortDescription\": {\n    \"en\": \"Modern and scalable web solutions\",\n    \"es\": \"Soluciones web modernas y escalables\",\n    \"de\": \"Moderne und skalierbare Web-Lösungen\",\n    \"fr\": \"Solutions web modernes et évolutives\",\n    \"it\": \"Soluzioni web moderne e scalabili\",\n    \"ja\": \"モダンでスケーラブルなウェブソリューション\",\n    \"ko\": \"현대적이고 확장 가능한 웹 솔루션\",\n    \"pt\": \"Soluções web modernas e escaláveis\",\n    \"ru\": \"Современные и масштабируемые веб-решения\",\n    \"zh\": \"现代可扩展的网络解决方案\"\n  },\n  \"description\": {\n    \"en\": \"Full description here\",\n    \"es\": \"Descripción completa aquí\",\n    \"de\": \"Vollständige Beschreibung\",\n    \"fr\": \"Description complète\",\n    \"it\": \"Descrizione completa\",\n    \"ja\": \"完全な説明\",\n    \"ko\": \"전체 설명\",\n    \"pt\": \"Descrição completa\",\n    \"ru\": \"Полное описание\",\n    \"zh\": \"完整描述\"\n  },\n  \"pillars\": [\"responsibility\", \"tech-adaptation\"],\n  \"tags\": [\"web\", \"nodejs\", \"react\"],\n  \"order\": 1,\n  \"isActive\": true\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_services_update",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Update Service",
+      "description": "## ✏️ Actualizar Servicio\n\nActualización parcial. El `slug` se usa como identificador en la URL.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:update` o `services:manage`.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/services/{{ service_slug }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_svupd_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svupd_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isActive\": false,\n  \"order\": 5\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_services_delete",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Delete Service (Logical)",
+      "description": "## 🗑️ Eliminar Servicio (Soft Delete)\n\nMarca el servicio como `deleted` (status: 'deleted').\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:delete` o `services:manage`.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/services/{{ service_slug }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svdel_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+
+    {
+      "_id": "req_portfolio_list_public",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "List Portfolio (Public)",
+      "description": "## 📋 Listar Portafolio (Público)\n\nRetorna proyectos con `status: published`, ordenados por `featured` desc y `order` asc. No incluye el campo `description` para aligerar la respuesta.\n\n### 🔍 Query params\n\n| Param | Tipo | Default | Descripción |\n|---|---|---|---|\n| `page` | `number` | `1` | Página |\n| `limit` | `number` | `10` | Items por página |\n| `featured` | `boolean` | — | Filtrar solo destacados |",
+      "method": "GET",
+      "url": "{{ base_url }}/portfolio",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptlistpub_1" }
+      ],
+      "parameters": [
+        { "name": "page", "value": "1", "id": "p_ptlistpub_1" },
+        { "name": "limit", "value": "10", "id": "p_ptlistpub_2" }
+      ],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -700
+    },
+    {
+      "_id": "req_portfolio_list_admin",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "List Portfolio (Admin)",
+      "description": "## 📋 Listar Portafolio (Admin)\n\nRetorna todos los proyectos excepto los eliminados. Acepta filtro por `status`.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:read` o `portfolio:manage`.\n\n### 🔍 Query params\n\n| Param | Tipo | Descripción |\n|---|---|---|\n| `page` | `number` | Página |\n| `limit` | `number` | Items por página |\n| `status` | `string` | `draft` \\| `published` \\| `archived` |",
+      "method": "GET",
+      "url": "{{ base_url }}/portfolio/admin",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptlistadm_1" }
+      ],
+      "parameters": [
+        { "name": "page", "value": "1", "id": "p_ptlistadm_1" },
+        { "name": "limit", "value": "10", "id": "p_ptlistadm_2" }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_portfolio_by_service",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "List Portfolio by Service",
+      "description": "## 🔎 Portafolio por Servicio\n\nFiltra proyectos publicados que incluyen el servicio especificado.\n\n### 🔍 Query params\n\n| Param | Tipo | Default | Descripción |\n|---|---|---|---|\n| `page` | `number` | `1` | Página |\n| `limit` | `number` | `10` | Items por página |",
+      "method": "GET",
+      "url": "{{ base_url }}/portfolio/by-service/{{ service_slug }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptbysvc_1" }
+      ],
+      "parameters": [
+        { "name": "page", "value": "1", "id": "p_ptbysvc_1" },
+        { "name": "limit", "value": "10", "id": "p_ptbysvc_2" }
+      ],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_portfolio_getbyslug",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Get Portfolio by Slug",
+      "description": "## 🔍 Obtener Proyecto por Slug\n\nRetorna el detalle completo del proyecto con join de cliente (solo `businessName`, `logoUrl`, `website`) y servicios (solo `id`, `slug`, `name`, `shortDescription`).\n\n> Guarda el slug de un proyecto en la variable `portfolio_slug` del entorno.",
+      "method": "GET",
+      "url": "{{ base_url }}/portfolio/{{ portfolio_slug }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptget_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_portfolio_create",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Create Portfolio",
+      "description": "## ➕ Crear Proyecto de Portafolio\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:create` o `portfolio:manage`.\n\n### 📤 Request Body\n\nTodos los campos `LocalizedString` requieren los 10 idiomas.\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `name` | `LocalizedString` | ✅ | Nombre del proyecto |\n| `shortDescription` | `LocalizedString` | ✅ | Descripción corta |\n| `description` | `LocalizedString` | ✅ | Descripción completa |\n| `coverImageUrl` | `string` (URL) | ✅ | Imagen de portada |\n| `serviceIds` | `string[]` (UUID) | ✅ | IDs de servicios (mín. 1) |\n| `startDate` | `string` (YYYY-MM-DD) | ✅ | Fecha de inicio |\n| `clientId` | `string` (UUID) | — | ID del cliente |\n| `gallery` | `string[]` (URL) | — | Galería de imágenes |\n| `technologies` | `string[]` | — | Tecnologías usadas |\n| `projectUrl` | `string` (URL) | — | URL del proyecto en vivo |\n| `endDate` | `string` (YYYY-MM-DD) | — | Fecha de finalización |\n| `featured` | `boolean` | — | Proyecto destacado |\n| `order` | `number` | — | Orden de presentación |\n| `testimonial` | `object` | — | `{ quote: LocalizedString, authorName, authorPosition? }` |\n| `metrics` | `object[]` | — | `{ label: LocalizedString, value: string }[]` |\n| `status` | `string` | — | `draft` (default) \\| `published` \\| `archived` |",
+      "method": "POST",
+      "url": "{{ base_url }}/portfolio",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_ptcreate_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptcreate_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": {\n    \"en\": \"E-commerce Platform\",\n    \"es\": \"Plataforma E-commerce\",\n    \"de\": \"E-Commerce-Plattform\",\n    \"fr\": \"Plateforme E-commerce\",\n    \"it\": \"Piattaforma E-commerce\",\n    \"ja\": \"Eコマースプラットフォーム\",\n    \"ko\": \"이커머스 플랫폼\",\n    \"pt\": \"Plataforma de E-commerce\",\n    \"ru\": \"Платформа электронной коммерции\",\n    \"zh\": \"电子商务平台\"\n  },\n  \"shortDescription\": {\n    \"en\": \"A complete e-commerce solution\",\n    \"es\": \"Una solución de e-commerce completa\",\n    \"de\": \"Eine vollständige E-Commerce-Lösung\",\n    \"fr\": \"Une solution e-commerce complète\",\n    \"it\": \"Una soluzione e-commerce completa\",\n    \"ja\": \"完全なEコマースソリューション\",\n    \"ko\": \"완전한 이커머스 솔루션\",\n    \"pt\": \"Uma solução completa de e-commerce\",\n    \"ru\": \"Полное решение для электронной коммерции\",\n    \"zh\": \"完整的电子商务解决方案\"\n  },\n  \"description\": {\n    \"en\": \"Detailed project description\",\n    \"es\": \"Descripción detallada del proyecto\",\n    \"de\": \"Detaillierte Projektbeschreibung\",\n    \"fr\": \"Description détaillée du projet\",\n    \"it\": \"Descrizione dettagliata del progetto\",\n    \"ja\": \"プロジェクトの詳細な説明\",\n    \"ko\": \"프로젝트 상세 설명\",\n    \"pt\": \"Descrição detalhada do projeto\",\n    \"ru\": \"Подробное описание проекта\",\n    \"zh\": \"项目详细描述\"\n  },\n  \"coverImageUrl\": \"https://res.cloudinary.com/example/image/upload/cover.jpg\",\n  \"serviceIds\": [\"SERVICE_UUID_HERE\"],\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-06-30\",\n  \"technologies\": [\"React\", \"Node.js\", \"MongoDB\"],\n  \"featured\": true,\n  \"order\": 1,\n  \"status\": \"published\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_portfolio_update",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Update Portfolio",
+      "description": "## ✏️ Actualizar Proyecto de Portafolio\n\nActualización parcial — solo se modifican los campos enviados.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:update` o `portfolio:manage`.\n\n> Guarda el `id` del proyecto en la variable `portfolio_id` del entorno.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/portfolio/{{ portfolio_id }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json", "id": "h_ptupd_1" },
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptupd_2" }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"published\",\n  \"featured\": true\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_portfolio_delete",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Delete Portfolio (Logical)",
+      "description": "## 🗑️ Eliminar Proyecto (Soft Delete)\n\nMarca el proyecto como `deleted` (status: 'deleted').\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:delete` o `portfolio:manage`.\n\n> Guarda el `id` del proyecto en la variable `portfolio_id` del entorno.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/portfolio/{{ portfolio_id }}",
+      "headers": [
+        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptdel_1" }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
     }
   ]
 }

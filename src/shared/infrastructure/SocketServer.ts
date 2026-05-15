@@ -114,7 +114,9 @@ export function initSocketServer(httpServer: Server): SocketIOServer {
 
 export function getIO(): SocketIOServer {
 	if (!io)
-		throw new Error('SocketServer not initialized. Call initSocketServer first.');
+		throw new Error(
+			'SocketServer not initialized. Call initSocketServer first.',
+		);
 	return io;
 }
 

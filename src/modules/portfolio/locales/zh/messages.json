@@ -1,0 +1,7 @@
+{
+	"SUCCESS_PORTFOLIO_CREATE": "作品集项目创建成功",
+	"SUCCESS_PORTFOLIO_LIST": "作品集列表获取成功",
+	"SUCCESS_PORTFOLIO_FOUND": "作品集项目查找成功",
+	"SUCCESS_PORTFOLIO_UPDATE": "作品集项目更新成功",
+	"SUCCESS_PORTFOLIO_DELETED": "作品集项目删除成功"
+}

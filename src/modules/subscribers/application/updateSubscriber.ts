@@ -1,5 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 import { SubscriberSchema } from '../types/subscriber.schema';
 
@@ -14,11 +14,7 @@ export async function updateSubscriber(
 	);
 
 	if (!updated) {
-		setThrowError({
-			statusCode: 404,
-			message: 'Subscriber not found',
-			code: 'SUBSCRIBER_NOT_FOUND',
-		});
+		AppError.notFound('SUBSCRIBER_NOT_FOUND', 'Subscriber not found');
 	}
 
 	return cleanMongoFields(

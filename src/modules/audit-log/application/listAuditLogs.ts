@@ -13,8 +13,15 @@ export interface AuditLogFilters {
 }
 
 export async function listAuditLogs(filters: AuditLogFilters) {
-	const { userId, action, resource, dateFrom, dateTo, page = 1, limit = 20 } =
-		filters;
+	const {
+		userId,
+		action,
+		resource,
+		dateFrom,
+		dateTo,
+		page = 1,
+		limit = 20,
+	} = filters;
 
 	const query: Record<string, unknown> = {};
 	if (userId) query.userId = userId;

@@ -11,20 +11,21 @@ vi.mock('@Constants/permissions', () => ({
 
 vi.mock('@Modules/auth', () => ({
 	authenticate: (_req: unknown, _res: unknown, next: () => void) => next(),
-	authorize:
-		() =>
-		(_req: unknown, _res: unknown, next: () => void) =>
-			next(),
+	authorize: () => (_req: unknown, _res: unknown, next: () => void) => next(),
 }));
 
 vi.mock('../../controllers/appSettings.get', () => ({
-	appSettingsGetController: (_req: unknown, res: { json: (v: unknown) => void }) =>
-		res.json({ ok: true }),
+	appSettingsGetController: (
+		_req: unknown,
+		res: { json: (v: unknown) => void },
+	) => res.json({ ok: true }),
 }));
 
 vi.mock('../../controllers/appSettings.update', () => ({
-	appSettingsUpdateController: (_req: unknown, res: { json: (v: unknown) => void }) =>
-		res.json({ ok: true }),
+	appSettingsUpdateController: (
+		_req: unknown,
+		res: { json: (v: unknown) => void },
+	) => res.json({ ok: true }),
 }));
 
 import { appSettingsApi } from '../route';

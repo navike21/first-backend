@@ -1,25 +1,17 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { ResetPasswordSchema } from '../schemas/auth.schema';
 import { resetPassword } from '../application/resetPassword';
 
 export const authResetPassword = asyncHandler(async (req, res) => {
 	const token = req.params.token as string;
 	if (!token)
-		setThrowError({
-			statusCode: 400,
-			code: 'MISSING_TOKEN',
-			message: 'Reset token is required',
-		});
+		AppError.badRequest('MISSING_TOKEN', 'Reset token is required');
 
 	const parsed = ResetPasswordSchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-		});
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed');
 	}
 
 	await resetPassword(token, parsed.data.password);

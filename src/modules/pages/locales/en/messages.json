@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAGE_CREATE": "Page created successfully",
+	"SUCCESS_PAGE_LIST": "Pages retrieved successfully",
+	"SUCCESS_PAGE_FOUND": "Page found successfully",
+	"SUCCESS_PAGE_UPDATE": "Page updated successfully",
+	"SUCCESS_PAGE_DELETED": "Page deleted successfully",
+	"SUCCESS_PAGE_SECTION_ADDED": "Section added successfully",
+	"SUCCESS_PAGE_SECTION_UPDATED": "Section updated successfully",
+	"SUCCESS_PAGE_SECTION_DELETED": "Section deleted successfully",
+	"SUCCESS_PAGE_SECTIONS_REORDERED": "Sections reordered successfully",
+	"PAGE_NOT_FOUND": "Page not found",
+	"PAGE_SLUG_CONFLICT": "A page with this slug already exists",
+	"PAGE_SECTION_NOT_FOUND": "Section not found"
+}

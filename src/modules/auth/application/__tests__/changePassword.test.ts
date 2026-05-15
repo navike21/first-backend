@@ -1,90 +1,92 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
+import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
+import SessionModel from '@Modules/auth/infrastructure/SessionModel';
 import { changePassword } from '@Modules/auth/application/changePassword';
 import { InvalidCredentialsError } from '@Modules/auth/domain/errors/AuthErrors';
 import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
-import { UserModel } from '@Modules/users';
-import { HashedPassword } from '@Modules/auth/domain/value-objects/HashedPassword';
-import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
-import SessionModel from '@Modules/auth/infrastructure/SessionModel';
 
-vi.mock('@Modules/users', () => ({
-	UserModel: { findOne: vi.fn(), findOneAndUpdate: vi.fn() },
-}));
+withMongo();
 
 vi.mock('@Modules/auth/domain/value-objects/HashedPassword', () => ({
-	HashedPassword: { compare: vi.fn(), hash: vi.fn() },
+	HashedPassword: {
+		compare: vi.fn().mockResolvedValue(true),
+		hash: vi.fn().mockResolvedValue('new-hashed-pw'),
+	},
 }));
 
-vi.mock('@Modules/auth/infrastructure/RefreshTokenModel', () => ({
-	default: { updateMany: vi.fn() },
-}));
-
-vi.mock('@Modules/auth/infrastructure/SessionModel', () => ({
-	default: { deleteMany: vi.fn() },
-}));
-
-type MockUser = Pick<UserDocument, 'id' | 'password'>;
-
-describe('changePassword', () => {
-	it('changes the password and revokes all sessions when credentials are valid', async () => {
-		// Arrange
-		const mockUser: MockUser = { id: 'u1', password: 'hashed' };
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(HashedPassword.compare).mockResolvedValue(true);
-		vi.mocked(HashedPassword.hash).mockResolvedValue('new-hashed');
-		vi.mocked(UserModel.findOneAndUpdate).mockResolvedValue(null);
-		vi.mocked(RefreshTokenModel.updateMany).mockResolvedValue(
-			undefined as never,
-		);
-		vi.mocked(SessionModel.deleteMany).mockResolvedValue(undefined as never);
-
-		// Act
-		await changePassword({
-			userId: 'u1',
-			currentPassword: 'old',
-			newPassword: 'new',
-		});
-
-		// Assert
-		expect(HashedPassword.hash).toHaveBeenCalledWith('new');
-		expect(UserModel.findOneAndUpdate).toHaveBeenCalled();
-		expect(RefreshTokenModel.updateMany).toHaveBeenCalled();
-		expect(SessionModel.deleteMany).toHaveBeenCalledWith({ userId: 'u1' });
+const seedUser = (overrides = {}) =>
+	UserModel.create({
+		email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		password: 'old-hash',
+		firstName: 'John',
+		lastName: 'Doe',
+		...overrides,
 	});
 
-	it('throws UserNotFoundError when user does not exist', async () => {
-		// Arrange
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
+describe('changePassword', () => {
+	it('updates the password hash in the database', async () => {
+		const user = await seedUser();
 
-		// Act & Assert
-		await expect(
-			changePassword({
-				userId: 'u99',
-				currentPassword: 'old',
-				newPassword: 'new',
-			}),
-		).rejects.toBeInstanceOf(UserNotFoundError);
+		await changePassword({
+			userId: user.id,
+			currentPassword: 'old',
+			newPassword: 'New1!',
+		});
+
+		const updated = await UserModel.findOne({ id: user.id });
+		expect(updated!.password).toBe('new-hashed-pw');
+	});
+
+	it('revokes all active RefreshTokens and deletes Sessions', async () => {
+		const user = await seedUser();
+		await RefreshTokenModel.create({
+			jti: 'active-jti',
+			userId: user.id,
+			expiresAt: new Date(Date.now() + 86400000),
+		});
+		await SessionModel.create({
+			userId: user.id,
+			userAgent: 'ua',
+			ip: '1.1.1.1',
+		});
+
+		await changePassword({
+			userId: user.id,
+			currentPassword: 'old',
+			newPassword: 'New1!',
+		});
+
+		const rt = await RefreshTokenModel.findOne({ jti: 'active-jti' });
+		expect(rt!.revokedAt).toBeInstanceOf(Date);
+
+		const session = await SessionModel.findOne({ userId: user.id });
+		expect(session).toBeNull();
 	});
 
 	it('throws InvalidCredentialsError when current password is wrong', async () => {
-		// Arrange
-		const mockUser: MockUser = { id: 'u1', password: 'hashed' };
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(HashedPassword.compare).mockResolvedValue(false);
+		const { HashedPassword } =
+			await import('@Modules/auth/domain/value-objects/HashedPassword');
+		vi.mocked(HashedPassword.compare).mockResolvedValueOnce(false);
+		const user = await seedUser();
 
-		// Act & Assert
 		await expect(
 			changePassword({
-				userId: 'u1',
+				userId: user.id,
 				currentPassword: 'wrong',
-				newPassword: 'new',
+				newPassword: 'New1!',
 			}),
 		).rejects.toBeInstanceOf(InvalidCredentialsError);
+	});
+
+	it('throws UserNotFoundError when user does not exist', async () => {
+		await expect(
+			changePassword({
+				userId: 'nonexistent',
+				currentPassword: 'any',
+				newPassword: 'New1!',
+			}),
+		).rejects.toBeInstanceOf(UserNotFoundError);
 	});
 });

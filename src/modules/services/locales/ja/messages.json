@@ -1,0 +1,7 @@
+{
+	"SUCCESS_SERVICE_CREATE": "サービスが正常に作成されました",
+	"SUCCESS_SERVICE_LIST": "サービス一覧が正常に取得されました",
+	"SUCCESS_SERVICE_FOUND": "サービスが正常に見つかりました",
+	"SUCCESS_SERVICE_UPDATE": "サービスが正常に更新されました",
+	"SUCCESS_SERVICE_DELETED": "サービスが正常に削除されました"
+}

@@ -1,6 +1,6 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { hasPermission, Permission } from '@Constants/permissions';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 
 export const authorize = (...required: Permission[]) =>
 	asyncHandler(async (_req, res, next) => {
@@ -11,11 +11,7 @@ export const authorize = (...required: Permission[]) =>
 		);
 
 		if (!allowed) {
-			setThrowError({
-				statusCode: 403,
-				code: 'FORBIDDEN',
-				message: 'Insufficient permissions',
-			});
+			AppError.forbidden('FORBIDDEN', 'Insufficient permissions');
 		}
 
 		next();

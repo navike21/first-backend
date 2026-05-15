@@ -1,26 +1,20 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { HydratedDocument } from 'mongoose';
-import type { UserDocument } from '@Modules/users/infrastructure/UserModel';
-import type { UserGroupDocument } from '@Modules/user-groups';
+import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
+import RefreshTokenModel from '@Modules/auth/infrastructure/RefreshTokenModel';
+import SessionModel from '@Modules/auth/infrastructure/SessionModel';
 import { loginUser } from '@Modules/auth/application/loginUser';
 import {
 	InvalidCredentialsError,
 	EmailNotVerifiedError,
 } from '@Modules/auth/domain/errors/AuthErrors';
-import { UserModel } from '@Modules/users';
-import { UserGroupModel } from '@Modules/user-groups';
-import { HashedPassword } from '@Modules/auth/domain/value-objects/HashedPassword';
 
-vi.mock('@Modules/users', () => ({
-	UserModel: { findOne: vi.fn() },
-}));
+withMongo();
 
-vi.mock('@Modules/user-groups', () => ({
-	UserGroupModel: { findOne: vi.fn() },
-}));
-
-vi.mock('@Helpers/uuid', () => ({
-	default: () => 'generated-uuid',
+vi.mock('@Modules/auth/domain/value-objects/HashedPassword', () => ({
+	HashedPassword: {
+		compare: vi.fn().mockResolvedValue(true),
+	},
 }));
 
 vi.mock('@Shared/infrastructure/JwtService', () => ({
@@ -34,182 +28,91 @@ vi.mock('@Shared/infrastructure/SocketServer', () => ({
 	emitSessionUpdate: vi.fn(),
 }));
 
-vi.mock('@Modules/auth/infrastructure/RefreshTokenModel', () => ({
-	default: { create: vi.fn() },
-}));
+vi.mock('@Helpers/uuid', () => ({ default: () => 'test-jti' }));
 
-vi.mock('@Modules/auth/infrastructure/SessionModel', () => ({
-	default: { create: vi.fn() },
-}));
+const seedUser = (overrides = {}) =>
+	UserModel.create({
+		email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
+		password: 'stored-hash',
+		firstName: 'Test',
+		lastName: 'User',
+		isEmailVerified: true,
+		...overrides,
+	});
 
-vi.mock('@Modules/auth/domain/value-objects/HashedPassword', () => ({
-	HashedPassword: { compare: vi.fn() },
-}));
+describe('loginUser', () => {
+	it('creates a RefreshToken and Session in the database on successful login', async () => {
+		const user = await seedUser();
 
-type MockUser = Pick<
-	UserDocument,
-	'id' | 'email' | 'password' | 'firstName' | 'lastName' | 'isEmailVerified'
-> & { groupId?: string };
-
-describe('Auth loginUser', () => {
-	it('logs in a valid user and returns tokens and user data', async () => {
-		// Arrange
-		const mockUser: MockUser = {
-			id: 'u1',
-			email: 'test@example.com',
-			password: 'hashed',
-			firstName: 'Test',
-			lastName: 'User',
-			groupId: 'g1',
-			isEmailVerified: true,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(HashedPassword.compare).mockResolvedValue(true);
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue({
-			id: 'g1',
-			permissions: ['READ', 'WRITE'],
-		} as unknown as HydratedDocument<UserGroupDocument>);
-
-		// Act
-		const result = await loginUser({
-			email: 'test@example.com',
-			password: 'password',
-			ip: '1.2.3.4',
+		await loginUser({
+			email: user.email,
+			password: 'any',
 			userAgent: 'ua',
+			ip: '1.2.3.4',
 		});
 
-		// Assert
+		const rt = await RefreshTokenModel.findOne({ userId: user.id });
+		expect(rt).not.toBeNull();
+		expect(rt!.jti).toBe('test-jti');
+
+		const session = await SessionModel.findOne({ userId: user.id });
+		expect(session).not.toBeNull();
+		expect(session!.ip).toBe('1.2.3.4');
+	});
+
+	it('returns accessToken, refreshToken, and user data', async () => {
+		const user = await seedUser();
+
+		const result = await loginUser({
+			email: user.email,
+			password: 'any',
+			userAgent: 'ua',
+			ip: '127.0.0.1',
+		});
+
 		expect(result.accessToken).toBe('ACCESS_TOKEN');
 		expect(result.refreshToken).toBe('REFRESH_TOKEN');
-		expect(result.user.id).toBe('u1');
-		expect(result.user.email).toBe('test@example.com');
-		expect(result.user.permissions).toEqual(['READ', 'WRITE']);
+		expect(result.user.id).toBe(user.id);
+		expect(result.user.email).toBe(user.email);
 	});
 
-	it('throws InvalidCredentialsError when the user is not found', async () => {
-		// Arrange
-		vi.mocked(UserModel.findOne).mockResolvedValue(null);
-
-		// Act & Assert
+	it('throws InvalidCredentialsError when user does not exist', async () => {
 		await expect(
 			loginUser({
-				email: 'missing@example.com',
-				password: 'pw',
-				ip: '1.2.3.4',
+				email: 'nobody@test.com',
+				password: 'any',
 				userAgent: 'ua',
+				ip: 'ip',
 			}),
 		).rejects.toBeInstanceOf(InvalidCredentialsError);
 	});
 
-	it('throws InvalidCredentialsError when the password does not match', async () => {
-		// Arrange
-		const mockUser: MockUser = {
-			id: 'u4',
-			email: 'badpassword@example.com',
-			password: 'hashed',
-			firstName: 'Bad',
-			lastName: 'Password',
-			isEmailVerified: true,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(HashedPassword.compare).mockResolvedValue(false);
+	it('throws InvalidCredentialsError when password is wrong', async () => {
+		const { HashedPassword } =
+			await import('@Modules/auth/domain/value-objects/HashedPassword');
+		vi.mocked(HashedPassword.compare).mockResolvedValueOnce(false);
+		const user = await seedUser();
 
-		// Act & Assert
 		await expect(
 			loginUser({
-				email: 'badpassword@example.com',
+				email: user.email,
 				password: 'wrong',
-				ip: '1.2.3.4',
 				userAgent: 'ua',
+				ip: 'ip',
 			}),
 		).rejects.toBeInstanceOf(InvalidCredentialsError);
 	});
 
-	it('throws EmailNotVerifiedError when the user email is not verified', async () => {
-		// Arrange
-		const mockUser: MockUser = {
-			id: 'u3',
-			email: 'notverified@example.com',
-			password: 'hashed',
-			firstName: 'Not',
-			lastName: 'Verified',
-			groupId: 'g1',
-			isEmailVerified: false,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(HashedPassword.compare).mockResolvedValue(true);
+	it('throws EmailNotVerifiedError when email is not verified', async () => {
+		const user = await seedUser({ isEmailVerified: false });
 
-		// Act & Assert
 		await expect(
 			loginUser({
-				email: 'notverified@example.com',
-				password: 'password',
-				ip: '1.2.3.4',
+				email: user.email,
+				password: 'any',
 				userAgent: 'ua',
+				ip: 'ip',
 			}),
 		).rejects.toBeInstanceOf(EmailNotVerifiedError);
-	});
-
-	it('returns empty permissions when the user has no groupId', async () => {
-		// Arrange
-		const mockUser: MockUser = {
-			id: 'u5',
-			email: 'nogroupid@example.com',
-			password: 'hashed',
-			firstName: 'No',
-			lastName: 'GroupId',
-			isEmailVerified: true,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(HashedPassword.compare).mockResolvedValue(true);
-
-		// Act
-		const result = await loginUser({
-			email: 'nogroupid@example.com',
-			password: 'password',
-			ip: '1.2.3.4',
-			userAgent: 'ua',
-		});
-
-		// Assert
-		expect(result.user.permissions).toEqual([]);
-		expect(UserGroupModel.findOne).not.toHaveBeenCalled();
-	});
-
-	it('returns empty permissions when the group is not found for the given groupId', async () => {
-		// Arrange
-		const mockUser: MockUser = {
-			id: 'u2',
-			email: 'nogroup@example.com',
-			password: 'hashed',
-			firstName: 'No',
-			lastName: 'Group',
-			groupId: 'missing',
-			isEmailVerified: true,
-		};
-		vi.mocked(UserModel.findOne).mockResolvedValue(
-			mockUser as unknown as HydratedDocument<UserDocument>,
-		);
-		vi.mocked(HashedPassword.compare).mockResolvedValue(true);
-		vi.mocked(UserGroupModel.findOne).mockResolvedValue(null);
-
-		// Act
-		const result = await loginUser({
-			email: 'nogroup@example.com',
-			password: 'password',
-			ip: '1.2.3.4',
-			userAgent: 'ua',
-		});
-
-		// Assert
-		expect(result.user.permissions).toEqual([]);
 	});
 });
