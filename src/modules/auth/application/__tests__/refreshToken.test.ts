@@ -125,9 +125,9 @@ describe('rotateRefreshToken', () => {
 			type: 'refresh',
 		});
 
-		await expect(rotateRefreshToken('token', 'ua', 'ip')).rejects.toBeInstanceOf(
-			InvalidTokenError,
-		);
+		await expect(
+			rotateRefreshToken('token', 'ua', 'ip'),
+		).rejects.toBeInstanceOf(InvalidTokenError);
 	});
 
 	it('revokes all tokens and throws TokenReuseDetectedError when the RT is already revoked', async () => {
@@ -164,8 +164,8 @@ describe('rotateRefreshToken', () => {
 			type: 'refresh',
 		});
 
-		await expect(rotateRefreshToken('token', 'ua', 'ip')).rejects.toBeInstanceOf(
-			InvalidTokenError,
-		);
+		await expect(
+			rotateRefreshToken('token', 'ua', 'ip'),
+		).rejects.toBeInstanceOf(InvalidTokenError);
 	});
 });

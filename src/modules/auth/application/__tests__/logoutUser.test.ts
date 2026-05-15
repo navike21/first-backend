@@ -26,7 +26,11 @@ describe('logoutUser', () => {
 	it('revokes the RefreshToken and deletes the Session', async () => {
 		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		const rt = await seedRT();
-		await SessionModel.create({ userId: rt.userId, userAgent: 'ua', ip: '1.1.1.1' });
+		await SessionModel.create({
+			userId: rt.userId,
+			userAgent: 'ua',
+			ip: '1.1.1.1',
+		});
 
 		vi.mocked(JwtService.verifyRefresh).mockReturnValue({
 			sub: rt.userId,

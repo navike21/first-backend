@@ -1,0 +1,7 @@
+{
+	"SUCCESS_SERVICE_CREATE": "Услуга успешно создана",
+	"SUCCESS_SERVICE_LIST": "Список услуг успешно получен",
+	"SUCCESS_SERVICE_FOUND": "Услуга успешно найдена",
+	"SUCCESS_SERVICE_UPDATE": "Услуга успешно обновлена",
+	"SUCCESS_SERVICE_DELETED": "Услуга успешно удалена"
+}

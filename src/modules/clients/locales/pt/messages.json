@@ -1,0 +1,7 @@
+{
+	"SUCCESS_CLIENT_CREATE": "Cliente criado com sucesso",
+	"SUCCESS_CLIENT_LIST": "Lista de clientes obtida com sucesso",
+	"SUCCESS_CLIENT_FOUND": "Cliente encontrado com sucesso",
+	"SUCCESS_CLIENT_UPDATE": "Cliente atualizado com sucesso",
+	"SUCCESS_CLIENT_DELETED": "Cliente excluído com sucesso"
+}

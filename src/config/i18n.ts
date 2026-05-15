@@ -7,6 +7,11 @@ import { subscribersLocales } from '../modules/subscribers/locales';
 import { storageLocales } from '../modules/storage/locales';
 import { auditLogLocales } from '../modules/audit-log/locales';
 import { appSettingsLocales } from '../modules/app-settings/locales';
+import { clientsLocales } from '../modules/clients/locales';
+import { servicesLocales } from '../modules/services/locales';
+import { portfolioLocales } from '../modules/portfolio/locales';
+import { pagesLocales } from '../modules/pages/locales';
+import { teamLocales } from '../modules/team/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -21,6 +26,11 @@ export async function initI18n(): Promise<void> {
 				storage: storageLocales[lang],
 				'audit-log': auditLogLocales[lang],
 				'app-settings': appSettingsLocales[lang],
+				clients: clientsLocales[lang],
+				services: servicesLocales[lang],
+				portfolio: portfolioLocales[lang],
+				pages: pagesLocales[lang],
+				team: teamLocales[lang],
 			},
 		]),
 	);
@@ -40,6 +50,11 @@ export async function initI18n(): Promise<void> {
 			'storage',
 			'audit-log',
 			'app-settings',
+			'clients',
+			'services',
+			'portfolio',
+			'pages',
+			'team',
 		],
 		defaultNS: 'errors',
 	});

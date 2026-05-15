@@ -1,17 +1,13 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { ForgotPasswordSchema } from '../schemas/auth.schema';
 import { forgotPassword } from '../application/forgotPassword';
 
 export const authForgotPassword = asyncHandler(async (req, res) => {
 	const parsed = ForgotPasswordSchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-		});
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed');
 	}
 
 	await forgotPassword(parsed.data.email, res.locals.lang as string);

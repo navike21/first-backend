@@ -33,7 +33,10 @@ describe('createUserGroup', () => {
 	});
 
 	it('applies default permissions, color, and status', async () => {
-		const result = await createUserGroup({ name: `G-${Date.now()}`, permissions: [] });
+		const result = await createUserGroup({
+			name: `G-${Date.now()}`,
+			permissions: [],
+		});
 
 		expect(result.permissions).toEqual([]);
 		expect(result.color).toBe('#6366f1');
@@ -44,9 +47,9 @@ describe('createUserGroup', () => {
 	it('throws UserGroupSlugConflictError when slug already exists', async () => {
 		await createUserGroup(baseInput('Duplicate Name'));
 
-		await expect(createUserGroup(baseInput('Duplicate Name'))).rejects.toBeInstanceOf(
-			UserGroupSlugConflictError,
-		);
+		await expect(
+			createUserGroup(baseInput('Duplicate Name')),
+		).rejects.toBeInstanceOf(UserGroupSlugConflictError);
 	});
 
 	it('persists the group in the database', async () => {

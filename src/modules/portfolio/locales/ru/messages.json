@@ -1,0 +1,7 @@
+{
+	"SUCCESS_PORTFOLIO_CREATE": "Элемент портфолио успешно создан",
+	"SUCCESS_PORTFOLIO_LIST": "Список портфолио успешно получен",
+	"SUCCESS_PORTFOLIO_FOUND": "Элемент портфолио успешно найден",
+	"SUCCESS_PORTFOLIO_UPDATE": "Элемент портфолио успешно обновлён",
+	"SUCCESS_PORTFOLIO_DELETED": "Элемент портфолио успешно удалён"
+}

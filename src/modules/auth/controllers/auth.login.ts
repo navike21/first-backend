@@ -1,6 +1,6 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { ENV } from '@Constants/environments';
 import { LoginSchema } from '../schemas/auth.schema';
 import { loginUser } from '../application/loginUser';
@@ -9,16 +9,11 @@ import { REFRESH_COOKIE, AUTH_COOKIE_PATH } from '../constants/authCookies';
 export const authLogin = asyncHandler(async (req, res) => {
 	const parsed = LoginSchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-			details: {
-				validation: parsed.error.issues.map((i) => ({
-					path: i.path.join('.'),
-					message: i.message,
-				})),
-			},
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
+			validation: parsed.error.issues.map((i) => ({
+				path: i.path.join('.'),
+				message: i.message,
+			})),
 		});
 	}
 

@@ -1,6 +1,6 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import setThrowError from '@Helpers/setThrowError';
+import { AppError } from '@Shared/domain/AppError';
 import { uploadFile } from '../application/uploadFile';
 import {
 	StorageUploadBodySchema,
@@ -9,31 +9,22 @@ import {
 
 export const storageUploadController = asyncHandler(async (req, res) => {
 	if (!req.file) {
-		setThrowError({
-			statusCode: 400,
-			code: 'FILE_REQUIRED',
-			message: 'No file was provided',
-		});
+		AppError.badRequest('FILE_REQUIRED', 'No file was provided');
 	}
 
 	const parsed = StorageUploadBodySchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-			details: parsed.error.issues.map((i) => ({
-				path: i.path.join('.'),
-				message: i.message,
-			})),
-		});
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', parsed.error.issues.map((i) => ({
+			path: i.path.join('.'),
+			message: i.message,
+		})));
 	}
 
 	const body = parsed.data as StorageUploadBody;
 	const result = await uploadFile({
-		buffer: req.file!.buffer,
-		originalName: req.file!.originalname,
-		mimeType: req.file!.mimetype,
+		buffer: req.file.buffer,
+		originalName: req.file.originalname,
+		mimeType: req.file.mimetype,
 		entityType: body.entityType,
 		entityId: body.entityId,
 		quality: body.quality,
@@ -52,29 +43,20 @@ export const storageUploadController = asyncHandler(async (req, res) => {
 export const storageUploadBulkController = asyncHandler(async (req, res) => {
 	const files = req.files as Express.Multer.File[] | undefined;
 	if (!files || files.length === 0) {
-		setThrowError({
-			statusCode: 400,
-			code: 'FILE_REQUIRED',
-			message: 'No files were provided',
-		});
+		AppError.badRequest('FILE_REQUIRED', 'No files were provided');
 	}
 
 	const parsed = StorageUploadBodySchema.safeParse(req.body);
 	if (!parsed.success) {
-		setThrowError({
-			statusCode: 422,
-			code: 'VALIDATION_SCHEMA_ERROR',
-			message: 'Validation failed',
-			details: parsed.error.issues.map((i) => ({
-				path: i.path.join('.'),
-				message: i.message,
-			})),
-		});
+		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', parsed.error.issues.map((i) => ({
+			path: i.path.join('.'),
+			message: i.message,
+		})));
 	}
 
 	const body = parsed.data as StorageUploadBody;
 	const results = await Promise.all(
-		files!.map((file) =>
+		files.map((file) =>
 			uploadFile({
 				buffer: file.buffer,
 				originalName: file.originalname,

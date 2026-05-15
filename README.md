@@ -102,6 +102,9 @@ src/
 │   ├── storage/          # File upload (single/bulk) and delete via cloud drivers
 │   ├── audit-log/        # Immutable audit trail, filterable by user/action/resource/date
 │   ├── app-settings/     # Global app configuration with in-memory cache (5 min TTL)
+│   ├── clients/          # CRM — client management (private, admin-only)
+│   ├── services/         # navike21 service catalog with multilingual content
+│   ├── portfolio/        # Project showcase linking clients and services
 │   ├── notifications-email/  # Transactional email templates
 │   ├── health/           # Health check endpoint
 │   └── welcomeApi/       # Root welcome endpoint
@@ -149,6 +152,31 @@ Global application configuration stored in MongoDB, served from an in-memory cac
 
 Permissions: `app-settings:read`, `app-settings:update`, `app-settings:manage`
 
+### Clients
+CRM-style client management. All routes require authentication — client data is private. Only `businessName`, `logoUrl`, and `website` are exposed in public portfolio context. Supports international document types (DNI, RUC, NIF, CNPJ, EIN, VAT, etc.) and ISO alpha-2 country codes. Soft delete preserves history.
+
+Routes: `POST /clients`, `GET /clients`, `GET /clients/:id`, `PATCH /clients/:id`, `DELETE /clients/:id`
+
+Permissions: `clients:read`, `clients:create`, `clients:update`, `clients:delete`, `clients:manage`
+
+### Services
+Manages navike21's 8 official services (Desarrollo web, Ecommerce, Software a medida, Mobile, Marketing Digital, SEO, Diseño UX/UI, Email marketing) with full multilingual content in 10 languages. Public GET endpoints; write endpoints require auth. Slugs are auto-generated from `name.en` using Unicode transliteration (CJK → romaji/pinyin, Cyrillic → Latin, accents stripped).
+
+Public routes: `GET /services`, `GET /services/:slug`
+
+Admin routes: `GET /services/admin`, `POST /services`, `PATCH /services/:slug`, `DELETE /services/:slug`
+
+Permissions: `services:read`, `services:create`, `services:update`, `services:delete`, `services:manage`
+
+### Portfolio
+Project showcase with multilingual content. Links clients and services via application-level UUID joins. Public detail responses embed client name + logo and service metadata. Supports testimonials, metrics, and gallery. Featured projects are sorted first.
+
+Public routes: `GET /portfolio`, `GET /portfolio/by-service/:serviceSlug`, `GET /portfolio/:slug`
+
+Admin routes: `GET /portfolio/admin`, `POST /portfolio`, `PATCH /portfolio/:id`, `DELETE /portfolio/:id`
+
+Permissions: `portfolio:read`, `portfolio:create`, `portfolio:update`, `portfolio:delete`, `portfolio:manage`
+
 ## RBAC Permissions
 
 | Module | Permissions |
@@ -160,6 +188,9 @@ Permissions: `app-settings:read`, `app-settings:update`, `app-settings:manage`
 | Storage | `storage:upload`, `storage:delete`, `storage:manage` |
 | Audit Logs | `audit-logs:read`, `audit-logs:manage` |
 | App Settings | `app-settings:read`, `app-settings:update`, `app-settings:manage` |
+| Clients | `clients:read`, `clients:create`, `clients:update`, `clients:delete`, `clients:manage` |
+| Services | `services:read`, `services:create`, `services:update`, `services:delete`, `services:manage` |
+| Portfolio | `portfolio:read`, `portfolio:create`, `portfolio:update`, `portfolio:delete`, `portfolio:manage` |
 | Superadmin | `*:*` |
 
 `*:manage` is a wildcard that covers all non-`manage` actions for the same module.
@@ -168,7 +199,7 @@ Permissions: `app-settings:read`, `app-settings:update`, `app-settings:manage`
 
 Import `docs/insomnia.collection.json` into [Insomnia](https://insomnia.rest) to get a ready-to-use collection with:
 - Three pre-configured environments (Base, Development, Production)
-- Environment variables: `access_token`, `user_id`, `group_id`, `subscriber_id`, `audit_log_id`
+- Environment variables: `access_token`, `user_id`, `group_id`, `subscriber_id`, `audit_log_id`, `client_id`, `service_slug`, `portfolio_slug`, `portfolio_id`
 - Documented request bodies and response examples for all endpoints
 
 ## Internationalization

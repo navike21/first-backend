@@ -1,8 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { withMongo } from '@test/withMongo';
 import UserModel from '../UserModel';
 
 withMongo();
+beforeAll(async () => {
+	await UserModel.syncIndexes();
+});
 
 const baseUser = () => ({
 	email: `test-${Date.now()}-${crypto.randomUUID().slice(0, 8)}@example.com`,
@@ -48,7 +51,7 @@ describe('UserModel', () => {
 	});
 
 	it('enforces unique email', async () => {
-		const email = `unique-${Date.now()}@test.com`;
+		const email = `unique-${crypto.randomUUID()}@test.com`;
 		await UserModel.create({ ...baseUser(), email });
 		await expect(UserModel.create({ ...baseUser(), email })).rejects.toThrow();
 	});

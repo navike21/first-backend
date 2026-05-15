@@ -1,0 +1,8 @@
+{
+	"SUCCESS_TEAM_MEMBER_CREATE": "Membro da equipe criado com sucesso",
+	"SUCCESS_TEAM_MEMBER_LIST": "Lista de membros da equipe obtida com sucesso",
+	"SUCCESS_TEAM_MEMBER_FOUND": "Membro da equipe encontrado com sucesso",
+	"SUCCESS_TEAM_MEMBER_UPDATE": "Membro da equipe atualizado com sucesso",
+	"SUCCESS_TEAM_MEMBER_DELETED": "Membro da equipe excluído com sucesso",
+	"TEAM_MEMBER_NOT_FOUND": "Membro da equipe não encontrado"
+}

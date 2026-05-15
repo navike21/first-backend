@@ -1,0 +1,50 @@
+import { describe, it, expect, vi } from 'vitest';
+
+vi.mock('@Constants/environments', () => ({
+	ENV: { NODE_ENV: 'test' },
+	ENVIRONMENT: 'test',
+}));
+vi.mock('@Helpers/responseStructure', () => ({
+	successResponse: vi.fn(),
+	errorResponse: vi.fn(),
+}));
+vi.mock('@Shared/infrastructure/JwtService', () => ({
+	JwtService: { verifyAccess: vi.fn() },
+}));
+vi.mock('@Modules/pages/application/createPage', () => ({
+	createPage: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/listPages', () => ({
+	listPages: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/getPageBySlug', () => ({
+	getPageBySlug: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/updatePage', () => ({
+	updatePage: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/deletePage', () => ({
+	deletePage: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/addSection', () => ({
+	addSection: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/updateSection', () => ({
+	updateSection: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/deleteSection', () => ({
+	deleteSection: vi.fn(),
+}));
+vi.mock('@Modules/pages/application/reorderSections', () => ({
+	reorderSections: vi.fn(),
+}));
+
+import { Router } from 'express';
+import { pagesApi } from '@Modules/pages/routes/route';
+
+describe('pagesApi route', () => {
+	it('registers routes on the router without throwing', () => {
+		const router = Router();
+		expect(() => pagesApi(router)).not.toThrow();
+	});
+});

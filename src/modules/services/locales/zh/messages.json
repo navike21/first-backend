@@ -1,0 +1,7 @@
+{
+	"SUCCESS_SERVICE_CREATE": "服务创建成功",
+	"SUCCESS_SERVICE_LIST": "服务列表获取成功",
+	"SUCCESS_SERVICE_FOUND": "服务查找成功",
+	"SUCCESS_SERVICE_UPDATE": "服务更新成功",
+	"SUCCESS_SERVICE_DELETED": "服务删除成功"
+}

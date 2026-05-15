@@ -32,6 +32,36 @@ export const PERMISSIONS = {
 	APP_SETTINGS_UPDATE: 'app-settings:update',
 	APP_SETTINGS_MANAGE: 'app-settings:manage',
 
+	CLIENTS_READ: 'clients:read',
+	CLIENTS_CREATE: 'clients:create',
+	CLIENTS_UPDATE: 'clients:update',
+	CLIENTS_DELETE: 'clients:delete',
+	CLIENTS_MANAGE: 'clients:manage',
+
+	SERVICES_READ: 'services:read',
+	SERVICES_CREATE: 'services:create',
+	SERVICES_UPDATE: 'services:update',
+	SERVICES_DELETE: 'services:delete',
+	SERVICES_MANAGE: 'services:manage',
+
+	PORTFOLIO_READ: 'portfolio:read',
+	PORTFOLIO_CREATE: 'portfolio:create',
+	PORTFOLIO_UPDATE: 'portfolio:update',
+	PORTFOLIO_DELETE: 'portfolio:delete',
+	PORTFOLIO_MANAGE: 'portfolio:manage',
+
+	PAGES_READ: 'pages:read',
+	PAGES_CREATE: 'pages:create',
+	PAGES_UPDATE: 'pages:update',
+	PAGES_DELETE: 'pages:delete',
+	PAGES_MANAGE: 'pages:manage',
+
+	TEAM_READ: 'team:read',
+	TEAM_CREATE: 'team:create',
+	TEAM_UPDATE: 'team:update',
+	TEAM_DELETE: 'team:delete',
+	TEAM_MANAGE: 'team:manage',
+
 	ALL: '*:*',
 } as const;
 

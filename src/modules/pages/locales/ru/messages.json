@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAGE_CREATE": "Страница успешно создана",
+	"SUCCESS_PAGE_LIST": "Страницы успешно получены",
+	"SUCCESS_PAGE_FOUND": "Страница успешно найдена",
+	"SUCCESS_PAGE_UPDATE": "Страница успешно обновлена",
+	"SUCCESS_PAGE_DELETED": "Страница успешно удалена",
+	"SUCCESS_PAGE_SECTION_ADDED": "Раздел успешно добавлен",
+	"SUCCESS_PAGE_SECTION_UPDATED": "Раздел успешно обновлён",
+	"SUCCESS_PAGE_SECTION_DELETED": "Раздел успешно удалён",
+	"SUCCESS_PAGE_SECTIONS_REORDERED": "Разделы успешно переупорядочены",
+	"PAGE_NOT_FOUND": "Страница не найдена",
+	"PAGE_SLUG_CONFLICT": "Страница с таким слагом уже существует",
+	"PAGE_SECTION_NOT_FOUND": "Раздел не найден"
+}
