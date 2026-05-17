@@ -1,6 +1,6 @@
 import dns from 'node:dns';
 import express from 'express';
-import { initApp, connectToDatabase } from '@Config/mainServer';
+import { initApp } from '@Config/mainServer';
 import { ENV } from '@Constants/environments';
 
 // Required for MongoDB Atlas SRV lookup — Node's c-ares resolver may not reach
@@ -13,6 +13,7 @@ const app = express();
 export const appReady = initApp(app);
 
 // Re-exported so api/index.js can call it independently and retry on failure.
-export { connectToDatabase as ensureConnected };
 
 export default app;
+
+export { connectToDatabase as ensureConnected } from '@Config/mainServer';

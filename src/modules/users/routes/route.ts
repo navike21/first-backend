@@ -12,8 +12,10 @@ import {
 	updateMyProfileController,
 } from '../controllers/user.profile';
 import { updatePresenceController } from '../controllers/user.presence';
+import { getUserMetadataController } from '../controllers/user.metadata';
 
 export function usersApi(router: Router) {
+	router.get('/users/metadata', authenticate, getUserMetadataController);
 	router.get('/users/me', authenticate, getMyProfileController);
 	router.patch('/users/me', authenticate, updateMyProfileController);
 	router.patch('/users/me/presence', authenticate, updatePresenceController);
