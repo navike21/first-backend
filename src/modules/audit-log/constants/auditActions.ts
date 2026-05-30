@@ -21,20 +21,35 @@ export const AUDIT_ACTIONS = {
 	CLIENTS_CREATED: 'clients:created',
 	CLIENTS_UPDATED: 'clients:updated',
 	CLIENTS_SOFT_DELETED: 'clients:soft_deleted',
+	CLIENTS_PERMANENTLY_DELETED: 'clients:permanently_deleted',
 	SERVICES_CREATED: 'services:created',
 	SERVICES_UPDATED: 'services:updated',
 	SERVICES_SOFT_DELETED: 'services:soft_deleted',
+	SERVICES_PERMANENTLY_DELETED: 'services:permanently_deleted',
 	PORTFOLIO_CREATED: 'portfolio:created',
 	PORTFOLIO_UPDATED: 'portfolio:updated',
 	PORTFOLIO_SOFT_DELETED: 'portfolio:soft_deleted',
+	PORTFOLIO_PERMANENTLY_DELETED: 'portfolio:permanently_deleted',
 
 	PAGES_CREATED: 'pages:created',
 	PAGES_UPDATED: 'pages:updated',
 	PAGES_SOFT_DELETED: 'pages:soft_deleted',
+	PAGES_PERMANENTLY_DELETED: 'pages:permanently_deleted',
 
-	TEAM_MEMBER_CREATED: 'team:created',
-	TEAM_MEMBER_UPDATED: 'team:updated',
-	TEAM_MEMBER_SOFT_DELETED: 'team:soft_deleted',
+	USERS_RESTORED: 'users:restored',
+	USER_GROUPS_RESTORED: 'user-groups:restored',
+	SUBSCRIBERS_RESTORED: 'subscribers:restored',
+	STORAGE_RESTORED: 'storage:restored',
+	CLIENTS_RESTORED: 'clients:restored',
+	SERVICES_RESTORED: 'services:restored',
+	PORTFOLIO_RESTORED: 'portfolio:restored',
+	PAGES_RESTORED: 'pages:restored',
+
+	COLLABORATOR_CREATED: 'collaborators:created',
+	COLLABORATOR_UPDATED: 'collaborators:updated',
+	COLLABORATOR_SOFT_DELETED: 'collaborators:soft_deleted',
+	COLLABORATOR_PERMANENTLY_DELETED: 'collaborators:permanently_deleted',
+	COLLABORATOR_RESTORED: 'collaborators:restored',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

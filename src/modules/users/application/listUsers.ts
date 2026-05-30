@@ -1,3 +1,4 @@
+import { DELETED } from '@Constants/statusRegister';
 import { ListUsersQuery } from '../schemas/user.schema';
 import UserModel from '../infrastructure/UserModel';
 
@@ -8,9 +9,9 @@ export async function listUsers({
 	search,
 	groupId,
 }: ListUsersQuery) {
-	const filter: Record<string, unknown> = {};
+	const filter: Record<string, unknown> = { status: { $ne: DELETED } };
 
-	if (status) filter.status = status;
+	if (status && status !== DELETED) filter.status = status;
 	if (groupId) filter.groupId = groupId;
 	if (search) {
 		filter.$or = [

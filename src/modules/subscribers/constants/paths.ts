@@ -8,3 +8,5 @@ export const SUBSCRIBER_PATH_DELETE_BULK = '/subscriber/delete-bulk';
 export const SUBSCRIBER_PATH_DELETE_LOGIC = '/subscriber/delete-logic/:id';
 export const SUBSCRIBER_PATH_DELETE_LOGIC_BULK =
 	'/subscriber/delete-logic-bulk';
+export const SUBSCRIBER_PATH_RESTORE = '/subscriber/restore/:id';
+export const SUBSCRIBER_PATH_TRASH = '/subscriber/trash';

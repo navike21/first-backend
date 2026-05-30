@@ -13,7 +13,7 @@ import { clientsApi } from '@Modules/clients';
 import { servicesApi } from '@Modules/services';
 import { portfolioApi } from '@Modules/portfolio';
 import { pagesApi } from '@Modules/pages';
-import { teamApi } from '@Modules/team';
+import { collaboratorsApi } from '@Modules/collaborators';
 
 const router: Router = Router();
 
@@ -33,7 +33,7 @@ const mainRouter = () => {
 	servicesApi(v1Router);
 	portfolioApi(v1Router);
 	pagesApi(v1Router);
-	teamApi(v1Router);
+	collaboratorsApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 

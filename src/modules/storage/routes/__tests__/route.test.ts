@@ -33,16 +33,18 @@ vi.mock('file-type', () => ({ fileTypeFromBuffer: vi.fn() }));
 import { storageApi } from '../route';
 
 describe('storageApi', () => {
-	it('registers expected POST, GET, and DELETE routes', () => {
+	it('registers expected POST, GET, PATCH and DELETE routes', () => {
 		const post = vi.fn();
 		const get = vi.fn();
+		const patch = vi.fn();
 		const del = vi.fn();
-		const mockRouter = { post, get, delete: del } as unknown as Router;
+		const mockRouter = { post, get, patch, delete: del } as unknown as Router;
 
 		storageApi(mockRouter);
 
 		expect(post).toHaveBeenCalledTimes(2);
-		expect(get).toHaveBeenCalledTimes(1);
+		expect(get).toHaveBeenCalledTimes(2);
+		expect(patch).toHaveBeenCalledTimes(1);
 		expect(del).toHaveBeenCalledTimes(2);
 
 		const postPaths = post.mock.calls.map((call) => call[0]);
@@ -51,6 +53,10 @@ describe('storageApi', () => {
 
 		const getPaths = get.mock.calls.map((call) => call[0]);
 		expect(getPaths).toContain('/storage/files');
+		expect(getPaths).toContain('/storage/trash');
+
+		const patchPaths = patch.mock.calls.map((call) => call[0]);
+		expect(patchPaths).toContain('/storage/:id/restore');
 
 		const deletePaths = del.mock.calls.map((call) => call[0]);
 		expect(deletePaths).toContain('/storage/delete');

@@ -11,6 +11,9 @@ import {
 	PAGES_PATH_CREATE,
 	PAGES_PATH_UPDATE,
 	PAGES_PATH_DELETE,
+	PAGES_PATH_DELETE_PERMANENT,
+	PAGES_PATH_RESTORE,
+	PAGES_PATH_TRASH,
 	PAGES_PATH_SECTION_ADD,
 	PAGES_PATH_SECTION_UPDATE,
 	PAGES_PATH_SECTION_DELETE,
@@ -24,6 +27,9 @@ import { pageGetBySlugPublicController } from '../controllers/page.getBySlug';
 import { pageCreateController } from '../controllers/page.create';
 import { pageUpdateController } from '../controllers/page.update';
 import { pageDeleteController } from '../controllers/page.delete';
+import { pageDeletePermanentController } from '../controllers/page.deletePermanent';
+import { pageRestoreController } from '../controllers/page.restore';
+import { pageTrashController } from '../controllers/page.trash';
 import { pageSectionAddController } from '../controllers/page.section.add';
 import { pageSectionUpdateController } from '../controllers/page.section.update';
 import { pageSectionDeleteController } from '../controllers/page.section.delete';
@@ -33,44 +39,54 @@ export function pagesApi(router: Router) {
 	router.get(PAGES_PATH_LIST_PUBLIC, pageListPublicController);
 
 	router.get(
+		PAGES_PATH_TRASH,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_READ, PERMISSIONS.PAGES_MANAGE),
+		pageTrashController,
+	);
+	router.get(
 		PAGES_PATH_LIST_ADMIN,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_READ, PERMISSIONS.PAGES_MANAGE),
 		pageListAdminController,
 	);
-
 	router.get(PAGES_PATH_GET_BY_SLUG, pageGetBySlugPublicController);
 
 	router.post(
 		PAGES_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_CREATE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.PAGES_CREATED,
-			resource: 'pages',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.PAGES_CREATED, resource: 'pages' }),
 		pageCreateController,
 	);
 
 	router.patch(
+		PAGES_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.PAGES_RESTORED, resource: 'pages' }),
+		pageRestoreController,
+	);
+	router.patch(
 		PAGES_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.PAGES_UPDATED,
-			resource: 'pages',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.PAGES_UPDATED, resource: 'pages' }),
 		pageUpdateController,
 	);
 
 	router.delete(
+		PAGES_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_PURGE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.PAGES_PERMANENTLY_DELETED, resource: 'pages' }),
+		pageDeletePermanentController,
+	);
+	router.delete(
 		PAGES_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_DELETE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.PAGES_SOFT_DELETED,
-			resource: 'pages',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.PAGES_SOFT_DELETED, resource: 'pages' }),
 		pageDeleteController,
 	);
 
@@ -80,21 +96,18 @@ export function pagesApi(router: Router) {
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
 		pageSectionAddController,
 	);
-
 	router.put(
 		PAGES_PATH_SECTIONS_REORDER,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
 		pageSectionReorderController,
 	);
-
 	router.patch(
 		PAGES_PATH_SECTION_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
 		pageSectionUpdateController,
 	);
-
 	router.delete(
 		PAGES_PATH_SECTION_DELETE,
 		authenticate,

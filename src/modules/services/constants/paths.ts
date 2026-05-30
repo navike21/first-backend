@@ -4,3 +4,6 @@ export const SERVICE_PATH_GET_BY_SLUG = '/services/:slug';
 export const SERVICE_PATH_CREATE = '/services';
 export const SERVICE_PATH_UPDATE = '/services/:id';
 export const SERVICE_PATH_DELETE = '/services/:id';
+export const SERVICE_PATH_DELETE_PERMANENT = '/services/:id/permanent';
+export const SERVICE_PATH_TRASH = '/services/trash';
+export const SERVICE_PATH_RESTORE = '/services/:id/restore';

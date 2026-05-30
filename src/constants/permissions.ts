@@ -3,18 +3,21 @@ export const PERMISSIONS = {
 	USERS_CREATE: 'users:create',
 	USERS_UPDATE: 'users:update',
 	USERS_DELETE: 'users:delete',
+	USERS_PURGE: 'users:purge',
 	USERS_MANAGE: 'users:manage',
 
 	USER_GROUPS_READ: 'user-groups:read',
 	USER_GROUPS_CREATE: 'user-groups:create',
 	USER_GROUPS_UPDATE: 'user-groups:update',
 	USER_GROUPS_DELETE: 'user-groups:delete',
+	USER_GROUPS_PURGE: 'user-groups:purge',
 	USER_GROUPS_MANAGE: 'user-groups:manage',
 
 	SUBSCRIBERS_READ: 'subscribers:read',
 	SUBSCRIBERS_CREATE: 'subscribers:create',
 	SUBSCRIBERS_UPDATE: 'subscribers:update',
 	SUBSCRIBERS_DELETE: 'subscribers:delete',
+	SUBSCRIBERS_PURGE: 'subscribers:purge',
 	SUBSCRIBERS_MANAGE: 'subscribers:manage',
 
 	PROFILE_READ: 'profile:read',
@@ -22,7 +25,9 @@ export const PERMISSIONS = {
 
 	STORAGE_READ: 'storage:read',
 	STORAGE_UPLOAD: 'storage:upload',
+	STORAGE_UPDATE: 'storage:update',
 	STORAGE_DELETE: 'storage:delete',
+	STORAGE_PURGE: 'storage:purge',
 	STORAGE_MANAGE: 'storage:manage',
 
 	AUDIT_LOGS_READ: 'audit-logs:read',
@@ -36,31 +41,36 @@ export const PERMISSIONS = {
 	CLIENTS_CREATE: 'clients:create',
 	CLIENTS_UPDATE: 'clients:update',
 	CLIENTS_DELETE: 'clients:delete',
+	CLIENTS_PURGE: 'clients:purge',
 	CLIENTS_MANAGE: 'clients:manage',
 
 	SERVICES_READ: 'services:read',
 	SERVICES_CREATE: 'services:create',
 	SERVICES_UPDATE: 'services:update',
 	SERVICES_DELETE: 'services:delete',
+	SERVICES_PURGE: 'services:purge',
 	SERVICES_MANAGE: 'services:manage',
 
 	PORTFOLIO_READ: 'portfolio:read',
 	PORTFOLIO_CREATE: 'portfolio:create',
 	PORTFOLIO_UPDATE: 'portfolio:update',
 	PORTFOLIO_DELETE: 'portfolio:delete',
+	PORTFOLIO_PURGE: 'portfolio:purge',
 	PORTFOLIO_MANAGE: 'portfolio:manage',
 
 	PAGES_READ: 'pages:read',
 	PAGES_CREATE: 'pages:create',
 	PAGES_UPDATE: 'pages:update',
 	PAGES_DELETE: 'pages:delete',
+	PAGES_PURGE: 'pages:purge',
 	PAGES_MANAGE: 'pages:manage',
 
-	TEAM_READ: 'team:read',
-	TEAM_CREATE: 'team:create',
-	TEAM_UPDATE: 'team:update',
-	TEAM_DELETE: 'team:delete',
-	TEAM_MANAGE: 'team:manage',
+	COLLABORATORS_READ: 'collaborators:read',
+	COLLABORATORS_CREATE: 'collaborators:create',
+	COLLABORATORS_UPDATE: 'collaborators:update',
+	COLLABORATORS_DELETE: 'collaborators:delete',
+	COLLABORATORS_PURGE: 'collaborators:purge',
+	COLLABORATORS_MANAGE: 'collaborators:manage',
 
 	ALL: '*:*',
 } as const;

@@ -10,32 +10,40 @@ import {
 	CLIENT_PATH_GET_BY_ID,
 	CLIENT_PATH_UPDATE,
 	CLIENT_PATH_DELETE,
+	CLIENT_PATH_DELETE_PERMANENT,
+	CLIENT_PATH_RESTORE,
+	CLIENT_PATH_TRASH,
 } from '../constants/paths';
 import { clientCreateController } from '../controllers/client.create';
 import { clientListController } from '../controllers/client.list';
 import { clientGetByIdController } from '../controllers/client.getById';
 import { clientUpdateController } from '../controllers/client.update';
 import { clientDeleteController } from '../controllers/client.delete';
+import { clientDeletePermanentController } from '../controllers/client.deletePermanent';
+import { clientRestoreController } from '../controllers/client.restore';
+import { clientTrashController } from '../controllers/client.trash';
 
 export function clientsApi(router: Router) {
 	router.post(
 		CLIENT_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_CREATE, PERMISSIONS.CLIENTS_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.CLIENTS_CREATED,
-			resource: 'clients',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_CREATED, resource: 'clients' }),
 		clientCreateController,
 	);
 
+	router.get(
+		CLIENT_PATH_TRASH,
+		authenticate,
+		authorize(PERMISSIONS.CLIENTS_READ, PERMISSIONS.CLIENTS_MANAGE),
+		clientTrashController,
+	);
 	router.get(
 		CLIENT_PATH_LIST,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_READ, PERMISSIONS.CLIENTS_MANAGE),
 		clientListController,
 	);
-
 	router.get(
 		CLIENT_PATH_GET_BY_ID,
 		authenticate,
@@ -44,24 +52,32 @@ export function clientsApi(router: Router) {
 	);
 
 	router.patch(
+		CLIENT_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.CLIENTS_UPDATE, PERMISSIONS.CLIENTS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_RESTORED, resource: 'clients' }),
+		clientRestoreController,
+	);
+	router.patch(
 		CLIENT_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_UPDATE, PERMISSIONS.CLIENTS_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.CLIENTS_UPDATED,
-			resource: 'clients',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_UPDATED, resource: 'clients' }),
 		clientUpdateController,
 	);
 
 	router.delete(
+		CLIENT_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.CLIENTS_PURGE, PERMISSIONS.CLIENTS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_PERMANENTLY_DELETED, resource: 'clients' }),
+		clientDeletePermanentController,
+	);
+	router.delete(
 		CLIENT_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_DELETE, PERMISSIONS.CLIENTS_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.CLIENTS_SOFT_DELETED,
-			resource: 'clients',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_SOFT_DELETED, resource: 'clients' }),
 		clientDeleteController,
 	);
 }
