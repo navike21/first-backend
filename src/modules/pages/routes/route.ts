@@ -11,6 +11,7 @@ import {
 	PAGES_PATH_CREATE,
 	PAGES_PATH_UPDATE,
 	PAGES_PATH_DELETE,
+	PAGES_PATH_DELETE_PERMANENT,
 	PAGES_PATH_SECTION_ADD,
 	PAGES_PATH_SECTION_UPDATE,
 	PAGES_PATH_SECTION_DELETE,
@@ -24,6 +25,7 @@ import { pageGetBySlugPublicController } from '../controllers/page.getBySlug';
 import { pageCreateController } from '../controllers/page.create';
 import { pageUpdateController } from '../controllers/page.update';
 import { pageDeleteController } from '../controllers/page.delete';
+import { pageDeletePermanentController } from '../controllers/page.deletePermanent';
 import { pageSectionAddController } from '../controllers/page.section.add';
 import { pageSectionUpdateController } from '../controllers/page.section.update';
 import { pageSectionDeleteController } from '../controllers/page.section.delete';
@@ -72,6 +74,17 @@ export function pagesApi(router: Router) {
 			resource: 'pages',
 		}),
 		pageDeleteController,
+	);
+
+	router.delete(
+		PAGES_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_PURGE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGES_PERMANENTLY_DELETED,
+			resource: 'pages',
+		}),
+		pageDeletePermanentController,
 	);
 
 	router.post(

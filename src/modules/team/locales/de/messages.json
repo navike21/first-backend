@@ -1,8 +1,0 @@
-{
-	"SUCCESS_TEAM_MEMBER_CREATE": "Teammitglied erfolgreich erstellt",
-	"SUCCESS_TEAM_MEMBER_LIST": "Teammitglieder erfolgreich abgerufen",
-	"SUCCESS_TEAM_MEMBER_FOUND": "Teammitglied erfolgreich gefunden",
-	"SUCCESS_TEAM_MEMBER_UPDATE": "Teammitglied erfolgreich aktualisiert",
-	"SUCCESS_TEAM_MEMBER_DELETED": "Teammitglied erfolgreich gelöscht",
-	"TEAM_MEMBER_NOT_FOUND": "Teammitglied nicht gefunden"
-}

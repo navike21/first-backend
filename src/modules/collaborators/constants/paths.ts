@@ -1,0 +1,7 @@
+export const COLLABORATOR_PATH_LIST_PUBLIC = '/collaborators';
+export const COLLABORATOR_PATH_LIST_ADMIN = '/collaborators/admin';
+export const COLLABORATOR_PATH_GET_BY_ID = '/collaborators/:id';
+export const COLLABORATOR_PATH_CREATE = '/collaborators';
+export const COLLABORATOR_PATH_UPDATE = '/collaborators/:id';
+export const COLLABORATOR_PATH_DELETE = '/collaborators/:id';
+export const COLLABORATOR_PATH_PURGE = '/collaborators/:id/permanent';

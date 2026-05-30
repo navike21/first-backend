@@ -12,6 +12,7 @@ import {
 	PORTFOLIO_PATH_CREATE,
 	PORTFOLIO_PATH_UPDATE,
 	PORTFOLIO_PATH_DELETE,
+	PORTFOLIO_PATH_DELETE_PERMANENT,
 } from '../constants/paths';
 import { portfolioListPublicController } from '../controllers/portfolio.listPublic';
 import { portfolioListByServiceController } from '../controllers/portfolio.listByService';
@@ -20,6 +21,7 @@ import { portfolioListAdminController } from '../controllers/portfolio.listAdmin
 import { portfolioCreateController } from '../controllers/portfolio.create';
 import { portfolioUpdateController } from '../controllers/portfolio.update';
 import { portfolioDeleteController } from '../controllers/portfolio.delete';
+import { portfolioDeletePermanentController } from '../controllers/portfolio.deletePermanent';
 
 export function portfolioApi(router: Router) {
 	router.get(PORTFOLIO_PATH_LIST_PUBLIC, portfolioListPublicController);
@@ -66,5 +68,16 @@ export function portfolioApi(router: Router) {
 			resource: 'portfolio',
 		}),
 		portfolioDeleteController,
+	);
+
+	router.delete(
+		PORTFOLIO_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.PORTFOLIO_PURGE, PERMISSIONS.PORTFOLIO_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_PERMANENTLY_DELETED,
+			resource: 'portfolio',
+		}),
+		portfolioDeletePermanentController,
 	);
 }
