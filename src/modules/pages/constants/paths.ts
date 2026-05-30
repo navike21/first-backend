@@ -8,3 +8,4 @@ export const PAGES_PATH_SECTION_ADD = '/pages/:slug/sections';
 export const PAGES_PATH_SECTION_UPDATE = '/pages/:slug/sections/:sectionId';
 export const PAGES_PATH_SECTION_DELETE = '/pages/:slug/sections/:sectionId';
 export const PAGES_PATH_SECTIONS_REORDER = '/pages/:slug/sections/reorder';
+export const PAGES_PATH_DELETE_PERMANENT = '/pages/:slug/permanent';

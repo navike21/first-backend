@@ -1,8 +1,0 @@
-{
-	"SUCCESS_TEAM_MEMBER_CREATE": "Член команды успешно создан",
-	"SUCCESS_TEAM_MEMBER_LIST": "Список членов команды успешно получен",
-	"SUCCESS_TEAM_MEMBER_FOUND": "Член команды успешно найден",
-	"SUCCESS_TEAM_MEMBER_UPDATE": "Член команды успешно обновлён",
-	"SUCCESS_TEAM_MEMBER_DELETED": "Член команды успешно удалён",
-	"TEAM_MEMBER_NOT_FOUND": "Член команды не найден"
-}

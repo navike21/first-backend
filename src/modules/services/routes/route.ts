@@ -11,6 +11,7 @@ import {
 	SERVICE_PATH_CREATE,
 	SERVICE_PATH_UPDATE,
 	SERVICE_PATH_DELETE,
+	SERVICE_PATH_DELETE_PERMANENT,
 } from '../constants/paths';
 import { serviceListPublicController } from '../controllers/service.listPublic';
 import { serviceListAdminController } from '../controllers/service.listAdmin';
@@ -18,6 +19,7 @@ import { serviceGetBySlugController } from '../controllers/service.getBySlug';
 import { serviceCreateController } from '../controllers/service.create';
 import { serviceUpdateController } from '../controllers/service.update';
 import { serviceDeleteController } from '../controllers/service.delete';
+import { serviceDeletePermanentController } from '../controllers/service.deletePermanent';
 
 export function servicesApi(router: Router) {
 	router.get(SERVICE_PATH_LIST_PUBLIC, serviceListPublicController);
@@ -62,5 +64,16 @@ export function servicesApi(router: Router) {
 			resource: 'services',
 		}),
 		serviceDeleteController,
+	);
+
+	router.delete(
+		SERVICE_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_PURGE, PERMISSIONS.SERVICES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_PERMANENTLY_DELETED,
+			resource: 'services',
+		}),
+		serviceDeletePermanentController,
 	);
 }

@@ -10,12 +10,14 @@ import {
 	CLIENT_PATH_GET_BY_ID,
 	CLIENT_PATH_UPDATE,
 	CLIENT_PATH_DELETE,
+	CLIENT_PATH_DELETE_PERMANENT,
 } from '../constants/paths';
 import { clientCreateController } from '../controllers/client.create';
 import { clientListController } from '../controllers/client.list';
 import { clientGetByIdController } from '../controllers/client.getById';
 import { clientUpdateController } from '../controllers/client.update';
 import { clientDeleteController } from '../controllers/client.delete';
+import { clientDeletePermanentController } from '../controllers/client.deletePermanent';
 
 export function clientsApi(router: Router) {
 	router.post(
@@ -63,5 +65,16 @@ export function clientsApi(router: Router) {
 			resource: 'clients',
 		}),
 		clientDeleteController,
+	);
+
+	router.delete(
+		CLIENT_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.CLIENTS_PURGE, PERMISSIONS.CLIENTS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_PERMANENTLY_DELETED,
+			resource: 'clients',
+		}),
+		clientDeletePermanentController,
 	);
 }
