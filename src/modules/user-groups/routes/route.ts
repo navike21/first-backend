@@ -49,7 +49,7 @@ export function userGroupsApi(router: Router) {
 	router.delete(
 		'/user-groups/:id',
 		authenticate,
-		authorize(PERMISSIONS.USER_GROUPS_DELETE, PERMISSIONS.USER_GROUPS_MANAGE),
+		authorize(PERMISSIONS.USER_GROUPS_PURGE, PERMISSIONS.USER_GROUPS_MANAGE),
 		deleteUserGroupController,
 	);
 }

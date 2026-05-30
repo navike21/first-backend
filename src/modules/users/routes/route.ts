@@ -53,7 +53,7 @@ export function usersApi(router: Router) {
 	router.delete(
 		'/users/:id',
 		authenticate,
-		authorize(PERMISSIONS.USERS_DELETE, PERMISSIONS.USERS_MANAGE),
+		authorize(PERMISSIONS.USERS_PURGE, PERMISSIONS.USERS_MANAGE),
 		deleteUserController,
 	);
 }

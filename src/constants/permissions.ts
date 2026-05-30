@@ -3,18 +3,21 @@ export const PERMISSIONS = {
 	USERS_CREATE: 'users:create',
 	USERS_UPDATE: 'users:update',
 	USERS_DELETE: 'users:delete',
+	USERS_PURGE: 'users:purge',
 	USERS_MANAGE: 'users:manage',
 
 	USER_GROUPS_READ: 'user-groups:read',
 	USER_GROUPS_CREATE: 'user-groups:create',
 	USER_GROUPS_UPDATE: 'user-groups:update',
 	USER_GROUPS_DELETE: 'user-groups:delete',
+	USER_GROUPS_PURGE: 'user-groups:purge',
 	USER_GROUPS_MANAGE: 'user-groups:manage',
 
 	SUBSCRIBERS_READ: 'subscribers:read',
 	SUBSCRIBERS_CREATE: 'subscribers:create',
 	SUBSCRIBERS_UPDATE: 'subscribers:update',
 	SUBSCRIBERS_DELETE: 'subscribers:delete',
+	SUBSCRIBERS_PURGE: 'subscribers:purge',
 	SUBSCRIBERS_MANAGE: 'subscribers:manage',
 
 	PROFILE_READ: 'profile:read',
@@ -23,6 +26,7 @@ export const PERMISSIONS = {
 	STORAGE_READ: 'storage:read',
 	STORAGE_UPLOAD: 'storage:upload',
 	STORAGE_DELETE: 'storage:delete',
+	STORAGE_PURGE: 'storage:purge',
 	STORAGE_MANAGE: 'storage:manage',
 
 	AUDIT_LOGS_READ: 'audit-logs:read',
