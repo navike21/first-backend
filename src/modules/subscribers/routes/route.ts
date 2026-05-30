@@ -78,13 +78,13 @@ export function subscribersApi(router: Router) {
 	router.delete(
 		SUBSCRIBER_PATH_DELETE,
 		authenticate,
-		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		authorize(PERMISSIONS.SUBSCRIBERS_PURGE, PERMISSIONS.SUBSCRIBERS_MANAGE),
 		subscriberDeletePhysical,
 	);
 	router.delete(
 		SUBSCRIBER_PATH_DELETE_BULK,
 		authenticate,
-		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		authorize(PERMISSIONS.SUBSCRIBERS_PURGE, PERMISSIONS.SUBSCRIBERS_MANAGE),
 		subscriberDeletePhysicalBulk,
 	);
 
