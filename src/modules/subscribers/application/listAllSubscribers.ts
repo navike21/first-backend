@@ -1,5 +1,5 @@
 import { QueryFilter } from 'mongoose';
-import { ACTIVE, StatusRegister } from '@Constants/statusRegister';
+import { ACTIVE, DELETED, StatusRegister } from '@Constants/statusRegister';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
 import { AppError } from '@Shared/domain/AppError';
@@ -19,7 +19,7 @@ export async function listAllSubscribers({
 }: ListAllParams) {
 	const skip = (page - 1) * limit;
 	const query: QueryFilter<SubscriberSchema> = {
-		status: (status ?? ACTIVE) as StatusRegister,
+		status: (status && status !== DELETED ? status : ACTIVE) as StatusRegister,
 	};
 
 	const [data, total] = await Promise.all([

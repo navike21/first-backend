@@ -11,6 +11,9 @@ import {
 	SERVICE_PATH_CREATE,
 	SERVICE_PATH_UPDATE,
 	SERVICE_PATH_DELETE,
+	SERVICE_PATH_DELETE_PERMANENT,
+	SERVICE_PATH_RESTORE,
+	SERVICE_PATH_TRASH,
 } from '../constants/paths';
 import { serviceListPublicController } from '../controllers/service.listPublic';
 import { serviceListAdminController } from '../controllers/service.listAdmin';
@@ -18,49 +21,62 @@ import { serviceGetBySlugController } from '../controllers/service.getBySlug';
 import { serviceCreateController } from '../controllers/service.create';
 import { serviceUpdateController } from '../controllers/service.update';
 import { serviceDeleteController } from '../controllers/service.delete';
+import { serviceDeletePermanentController } from '../controllers/service.deletePermanent';
+import { serviceRestoreController } from '../controllers/service.restore';
+import { serviceTrashController } from '../controllers/service.trash';
 
 export function servicesApi(router: Router) {
 	router.get(SERVICE_PATH_LIST_PUBLIC, serviceListPublicController);
 
+	router.get(
+		SERVICE_PATH_TRASH,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_READ, PERMISSIONS.SERVICES_MANAGE),
+		serviceTrashController,
+	);
 	router.get(
 		SERVICE_PATH_LIST_ADMIN,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_READ, PERMISSIONS.SERVICES_MANAGE),
 		serviceListAdminController,
 	);
-
 	router.get(SERVICE_PATH_GET_BY_SLUG, serviceGetBySlugController);
 
 	router.post(
 		SERVICE_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_CREATE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.SERVICES_CREATED,
-			resource: 'services',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.SERVICES_CREATED, resource: 'services' }),
 		serviceCreateController,
 	);
 
 	router.patch(
+		SERVICE_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.SERVICES_RESTORED, resource: 'services' }),
+		serviceRestoreController,
+	);
+	router.patch(
 		SERVICE_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.SERVICES_UPDATED,
-			resource: 'services',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.SERVICES_UPDATED, resource: 'services' }),
 		serviceUpdateController,
 	);
 
 	router.delete(
+		SERVICE_PATH_DELETE_PERMANENT,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_PURGE, PERMISSIONS.SERVICES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.SERVICES_PERMANENTLY_DELETED, resource: 'services' }),
+		serviceDeletePermanentController,
+	);
+	router.delete(
 		SERVICE_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_DELETE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.SERVICES_SOFT_DELETED,
-			resource: 'services',
-		}),
+		captureAudit({ action: AUDIT_ACTIONS.SERVICES_SOFT_DELETED, resource: 'services' }),
 		serviceDeleteController,
 	);
 }

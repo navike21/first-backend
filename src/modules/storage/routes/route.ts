@@ -7,6 +7,8 @@ import {
 	STORAGE_PATH_DELETE,
 	STORAGE_PATH_DELETE_PERMANENT,
 	STORAGE_PATH_FILES,
+	STORAGE_PATH_RESTORE,
+	STORAGE_PATH_TRASH,
 	STORAGE_PATH_UPLOAD,
 	STORAGE_PATH_UPLOAD_BULK,
 } from '../constants/paths';
@@ -17,6 +19,8 @@ import {
 import { storageDeleteController } from '../controllers/storage.delete';
 import { storageDeletePermanentController } from '../controllers/storage.deletePermanent';
 import { storageListController } from '../controllers/storage.list';
+import { storageRestoreController } from '../controllers/storage.restore';
+import { storageTrashController } from '../controllers/storage.trash';
 import {
 	createMulterArray,
 	createMulterSingle,
@@ -69,16 +73,30 @@ export function storageApi(router: Router) {
 	);
 
 	router.get(
+		STORAGE_PATH_TRASH,
+		authenticate,
+		authorize(PERMISSIONS.STORAGE_READ, PERMISSIONS.STORAGE_MANAGE),
+		storageTrashController,
+	);
+	router.get(
 		STORAGE_PATH_FILES,
 		authenticate,
 		authorize(PERMISSIONS.STORAGE_READ, PERMISSIONS.STORAGE_MANAGE),
 		storageListController,
 	);
 
+	router.patch(
+		STORAGE_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.STORAGE_UPDATE, PERMISSIONS.STORAGE_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.STORAGE_RESTORED, resource: 'storage' }),
+		storageRestoreController,
+	);
+
 	router.delete(
 		STORAGE_PATH_DELETE_PERMANENT,
 		authenticate,
-		authorize(PERMISSIONS.STORAGE_MANAGE),
+		authorize(PERMISSIONS.STORAGE_PURGE, PERMISSIONS.STORAGE_MANAGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.STORAGE_PERMANENTLY_DELETED,
 			resource: 'storage',

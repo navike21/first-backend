@@ -3,3 +3,5 @@ export const STORAGE_PATH_UPLOAD_BULK = '/storage/upload-bulk';
 export const STORAGE_PATH_FILES = '/storage/files';
 export const STORAGE_PATH_DELETE = '/storage/delete';
 export const STORAGE_PATH_DELETE_PERMANENT = '/storage/delete/permanent';
+export const STORAGE_PATH_RESTORE = '/storage/:id/restore';
+export const STORAGE_PATH_TRASH = '/storage/trash';
