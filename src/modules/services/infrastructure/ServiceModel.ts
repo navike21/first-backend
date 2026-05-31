@@ -19,7 +19,7 @@ export interface ServiceDocument {
 	order: number;
 	isActive: boolean;
 	status: string;
-	deletedAt?: Date;
+	deletedAt?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -42,9 +42,9 @@ const serviceSchema = new Schema<ServiceDocument>(
 			type: String,
 			required: true,
 			default: 'active',
-			enum: ['active', 'deleted'],
+			enum: ['active', 'inactive'],
 		},
-		deletedAt: { type: Date },
+		deletedAt: { type: Date, default: null },
 	},
 	{ timestamps: true },
 );

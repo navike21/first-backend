@@ -8,3 +8,6 @@ export const PORTFOLIO_PATH_DELETE = '/portfolio/:id';
 export const PORTFOLIO_PATH_DELETE_PERMANENT = '/portfolio/:id/permanent';
 export const PORTFOLIO_PATH_TRASH = '/portfolio/trash';
 export const PORTFOLIO_PATH_RESTORE = '/portfolio/:id/restore';
+export const PORTFOLIO_PATH_BULK_DELETE = '/portfolio/bulk';
+export const PORTFOLIO_PATH_BULK_RESTORE = '/portfolio/bulk/restore';
+export const PORTFOLIO_PATH_BULK_PURGE = '/portfolio/bulk/permanent';

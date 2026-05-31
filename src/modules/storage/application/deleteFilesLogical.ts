@@ -1,4 +1,3 @@
-import { ACTIVE, DELETED } from '@Constants/statusRegister';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { AppError } from '@Shared/domain/AppError';
 import StorageFileModel from '../infrastructure/StorageFileModel';
@@ -7,7 +6,7 @@ import { STORAGE_ERRORS } from '../domain/errors/StorageErrors';
 export async function deleteFilesLogical(ids: string[]) {
 	const files = await StorageFileModel.find({
 		id: { $in: ids },
-		status: ACTIVE,
+		deletedAt: null,
 	}).lean();
 
 	if (files.length === 0) {
@@ -15,8 +14,8 @@ export async function deleteFilesLogical(ids: string[]) {
 	}
 
 	await StorageFileModel.updateMany(
-		{ id: { $in: ids }, status: ACTIVE },
-		{ $set: { status: DELETED, deletedAt: new Date() } },
+		{ id: { $in: ids }, deletedAt: null },
+		{ $set: { deletedAt: new Date() } },
 	);
 
 	return files.map(cleanMongoFields);

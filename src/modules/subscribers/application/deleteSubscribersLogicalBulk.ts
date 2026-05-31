@@ -1,11 +1,10 @@
-import { ACTIVE, DELETED } from '@Constants/statusRegister';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 
 export async function deleteSubscribersLogicalBulk(ids: string[]) {
 	const subscribers = await SubscriberModel.find({
 		id: { $in: ids },
-		status: ACTIVE,
+		deletedAt: null,
 	}).lean();
 
 	const foundIds = subscribers
@@ -19,8 +18,8 @@ export async function deleteSubscribersLogicalBulk(ids: string[]) {
 	}
 
 	await SubscriberModel.updateMany(
-		{ id: { $in: foundIds }, status: ACTIVE },
-		{ $set: { status: DELETED } },
+		{ id: { $in: foundIds }, deletedAt: null },
+		{ $set: { deletedAt: new Date() } },
 	);
 
 	return {

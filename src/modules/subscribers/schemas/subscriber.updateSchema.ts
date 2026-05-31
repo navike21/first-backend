@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { SubscriberSchema } from '../types/subscriber.schema';
-import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
 
 type DeepPartial<T> = {
@@ -54,5 +53,5 @@ export const SubscriberUpdateSchema = z.object({
 		})
 		.optional(),
 
-	status: z.enum(STATUS_REGISTER_ARRAY).optional(),
+	status: z.enum(['active', 'inactive'] as const).optional(),
 }) satisfies z.ZodType<SubscriberUpdateSchemaType>;

@@ -13,7 +13,7 @@ export async function listServicesAdmin({
 	limit,
 }: ListServicesAdminParams) {
 	const skip = (page - 1) * limit;
-	const query = { status: 'active' };
+	const query = { deletedAt: null };
 
 	const [data, total] = await Promise.all([
 		ServiceModel.find(query)

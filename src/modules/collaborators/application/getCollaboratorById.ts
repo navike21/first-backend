@@ -5,7 +5,7 @@ import { CollaboratorNotFoundError } from '../domain/errors/CollaboratorErrors';
 export async function getCollaboratorById(id: string) {
 	const doc = await CollaboratorModel.findOne({
 		id,
-		status: { $ne: 'deleted' },
+		deletedAt: null,
 	}).lean();
 	if (!doc) throw new CollaboratorNotFoundError();
 	return cleanMongoFields(doc);

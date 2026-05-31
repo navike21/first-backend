@@ -1,4 +1,3 @@
-import { ACTIVE, DELETED } from '@Constants/statusRegister';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { AppError } from '@Shared/domain/AppError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
@@ -6,7 +5,7 @@ import SubscriberModel from '../infrastructure/SubscriberModel';
 export async function deleteSubscriberLogical(id: string) {
 	const subscriber = await SubscriberModel.findOne({
 		id,
-		status: ACTIVE,
+		deletedAt: null,
 	}).lean();
 
 	if (!subscriber) {
@@ -14,9 +13,9 @@ export async function deleteSubscriberLogical(id: string) {
 	}
 
 	await SubscriberModel.findOneAndUpdate(
-		{ id, status: ACTIVE },
-		{ $set: { status: DELETED } },
+		{ id, deletedAt: null },
+		{ $set: { deletedAt: new Date() } },
 	);
 
-	return cleanMongoFields({ ...subscriber, status: DELETED });
+	return cleanMongoFields({ ...subscriber, deletedAt: new Date() });
 }

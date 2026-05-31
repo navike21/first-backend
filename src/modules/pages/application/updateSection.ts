@@ -11,7 +11,7 @@ export async function updateSection(
 	sectionId: string,
 	input: UpdateSectionInput,
 ) {
-	const doc = await PageModel.findOne({ slug, status: { $ne: 'deleted' } });
+	const doc = await PageModel.findOne({ slug, deletedAt: null });
 	if (!doc) throw new PageNotFoundError();
 
 	const section = doc.sections.find(

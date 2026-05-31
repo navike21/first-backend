@@ -13,6 +13,9 @@ import {
 	CLIENT_PATH_DELETE_PERMANENT,
 	CLIENT_PATH_RESTORE,
 	CLIENT_PATH_TRASH,
+	CLIENT_PATH_BULK_DELETE,
+	CLIENT_PATH_BULK_RESTORE,
+	CLIENT_PATH_BULK_PURGE,
 } from '../constants/paths';
 import { clientCreateController } from '../controllers/client.create';
 import { clientListController } from '../controllers/client.list';
@@ -22,6 +25,9 @@ import { clientDeleteController } from '../controllers/client.delete';
 import { clientDeletePermanentController } from '../controllers/client.deletePermanent';
 import { clientRestoreController } from '../controllers/client.restore';
 import { clientTrashController } from '../controllers/client.trash';
+import { deleteClientsBulkController } from '../controllers/client.deleteBulk';
+import { restoreClientsBulkController } from '../controllers/client.restoreBulk';
+import { purgeClientsBulkController } from '../controllers/client.purgeBulk';
 
 export function clientsApi(router: Router) {
 	router.post(
@@ -44,6 +50,42 @@ export function clientsApi(router: Router) {
 		authorize(PERMISSIONS.CLIENTS_READ, PERMISSIONS.CLIENTS_MANAGE),
 		clientListController,
 	);
+
+	// Bulk operations (before :id routes to avoid conflicts)
+	router.delete(
+		CLIENT_PATH_BULK_DELETE,
+		authenticate,
+		authorize(PERMISSIONS.CLIENTS_DELETE, PERMISSIONS.CLIENTS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_BULK_SOFT_DELETED,
+			resource: 'clients',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		deleteClientsBulkController,
+	);
+	router.patch(
+		CLIENT_PATH_BULK_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.CLIENTS_UPDATE, PERMISSIONS.CLIENTS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_BULK_RESTORED,
+			resource: 'clients',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		restoreClientsBulkController,
+	);
+	router.delete(
+		CLIENT_PATH_BULK_PURGE,
+		authenticate,
+		authorize(PERMISSIONS.CLIENTS_PURGE, PERMISSIONS.CLIENTS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_BULK_PERMANENTLY_DELETED,
+			resource: 'clients',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		purgeClientsBulkController,
+	);
+
 	router.get(
 		CLIENT_PATH_GET_BY_ID,
 		authenticate,

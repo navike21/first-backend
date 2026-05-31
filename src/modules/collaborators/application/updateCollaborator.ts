@@ -7,7 +7,7 @@ export async function updateCollaborator(
 	id: string,
 	input: updateCollaboratorInput,
 ) {
-	const doc = await CollaboratorModel.findOne({ id, status: { $ne: 'deleted' } });
+	const doc = await CollaboratorModel.findOne({ id, deletedAt: null });
 	if (!doc) throw new CollaboratorNotFoundError();
 
 	Object.assign(doc, input);

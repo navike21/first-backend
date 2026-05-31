@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 import { DOCUMENT_TYPES_ARRAY } from '../constants/documentTypes';
 
 export const CreateClientSchema = z.object({
@@ -69,7 +68,7 @@ export const CreateClientSchema = z.object({
 		.trim()
 		.optional(),
 
-	status: z.enum(STATUS_REGISTER_ARRAY).optional(),
+	status: z.enum(['active', 'inactive'] as const).optional(),
 });
 
 export const UpdateClientSchema = CreateClientSchema.partial();

@@ -7,3 +7,6 @@ export const SERVICE_PATH_DELETE = '/services/:id';
 export const SERVICE_PATH_DELETE_PERMANENT = '/services/:id/permanent';
 export const SERVICE_PATH_TRASH = '/services/trash';
 export const SERVICE_PATH_RESTORE = '/services/:id/restore';
+export const SERVICE_PATH_BULK_DELETE = '/services/bulk';
+export const SERVICE_PATH_BULK_RESTORE = '/services/bulk/restore';
+export const SERVICE_PATH_BULK_PURGE = '/services/bulk/permanent';

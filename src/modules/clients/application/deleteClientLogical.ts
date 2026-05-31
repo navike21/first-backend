@@ -3,10 +3,9 @@ import { ClientNotFoundError } from '../domain/errors/ClientErrors';
 import ClientModel from '../infrastructure/ClientModel';
 
 export async function deleteClientLogical(id: string) {
-	const client = await ClientModel.findOne({ id, status: { $ne: 'deleted' } });
+	const client = await ClientModel.findOne({ id, deletedAt: null });
 	if (!client) throw new ClientNotFoundError();
 
-	client.status = 'deleted';
 	client.deletedAt = new Date();
 	await client.save();
 

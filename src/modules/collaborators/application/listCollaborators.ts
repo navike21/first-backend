@@ -13,8 +13,8 @@ export async function listCollaborators({
 	adminView = false,
 }: ListCollaboratorsOptions) {
 	const filter: Record<string, unknown> = adminView
-		? { status: { $ne: 'deleted' } }
-		: { status: 'active', isActive: true };
+		? { deletedAt: null }
+		: { status: 'active', isActive: true, deletedAt: null };
 
 	const [docs, total] = await Promise.all([
 		CollaboratorModel.find(filter)

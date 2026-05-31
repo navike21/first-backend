@@ -5,7 +5,7 @@ import ClientModel from '../infrastructure/ClientModel';
 export async function getClientById(id: string) {
 	const client = await ClientModel.findOne({
 		id,
-		status: { $ne: 'deleted' },
+		deletedAt: null,
 	}).lean();
 	if (!client) throw new ClientNotFoundError();
 	return cleanMongoFields(client);

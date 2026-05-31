@@ -11,3 +11,6 @@ export const PAGES_PATH_SECTIONS_REORDER = '/pages/:slug/sections/reorder';
 export const PAGES_PATH_DELETE_PERMANENT = '/pages/:slug/permanent';
 export const PAGES_PATH_TRASH = '/pages/trash';
 export const PAGES_PATH_RESTORE = '/pages/:slug/restore';
+export const PAGES_PATH_BULK_DELETE = '/pages/bulk';
+export const PAGES_PATH_BULK_RESTORE = '/pages/bulk/restore';
+export const PAGES_PATH_BULK_PURGE = '/pages/bulk/permanent';

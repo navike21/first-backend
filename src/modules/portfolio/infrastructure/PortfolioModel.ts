@@ -34,7 +34,7 @@ export interface PortfolioDocument {
 	testimonial?: PortfolioTestimonial;
 	metrics: PortfolioMetric[];
 	status: string;
-	deletedAt?: Date;
+	deletedAt?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -76,7 +76,7 @@ const portfolioSchema = new Schema<PortfolioDocument>(
 			default: 'draft',
 			enum: PORTFOLIO_STATUSES_ARRAY,
 		},
-		deletedAt: { type: Date },
+		deletedAt: { type: Date, default: null },
 	},
 	{ timestamps: true },
 );

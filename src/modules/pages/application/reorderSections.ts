@@ -3,7 +3,7 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { PageNotFoundError } from '../domain/errors/PageErrors';
 
 export async function reorderSections(slug: string, order: string[]) {
-	const doc = await PageModel.findOne({ slug, status: { $ne: 'deleted' } });
+	const doc = await PageModel.findOne({ slug, deletedAt: null });
 	if (!doc) throw new PageNotFoundError();
 
 	const sectionMap = new Map(

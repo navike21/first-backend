@@ -3,12 +3,12 @@ import { AppError } from '@Shared/domain/AppError';
 import CollaboratorModel from '../infrastructure/CollaboratorModel';
 
 export async function restoreCollaborator(id: string) {
-	const doc = await CollaboratorModel.findOne({ id, status: 'deleted' }).lean();
+	const doc = await CollaboratorModel.findOne({ id, deletedAt: { $ne: null } }).lean();
 	if (!doc) AppError.notFound('COLLABORATOR_NOT_FOUND', 'Collaborator not found in trash');
 
 	await CollaboratorModel.findOneAndUpdate(
-		{ id, status: 'deleted' },
-		{ $set: { status: 'active' }, $unset: { deletedAt: '' } },
+		{ id, deletedAt: { $ne: null } },
+		{ $unset: { deletedAt: '' } },
 	);
-	return cleanMongoFields({ ...doc, status: 'active', deletedAt: undefined });
+	return cleanMongoFields({ ...doc, deletedAt: undefined });
 }

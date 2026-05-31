@@ -11,6 +11,7 @@ import {
 	STORAGE_PATH_TRASH,
 	STORAGE_PATH_UPLOAD,
 	STORAGE_PATH_UPLOAD_BULK,
+	STORAGE_PATH_BULK_RESTORE,
 } from '../constants/paths';
 import {
 	storageUploadBulkController,
@@ -21,6 +22,7 @@ import { storageDeletePermanentController } from '../controllers/storage.deleteP
 import { storageListController } from '../controllers/storage.list';
 import { storageRestoreController } from '../controllers/storage.restore';
 import { storageTrashController } from '../controllers/storage.trash';
+import { storageRestoreBulkController } from '../controllers/storage.restoreBulk';
 import {
 	createMulterArray,
 	createMulterSingle,
@@ -91,6 +93,19 @@ export function storageApi(router: Router) {
 		authorize(PERMISSIONS.STORAGE_UPDATE, PERMISSIONS.STORAGE_MANAGE),
 		captureAudit({ action: AUDIT_ACTIONS.STORAGE_RESTORED, resource: 'storage' }),
 		storageRestoreController,
+	);
+
+	// Bulk restore
+	router.patch(
+		STORAGE_PATH_BULK_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.STORAGE_UPDATE, PERMISSIONS.STORAGE_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.STORAGE_BULK_RESTORED,
+			resource: 'storage',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		storageRestoreBulkController,
 	);
 
 	router.delete(

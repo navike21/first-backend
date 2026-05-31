@@ -37,7 +37,7 @@ export const StorageDeleteSchema = z.object({
 export const StorageListQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).optional().default(1),
 	limit: z.coerce.number().int().min(1).max(100).optional().default(20),
-	status: z.enum(STATUS_REGISTER_ARRAY as [string, ...string[]]).optional(),
+	status: z.enum(['active', 'inactive'] as const).optional(),
 	entityType: z.string().max(50).optional(),
 	entityId: z.uuid().optional(),
 	uploadedBy: z.uuid().optional(),

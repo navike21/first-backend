@@ -16,7 +16,7 @@ export async function listPortfolioAdmin({
 	status,
 }: ListPortfolioAdminParams) {
 	const skip = (page - 1) * limit;
-	const query: Record<string, unknown> = { status: { $ne: 'deleted' } };
+	const query: Record<string, unknown> = { deletedAt: null };
 	if (status) query.status = status;
 
 	const [data, total] = await Promise.all([

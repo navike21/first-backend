@@ -14,6 +14,9 @@ import {
 	SERVICE_PATH_DELETE_PERMANENT,
 	SERVICE_PATH_RESTORE,
 	SERVICE_PATH_TRASH,
+	SERVICE_PATH_BULK_DELETE,
+	SERVICE_PATH_BULK_RESTORE,
+	SERVICE_PATH_BULK_PURGE,
 } from '../constants/paths';
 import { serviceListPublicController } from '../controllers/service.listPublic';
 import { serviceListAdminController } from '../controllers/service.listAdmin';
@@ -24,6 +27,9 @@ import { serviceDeleteController } from '../controllers/service.delete';
 import { serviceDeletePermanentController } from '../controllers/service.deletePermanent';
 import { serviceRestoreController } from '../controllers/service.restore';
 import { serviceTrashController } from '../controllers/service.trash';
+import { deleteServicesBulkController } from '../controllers/service.deleteBulk';
+import { restoreServicesBulkController } from '../controllers/service.restoreBulk';
+import { purgeServicesBulkController } from '../controllers/service.purgeBulk';
 
 export function servicesApi(router: Router) {
 	router.get(SERVICE_PATH_LIST_PUBLIC, serviceListPublicController);
@@ -57,6 +63,42 @@ export function servicesApi(router: Router) {
 		captureAudit({ action: AUDIT_ACTIONS.SERVICES_RESTORED, resource: 'services' }),
 		serviceRestoreController,
 	);
+
+	// Bulk operations (before :id routes to avoid conflicts)
+	router.delete(
+		SERVICE_PATH_BULK_DELETE,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_DELETE, PERMISSIONS.SERVICES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_BULK_SOFT_DELETED,
+			resource: 'services',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		deleteServicesBulkController,
+	);
+	router.patch(
+		SERVICE_PATH_BULK_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_BULK_RESTORED,
+			resource: 'services',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		restoreServicesBulkController,
+	);
+	router.delete(
+		SERVICE_PATH_BULK_PURGE,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_PURGE, PERMISSIONS.SERVICES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_BULK_PERMANENTLY_DELETED,
+			resource: 'services',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		purgeServicesBulkController,
+	);
+
 	router.patch(
 		SERVICE_PATH_UPDATE,
 		authenticate,

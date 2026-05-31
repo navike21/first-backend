@@ -1,5 +1,4 @@
 import { QueryFilter } from 'mongoose';
-import { ACTIVE, DELETED } from '@Constants/statusRegister';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
 import { AppError } from '@Shared/domain/AppError';
@@ -22,8 +21,12 @@ export async function listClients({
 	const skip = (page - 1) * limit;
 
 	const query: QueryFilter<ClientDocument> = {
-		status: status && status !== DELETED ? status : ACTIVE,
+		deletedAt: null,
 	};
+
+	if (status) {
+		query.status = status;
+	}
 
 	if (search) {
 		query.businessName = { $regex: search, $options: 'i' };

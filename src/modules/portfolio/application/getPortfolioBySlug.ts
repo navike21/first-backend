@@ -16,7 +16,7 @@ export async function getPortfolioBySlug(slug: string) {
 	const clientDoc = portfolio.clientId
 		? await ClientModel.findOne({
 				id: portfolio.clientId,
-				status: { $ne: 'deleted' },
+				deletedAt: null,
 			})
 				.select({ businessName: 1, logoUrl: 1, website: 1 })
 				.lean()

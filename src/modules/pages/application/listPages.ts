@@ -13,8 +13,8 @@ export async function listPages({
 	adminView = false,
 }: ListPagesOptions) {
 	const filter: Record<string, unknown> = adminView
-		? { status: { $ne: 'deleted' } }
-		: { status: 'published', isPublished: true };
+		? { deletedAt: null }
+		: { status: 'published', isPublished: true, deletedAt: null };
 
 	const [docs, total] = await Promise.all([
 		PageModel.find(filter)

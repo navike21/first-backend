@@ -9,6 +9,7 @@ import {
 	SUBSCRIBER_PATH_REGISTER,
 	SUBSCRIBER_PATH_REGISTER_BULK,
 	SUBSCRIBER_PATH_RESTORE,
+	SUBSCRIBER_PATH_RESTORE_BULK,
 	SUBSCRIBER_PATH_SEARCH_BY_ID,
 	SUBSCRIBER_PATH_TRASH,
 	SUBSCRIBER_PATH_UPDATE,
@@ -38,6 +39,7 @@ import { subscriberUpdate } from '../controllers/subscriber.update';
 import { validateUpdateSchema } from '../middlewares/validateUpdateSchema';
 import { subscriberRestoreController } from '../controllers/subscriber.restore';
 import { subscriberTrashController } from '../controllers/subscriber.trash';
+import { subscriberRestoreBulkController } from '../controllers/subscriber.restoreBulk';
 
 export function subscribersApi(router: Router) {
 	// Public — subscribe form
@@ -83,6 +85,17 @@ export function subscribersApi(router: Router) {
 		subscriberRestoreController,
 	);
 	router.patch(
+		SUBSCRIBER_PATH_RESTORE_BULK,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_BULK_RESTORED,
+			resource: 'subscribers',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		subscriberRestoreBulkController,
+	);
+	router.patch(
 		SUBSCRIBER_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
@@ -94,12 +107,22 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_DELETE_LOGIC,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_BULK_SOFT_DELETED,
+			resource: 'subscribers',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
 		subscriberDeleteLogical,
 	);
 	router.delete(
 		SUBSCRIBER_PATH_DELETE_LOGIC_BULK,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_BULK_SOFT_DELETED,
+			resource: 'subscribers',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
 		subscriberDeleteLogicalBulk,
 	);
 	router.delete(
@@ -112,6 +135,11 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_DELETE_BULK,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_PURGE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_BULK_PERMANENTLY_DELETED,
+			resource: 'subscribers',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
 		subscriberDeletePhysicalBulk,
 	);
 }

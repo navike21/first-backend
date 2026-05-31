@@ -9,7 +9,7 @@ import type { UpdatePortfolioInput } from '../schemas/portfolio.schema';
 export async function updatePortfolio(id: string, input: UpdatePortfolioInput) {
 	const portfolio = await PortfolioModel.findOne({
 		id,
-		status: { $ne: 'deleted' },
+		deletedAt: null,
 	});
 	if (!portfolio) throw new PortfolioNotFoundError();
 

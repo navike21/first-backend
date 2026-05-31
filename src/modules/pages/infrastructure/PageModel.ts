@@ -36,10 +36,10 @@ const PageSchema = new Schema(
 		isPublished: { type: Boolean, default: false },
 		status: {
 			type: String,
-			enum: ['draft', 'published', 'deleted'],
+			enum: ['draft', 'published'],
 			default: 'draft',
 		},
-		deletedAt: { type: Date },
+		deletedAt: { type: Date, default: null },
 	},
 	{ timestamps: true },
 );

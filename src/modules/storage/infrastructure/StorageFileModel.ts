@@ -1,9 +1,4 @@
 import { model, Schema } from 'mongoose';
-import {
-	ACTIVE,
-	STATUS_REGISTER_ARRAY,
-	StatusRegister,
-} from '@Constants/statusRegister';
 import generateUUID from '@Helpers/uuid';
 
 export interface StorageVariant {
@@ -23,8 +18,8 @@ export interface StorageFileDocument {
 	full?: StorageVariant;
 	thumb?: StorageVariant;
 	uploadedBy?: string;
-	status: StatusRegister;
-	deletedAt?: Date;
+	status: 'active' | 'inactive';
+	deletedAt?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -53,10 +48,10 @@ const storageFileSchema = new Schema<StorageFileDocument>(
 		status: {
 			type: String,
 			required: true,
-			enum: STATUS_REGISTER_ARRAY,
-			default: ACTIVE,
+			enum: ['active', 'inactive'],
+			default: 'active',
 		},
-		deletedAt: { type: Date },
+		deletedAt: { type: Date, default: null },
 	},
 	{ timestamps: true },
 );

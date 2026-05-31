@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { SubscriberSchema } from '../types/subscriber.schema';
-import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
 
 export const SubscriberRegisterSchema = z.object({
@@ -76,5 +75,5 @@ export const SubscriberRegisterSchema = z.object({
 		},
 	),
 
-	status: z.enum(STATUS_REGISTER_ARRAY).optional(),
+	status: z.enum(['active', 'inactive'] as const).optional(),
 }) satisfies z.ZodType<SubscriberSchema>;

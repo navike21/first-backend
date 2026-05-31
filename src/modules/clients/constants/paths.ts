@@ -6,3 +6,6 @@ export const CLIENT_PATH_DELETE = '/clients/:id';
 export const CLIENT_PATH_DELETE_PERMANENT = '/clients/:id/permanent';
 export const CLIENT_PATH_TRASH = '/clients/trash';
 export const CLIENT_PATH_RESTORE = '/clients/:id/restore';
+export const CLIENT_PATH_BULK_DELETE = '/clients/bulk';
+export const CLIENT_PATH_BULK_RESTORE = '/clients/bulk/restore';
+export const CLIENT_PATH_BULK_PURGE = '/clients/bulk/permanent';

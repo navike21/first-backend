@@ -15,8 +15,8 @@ export async function listStorageFiles(query: ListStorageFilesQuery) {
 	const limit = query.limit ?? 20;
 	const skip = (page - 1) * limit;
 
-	const filter: Record<string, unknown> = { status: { $ne: 'deleted' } };
-	if (query.status && query.status !== 'deleted') filter.status = query.status;
+	const filter: Record<string, unknown> = { deletedAt: null };
+	if (query.status) filter.status = query.status;
 	if (query.entityType) filter.entityType = query.entityType;
 	if (query.entityId) filter.entityId = query.entityId;
 	if (query.uploadedBy) filter.uploadedBy = query.uploadedBy;

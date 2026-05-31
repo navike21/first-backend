@@ -18,6 +18,9 @@ import {
 	PAGES_PATH_SECTION_UPDATE,
 	PAGES_PATH_SECTION_DELETE,
 	PAGES_PATH_SECTIONS_REORDER,
+	PAGES_PATH_BULK_DELETE,
+	PAGES_PATH_BULK_RESTORE,
+	PAGES_PATH_BULK_PURGE,
 } from '../constants/paths';
 import {
 	pageListPublicController,
@@ -34,6 +37,9 @@ import { pageSectionAddController } from '../controllers/page.section.add';
 import { pageSectionUpdateController } from '../controllers/page.section.update';
 import { pageSectionDeleteController } from '../controllers/page.section.delete';
 import { pageSectionReorderController } from '../controllers/page.section.reorder';
+import { deletePagesBulkController } from '../controllers/page.deleteBulk';
+import { restorePagesBulkController } from '../controllers/page.restoreBulk';
+import { purgePagesBulkController } from '../controllers/page.purgeBulk';
 
 export function pagesApi(router: Router) {
 	router.get(PAGES_PATH_LIST_PUBLIC, pageListPublicController);
@@ -67,6 +73,42 @@ export function pagesApi(router: Router) {
 		captureAudit({ action: AUDIT_ACTIONS.PAGES_RESTORED, resource: 'pages' }),
 		pageRestoreController,
 	);
+
+	// Bulk operations (before :slug routes to avoid conflicts)
+	router.delete(
+		PAGES_PATH_BULK_DELETE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_DELETE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGES_BULK_SOFT_DELETED,
+			resource: 'pages',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		deletePagesBulkController,
+	);
+	router.patch(
+		PAGES_PATH_BULK_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGES_BULK_RESTORED,
+			resource: 'pages',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		restorePagesBulkController,
+	);
+	router.delete(
+		PAGES_PATH_BULK_PURGE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_PURGE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGES_BULK_PERMANENTLY_DELETED,
+			resource: 'pages',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		purgePagesBulkController,
+	);
+
 	router.patch(
 		PAGES_PATH_UPDATE,
 		authenticate,

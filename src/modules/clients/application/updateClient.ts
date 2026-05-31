@@ -7,13 +7,13 @@ import ClientModel from '../infrastructure/ClientModel';
 import type { UpdateClientInput } from '../schemas/client.schema';
 
 export async function updateClient(id: string, input: UpdateClientInput) {
-	const client = await ClientModel.findOne({ id, status: { $ne: 'deleted' } });
+	const client = await ClientModel.findOne({ id, deletedAt: null });
 	if (!client) throw new ClientNotFoundError();
 
 	if (input.businessName) {
 		const conflict = await ClientModel.findOne({
 			businessName: { $regex: new RegExp(`^${input.businessName}$`, 'i') },
-			status: { $ne: 'deleted' },
+			deletedAt: null,
 			id: { $ne: id },
 		});
 		if (conflict) throw new ClientBusinessNameConflictError();

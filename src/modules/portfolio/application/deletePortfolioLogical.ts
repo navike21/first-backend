@@ -5,11 +5,10 @@ import PortfolioModel from '../infrastructure/PortfolioModel';
 export async function deletePortfolioLogical(id: string) {
 	const portfolio = await PortfolioModel.findOne({
 		id,
-		status: { $ne: 'deleted' },
+		deletedAt: null,
 	});
 	if (!portfolio) throw new PortfolioNotFoundError();
 
-	portfolio.status = 'deleted';
 	portfolio.deletedAt = new Date();
 	await portfolio.save();
 

@@ -7,3 +7,6 @@ export const COLLABORATOR_PATH_DELETE = '/collaborators/:id';
 export const COLLABORATOR_PATH_PURGE = '/collaborators/:id/permanent';
 export const COLLABORATOR_PATH_TRASH = '/collaborators/trash';
 export const COLLABORATOR_PATH_RESTORE = '/collaborators/:id/restore';
+export const COLLABORATOR_PATH_BULK_DELETE = '/collaborators/bulk';
+export const COLLABORATOR_PATH_BULK_RESTORE = '/collaborators/bulk/restore';
+export const COLLABORATOR_PATH_BULK_PURGE = '/collaborators/bulk/permanent';

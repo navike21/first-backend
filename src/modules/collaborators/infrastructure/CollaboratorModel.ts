@@ -20,10 +20,10 @@ const CollaboratorSchema = new Schema(
 		isActive: { type: Boolean, default: true },
 		status: {
 			type: String,
-			enum: ['active', 'inactive', 'deleted'],
+			enum: ['active', 'inactive'],
 			default: 'active',
 		},
-		deletedAt: { type: Date },
+		deletedAt: { type: Date, default: null },
 	},
 	{ timestamps: true },
 );

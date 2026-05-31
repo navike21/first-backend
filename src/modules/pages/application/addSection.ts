@@ -4,7 +4,7 @@ import { PageNotFoundError } from '../domain/errors/PageErrors';
 import { CreateSectionInput } from '../schemas/page.schema';
 
 export async function addSection(slug: string, input: CreateSectionInput) {
-	const doc = await PageModel.findOne({ slug, status: { $ne: 'deleted' } });
+	const doc = await PageModel.findOne({ slug, deletedAt: null });
 	if (!doc) throw new PageNotFoundError();
 
 	const { randomUUID } = await import('node:crypto');

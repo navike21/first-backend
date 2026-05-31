@@ -14,6 +14,9 @@ import {
 	COLLABORATOR_PATH_PURGE,
 	COLLABORATOR_PATH_RESTORE,
 	COLLABORATOR_PATH_TRASH,
+	COLLABORATOR_PATH_BULK_DELETE,
+	COLLABORATOR_PATH_BULK_RESTORE,
+	COLLABORATOR_PATH_BULK_PURGE,
 } from '../constants/paths';
 import {
 	collaboratorListPublicController,
@@ -26,6 +29,9 @@ import { collaboratorDeleteController } from '../controllers/collaborator.delete
 import { collaboratorPurgeController } from '../controllers/collaborator.purge';
 import { collaboratorRestoreController } from '../controllers/collaborator.restore';
 import { collaboratorTrashController } from '../controllers/collaborator.trash';
+import { deleteCollaboratorsBulkController } from '../controllers/collaborator.deleteBulk';
+import { restoreCollaboratorsBulkController } from '../controllers/collaborator.restoreBulk';
+import { purgeCollaboratorsBulkController } from '../controllers/collaborator.purgeBulk';
 
 export function collaboratorsApi(router: Router) {
 	router.get(COLLABORATOR_PATH_LIST_PUBLIC, collaboratorListPublicController);
@@ -59,6 +65,42 @@ export function collaboratorsApi(router: Router) {
 		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_RESTORED, resource: 'collaborators' }),
 		collaboratorRestoreController,
 	);
+
+	// Bulk operations (before :id routes to avoid conflicts)
+	router.delete(
+		COLLABORATOR_PATH_BULK_DELETE,
+		authenticate,
+		authorize(PERMISSIONS.COLLABORATORS_DELETE, PERMISSIONS.COLLABORATORS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATORS_BULK_SOFT_DELETED,
+			resource: 'collaborators',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		deleteCollaboratorsBulkController,
+	);
+	router.patch(
+		COLLABORATOR_PATH_BULK_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.COLLABORATORS_UPDATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATORS_BULK_RESTORED,
+			resource: 'collaborators',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		restoreCollaboratorsBulkController,
+	);
+	router.delete(
+		COLLABORATOR_PATH_BULK_PURGE,
+		authenticate,
+		authorize(PERMISSIONS.COLLABORATORS_PURGE, PERMISSIONS.COLLABORATORS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATORS_BULK_PERMANENTLY_DELETED,
+			resource: 'collaborators',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		purgeCollaboratorsBulkController,
+	);
+
 	router.patch(
 		COLLABORATOR_PATH_UPDATE,
 		authenticate,

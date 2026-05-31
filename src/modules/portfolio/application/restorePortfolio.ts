@@ -3,12 +3,12 @@ import { AppError } from '@Shared/domain/AppError';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
 export async function restorePortfolio(id: string) {
-	const item = await PortfolioModel.findOne({ id, status: 'deleted' }).lean();
+	const item = await PortfolioModel.findOne({ id, deletedAt: { $ne: null } }).lean();
 	if (!item) AppError.notFound('PORTFOLIO_NOT_FOUND', 'Portfolio item not found in trash');
 
 	await PortfolioModel.findOneAndUpdate(
-		{ id, status: 'deleted' },
-		{ $set: { status: 'draft' }, $unset: { deletedAt: '' } },
+		{ id, deletedAt: { $ne: null } },
+		{ $unset: { deletedAt: '' } },
 	);
-	return cleanMongoFields({ ...item, status: 'draft', deletedAt: undefined });
+	return cleanMongoFields({ ...item, deletedAt: undefined });
 }

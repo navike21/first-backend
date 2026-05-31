@@ -3,12 +3,12 @@ import { AppError } from '@Shared/domain/AppError';
 import PageModel from '../infrastructure/PageModel';
 
 export async function restorePage(slug: string) {
-	const page = await PageModel.findOne({ slug, status: 'deleted' }).lean();
+	const page = await PageModel.findOne({ slug, deletedAt: { $ne: null } }).lean();
 	if (!page) AppError.notFound('PAGE_NOT_FOUND', 'Page not found in trash');
 
 	await PageModel.findOneAndUpdate(
-		{ slug, status: 'deleted' },
-		{ $set: { status: 'draft' }, $unset: { deletedAt: '' } },
+		{ slug, deletedAt: { $ne: null } },
+		{ $unset: { deletedAt: '' } },
 	);
-	return cleanMongoFields({ ...page, status: 'draft', deletedAt: undefined });
+	return cleanMongoFields({ ...page, deletedAt: undefined });
 }

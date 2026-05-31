@@ -1,7 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { SubscriberSchema } from '../types/subscriber.schema';
 import { emailValidate } from '@Helpers/emailValidate';
-import { ACTIVE, STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 import { dateValidate } from '@Helpers/dateValidate';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
 import generateUUID from '@Helpers/uuid';
@@ -71,8 +70,12 @@ const subscriberSchema = new Schema<SubscriberSchema>({
 	status: {
 		type: String,
 		required: true,
-		default: ACTIVE,
-		enum: STATUS_REGISTER_ARRAY,
+		default: 'active',
+		enum: ['active', 'inactive'],
+	},
+	deletedAt: {
+		type: Date,
+		default: null,
 	},
 });
 

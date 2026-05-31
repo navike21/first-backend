@@ -1,4 +1,3 @@
-import { StatusRegister } from '@Constants/statusRegister';
 import { UserGender } from '@Constants/userGender';
 
 export interface SubscriberSchema {
@@ -15,5 +14,6 @@ export interface SubscriberSchema {
 		dateOfBirth?: Date;
 		gender: UserGender;
 	};
-	status?: StatusRegister;
+	status?: string;
+	deletedAt?: Date | null;
 }

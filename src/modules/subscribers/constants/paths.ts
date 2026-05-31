@@ -10,3 +10,4 @@ export const SUBSCRIBER_PATH_DELETE_LOGIC_BULK =
 	'/subscriber/delete-logic-bulk';
 export const SUBSCRIBER_PATH_RESTORE = '/subscriber/restore/:id';
 export const SUBSCRIBER_PATH_TRASH = '/subscriber/trash';
+export const SUBSCRIBER_PATH_RESTORE_BULK = '/subscriber/restore-bulk';

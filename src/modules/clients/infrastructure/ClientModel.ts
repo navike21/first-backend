@@ -1,13 +1,12 @@
 import { model, Schema } from 'mongoose';
 import generateUUID from '@Helpers/uuid';
-import { ACTIVE, STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 import { DOCUMENT_TYPES_ARRAY } from '../constants/documentTypes';
 import type { CreateClientInput } from '../schemas/client.schema';
 
 export interface ClientDocument extends Omit<CreateClientInput, 'status'> {
 	id: string;
 	status: string;
-	deletedAt?: Date;
+	deletedAt?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -49,10 +48,10 @@ const clientSchema = new Schema<ClientDocument>(
 		status: {
 			type: String,
 			required: true,
-			default: ACTIVE,
-			enum: STATUS_REGISTER_ARRAY,
+			default: 'active',
+			enum: ['active', 'inactive'],
 		},
-		deletedAt: { type: Date },
+		deletedAt: { type: Date, default: null },
 	},
 	{ timestamps: true },
 );

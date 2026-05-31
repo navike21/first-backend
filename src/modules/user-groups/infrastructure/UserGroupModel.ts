@@ -1,10 +1,5 @@
 import { model, Schema } from 'mongoose';
 import { ALL_PERMISSIONS, Permission } from '@Constants/permissions';
-import {
-	ACTIVE,
-	STATUS_REGISTER_ARRAY,
-	StatusRegister,
-} from '@Constants/statusRegister';
 import generateUUID from '@Helpers/uuid';
 
 export interface UserGroupDocument {
@@ -15,7 +10,8 @@ export interface UserGroupDocument {
 	permissions: Permission[];
 	color: string;
 	isSystem: boolean;
-	status: StatusRegister;
+	status: 'active' | 'inactive';
+	deletedAt?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -60,9 +56,10 @@ const userGroupSchema = new Schema<UserGroupDocument>(
 		status: {
 			type: String,
 			required: true,
-			enum: STATUS_REGISTER_ARRAY,
-			default: ACTIVE,
+			enum: ['active', 'inactive'],
+			default: 'active',
 		},
+		deletedAt: { type: Date, default: null },
 	},
 	{ timestamps: true },
 );

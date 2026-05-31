@@ -6,7 +6,7 @@ import type { CreateClientInput } from '../schemas/client.schema';
 export async function createClient(input: CreateClientInput) {
 	const existing = await ClientModel.findOne({
 		businessName: { $regex: new RegExp(`^${input.businessName}$`, 'i') },
-		status: { $ne: 'deleted' },
+		deletedAt: null,
 	});
 	if (existing) throw new ClientBusinessNameConflictError();
 

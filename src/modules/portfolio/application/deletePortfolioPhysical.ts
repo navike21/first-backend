@@ -3,7 +3,9 @@ import { AppError } from '@Shared/domain/AppError';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
 export async function deletePortfolioPhysical(id: string) {
-	const deleted = await PortfolioModel.findOneAndDelete({ id }).lean();
-	if (!deleted) AppError.notFound('PORTFOLIO_NOT_FOUND', 'Portfolio item not found');
-	return cleanMongoFields(deleted);
+	const portfolio = await PortfolioModel.findOne({ id, deletedAt: { $ne: null } }).lean();
+	if (!portfolio) AppError.notFound('PORTFOLIO_NOT_FOUND', 'Portfolio item not found in trash');
+
+	await PortfolioModel.deleteOne({ id });
+	return cleanMongoFields(portfolio);
 }
