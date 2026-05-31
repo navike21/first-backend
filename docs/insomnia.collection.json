@@ -1,17 +1,16 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2026-05-12T00:00:00.000Z",
+  "__export_date": "2026-05-31T00:00:00.000Z",
   "__export_source": "first-backend.api",
   "resources": [
     {
       "_id": "wrk_firstbackend",
       "_type": "workspace",
       "name": "First Backend API",
-      "description": "# 🚀 First Backend API\n\nAPI REST construida con **Node.js + TypeScript + Express + MongoDB**.\n\n---\n\n## 🌐 Ambientes\n\n| Ambiente | URL Base |\n|---|---|\n| Development | `http://localhost:3200/api/v1` |\n| Production (Vercel) | `https://first-backend.vercel.app/api/v1` |\n\n---\n\n## 🔐 Autenticación\n\nEsta API usa **JWT (JSON Web Tokens)** con un modelo de triple secreto:\n\n| Token | Duración | Uso |\n|---|---|---|\n| `access_token` | 15 min | Header `Authorization: Bearer <token>` |\n| `refresh_token` | 7 días | Cookie `httpOnly` — se gestiona automáticamente |\n| `email_token` | 24 h | Verificación de correo |\n| `reset_token` | 1 h | Restablecimiento de contraseña |\n\n### Flujo de autenticación\n\n1. `POST /auth/login` → guarda `access_token` en la variable de entorno\n2. Las rutas protegidas usan `Bearer {{ access_token }}` automáticamente\n3. Al expirar, `POST /auth/refresh` renueva el token usando la cookie httpOnly\n\n---\n\n## 🛡️ Permisos (RBAC)\n\nCada usuario pertenece a un **grupo de usuario** que define sus permisos:\n\n| Módulo | Permisos disponibles |\n|---|---|\n| Perfil propio | `profile:read`, `profile:update` |\n| Usuarios | `users:read`, `users:create`, `users:update`, `users:delete`, `users:manage` |\n| Grupos | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:manage` |\n| Suscriptores | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:manage` |\n| Almacenamiento | `storage:upload`, `storage:delete`, `storage:manage` |\n| Audit Logs | `audit-logs:read`, `audit-logs:manage` |\n| App Settings | `app-settings:read`, `app-settings:update`, `app-settings:manage` |\n| Clientes | `clients:read`, `clients:create`, `clients:update`, `clients:delete`, `clients:manage` |\n| Servicios | `services:read`, `services:create`, `services:update`, `services:delete`, `services:manage` |\n| Portafolio | `portfolio:read`, `portfolio:create`, `portfolio:update`, `portfolio:delete`, `portfolio:manage` |\n\n> 💡 Los permisos `*:manage` son comodín e incluyen todas las operaciones del módulo.\n\n---\n\n## 🌍 Internacionalización\n\nTodas las rutas aceptan el header `Accept-Language` para respuestas y emails en el idioma del usuario.\n\n**Idiomas soportados:** `es`, `en`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`",
+      "description": "# 🚀 First Backend API\n\nAPI REST construida con **Node.js + TypeScript + Express + MongoDB**.\n\n---\n\n## 🌐 Ambientes\n\n| Ambiente | URL Base |\n|---|---|\n| Development | `http://localhost:3200/api/v1` |\n| Production (Vercel) | `https://first-backend.vercel.app/api/v1` |\n\n---\n\n## 🔐 Autenticación\n\nEsta API usa **JWT (JSON Web Tokens)** con un modelo de triple secreto:\n\n| Token | Duración | Uso |\n|---|---|---|\n| `access_token` | 15 min | Header `Authorization: Bearer <token>` |\n| `refresh_token` | 7 días | Cookie `httpOnly` — se gestiona automáticamente |\n| `email_token` | 24 h | Verificación de correo |\n| `reset_token` | 1 h | Restablecimiento de contraseña |\n\n### Flujo de autenticación\n\n1. `POST /auth/login` → guarda `access_token` en la variable de entorno\n2. Las rutas protegidas usan `Bearer {{ access_token }}` automáticamente\n3. Al expirar, `POST /auth/refresh` renueva el token usando la cookie httpOnly\n\n---\n\n## 🛡️ Permisos (RBAC)\n\nCada usuario pertenece a un **grupo de usuario** que define sus permisos:\n\n| Módulo | Permisos disponibles |\n|---|---|\n| Perfil propio | `profile:read`, `profile:update` |\n| Usuarios | `users:read`, `users:create`, `users:update`, `users:delete`, `users:purge`, `users:manage` |\n| Grupos | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:purge`, `user-groups:manage` |\n| Suscriptores | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:purge`, `subscribers:manage` |\n| Almacenamiento | `storage:upload`, `storage:delete`, `storage:purge`, `storage:manage` |\n| Audit Logs | `audit-logs:read`, `audit-logs:manage` |\n| App Settings | `app-settings:read`, `app-settings:update`, `app-settings:manage` |\n| Clientes | `clients:read`, `clients:create`, `clients:update`, `clients:delete`, `clients:purge`, `clients:manage` |\n| Servicios | `services:read`, `services:create`, `services:update`, `services:delete`, `services:purge`, `services:manage` |\n| Portafolio | `portfolio:read`, `portfolio:create`, `portfolio:update`, `portfolio:delete`, `portfolio:purge`, `portfolio:manage` |\n| Colaboradores | `collaborators:read`, `collaborators:create`, `collaborators:update`, `collaborators:delete`, `collaborators:purge`, `collaborators:manage` |\n| Páginas | `pages:read`, `pages:create`, `pages:update`, `pages:delete`, `pages:purge`, `pages:manage` |\n\n> 💡 Los permisos `*:manage` son comodín e incluyen todas las operaciones del módulo.\n\n---\n\n## 🌍 Internacionalización\n\nTodas las rutas aceptan el header `Accept-Language` para respuestas y emails en el idioma del usuario.\n\n**Idiomas soportados:** `es`, `en`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`",
       "scope": "collection"
     },
-
     {
       "_id": "env_base",
       "_type": "environment",
@@ -29,7 +28,10 @@
         "client_id": "",
         "service_slug": "",
         "portfolio_slug": "",
-        "portfolio_id": ""
+        "portfolio_id": "",
+        "file_id": "",
+        "collaborator_id": "",
+        "page_slug": ""
       },
       "color": null,
       "isPrivate": false
@@ -58,7 +60,6 @@
       "color": "#059669",
       "isPrivate": false
     },
-
     {
       "_id": "fld_general",
       "_type": "request_group",
@@ -99,7 +100,6 @@
       "description": "## 📧 Suscriptores\n\nGestión de la lista de suscriptores (newsletter). Distingue entre la ruta pública del formulario y las rutas de administración.\n\n### Ruta pública\n\n| Endpoint | Auth | Descripción |\n|---|---|---|\n| `POST /subscriber/register` | ❌ Público | Formulario de suscripción |\n\n### Rutas administrativas\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `POST /subscriber/register-bulk` | ✅ Bearer | `subscribers:create` o `subscribers:manage` |\n| `GET /subscriber/list` | ✅ Bearer | `subscribers:read` o `subscribers:manage` |\n| `GET /subscriber/search/:id` | ✅ Bearer | `subscribers:read` o `subscribers:manage` |\n| `PATCH /subscriber/update/:id` | ✅ Bearer | `subscribers:update` o `subscribers:manage` |\n| `DELETE /subscriber/delete-logic/:id` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n| `DELETE /subscriber/delete-logic-bulk` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n| `DELETE /subscriber/delete/:id` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n| `DELETE /subscriber/delete-bulk` | ✅ Bearer | `subscribers:delete` o `subscribers:manage` |\n\n### Tipos de eliminación\n\n| Tipo | Reversible | Descripción |\n|---|---|---|\n| **Lógica** (soft delete) | ✅ Sí | Marca el registro como eliminado, permanece en DB |\n| **Física** (hard delete) | ❌ No | Elimina el registro permanentemente de la DB |",
       "metaSortKey": -600
     },
-
     {
       "_id": "req_welcome",
       "_type": "request",
@@ -109,7 +109,11 @@
       "method": "GET",
       "url": "{{ host }}/",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_welcome_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_welcome_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -125,14 +129,17 @@
       "method": "GET",
       "url": "{{ base_url }}/health",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_health_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_health_1"
+        }
       ],
       "parameters": [],
       "body": {},
       "authentication": {},
       "metaSortKey": -200
     },
-
     {
       "_id": "req_auth_login",
       "_type": "request",
@@ -142,8 +149,16 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/login",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_login_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_login_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_login_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_login_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -162,7 +177,11 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/refresh",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_refresh_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_refresh_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -178,7 +197,11 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/logout",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_logout_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_logout_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -194,7 +217,11 @@
       "method": "GET",
       "url": "{{ base_url }}/auth/verify-email/:token",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_verifyemail_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_verifyemail_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -210,8 +237,16 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/forgot-password",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_forgot_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_forgot_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_forgot_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_forgot_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -230,8 +265,16 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/reset-password/:token",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_reset_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_reset_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_reset_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_reset_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -250,8 +293,16 @@
       "method": "POST",
       "url": "{{ base_url }}/auth/change-password",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_changepw_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_changepw_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_changepw_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_changepw_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -274,7 +325,11 @@
       "method": "GET",
       "url": "{{ base_url }}/auth/sessions",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_sessions_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_sessions_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -285,7 +340,6 @@
       },
       "metaSortKey": -800
     },
-
     {
       "_id": "req_users_me_get",
       "_type": "request",
@@ -295,7 +349,11 @@
       "method": "GET",
       "url": "{{ base_url }}/users/me",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_mep_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_mep_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -315,8 +373,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/users/me",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_meup_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_meup_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_meup_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_meup_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -339,8 +405,16 @@
       "method": "POST",
       "url": "{{ base_url }}/users",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_ucreate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ucreate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ucreate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ucreate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -363,14 +437,38 @@
       "method": "GET",
       "url": "{{ base_url }}/users",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ulist_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ulist_1"
+        }
       ],
       "parameters": [
-        { "name": "page", "value": "1", "disabled": false },
-        { "name": "limit", "value": "20", "disabled": false },
-        { "name": "status", "value": "active", "disabled": true },
-        { "name": "search", "value": "", "disabled": true },
-        { "name": "groupId", "value": "", "disabled": true }
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "disabled": false
+        },
+        {
+          "name": "status",
+          "value": "active",
+          "disabled": true
+        },
+        {
+          "name": "search",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "groupId",
+          "value": "",
+          "disabled": true
+        }
       ],
       "body": {},
       "authentication": {
@@ -389,7 +487,11 @@
       "method": "GET",
       "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugetid_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugetid_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -409,8 +511,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_uupdate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_uupdate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_uupdate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_uupdate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -428,12 +538,16 @@
       "_id": "req_users_delete",
       "_type": "request",
       "parentId": "fld_users",
-      "name": "Delete User (Admin)",
-      "description": "## 🗑️ Delete User\n\nElimina un usuario del sistema por su ID.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:delete` o `users:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del usuario a eliminar |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Usuario eliminado correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |",
+      "name": "Delete User — Soft Delete (Admin)",
+      "description": "## 🗑️ Delete User (Soft Delete)\n\nMueve el usuario a la **papelera** (soft delete). El registro permanece en DB con `deletedAt` seteado. **Se puede restaurar** con `PATCH /users/:id/restore`.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:delete` o `users:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del usuario a mover a papelera |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Usuario movido a papelera correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |\n\n> 💡 Para eliminar permanentemente usa `DELETE /users/:id/permanent` (requiere `users:purge`).",
       "method": "DELETE",
       "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_udelete_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_udelete_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -444,7 +558,6 @@
       },
       "metaSortKey": -700
     },
-
     {
       "_id": "req_permissions_catalog",
       "_type": "request",
@@ -454,7 +567,11 @@
       "method": "GET",
       "url": "{{ base_url }}/permissions/catalog",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_permcat_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_permcat_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -474,8 +591,16 @@
       "method": "POST",
       "url": "{{ base_url }}/user-groups",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_ugcreate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugcreate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ugcreate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugcreate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -498,13 +623,33 @@
       "method": "GET",
       "url": "{{ base_url }}/user-groups",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_uglist_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_uglist_1"
+        }
       ],
       "parameters": [
-        { "name": "page", "value": "1", "disabled": false },
-        { "name": "limit", "value": "20", "disabled": false },
-        { "name": "status", "value": "active", "disabled": true },
-        { "name": "search", "value": "", "disabled": true }
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "disabled": false
+        },
+        {
+          "name": "status",
+          "value": "active",
+          "disabled": true
+        },
+        {
+          "name": "search",
+          "value": "",
+          "disabled": true
+        }
       ],
       "body": {},
       "authentication": {
@@ -523,7 +668,11 @@
       "method": "GET",
       "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_uggetid_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_uggetid_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -543,8 +692,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_ugupdate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugupdate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ugupdate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugupdate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -562,12 +719,16 @@
       "_id": "req_usergroups_delete",
       "_type": "request",
       "parentId": "fld_usergroups",
-      "name": "Delete User Group",
-      "description": "## 🗑️ Delete User Group\n\nElimina un grupo de usuarios por su ID.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `user-groups:delete` o `user-groups:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del grupo a eliminar |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Grupo eliminado correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `403` | `USER_GROUP_SYSTEM_PROTECTED` | ⚠️ El grupo es del sistema y no puede eliminarse |\n| `404` | `USER_GROUP_NOT_FOUND` | Grupo no encontrado |",
+      "name": "Delete User Group — Soft Delete",
+      "description": "## 🗑️ Delete User Group (Soft Delete)\n\nMueve el grupo a la **papelera** (soft delete). El registro permanece en DB con `deletedAt` seteado.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `user-groups:delete` o `user-groups:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del grupo a mover a papelera |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"message\": \"Grupo movido a papelera correctamente\"\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `403` | `USER_GROUP_SYSTEM_PROTECTED` | El grupo es del sistema y no puede eliminarse |\n| `404` | `USER_GROUP_NOT_FOUND` | Grupo no encontrado |",
       "method": "DELETE",
       "url": "{{ base_url }}/user-groups/{{ group_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ugdelete_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugdelete_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -578,7 +739,6 @@
       },
       "metaSortKey": -600
     },
-
     {
       "_id": "req_sub_register",
       "_type": "request",
@@ -588,8 +748,16 @@
       "method": "POST",
       "url": "{{ base_url }}/subscriber/register",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_subreg_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subreg_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_subreg_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subreg_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -608,8 +776,16 @@
       "method": "POST",
       "url": "{{ base_url }}/subscriber/register-bulk",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_subbulkreg_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subbulkreg_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_subbulkreg_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subbulkreg_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -632,7 +808,11 @@
       "method": "GET",
       "url": "{{ base_url }}/subscriber/list",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_sublist_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_sublist_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -652,7 +832,11 @@
       "method": "GET",
       "url": "{{ base_url }}/subscriber/search/{{ subscriber_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subgetid_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subgetid_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -672,8 +856,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/subscriber/update/{{ subscriber_id }}",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_subupdate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subupdate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_subupdate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subupdate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -696,7 +888,11 @@
       "method": "DELETE",
       "url": "{{ base_url }}/subscriber/delete-logic/{{ subscriber_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdl_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subdl_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -716,8 +912,16 @@
       "method": "DELETE",
       "url": "{{ base_url }}/subscriber/delete-logic-bulk",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_subdlb_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdlb_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_subdlb_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subdlb_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -740,7 +944,11 @@
       "method": "DELETE",
       "url": "{{ base_url }}/subscriber/delete/{{ subscriber_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdp_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subdp_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -760,8 +968,16 @@
       "method": "DELETE",
       "url": "{{ base_url }}/subscriber/delete-bulk",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_subdpb_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_subdpb_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_subdpb_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subdpb_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -775,7 +991,6 @@
       },
       "metaSortKey": -900
     },
-
     {
       "_id": "fld_storage",
       "_type": "request_group",
@@ -800,7 +1015,6 @@
       "description": "## ⚙️ Configuración de la Aplicación\n\nGestión de la configuración global de la aplicación. Las settings se almacenan en MongoDB y se cachean en memoria con TTL de 5 minutos.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `GET /app-settings` | ✅ Bearer | `app-settings:read` o `app-settings:manage` |\n| `PATCH /app-settings` | ✅ Bearer | `app-settings:update` o `app-settings:manage` |\n\n### Categorías de configuración\n\n| Categoría | Campos |\n|---|---|\n| `general` | `appName`, `defaultLanguage`, `timezone`, `maintenanceMode` |\n| `notifications` | `emailSenderName`, `emailSenderAddress`, `welcomeEmailEnabled`, `notificationsEnabled` |\n| `appearance` | `logoUrl`, `primaryColor`, `faviconUrl` |\n\n> 💡 Si no hay configuración guardada, se devuelven los valores por defecto del sistema.",
       "metaSortKey": -300
     },
-
     {
       "_id": "req_storage_upload",
       "_type": "request",
@@ -810,16 +1024,40 @@
       "method": "POST",
       "url": "{{ base_url }}/storage/upload",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_stu_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_stu_1"
+        }
       ],
       "parameters": [],
       "body": {
         "mimeType": "multipart/form-data",
         "params": [
-          { "name": "file", "value": "", "type": "file", "disabled": false },
-          { "name": "entityType", "value": "user", "type": "text", "disabled": true },
-          { "name": "entityId", "value": "{{ user_id }}", "type": "text", "disabled": true },
-          { "name": "quality", "value": "80", "type": "text", "disabled": true }
+          {
+            "name": "file",
+            "value": "",
+            "type": "file",
+            "disabled": false
+          },
+          {
+            "name": "entityType",
+            "value": "user",
+            "type": "text",
+            "disabled": true
+          },
+          {
+            "name": "entityId",
+            "value": "{{ user_id }}",
+            "type": "text",
+            "disabled": true
+          },
+          {
+            "name": "quality",
+            "value": "80",
+            "type": "text",
+            "disabled": true
+          }
         ]
       },
       "authentication": {
@@ -838,16 +1076,40 @@
       "method": "POST",
       "url": "{{ base_url }}/storage/upload-bulk",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_stub_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_stub_1"
+        }
       ],
       "parameters": [],
       "body": {
         "mimeType": "multipart/form-data",
         "params": [
-          { "name": "files", "value": "", "type": "file", "disabled": false },
-          { "name": "entityType", "value": "product", "type": "text", "disabled": true },
-          { "name": "entityId", "value": "", "type": "text", "disabled": true },
-          { "name": "quality", "value": "80", "type": "text", "disabled": true }
+          {
+            "name": "files",
+            "value": "",
+            "type": "file",
+            "disabled": false
+          },
+          {
+            "name": "entityType",
+            "value": "product",
+            "type": "text",
+            "disabled": true
+          },
+          {
+            "name": "entityId",
+            "value": "",
+            "type": "text",
+            "disabled": true
+          },
+          {
+            "name": "quality",
+            "value": "80",
+            "type": "text",
+            "disabled": true
+          }
         ]
       },
       "authentication": {
@@ -862,17 +1124,25 @@
       "_type": "request",
       "parentId": "fld_storage",
       "name": "Delete Files",
-      "description": "## 🗑️ Delete Files\n\nElimina uno o varios archivos del almacenamiento por sus URLs.\n\n> ⚠️ **IRREVERSIBLE.** Los archivos se eliminan permanentemente del almacenamiento.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `storage:delete` o `storage:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `urls` | `string[]` | ✅ | Array de URLs de los archivos a eliminar |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": {\n    \"deleted\": 2\n  }\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `URLS_REQUIRED` | El array de URLs está vacío |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
+      "description": "## 🗑️ Delete Files\n\nElimina uno o varios archivos del almacenamiento por sus IDs.\n\n> ⚠️ **IRREVERSIBLE.** Los archivos se eliminan permanentemente del almacenamiento.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `storage:delete` o `storage:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `ids` | `string[]` | ✅ | Array de IDs (UUID) de los archivos a eliminar (máx. 100) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\n```json\n{\n  \"data\": {\n    \"deleted\": 2\n  }\n}\n```\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `400` | `IDS_REQUIRED` | El array de IDs está vacío |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |",
       "method": "DELETE",
       "url": "{{ base_url }}/storage/delete",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_std_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_std_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_std_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_std_2"
+        }
       ],
       "parameters": [],
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"urls\": [\n    \"https://storage.example.com/uploads/image1.jpg\",\n    \"https://storage.example.com/uploads/image2.png\"\n  ]\n}"
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
       },
       "authentication": {
         "type": "bearer",
@@ -881,7 +1151,6 @@
       },
       "metaSortKey": -300
     },
-
     {
       "_id": "req_auditlogs_list",
       "_type": "request",
@@ -891,16 +1160,48 @@
       "method": "GET",
       "url": "{{ base_url }}/audit-logs",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_allist_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_allist_1"
+        }
       ],
       "parameters": [
-        { "name": "page", "value": "1", "disabled": false },
-        { "name": "limit", "value": "20", "disabled": false },
-        { "name": "userId", "value": "", "disabled": true },
-        { "name": "action", "value": "", "disabled": true },
-        { "name": "resource", "value": "", "disabled": true },
-        { "name": "dateFrom", "value": "", "disabled": true },
-        { "name": "dateTo", "value": "", "disabled": true }
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "disabled": false
+        },
+        {
+          "name": "userId",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "action",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "resource",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "dateFrom",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "dateTo",
+          "value": "",
+          "disabled": true
+        }
       ],
       "body": {},
       "authentication": {
@@ -919,7 +1220,11 @@
       "method": "GET",
       "url": "{{ base_url }}/audit-logs/{{ audit_log_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_algetid_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_algetid_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -930,7 +1235,6 @@
       },
       "metaSortKey": -200
     },
-
     {
       "_id": "req_appsettings_get",
       "_type": "request",
@@ -940,7 +1244,11 @@
       "method": "GET",
       "url": "{{ base_url }}/app-settings",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_asget_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_asget_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -960,8 +1268,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/app-settings",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_aspatch_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_aspatch_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_aspatch_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_aspatch_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -975,14 +1291,13 @@
       },
       "metaSortKey": -200
     },
-
     {
       "_id": "fld_clients",
       "_type": "request_group",
       "parentId": "wrk_firstbackend",
       "name": "🏢 Clients",
       "description": "## 🏢 Clientes\n\nGestión de clientes (CRM). Todas las rutas requieren autenticación. Solo `businessName`, `logoUrl` y `website` se exponen en el contexto público del portafolio.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| `POST /clients` | ✅ Bearer | `clients:create` o `clients:manage` |\n| `GET /clients` | ✅ Bearer | `clients:read` o `clients:manage` |\n| `GET /clients/:id` | ✅ Bearer | `clients:read` o `clients:manage` |\n| `PATCH /clients/:id` | ✅ Bearer | `clients:update` o `clients:manage` |\n| `DELETE /clients/:id` | ✅ Bearer | `clients:delete` o `clients:manage` |",
-      "metaSortKey": -500
+      "metaSortKey": -250
     },
     {
       "_id": "fld_services",
@@ -990,7 +1305,7 @@
       "parentId": "wrk_firstbackend",
       "name": "🛠️ Services",
       "description": "## 🛠️ Servicios\n\nGestión de los servicios de navike21 con contenido multiidioma. Las rutas GET son públicas; escritura requiere autenticación.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso | Descripción |\n|---|---|---|---|\n| `GET /services` | ❌ Público | — | Lista servicios activos |\n| `GET /services/admin` | ✅ Bearer | `services:read` o `services:manage` | Lista admin (incluye inactivos) |\n| `GET /services/:slug` | ❌ Público | — | Detalle por slug |\n| `POST /services` | ✅ Bearer | `services:create` o `services:manage` | Crear servicio |\n| `PATCH /services/:slug` | ✅ Bearer | `services:update` o `services:manage` | Actualizar |\n| `DELETE /services/:slug` | ✅ Bearer | `services:delete` o `services:manage` | Soft delete |",
-      "metaSortKey": -450
+      "metaSortKey": -220
     },
     {
       "_id": "fld_portfolio",
@@ -998,9 +1313,8 @@
       "parentId": "wrk_firstbackend",
       "name": "🗂️ Portfolio",
       "description": "## 🗂️ Portafolio\n\nMuestra de proyectos de navike21. Las rutas GET son públicas; escritura requiere autenticación.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso | Descripción |\n|---|---|---|---|\n| `GET /portfolio` | ❌ Público | — | Lista proyectos publicados |\n| `GET /portfolio/admin` | ✅ Bearer | `portfolio:read` o `portfolio:manage` | Lista admin |\n| `GET /portfolio/by-service/:serviceSlug` | ❌ Público | — | Filtra por servicio |\n| `GET /portfolio/:slug` | ❌ Público | — | Detalle con cliente y servicios |\n| `POST /portfolio` | ✅ Bearer | `portfolio:create` o `portfolio:manage` | Crear proyecto |\n| `PATCH /portfolio/:id` | ✅ Bearer | `portfolio:update` o `portfolio:manage` | Actualizar |\n| `DELETE /portfolio/:id` | ✅ Bearer | `portfolio:delete` o `portfolio:manage` | Soft delete |",
-      "metaSortKey": -400
+      "metaSortKey": -190
     },
-
     {
       "_id": "req_clients_create",
       "_type": "request",
@@ -1010,8 +1324,16 @@
       "method": "POST",
       "url": "{{ base_url }}/clients",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_clcreate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_clcreate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clcreate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clcreate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -1034,11 +1356,23 @@
       "method": "GET",
       "url": "{{ base_url }}/clients",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_cllist_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_cllist_1"
+        }
       ],
       "parameters": [
-        { "name": "page", "value": "1", "id": "p_cllist_1" },
-        { "name": "limit", "value": "10", "id": "p_cllist_2" }
+        {
+          "name": "page",
+          "value": "1",
+          "id": "p_cllist_1"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "id": "p_cllist_2"
+        }
       ],
       "body": {},
       "authentication": {
@@ -1057,7 +1391,11 @@
       "method": "GET",
       "url": "{{ base_url }}/clients/{{ client_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_clget_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clget_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -1077,8 +1415,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/clients/{{ client_id }}",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_clupd_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_clupd_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clupd_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clupd_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -1097,11 +1443,15 @@
       "_type": "request",
       "parentId": "fld_clients",
       "name": "Delete Client (Logical)",
-      "description": "## 🗑️ Eliminar Cliente (Soft Delete)\n\nMarca el cliente como `deleted`. No elimina físicamente de la base de datos.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:delete` o `clients:manage`.",
+      "description": "## 🗑️ Eliminar Cliente (Soft Delete)\n\nMueve el cliente a la **papelera** (soft delete). El registro permanece en DB con `deletedAt` seteado. **Se puede restaurar** con `PATCH /clients/:id/restore`.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:delete` o `clients:manage`.",
       "method": "DELETE",
       "url": "{{ base_url }}/clients/{{ client_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_cldel_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_cldel_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -1112,7 +1462,6 @@
       },
       "metaSortKey": -100
     },
-
     {
       "_id": "req_services_list_public",
       "_type": "request",
@@ -1122,7 +1471,11 @@
       "method": "GET",
       "url": "{{ base_url }}/services",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svlistpub_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svlistpub_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -1138,7 +1491,11 @@
       "method": "GET",
       "url": "{{ base_url }}/services/admin",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svlistadm_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svlistadm_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -1158,7 +1515,11 @@
       "method": "GET",
       "url": "{{ base_url }}/services/{{ service_slug }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svget_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svget_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -1174,8 +1535,16 @@
       "method": "POST",
       "url": "{{ base_url }}/services",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_svcreate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svcreate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_svcreate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svcreate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -1198,8 +1567,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/services/{{ service_slug }}",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_svupd_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svupd_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_svupd_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svupd_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -1218,11 +1595,15 @@
       "_type": "request",
       "parentId": "fld_services",
       "name": "Delete Service (Logical)",
-      "description": "## 🗑️ Eliminar Servicio (Soft Delete)\n\nMarca el servicio como `deleted` (status: 'deleted').\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:delete` o `services:manage`.",
+      "description": "## 🗑️ Eliminar Servicio (Soft Delete)\n\nMueve el servicio a la **papelera** (soft delete). El registro permanece en DB con `deletedAt` seteado. **Se puede restaurar** con `PATCH /services/:slug/restore`.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:delete` o `services:manage`.",
       "method": "DELETE",
       "url": "{{ base_url }}/services/{{ service_slug }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_svdel_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svdel_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -1233,7 +1614,6 @@
       },
       "metaSortKey": -100
     },
-
     {
       "_id": "req_portfolio_list_public",
       "_type": "request",
@@ -1243,11 +1623,23 @@
       "method": "GET",
       "url": "{{ base_url }}/portfolio",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptlistpub_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptlistpub_1"
+        }
       ],
       "parameters": [
-        { "name": "page", "value": "1", "id": "p_ptlistpub_1" },
-        { "name": "limit", "value": "10", "id": "p_ptlistpub_2" }
+        {
+          "name": "page",
+          "value": "1",
+          "id": "p_ptlistpub_1"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "id": "p_ptlistpub_2"
+        }
       ],
       "body": {},
       "authentication": {},
@@ -1262,11 +1654,23 @@
       "method": "GET",
       "url": "{{ base_url }}/portfolio/admin",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptlistadm_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptlistadm_1"
+        }
       ],
       "parameters": [
-        { "name": "page", "value": "1", "id": "p_ptlistadm_1" },
-        { "name": "limit", "value": "10", "id": "p_ptlistadm_2" }
+        {
+          "name": "page",
+          "value": "1",
+          "id": "p_ptlistadm_1"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "id": "p_ptlistadm_2"
+        }
       ],
       "body": {},
       "authentication": {
@@ -1285,11 +1689,23 @@
       "method": "GET",
       "url": "{{ base_url }}/portfolio/by-service/{{ service_slug }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptbysvc_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptbysvc_1"
+        }
       ],
       "parameters": [
-        { "name": "page", "value": "1", "id": "p_ptbysvc_1" },
-        { "name": "limit", "value": "10", "id": "p_ptbysvc_2" }
+        {
+          "name": "page",
+          "value": "1",
+          "id": "p_ptbysvc_1"
+        },
+        {
+          "name": "limit",
+          "value": "10",
+          "id": "p_ptbysvc_2"
+        }
       ],
       "body": {},
       "authentication": {},
@@ -1304,7 +1720,11 @@
       "method": "GET",
       "url": "{{ base_url }}/portfolio/{{ portfolio_slug }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptget_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptget_1"
+        }
       ],
       "parameters": [],
       "body": {},
@@ -1320,8 +1740,16 @@
       "method": "POST",
       "url": "{{ base_url }}/portfolio",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_ptcreate_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptcreate_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ptcreate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptcreate_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -1344,8 +1772,16 @@
       "method": "PATCH",
       "url": "{{ base_url }}/portfolio/{{ portfolio_id }}",
       "headers": [
-        { "name": "Content-Type", "value": "application/json", "id": "h_ptupd_1" },
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptupd_2" }
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ptupd_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptupd_2"
+        }
       ],
       "parameters": [],
       "body": {
@@ -1364,14 +1800,1737 @@
       "_type": "request",
       "parentId": "fld_portfolio",
       "name": "Delete Portfolio (Logical)",
-      "description": "## 🗑️ Eliminar Proyecto (Soft Delete)\n\nMarca el proyecto como `deleted` (status: 'deleted').\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:delete` o `portfolio:manage`.\n\n> Guarda el `id` del proyecto en la variable `portfolio_id` del entorno.",
+      "description": "## 🗑️ Eliminar Proyecto (Soft Delete)\n\nMueve el proyecto a la **papelera** (soft delete). El registro permanece en DB con `deletedAt` seteado. **Se puede restaurar** con `PATCH /portfolio/:id/restore`.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:delete` o `portfolio:manage`.\n\n> Guarda el `id` del proyecto en la variable `portfolio_id` del entorno.",
       "method": "DELETE",
       "url": "{{ base_url }}/portfolio/{{ portfolio_id }}",
       "headers": [
-        { "name": "Accept-Language", "value": "{{ lang }}", "id": "h_ptdel_1" }
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptdel_1"
+        }
       ],
       "parameters": [],
       "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_users_trash",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "List users Trash (Admin)",
+      "description": "Retorna registros en papelera (deletedAt seteado). Bearer + read o manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/users/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_utrash_1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "disabled": false
+        }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -450
+    },
+    {
+      "_id": "req_users_restore",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Restore users item (Admin)",
+      "description": "Restaura un registro de la papelera. Bearer + update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/users/{{ user_id }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_urestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -480
+    },
+    {
+      "_id": "req_users_purge",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Purge users Permanently (Admin)",
+      "description": "Elimina fisicamente un registro ya en papelera. IRREVERSIBLE. Bearer + purge o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/users/{{ user_id }}/permanent",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_upurge_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -720
+    },
+    {
+      "_id": "req_users_bulk_delete",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Bulk Soft Delete Users (Admin)",
+      "description": "Mueve multiples usuarios a papelera. Max 100 IDs. Bearer + users:delete o users:manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/users/bulk",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ubdel_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ubdel_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -750
+    },
+    {
+      "_id": "req_users_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Bulk Restore Users (Admin)",
+      "description": "Restaura multiples usuarios de la papelera. Max 100 IDs. Bearer + users:update o users:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/users/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ubrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ubrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -780
+    },
+    {
+      "_id": "req_users_bulk_purge",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Bulk Purge Users Permanently (Admin)",
+      "description": "Elimina fisicamente multiples usuarios de papelera. IRREVERSIBLE. Max 100 IDs. Bearer + users:purge o users:manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/users/bulk/permanent",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ubpurge_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ubpurge_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -810
+    },
+    {
+      "_id": "req_ug_trash",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "List usergroups Trash (Admin)",
+      "description": "Retorna registros en papelera (deletedAt seteado). Bearer + read o manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/user-groups/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugtrash_1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "disabled": false
+        }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -650
+    },
+    {
+      "_id": "req_ug_restore",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Restore usergroups item (Admin)",
+      "description": "Restaura un registro de la papelera. Bearer + update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/user-groups/{{ group_id }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugrestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -680
+    },
+    {
+      "_id": "req_ug_purge",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Purge usergroups Permanently (Admin)",
+      "description": "Elimina fisicamente un registro ya en papelera. IRREVERSIBLE. Bearer + purge o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/user-groups/{{ group_id }}/permanent",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugpurge_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -710
+    },
+    {
+      "_id": "req_ug_bulk_delete",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Bulk Soft Delete User Groups (Admin)",
+      "description": "Mueve multiples grupos a papelera. Max 100 IDs. Bearer + user-groups:delete o user-groups:manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/user-groups/bulk",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ugbdel_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugbdel_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -740
+    },
+    {
+      "_id": "req_ug_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Bulk Restore User Groups (Admin)",
+      "description": "Restaura multiples grupos. Max 100 IDs. Bearer + user-groups:update o user-groups:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/user-groups/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ugbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -770
+    },
+    {
+      "_id": "req_ug_bulk_purge",
+      "_type": "request",
+      "parentId": "fld_usergroups",
+      "name": "Bulk Purge User Groups Permanently (Admin)",
+      "description": "Elimina fisicamente multiples grupos de papelera. IRREVERSIBLE. Max 100 IDs. Bearer + user-groups:purge o user-groups:manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/user-groups/bulk/permanent",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ugbpurge_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ugbpurge_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -800
+    },
+    {
+      "_id": "req_sub_trash",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "List subscribers Trash (Admin)",
+      "description": "Retorna registros en papelera (deletedAt seteado). Bearer + read o manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/subscriber/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subtrash_1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        },
+        {
+          "name": "limit",
+          "value": "20",
+          "disabled": false
+        }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -650
+    },
+    {
+      "_id": "req_sub_restore",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Restore subscribers item (Admin)",
+      "description": "Restaura un registro de la papelera. Bearer + update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/subscriber/restore/{{ subscriber_id }}",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subrestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -680
+    },
+    {
+      "_id": "req_sub_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_subscribers",
+      "name": "Bulk Restore Subscribers (Admin)",
+      "description": "Restaura multiples suscriptores. Max 100 IDs. Bearer + subscribers:update o subscribers:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/subscriber/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_subbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_subbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -950
+    },
+    {
+      "_id": "req_storage_trash",
+      "_type": "request",
+      "parentId": "fld_storage",
+      "name": "List Storage Trash (Admin)",
+      "description": "Papelera de archivos.",
+      "method": "GET",
+      "url": "{{ base_url }}/storage/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_sttrash_1"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "page",
+          "value": "1",
+          "disabled": false
+        }
+      ],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -75
+    },
+    {
+      "_id": "req_storage_list",
+      "_type": "request",
+      "parentId": "fld_storage",
+      "name": "List Storage Files (Admin)",
+      "description": "Lista archivos. Bearer + storage:manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/storage/files",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_stlist_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -50
+    },
+    {
+      "_id": "req_storage_restore",
+      "_type": "request",
+      "parentId": "fld_storage",
+      "name": "Restore Storage File (Admin)",
+      "description": "Restaura archivo de papelera. Bearer + storage:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/storage/{{ file_id }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_strestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -125
+    },
+    {
+      "_id": "req_storage_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_storage",
+      "name": "Bulk Restore Storage Files (Admin)",
+      "description": "Restaura multiples archivos. Max 100 IDs. Bearer + storage:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/storage/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_stbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_stbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -350
+    },
+    {
+      "_id": "req_clients_trash",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "List Clients Trash (Admin)",
+      "description": "Papelera de clientes.",
+      "method": "GET",
+      "url": "{{ base_url }}/clients/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_cltrash_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -150
+    },
+    {
+      "_id": "req_clients_restore",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Restore Client (Admin)",
+      "description": "Restaura cliente de papelera. Bearer + clients:update o clients:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/clients/{{ client_id }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clrestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -160
+    },
+    {
+      "_id": "req_clients_purge",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Purge Client Permanently (Admin)",
+      "description": "Elimina fisicamente cliente de papelera. IRREVERSIBLE.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/clients/{{ client_id }}/permanent",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clpurge_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -170
+    },
+    {
+      "_id": "req_clients_bulk_delete",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Bulk Soft Delete Clients (Admin)",
+      "description": "Mueve clientes a papelera. Max 100.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/clients/bulk",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbdel_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbdel_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -180
+    },
+    {
+      "_id": "req_clients_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Bulk Restore Clients (Admin)",
+      "description": "Restaura clientes. Max 100.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/clients/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -190
+    },
+    {
+      "_id": "req_clients_bulk_purge",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Bulk Purge Clients Permanently (Admin)",
+      "description": "Purga clientes. IRREVERSIBLE. Max 100.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/clients/bulk/permanent",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbpurge_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbpurge_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -195
+    },
+    {
+      "_id": "req_services_trash",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "List Services Trash (Admin)",
+      "description": "Papelera de servicios.",
+      "method": "GET",
+      "url": "{{ base_url }}/services/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svtrash_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -150
+    },
+    {
+      "_id": "req_services_restore",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Restore Service (Admin)",
+      "description": "Restaura servicio por slug. Bearer + services:update o services:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/services/{{ service_slug }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svrestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -160
+    },
+    {
+      "_id": "req_services_purge",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Purge Service Permanently (Admin)",
+      "description": "Purga servicio por slug. IRREVERSIBLE.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/services/{{ service_slug }}/permanent",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svpurge_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -170
+    },
+    {
+      "_id": "req_services_bulk_delete",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Bulk Soft Delete Services (Admin)",
+      "description": "Mueve servicios a papelera (por IDs). Max 100.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/services/bulk",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_svbdel_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svbdel_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -180
+    },
+    {
+      "_id": "req_services_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Bulk Restore Services (Admin)",
+      "description": "Restaura servicios. Max 100.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/services/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_svbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -190
+    },
+    {
+      "_id": "req_services_bulk_purge",
+      "_type": "request",
+      "parentId": "fld_services",
+      "name": "Bulk Purge Services Permanently (Admin)",
+      "description": "Purga servicios. IRREVERSIBLE. Max 100.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/services/bulk/permanent",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_svbpurge_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_svbpurge_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -195
+    },
+    {
+      "_id": "req_portfolio_trash",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "List Portfolio Trash (Admin)",
+      "description": "Papelera de portafolio.",
+      "method": "GET",
+      "url": "{{ base_url }}/portfolio/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pttrash_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -150
+    },
+    {
+      "_id": "req_portfolio_restore",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Restore Portfolio Item (Admin)",
+      "description": "Restaura proyecto de papelera. Bearer + portfolio:update o portfolio:manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/portfolio/{{ portfolio_id }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptrestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -160
+    },
+    {
+      "_id": "req_portfolio_purge",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Purge Portfolio Item Permanently (Admin)",
+      "description": "Purga proyecto. IRREVERSIBLE.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/portfolio/{{ portfolio_id }}/permanent",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptpurge_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -170
+    },
+    {
+      "_id": "req_portfolio_bulk_delete",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Bulk Soft Delete Portfolio (Admin)",
+      "description": "Mueve proyectos a papelera. Max 100.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/portfolio/bulk",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ptbdel_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptbdel_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -180
+    },
+    {
+      "_id": "req_portfolio_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Bulk Restore Portfolio (Admin)",
+      "description": "Restaura proyectos. Max 100.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/portfolio/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ptbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -190
+    },
+    {
+      "_id": "req_portfolio_bulk_purge",
+      "_type": "request",
+      "parentId": "fld_portfolio",
+      "name": "Bulk Purge Portfolio Permanently (Admin)",
+      "description": "Purga proyectos. IRREVERSIBLE. Max 100.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/portfolio/bulk/permanent",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_ptbpurge_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_ptbpurge_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"a\",\n    \"b\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -195
+    },
+    {
+      "_id": "fld_collaborators",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "🤝 Collaborators",
+      "description": "## Colaboradores\n\nGestion de colaboradores del equipo. Las rutas GET son publicas; escritura requiere autenticacion.\n\n### Endpoints\n\n| Endpoint | Auth | Permiso |\n|---|---|---|\n| GET /collaborators | Publico | — |\n| GET /collaborators/admin | Bearer | collaborators:read o manage |\n| GET /collaborators/:id | Publico | — |\n| POST /collaborators | Bearer | collaborators:create o manage |\n| PATCH /collaborators/:id | Bearer | collaborators:update o manage |\n| DELETE /collaborators/:id | Bearer | collaborators:delete o manage |",
+      "metaSortKey": -160
+    },
+    {
+      "_id": "req_collab_list_public",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "List Collaborators (Public)",
+      "description": "Retorna colaboradores activos. No requiere autenticacion.",
+      "method": "GET",
+      "url": "{{ base_url }}/collaborators",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbpub_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -700
+    },
+    {
+      "_id": "req_collab_list_admin",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "List Collaborators (Admin)",
+      "description": "Retorna todos los colaboradores incluyendo inactivos. Bearer + collaborators:read o manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/collaborators/admin",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbadm_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_collab_get",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Get Collaborator by ID (Public)",
+      "description": "Retorna detalle de un colaborador. No requiere autenticacion.",
+      "method": "GET",
+      "url": "{{ base_url }}/collaborators/{{ collaborator_id }}",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbget_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_collab_create",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Create Collaborator (Admin)",
+      "description": "Crea un nuevo colaborador. Bearer + collaborators:create o manage.",
+      "method": "POST",
+      "url": "{{ base_url }}/collaborators",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbcreate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbcreate_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"John Doe\",\n  \"role\": {\n    \"en\": \"Lead Developer\",\n    \"es\": \"Desarrollador Principal\",\n    \"de\": \"Leitentwickler\",\n    \"fr\": \"Developpeur Principal\",\n    \"it\": \"Sviluppatore Principale\",\n    \"ja\": \"リード開発者\",\n    \"ko\": \"리드 개발자\",\n    \"pt\": \"Desenvolvedor Principal\",\n    \"ru\": \"Ведущий разработчик\",\n    \"zh\": \"首席开发者\"\n  },\n  \"bio\": {\n    \"en\": \"Experienced developer\",\n    \"es\": \"Desarrollador con experiencia\",\n    \"de\": \"Erfahrener Entwickler\",\n    \"fr\": \"Developpeur experimente\",\n    \"it\": \"Sviluppatore esperto\",\n    \"ja\": \"経験豊富な開発者\",\n    \"ko\": \"경험 많은 개발자\",\n    \"pt\": \"Desenvolvedor experiente\",\n    \"ru\": \"Опытный разработчик\",\n    \"zh\": \"经验丰富的开发者\"\n  },\n  \"photoUrl\": \"https://example.com/photo.jpg\",\n  \"socialLinks\": {\n    \"linkedin\": \"https://linkedin.com/in/johndoe\",\n    \"github\": \"https://github.com/johndoe\"\n  },\n  \"order\": 1,\n  \"isActive\": true,\n  \"status\": \"active\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_collab_update",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Update Collaborator (Admin)",
+      "description": "Actualiza colaborador. Bearer + collaborators:update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/collaborators/{{ collaborator_id }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbupd_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbupd_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isActive\": true,\n  \"order\": 2\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -350
+    },
+    {
+      "_id": "req_collab_trash",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "List Collaborators Trash (Admin)",
+      "description": "Papelera de colaboradores. Bearer + collaborators:read o manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/collaborators/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbtrash_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_collab_restore",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Restore Collaborator (Admin)",
+      "description": "Restaura colaborador de papelera. Bearer + collaborators:update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/collaborators/{{ collaborator_id }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbrestore2_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -250
+    },
+    {
+      "_id": "req_collab_delete",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Delete Collaborator (Soft Delete)",
+      "description": "Mueve colaborador a papelera. Bearer + collaborators:delete o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/collaborators/{{ collaborator_id }}",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbdel2_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_collab_purge",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Purge Collaborator Permanently (Admin)",
+      "description": "Purga colaborador ya en papelera. IRREVERSIBLE. Bearer + collaborators:purge o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/collaborators/{{ collaborator_id }}/permanent",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbpurge2_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -150
+    },
+    {
+      "_id": "req_collab_bulk_delete",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Bulk Soft Delete Collaborators (Admin)",
+      "description": "Mueve colaboradores a papelera. Max 100. Bearer + collaborators:delete o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/collaborators/bulk",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbbdel_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbbdel_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -120
+    },
+    {
+      "_id": "req_collab_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Bulk Restore Collaborators (Admin)",
+      "description": "Restaura colaboradores. Max 100. Bearer + collaborators:update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/collaborators/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -110
+    },
+    {
+      "_id": "req_collab_bulk_purge",
+      "_type": "request",
+      "parentId": "fld_collaborators",
+      "name": "Bulk Purge Collaborators Permanently (Admin)",
+      "description": "Purga colaboradores. IRREVERSIBLE. Max 100. Bearer + collaborators:purge o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/collaborators/bulk/permanent",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_clbbpurge_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_clbbpurge_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -100
+    },
+    {
+      "_id": "fld_pages",
+      "_type": "request_group",
+      "parentId": "wrk_firstbackend",
+      "name": "Paginas (Pages)",
+      "description": "Gestion de paginas de contenido estatico. Las rutas GET son publicas; escritura requiere autenticacion.",
+      "metaSortKey": -130
+    },
+    {
+      "_id": "req_pages_list_public",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "List Pages (Public)",
+      "description": "Retorna paginas publicadas. No requiere autenticacion.",
+      "method": "GET",
+      "url": "{{ base_url }}/pages",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgpub_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -700
+    },
+    {
+      "_id": "req_pages_get_public",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Get Page by Slug (Public)",
+      "description": "Retorna detalle de una pagina. No requiere autenticacion.",
+      "method": "GET",
+      "url": "{{ base_url }}/pages/{{ page_slug }}",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pggetpub_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -600
+    },
+    {
+      "_id": "req_pages_list_admin",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "List Pages (Admin)",
+      "description": "Retorna todas las paginas incluyendo drafts. Bearer + pages:read o manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/pages/admin",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgadm_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -500
+    },
+    {
+      "_id": "req_pages_trash",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "List Pages Trash (Admin)",
+      "description": "Papelera de paginas. Bearer + pages:read o manage.",
+      "method": "GET",
+      "url": "{{ base_url }}/pages/trash",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgtrash_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -475
+    },
+    {
+      "_id": "req_pages_create",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Create Page (Admin)",
+      "description": "Crea nueva pagina. Bearer + pages:create o manage.",
+      "method": "POST",
+      "url": "{{ base_url }}/pages",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_pgcreate_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgcreate_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"slug\": \"about-us\",\n  \"title\": {\n    \"en\": \"About Us\",\n    \"es\": \"Sobre Nosotros\",\n    \"de\": \"Uber Uns\",\n    \"fr\": \"A Propos\",\n    \"it\": \"Chi Siamo\",\n    \"ja\": \"About\",\n    \"ko\": \"About\",\n    \"pt\": \"Sobre Nos\",\n    \"ru\": \"O kompanii\",\n    \"zh\": \"About\"\n  },\n  \"description\": {\n    \"en\": \"Our story and mission\",\n    \"es\": \"Nuestra historia y mision\",\n    \"de\": \"Unsere Geschichte\",\n    \"fr\": \"Notre histoire\",\n    \"it\": \"La nostra storia\",\n    \"ja\": \"Story\",\n    \"ko\": \"Story\",\n    \"pt\": \"Nossa historia\",\n    \"ru\": \"Istoriya\",\n    \"zh\": \"Story\"\n  },\n  \"status\": \"draft\",\n  \"isPublished\": false\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -400
+    },
+    {
+      "_id": "req_pages_update",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Update Page (Admin)",
+      "description": "Actualiza pagina por slug. Bearer + pages:update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/pages/{{ page_slug }}",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_pgupd_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgupd_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isPublished\": true,\n  \"status\": \"published\"\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -300
+    },
+    {
+      "_id": "req_pages_restore",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Restore Page (Admin)",
+      "description": "Restaura pagina de papelera. Bearer + pages:update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/pages/{{ page_slug }}/restore",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgrestore_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -250
+    },
+    {
+      "_id": "req_pages_delete",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Delete Page (Soft Delete)",
+      "description": "Mueve pagina a papelera. Bearer + pages:delete o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/pages/{{ page_slug }}",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgdel_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -200
+    },
+    {
+      "_id": "req_pages_purge",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Purge Page Permanently (Admin)",
+      "description": "Purga pagina ya en papelera. IRREVERSIBLE. Bearer + pages:purge o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/pages/{{ page_slug }}/permanent",
+      "headers": [
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgpurge_1"
+        }
+      ],
+      "parameters": [],
+      "body": {},
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -150
+    },
+    {
+      "_id": "req_pages_bulk_delete",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Bulk Soft Delete Pages (Admin)",
+      "description": "Mueve paginas a papelera. Max 100. Bearer + pages:delete o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/pages/bulk",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_pgbdel_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgbdel_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -120
+    },
+    {
+      "_id": "req_pages_bulk_restore",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Bulk Restore Pages (Admin)",
+      "description": "Restaura paginas. Max 100. Bearer + pages:update o manage.",
+      "method": "PATCH",
+      "url": "{{ base_url }}/pages/bulk/restore",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_pgbrestore_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgbrestore_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ access_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -110
+    },
+    {
+      "_id": "req_pages_bulk_purge",
+      "_type": "request",
+      "parentId": "fld_pages",
+      "name": "Bulk Purge Pages Permanently (Admin)",
+      "description": "Purga paginas. IRREVERSIBLE. Max 100. Bearer + pages:purge o manage.",
+      "method": "DELETE",
+      "url": "{{ base_url }}/pages/bulk/permanent",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "h_pgbpurge_1"
+        },
+        {
+          "name": "Accept-Language",
+          "value": "{{ lang }}",
+          "id": "h_pgbpurge_2"
+        }
+      ],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"ids\": [\n    \"550e8400-e29b-41d4-a716-446655440000\",\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ]\n}"
+      },
       "authentication": {
         "type": "bearer",
         "token": "{{ access_token }}",
