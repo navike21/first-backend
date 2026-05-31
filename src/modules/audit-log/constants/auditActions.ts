@@ -50,6 +50,42 @@ export const AUDIT_ACTIONS = {
 	COLLABORATOR_SOFT_DELETED: 'collaborators:soft_deleted',
 	COLLABORATOR_PERMANENTLY_DELETED: 'collaborators:permanently_deleted',
 	COLLABORATOR_RESTORED: 'collaborators:restored',
+
+	USERS_BULK_SOFT_DELETED: 'users:bulk_soft_deleted',
+	USERS_BULK_RESTORED: 'users:bulk_restored',
+	USERS_BULK_PERMANENTLY_DELETED: 'users:bulk_permanently_deleted',
+
+	USER_GROUPS_BULK_SOFT_DELETED: 'user-groups:bulk_soft_deleted',
+	USER_GROUPS_BULK_RESTORED: 'user-groups:bulk_restored',
+	USER_GROUPS_BULK_PERMANENTLY_DELETED: 'user-groups:bulk_permanently_deleted',
+
+	CLIENTS_BULK_SOFT_DELETED: 'clients:bulk_soft_deleted',
+	CLIENTS_BULK_RESTORED: 'clients:bulk_restored',
+	CLIENTS_BULK_PERMANENTLY_DELETED: 'clients:bulk_permanently_deleted',
+
+	COLLABORATORS_BULK_SOFT_DELETED: 'collaborators:bulk_soft_deleted',
+	COLLABORATORS_BULK_RESTORED: 'collaborators:bulk_restored',
+	COLLABORATORS_BULK_PERMANENTLY_DELETED: 'collaborators:bulk_permanently_deleted',
+
+	SERVICES_BULK_SOFT_DELETED: 'services:bulk_soft_deleted',
+	SERVICES_BULK_RESTORED: 'services:bulk_restored',
+	SERVICES_BULK_PERMANENTLY_DELETED: 'services:bulk_permanently_deleted',
+
+	PORTFOLIO_BULK_SOFT_DELETED: 'portfolio:bulk_soft_deleted',
+	PORTFOLIO_BULK_RESTORED: 'portfolio:bulk_restored',
+	PORTFOLIO_BULK_PERMANENTLY_DELETED: 'portfolio:bulk_permanently_deleted',
+
+	PAGES_BULK_SOFT_DELETED: 'pages:bulk_soft_deleted',
+	PAGES_BULK_RESTORED: 'pages:bulk_restored',
+	PAGES_BULK_PERMANENTLY_DELETED: 'pages:bulk_permanently_deleted',
+
+	STORAGE_BULK_SOFT_DELETED: 'storage:bulk_soft_deleted',
+	STORAGE_BULK_RESTORED: 'storage:bulk_restored',
+	STORAGE_BULK_PERMANENTLY_DELETED: 'storage:bulk_permanently_deleted',
+
+	SUBSCRIBERS_BULK_SOFT_DELETED: 'subscribers:bulk_soft_deleted',
+	SUBSCRIBERS_BULK_RESTORED: 'subscribers:bulk_restored',
+	SUBSCRIBERS_BULK_PERMANENTLY_DELETED: 'subscribers:bulk_permanently_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

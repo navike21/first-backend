@@ -7,7 +7,7 @@ export async function listUserGroups({
 	status,
 	search,
 }: ListUserGroupsQuery) {
-	const filter: Record<string, unknown> = { status: { $ne: 'deleted' } };
+	const filter: Record<string, unknown> = { deletedAt: null };
 
 	if (status) filter.status = status;
 	if (search) filter.name = { $regex: search, $options: 'i' };

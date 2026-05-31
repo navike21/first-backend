@@ -1,10 +1,8 @@
 import { model, Schema } from 'mongoose';
 import { USER_GENDER_ARRAY, UserGender } from '@Constants/userGender';
-import {
-	ACTIVE,
-	STATUS_REGISTER_ARRAY,
-	StatusRegister,
-} from '@Constants/statusRegister';
+import { ACTIVE } from '@Constants/statusRegister';
+
+export type UserStatus = 'active' | 'inactive';
 import generateUUID from '@Helpers/uuid';
 
 export interface AddressDocument {
@@ -36,7 +34,8 @@ export interface UserDocument {
 	address?: AddressDocument;
 	groupId?: string;
 	isEmailVerified: boolean;
-	status: StatusRegister;
+	status: UserStatus;
+	deletedAt?: Date | null;
 	presenceStatus: PresenceStatus;
 	lastSeenAt?: Date;
 	createdAt: Date;
@@ -89,9 +88,10 @@ const userSchema = new Schema<UserDocument>(
 		status: {
 			type: String,
 			required: true,
-			enum: STATUS_REGISTER_ARRAY,
+			enum: ['active', 'inactive'],
 			default: ACTIVE,
 		},
+		deletedAt: { type: Date, default: null },
 		presenceStatus: {
 			type: String,
 			required: true,

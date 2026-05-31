@@ -8,7 +8,7 @@ export async function listUsers({
 	search,
 	groupId,
 }: ListUsersQuery) {
-	const filter: Record<string, unknown> = { status: { $ne: 'deleted' } };
+	const filter: Record<string, unknown> = { deletedAt: null };
 
 	if (status) filter.status = status;
 	if (groupId) filter.groupId = groupId;
