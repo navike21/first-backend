@@ -1,4 +1,3 @@
-import { DELETED } from '@Constants/statusRegister';
 import { ListUserGroupsQuery } from '../schemas/userGroup.schema';
 import UserGroupModel from '../infrastructure/UserGroupModel';
 
@@ -8,9 +7,9 @@ export async function listUserGroups({
 	status,
 	search,
 }: ListUserGroupsQuery) {
-	const filter: Record<string, unknown> = { status: { $ne: DELETED } };
+	const filter: Record<string, unknown> = { status: { $ne: 'deleted' } };
 
-	if (status && status !== DELETED) filter.status = status;
+	if (status) filter.status = status;
 	if (search) filter.name = { $regex: search, $options: 'i' };
 
 	const skip = (page - 1) * limit;
