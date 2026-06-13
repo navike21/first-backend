@@ -19,12 +19,19 @@ export async function resetPassword(token: string, newPassword: string) {
 	const user = await UserModel.findOne({ id: payload.sub });
 	if (!user) throw new UserNotFoundError();
 
+	// Single-use: reject a token issued before the last password change, so a
+	// reset link cannot be replayed after it has already been used.
+	const issuedAtMs = (payload.iat ?? 0) * 1000;
+	if (user.passwordChangedAt && issuedAtMs < user.passwordChangedAt.getTime()) {
+		throw new InvalidTokenError();
+	}
+
 	const newHash = await HashedPassword.hash(newPassword);
 
 	await Promise.all([
 		UserModel.findOneAndUpdate(
 			{ id: payload.sub },
-			{ $set: { password: newHash } },
+			{ $set: { password: newHash, passwordChangedAt: new Date() } },
 		),
 		RefreshTokenModel.updateMany(
 			{ userId: payload.sub, revokedAt: { $exists: false } },

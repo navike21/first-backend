@@ -63,6 +63,8 @@ export async function loginUser({
 			email: user.email,
 			firstName: user.firstName,
 			lastName: user.lastName,
+			profilePictureUrl: user.profilePictureUrl,
+			preferences: user.preferences,
 			permissions,
 		},
 	};

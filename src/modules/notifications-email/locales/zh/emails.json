@@ -14,10 +14,10 @@
 		"safety": "如果您没有请求重置密码，可以安全地忽略此邮件。您的密码不会更改。"
 	},
 	"welcomeEmail": {
-		"subject": "欢迎来到 First Backend！",
+		"subject": "欢迎来到 {{appName}}！",
 		"heading": "欢迎，{{firstName}}！",
 		"body": "您的账户已验证并完全激活。一切准备就绪，您可以开始使用了。",
 		"thanks": "感谢您的加入。"
 	},
-	"footer": "© {{year}} First Backend. 保留所有权利。"
+	"footer": "© {{year}} {{appName}}. 保留所有权利。"
 }

@@ -1,21 +1,13 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
 import { ListUserGroupsQuerySchema } from '../schemas/userGroup.schema';
 import { listUserGroups } from '../application/listUserGroups';
 
 export const listUserGroupsController = asyncHandler(async (req, res) => {
-	const parsed = ListUserGroupsQuerySchema.safeParse(req.query);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
-			validation: parsed.error.issues.map((i) => ({
-				path: i.path.join('.'),
-				message: i.message,
-			})),
-		});
-	}
+	const validated = validate(ListUserGroupsQuerySchema, req.query);
 
-	const result = await listUserGroups(parsed.data);
+	const result = await listUserGroups(validated);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'USER_GROUPS_LISTED',

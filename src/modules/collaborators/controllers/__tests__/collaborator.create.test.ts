@@ -47,8 +47,8 @@ const validBody = {
 describe('collaboratorCreateController', () => {
 	it('calls createCollaborator and returns 201 on valid input', async () => {
 		vi.mocked(createCollaborator).mockResolvedValue({
-			id: '1',
-			name: 'Jane Doe',
+			data: { id: '1', name: 'Jane Doe' },
+			warnings: [],
 		} as never);
 		const req = { body: validBody } as unknown as Request;
 		const res = makeRes();

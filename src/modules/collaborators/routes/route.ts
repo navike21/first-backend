@@ -4,6 +4,7 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
+import { acceptImage } from '@Modules/storage';
 import {
 	COLLABORATOR_PATH_LIST_PUBLIC,
 	COLLABORATOR_PATH_LIST_ADMIN,
@@ -54,6 +55,7 @@ export function collaboratorsApi(router: Router) {
 		COLLABORATOR_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.COLLABORATORS_CREATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		...acceptImage('photo'),
 		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_CREATED, resource: 'collaborators' }),
 		collaboratorCreateController,
 	);
@@ -92,7 +94,7 @@ export function collaboratorsApi(router: Router) {
 	router.delete(
 		COLLABORATOR_PATH_BULK_PURGE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_PURGE, PERMISSIONS.COLLABORATORS_MANAGE),
+		authorize(PERMISSIONS.COLLABORATORS_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.COLLABORATORS_BULK_PERMANENTLY_DELETED,
 			resource: 'collaborators',
@@ -105,6 +107,7 @@ export function collaboratorsApi(router: Router) {
 		COLLABORATOR_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.COLLABORATORS_UPDATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		...acceptImage('photo'),
 		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_UPDATED, resource: 'collaborators' }),
 		collaboratorUpdateController,
 	);
@@ -112,7 +115,7 @@ export function collaboratorsApi(router: Router) {
 	router.delete(
 		COLLABORATOR_PATH_PURGE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_PURGE, PERMISSIONS.COLLABORATORS_MANAGE),
+		authorize(PERMISSIONS.COLLABORATORS_PURGE),
 		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_PERMANENTLY_DELETED, resource: 'collaborators' }),
 		collaboratorPurgeController,
 	);

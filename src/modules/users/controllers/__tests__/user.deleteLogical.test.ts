@@ -37,7 +37,7 @@ describe('deleteUserLogicalController', () => {
 
 		await deleteUserLogicalController(req, res, next);
 
-		expect(deleteUserLogical).toHaveBeenCalledWith('u-1');
+		expect(deleteUserLogical).toHaveBeenCalledWith('u-1', undefined);
 		expect(successResponse).toHaveBeenCalled();
 	});
 

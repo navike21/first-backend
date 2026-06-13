@@ -28,7 +28,7 @@ describe('updateCollaborator', () => {
 		const result = await updateCollaborator('1', { name: 'New Name' });
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('_id');
 	});
 
 	it('throws CollaboratorNotFoundError when member does not exist', async () => {

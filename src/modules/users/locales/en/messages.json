@@ -5,5 +5,6 @@
 	"USER_FOUND": "User retrieved",
 	"USERS_LISTED": "Users retrieved",
 	"PROFILE_FOUND": "Profile retrieved",
-	"PROFILE_UPDATED": "Profile updated successfully"
+	"PROFILE_UPDATED": "Profile updated successfully",
+	"PREFERENCES_UPDATED": "Preferences updated successfully"
 }

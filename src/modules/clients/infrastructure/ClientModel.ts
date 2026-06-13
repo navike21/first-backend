@@ -31,9 +31,14 @@ const clientSchema = new Schema<ClientDocument>(
 		state: { type: String, maxLength: 100 },
 		city: { type: String, maxLength: 100 },
 		address: { type: String, maxLength: 300 },
+		postalCode: { type: String, maxLength: 20 },
 		logoUrl: { type: String },
 		website: { type: String },
+		email: { type: String },
+		phone: { type: String, maxLength: 30 },
 		industry: { type: String, maxLength: 100 },
+		language: { type: String, maxLength: 10 },
+		currency: { type: String, maxLength: 3, uppercase: true },
 		primaryContact: {
 			type: {
 				firstName: { type: String, required: true },
@@ -59,5 +64,19 @@ const clientSchema = new Schema<ClientDocument>(
 clientSchema.index({ businessName: 1 });
 clientSchema.index({ status: 1, createdAt: -1 });
 clientSchema.index({ country: 1 });
+
+// Uniqueness key for clients: a tax/identity document is unique per country.
+// Partial so clients without a document are allowed, and soft-deleted ones do
+// not block re-creation. This index is the source of truth for de-duplication.
+clientSchema.index(
+	{ documentType: 1, documentNumber: 1, country: 1 },
+	{
+		unique: true,
+		partialFilterExpression: {
+			documentNumber: { $exists: true },
+			deletedAt: null,
+		},
+	},
+);
 
 export default model<ClientDocument>('Client', clientSchema);

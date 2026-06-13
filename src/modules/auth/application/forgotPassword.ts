@@ -1,6 +1,7 @@
 import { ENV } from '@Constants/environments';
 import { JwtService } from '@Shared/infrastructure/JwtService';
-import { sendEmail, passwordResetTemplate } from '@Modules/notifications-email';
+import { eventBus } from '@Shared/infrastructure/EventBus';
+import { PasswordResetRequestedEvent } from '@Shared/events/emailEvents';
 import { logInfo } from '@Helpers/log';
 import { UserModel } from '@Modules/users';
 
@@ -17,8 +18,7 @@ export async function forgotPassword(email: string, lang = 'en') {
 	const token = JwtService.signEmail({ sub: user.id, type: 'password_reset' });
 	const resetUrl = `${ENV.CLIENT_URL}/reset-password?token=${token}`;
 
-	await sendEmail({
-		to: user.email,
-		...passwordResetTemplate({ firstName: user.firstName, resetUrl, lang }),
-	});
+	await eventBus.publish(
+		new PasswordResetRequestedEvent(user.email, user.firstName, resetUrl, lang),
+	);
 }

@@ -100,7 +100,7 @@ export function pagesApi(router: Router) {
 	router.delete(
 		PAGES_PATH_BULK_PURGE,
 		authenticate,
-		authorize(PERMISSIONS.PAGES_PURGE, PERMISSIONS.PAGES_MANAGE),
+		authorize(PERMISSIONS.PAGES_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.PAGES_BULK_PERMANENTLY_DELETED,
 			resource: 'pages',
@@ -120,7 +120,7 @@ export function pagesApi(router: Router) {
 	router.delete(
 		PAGES_PATH_DELETE_PERMANENT,
 		authenticate,
-		authorize(PERMISSIONS.PAGES_PURGE, PERMISSIONS.PAGES_MANAGE),
+		authorize(PERMISSIONS.PAGES_PURGE),
 		captureAudit({ action: AUDIT_ACTIONS.PAGES_PERMANENTLY_DELETED, resource: 'pages' }),
 		pageDeletePermanentController,
 	);

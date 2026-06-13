@@ -4,12 +4,13 @@ import { getEmailLocale, t } from '@Modules/notifications-email/locales';
 describe('getEmailLocale', () => {
 	it('returns English locale by default for unsupported language', () => {
 		const locale = getEmailLocale('xx');
-		expect(locale.welcomeEmail.subject).toBe('Welcome to First Backend!');
+		// Brand is now an {{appName}} placeholder (interpolated by the template).
+		expect(locale.welcomeEmail.subject).toBe('Welcome to {{appName}}!');
 	});
 
 	it('returns the correct locale for a supported language', () => {
 		const locale = getEmailLocale('es');
-		expect(locale.welcomeEmail.subject).toBe('¡Bienvenido a First Backend!');
+		expect(locale.welcomeEmail.subject).toBe('¡Bienvenido a {{appName}}!');
 	});
 });
 

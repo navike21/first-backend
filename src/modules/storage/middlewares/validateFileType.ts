@@ -5,9 +5,15 @@ import { STORAGE_ERRORS } from '../domain/errors/StorageErrors';
 export interface ValidateFileTypeOptions {
 	allowedMimeTypes: readonly string[];
 	field?: 'file' | 'files';
+	/**
+	 * When false, an absent file is allowed (the middleware just calls next()).
+	 * Used for optional attachments on create/update endpoints. Defaults to true
+	 * to preserve the dedicated upload endpoints' behaviour.
+	 */
+	required?: boolean;
 }
 
-async function validateSingleFile(
+export async function validateSingleFile(
 	file: Express.Multer.File,
 	allowedMimeTypes: readonly string[],
 ): Promise<void> {
@@ -41,6 +47,7 @@ export function validateFileType(
 	options: ValidateFileTypeOptions,
 ): RequestHandler {
 	const field = options.field ?? 'file';
+	const required = options.required ?? true;
 
 	return async (req: Request, _res: Response, next: NextFunction) => {
 		try {
@@ -52,6 +59,7 @@ export function validateFileType(
 			}
 
 			if (files.length === 0) {
+				if (!required) return next();
 				AppError.badRequest(STORAGE_ERRORS.FILE_REQUIRED, 'No file was provided');
 			}
 

@@ -32,5 +32,9 @@
 	"DRIVER_NOT_CONFIGURED": "El controlador de almacenamiento no está configurado",
 	"AUDIT_LOG_NOT_FOUND": "Entrada de auditoría no encontrada",
 	"APP_SETTINGS_NOT_FOUND": "Configuración de la aplicación no encontrada",
-	"APP_SETTINGS_EMPTY_UPDATE": "Se debe proporcionar al menos una categoría de configuración"
+	"APP_SETTINGS_EMPTY_UPDATE": "Se debe proporcionar al menos una categoría de configuración",
+	"RESOURCE_DUPLICATE": "Ya existe un registro con estos valores únicos",
+	"IMAGE_UPLOAD_FAILED": "El registro se guardó, pero la imagen no se pudo subir",
+	"CANNOT_DELETE_SELF": "No puedes eliminar tu propia cuenta",
+	"LAST_SUPER_ADMIN": "No se puede eliminar al último super-administrador"
 }

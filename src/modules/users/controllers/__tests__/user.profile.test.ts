@@ -15,13 +15,18 @@ vi.mock('@Modules/users/application/getMyProfile', () => ({
 vi.mock('@Modules/users/application/updateMyProfile', () => ({
 	updateMyProfile: vi.fn(),
 }));
+vi.mock('@Modules/users/application/updateMyPreferences', () => ({
+	updateMyPreferences: vi.fn(),
+}));
 
 import {
 	getMyProfileController,
 	updateMyProfileController,
+	updateMyPreferencesController,
 } from '@Modules/users/controllers/user.profile';
 import { getMyProfile } from '@Modules/users/application/getMyProfile';
 import { updateMyProfile } from '@Modules/users/application/updateMyProfile';
+import { updateMyPreferences } from '@Modules/users/application/updateMyPreferences';
 import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes(locals: Record<string, unknown> = {}) {
@@ -46,12 +51,20 @@ describe('getMyProfileController', () => {
 
 describe('updateMyProfileController', () => {
 	it('calls updateMyProfile on valid input', async () => {
-		vi.mocked(updateMyProfile).mockResolvedValue({ id: 'u1' } as never);
+		vi.mocked(updateMyProfile).mockResolvedValue({
+			data: { id: 'u1' },
+			warnings: [],
+		} as never);
 		const req = { body: { firstName: 'Jane' } } as unknown as Request;
 		const res = makeRes({ userId: 'u1' });
 		const next = vi.fn();
 		await updateMyProfileController(req, res, next);
-		expect(updateMyProfile).toHaveBeenCalledWith('u1', expect.any(Object));
+		expect(updateMyProfile).toHaveBeenCalledWith(
+			'u1',
+			expect.any(Object),
+			undefined,
+			'u1',
+		);
 		expect(successResponse).toHaveBeenCalled();
 	});
 
@@ -60,6 +73,28 @@ describe('updateMyProfileController', () => {
 		const res = makeRes({ userId: 'u1' });
 		const next = vi.fn();
 		await updateMyProfileController(req, res, next);
+		expect(next).toHaveBeenCalledWith(expect.any(Error));
+	});
+});
+
+describe('updateMyPreferencesController', () => {
+	it('calls updateMyPreferences and returns 200', async () => {
+		vi.mocked(updateMyPreferences).mockResolvedValue({
+			theme: 'dark',
+		} as never);
+		const req = { body: { theme: 'dark' } } as unknown as Request;
+		const res = makeRes({ userId: 'u1' });
+		const next = vi.fn();
+		await updateMyPreferencesController(req, res, next);
+		expect(updateMyPreferences).toHaveBeenCalledWith('u1', { theme: 'dark' });
+		expect(successResponse).toHaveBeenCalled();
+	});
+
+	it('calls next with error on empty/invalid body', async () => {
+		const req = { body: {} } as unknown as Request;
+		const res = makeRes({ userId: 'u1' });
+		const next = vi.fn();
+		await updateMyPreferencesController(req, res, next);
 		expect(next).toHaveBeenCalledWith(expect.any(Error));
 	});
 });

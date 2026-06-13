@@ -16,6 +16,8 @@ export interface RefreshTokenPayload {
 export interface EmailTokenPayload {
 	sub: string;
 	type: 'email_verification' | 'password_reset';
+	/** Issued-at (seconds), added by jsonwebtoken; used for single-use checks. */
+	iat?: number;
 }
 
 export const JwtService = {

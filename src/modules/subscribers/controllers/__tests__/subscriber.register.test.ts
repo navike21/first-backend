@@ -25,14 +25,32 @@ function makeRes() {
 	} as unknown as Response;
 }
 
+const validBody = {
+	firstName: 'John',
+	lastName: 'Doe',
+	contactInformation: { email: 'john@test.com' },
+	personalInformation: { gender: 'male' },
+};
+
 describe('subscriberRegister', () => {
-	it('calls registerSubscriber with req.body and returns 201', async () => {
+	it('validates and calls registerSubscriber on a valid body, returns 201', async () => {
 		vi.mocked(registerSubscriber).mockResolvedValue({ id: '1' } as never);
+		const req = { body: validBody } as unknown as Request;
+		const res = makeRes();
+		const next = vi.fn();
+		await subscriberRegister(req, res, next);
+		expect(registerSubscriber).toHaveBeenCalledWith(
+			expect.objectContaining({ firstName: 'John' }),
+		);
+		expect(successResponse).toHaveBeenCalled();
+	});
+
+	it('calls next with error on an invalid body', async () => {
 		const req = { body: { firstName: 'John' } } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();
 		await subscriberRegister(req, res, next);
-		expect(registerSubscriber).toHaveBeenCalledWith({ firstName: 'John' });
-		expect(successResponse).toHaveBeenCalled();
+		expect(next).toHaveBeenCalledWith(expect.any(Error));
+		expect(registerSubscriber).not.toHaveBeenCalled();
 	});
 });

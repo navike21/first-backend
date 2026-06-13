@@ -51,7 +51,8 @@ describe('createService', () => {
 		const result = await createService(validInput);
 
 		expect(ServiceModel.create).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('_id');
+		expect(result.warnings).toEqual([]);
 	});
 
 	it('uses provided slug', async () => {

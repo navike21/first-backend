@@ -6,13 +6,6 @@ import { EmailAlreadyExistsError } from '@Modules/users/domain/errors/UserErrors
 
 withMongo();
 
-vi.mock('@Modules/notifications-email', () => ({
-	sendEmail: vi.fn().mockResolvedValue(undefined),
-	verifyEmailTemplate: vi
-		.fn()
-		.mockReturnValue({ subject: 'Verify', html: '<p/>' }),
-}));
-
 vi.mock('@Constants/environments', () => ({
 	ENV: { CLIENT_URL: 'http://localhost:3000' },
 }));
@@ -42,10 +35,11 @@ describe('createUser', () => {
 
 		const result = await createUser(input);
 
-		expect(result.email).toBe(input.email);
-		expect(result.firstName).toBe('John');
+		expect(result.data.email).toBe(input.email);
+		expect(result.data.firstName).toBe('John');
+		expect(result.warnings).toEqual([]);
 
-		const inDb = await UserModel.findOne({ id: result.id });
+		const inDb = await UserModel.findOne({ id: result.data.id });
 		expect(inDb).not.toBeNull();
 		expect(inDb!.password).toBe('hashed_pw');
 	});
@@ -68,13 +62,13 @@ describe('createUser', () => {
 
 		const result = await createUser(input);
 
-		const inDb = await UserModel.findOne({ id: result.id });
+		const inDb = await UserModel.findOne({ id: result.data.id });
 		expect(inDb!.dateOfBirth).toBeInstanceOf(Date);
 	});
 
-	it('passes lang to the email template', async () => {
-		const { verifyEmailTemplate } =
-			await import('@Modules/notifications-email');
+	it('publishes a UserRegisteredEvent (non-blocking email) with the given lang', async () => {
+		const { eventBus } = await import('@Shared/infrastructure/EventBus');
+		const publishSpy = vi.spyOn(eventBus, 'publish').mockResolvedValue();
 		const input = {
 			...baseInput,
 			email: `lang-${crypto.randomUUID().slice(0, 8)}@test.com`,
@@ -82,8 +76,11 @@ describe('createUser', () => {
 
 		await createUser(input, 'es');
 
-		expect(verifyEmailTemplate).toHaveBeenCalledWith(
-			expect.objectContaining({ lang: 'es' }),
-		);
+		expect(publishSpy).toHaveBeenCalledTimes(1);
+		const event = publishSpy.mock.calls[0][0];
+		expect(event.eventName).toBe('user.registered');
+		expect(event).toMatchObject({ email: input.email, lang: 'es' });
+
+		publishSpy.mockRestore();
 	});
 });

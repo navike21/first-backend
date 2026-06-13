@@ -1,27 +1,16 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
+import { bulkOutcome } from '@Helpers/bulkOutcome';
 import { BulkIdsSchema } from '@Shared/schemas/bulkIds.schema';
 import { restoreUsersBulk } from '../application/restoreUsersBulk';
 
 export const restoreUsersBulkController = asyncHandler(async (req, res) => {
-	const parsed = BulkIdsSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable(
-			'VALIDATION_SCHEMA_ERROR',
-			'Validation failed',
-			parsed.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
-		);
-	}
+	const validated = validate(BulkIdsSchema, req.body);
 
-	const data = await restoreUsersBulk(parsed.data!.ids);
+	const data = await restoreUsersBulk(validated.ids);
 
-	const code =
-		data.processedIds.length === 0
-			? 'USERS_BULK_RESTORE_NONE'
-			: data.notFoundIds.length > 0
-				? 'USERS_BULK_RESTORE_PARTIAL'
-				: 'USERS_BULK_RESTORE_SUCCESS';
+	const code = `USERS_BULK_RESTORE_${bulkOutcome(data)}`;
 
 	successResponse(res, { statusCode: 200, code, message: code, ns: 'users', data });
 });

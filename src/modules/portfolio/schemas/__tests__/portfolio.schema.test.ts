@@ -34,10 +34,12 @@ describe('portfolio.schema', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('CreatePortfolioSchema rejects missing coverImageUrl', () => {
+	it('CreatePortfolioSchema allows missing coverImageUrl (supplied by file upload)', () => {
 		const { coverImageUrl: _, ...rest } = validPortfolio;
 		const result = CreatePortfolioSchema.safeParse(rest);
-		expect(result.success).toBe(false);
+		// The cover requirement is enforced by createPortfolio, not the schema,
+		// so a multipart create can supply it via an uploaded `cover` file.
+		expect(result.success).toBe(true);
 	});
 
 	it('CreatePortfolioSchema rejects empty serviceIds', () => {

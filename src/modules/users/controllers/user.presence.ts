@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
 import { updatePresence } from '../application/updatePresence';
 import { emitPresenceChange } from '@Shared/infrastructure/SocketServer';
 import type { PresenceStatus } from '../infrastructure/UserModel';
@@ -11,21 +11,15 @@ const PresenceUpdateSchema = z.object({
 });
 
 export const updatePresenceController = asyncHandler(async (req, res) => {
-	const parsed = PresenceUpdateSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', parsed.error.issues.map((i) => ({
-			path: i.path.join('.'),
-			message: i.message,
-		})));
-	}
+	const validated = validate(PresenceUpdateSchema, req.body);
 
 	const userId = res.locals.userId as string;
 	const data = await updatePresence(
 		userId,
-		parsed.data.status as PresenceStatus,
+		validated.status as PresenceStatus,
 	);
 
-	emitPresenceChange(userId, parsed.data.status);
+	emitPresenceChange(userId, validated.status);
 
 	successResponse(res, {
 		statusCode: 200,

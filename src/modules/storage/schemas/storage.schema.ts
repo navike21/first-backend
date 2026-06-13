@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { STATUS_REGISTER_ARRAY } from '@Constants/statusRegister';
 
 export const StorageUploadBodySchema = z.object({
 	entityType: z

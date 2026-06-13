@@ -18,17 +18,19 @@ describe('deleteServiceLogical', () => {
 		const serviceDoc = {
 			id: '1',
 			status: 'active',
+			deletedAt: undefined as Date | undefined,
 			save: saveFn,
 			toObject: vi
 				.fn()
-				.mockReturnValue({ id: '1', status: 'deleted', _id: 'm1' }),
+				.mockReturnValue({ id: '1', deletedAt: new Date(), _id: 'm1' }),
 		};
 		vi.mocked(ServiceModel.findOne).mockResolvedValue(serviceDoc as never);
 
 		const result = await deleteServiceLogical('1');
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(serviceDoc.status).toBe('deleted');
+		// Soft-delete is recorded via deletedAt (there is no 'deleted' status).
+		expect(serviceDoc.deletedAt).toBeInstanceOf(Date);
 		expect(result).not.toHaveProperty('_id');
 	});
 

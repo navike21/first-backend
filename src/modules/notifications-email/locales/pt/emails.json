@@ -14,10 +14,10 @@
 		"safety": "Se você não solicitou uma redefinição de senha, pode ignorar este e-mail com segurança. Sua senha não será alterada."
 	},
 	"welcomeEmail": {
-		"subject": "Bem-vindo ao First Backend!",
+		"subject": "Bem-vindo ao {{appName}}!",
 		"heading": "Bem-vindo, {{firstName}}!",
 		"body": "Sua conta foi verificada e está agora totalmente ativa. Você está pronto para começar.",
 		"thanks": "Obrigado por se juntar a nós."
 	},
-	"footer": "© {{year}} First Backend. Todos os direitos reservados."
+	"footer": "© {{year}} {{appName}}. Todos os direitos reservados."
 }

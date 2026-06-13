@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
 	ClientNotFoundError,
-	ClientBusinessNameConflictError,
+	ClientDuplicateDocumentError,
 } from '@Modules/clients/domain/errors/ClientErrors';
 import { AppError } from '@Shared/domain/AppError';
 
@@ -13,10 +13,13 @@ describe('Client domain errors', () => {
 		expect(error.code).toBe('CLIENT_NOT_FOUND');
 	});
 
-	it('ClientBusinessNameConflictError has correct code and status', () => {
-		const error = new ClientBusinessNameConflictError();
+	it('ClientDuplicateDocumentError maps to 409 RESOURCE_DUPLICATE with the key names', () => {
+		const error = new ClientDuplicateDocumentError();
 		expect(error).toBeInstanceOf(AppError);
 		expect(error.statusCode).toBe(409);
-		expect(error.code).toBe('CLIENT_BUSINESS_NAME_CONFLICT');
+		expect(error.code).toBe('RESOURCE_DUPLICATE');
+		expect(error.details).toEqual({
+			keys: ['documentType', 'documentNumber', 'country'],
+		});
 	});
 });

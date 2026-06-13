@@ -14,10 +14,10 @@
 		"safety": "Falls Sie keine Passwortrücksetzung angefordert haben, können Sie diese E-Mail ignorieren. Ihr Passwort wird nicht geändert."
 	},
 	"welcomeEmail": {
-		"subject": "Willkommen bei First Backend!",
+		"subject": "Willkommen bei {{appName}}!",
 		"heading": "Willkommen, {{firstName}}!",
 		"body": "Ihr Konto wurde verifiziert und ist jetzt vollständig aktiv. Alles ist bereit für den Start.",
 		"thanks": "Danke, dass Sie bei uns sind."
 	},
-	"footer": "© {{year}} First Backend. Alle Rechte vorbehalten."
+	"footer": "© {{year}} {{appName}}. Alle Rechte vorbehalten."
 }

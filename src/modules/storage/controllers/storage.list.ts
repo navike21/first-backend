@@ -1,19 +1,13 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
 import { listStorageFiles } from '../application/listStorageFiles';
 import { StorageListQuerySchema } from '../schemas/storage.schema';
 
 export const storageListController = asyncHandler(async (req, res) => {
-	const parsed = StorageListQuerySchema.safeParse(req.query);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', parsed.error.issues.map((i) => ({
-			path: i.path.join('.'),
-			message: i.message,
-		})));
-	}
+	const validated = validate(StorageListQuerySchema, req.query);
 
-	const result = await listStorageFiles(parsed.data);
+	const result = await listStorageFiles(validated);
 
 	successResponse(res, {
 		statusCode: 200,

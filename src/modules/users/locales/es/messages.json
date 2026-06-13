@@ -5,5 +5,6 @@
 	"USER_FOUND": "Usuario obtenido",
 	"USERS_LISTED": "Usuarios obtenidos",
 	"PROFILE_FOUND": "Perfil obtenido",
-	"PROFILE_UPDATED": "Perfil actualizado exitosamente"
+	"PROFILE_UPDATED": "Perfil actualizado exitosamente",
+	"PREFERENCES_UPDATED": "Preferencias actualizadas exitosamente"
 }

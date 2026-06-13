@@ -28,8 +28,8 @@ function makeRes() {
 describe('collaboratorUpdateController', () => {
 	it('calls updateCollaborator and returns 200 on valid input', async () => {
 		vi.mocked(updateCollaborator).mockResolvedValue({
-			id: '1',
-			name: 'New Name',
+			data: { id: '1', name: 'New Name' },
+			warnings: [],
 		} as never);
 		const req = {
 			params: { id: '1' },

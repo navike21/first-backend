@@ -1,26 +1,16 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
+import { validate } from '@Helpers/validate';
 import { AppError } from '@Shared/domain/AppError';
 import { uploadFile } from '../application/uploadFile';
-import {
-	StorageUploadBodySchema,
-	type StorageUploadBody,
-} from '../schemas/storage.schema';
+import { StorageUploadBodySchema } from '../schemas/storage.schema';
 
 export const storageUploadController = asyncHandler(async (req, res) => {
 	if (!req.file) {
 		AppError.badRequest('FILE_REQUIRED', 'No file was provided');
 	}
 
-	const parsed = StorageUploadBodySchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', parsed.error.issues.map((i) => ({
-			path: i.path.join('.'),
-			message: i.message,
-		})));
-	}
-
-	const body = parsed.data as StorageUploadBody;
+	const body = validate(StorageUploadBodySchema, req.body);
 	const result = await uploadFile({
 		buffer: req.file.buffer,
 		originalName: req.file.originalname,
@@ -46,15 +36,7 @@ export const storageUploadBulkController = asyncHandler(async (req, res) => {
 		AppError.badRequest('FILE_REQUIRED', 'No files were provided');
 	}
 
-	const parsed = StorageUploadBodySchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', parsed.error.issues.map((i) => ({
-			path: i.path.join('.'),
-			message: i.message,
-		})));
-	}
-
-	const body = parsed.data as StorageUploadBody;
+	const body = validate(StorageUploadBodySchema, req.body);
 	const results = await Promise.all(
 		files.map((file) =>
 			uploadFile({

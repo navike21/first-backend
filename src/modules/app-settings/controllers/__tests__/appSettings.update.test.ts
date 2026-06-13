@@ -24,7 +24,7 @@ function run(body: object = {}): Promise<void> {
 			err ? reject(err) : resolve();
 		appSettingsUpdateController(
 			{ body } as unknown as Request,
-			{} as Response,
+			{ locals: {} } as unknown as Response,
 			next,
 		);
 	});
@@ -35,7 +35,7 @@ describe('appSettingsUpdateController', () => {
 
 	it('calls updateAppSettings and returns 200 on valid body', async () => {
 		const updated = { general: { appName: 'Updated' } };
-		mockUpdateAppSettings.mockResolvedValue(updated);
+		mockUpdateAppSettings.mockResolvedValue({ data: updated, warnings: [] });
 
 		await run({ general: { appName: 'Updated' } });
 
@@ -53,7 +53,7 @@ describe('appSettingsUpdateController', () => {
 
 	it('calls next with VALIDATION_SCHEMA_ERROR when body is invalid', async () => {
 		await expect(run({})).rejects.toMatchObject({
-			statusCode: 400,
+			statusCode: 422,
 			code: 'VALIDATION_SCHEMA_ERROR',
 		});
 		expect(mockUpdateAppSettings).not.toHaveBeenCalled();

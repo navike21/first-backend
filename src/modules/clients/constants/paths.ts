@@ -1,3 +1,6 @@
+/** entityType used to anchor a client's stored files (logo) in the storage module. */
+export const CLIENT_ENTITY_TYPE = 'clients';
+
 export const CLIENT_PATH_LIST = '/clients';
 export const CLIENT_PATH_CREATE = '/clients';
 export const CLIENT_PATH_GET_BY_ID = '/clients/:id';

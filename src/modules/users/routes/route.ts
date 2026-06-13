@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authorize, authenticate } from '@Modules/auth';
+import { acceptImage } from '@Modules/storage';
 import { PERMISSIONS } from '@Constants/permissions';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
@@ -12,6 +13,7 @@ import { deleteUserLogicalController } from '../controllers/user.deleteLogical';
 import {
 	getMyProfileController,
 	updateMyProfileController,
+	updateMyPreferencesController,
 } from '../controllers/user.profile';
 import { updatePresenceController } from '../controllers/user.presence';
 import { getUserMetadataController } from '../controllers/user.metadata';
@@ -24,13 +26,24 @@ import { purgeUsersBulkController } from '../controllers/user.purgeBulk';
 export function usersApi(router: Router) {
 	router.get('/users/metadata', authenticate, getUserMetadataController);
 	router.get('/users/me', authenticate, getMyProfileController);
-	router.patch('/users/me', authenticate, updateMyProfileController);
+	router.patch(
+		'/users/me',
+		authenticate,
+		...acceptImage('avatar'),
+		updateMyProfileController,
+	);
+	router.patch(
+		'/users/me/preferences',
+		authenticate,
+		updateMyPreferencesController,
+	);
 	router.patch('/users/me/presence', authenticate, updatePresenceController);
 
 	router.post(
 		'/users',
 		authenticate,
 		authorize(PERMISSIONS.USERS_CREATE, PERMISSIONS.USERS_MANAGE),
+		...acceptImage('avatar'),
 		createUserController,
 	);
 
@@ -61,6 +74,7 @@ export function usersApi(router: Router) {
 		'/users/:id',
 		authenticate,
 		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
+		...acceptImage('avatar'),
 		updateUserController,
 	);
 
@@ -99,7 +113,7 @@ export function usersApi(router: Router) {
 	router.delete(
 		'/users/bulk/permanent',
 		authenticate,
-		authorize(PERMISSIONS.USERS_PURGE, PERMISSIONS.USERS_MANAGE),
+		authorize(PERMISSIONS.USERS_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.USERS_BULK_PERMANENTLY_DELETED,
 			resource: 'users',
@@ -121,7 +135,7 @@ export function usersApi(router: Router) {
 	router.delete(
 		'/users/:id/permanent',
 		authenticate,
-		authorize(PERMISSIONS.USERS_PURGE, PERMISSIONS.USERS_MANAGE),
+		authorize(PERMISSIONS.USERS_PURGE),
 		captureAudit({ action: AUDIT_ACTIONS.USERS_DELETED, resource: 'users' }),
 		deleteUserController,
 	);

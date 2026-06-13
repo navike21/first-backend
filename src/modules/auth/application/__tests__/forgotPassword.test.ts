@@ -1,19 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { withMongo } from '@test/withMongo';
 import UserModel from '@Modules/users/infrastructure/UserModel';
+import { eventBus } from '@Shared/infrastructure/EventBus';
 import { forgotPassword } from '@Modules/auth/application/forgotPassword';
 
 withMongo();
 
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { signEmail: vi.fn().mockReturnValue('RESET_TOKEN') },
-}));
-
-vi.mock('@Modules/notifications-email', () => ({
-	sendEmail: vi.fn().mockResolvedValue(undefined),
-	passwordResetTemplate: vi
-		.fn()
-		.mockReturnValue({ subject: 'Reset', html: '<p/>' }),
 }));
 
 vi.mock('@Constants/environments', () => ({
@@ -23,8 +17,16 @@ vi.mock('@Constants/environments', () => ({
 vi.mock('@Helpers/log', () => ({ logInfo: vi.fn() }));
 
 describe('forgotPassword', () => {
-	it('sends a password reset email for an existing user', async () => {
-		const { sendEmail } = await import('@Modules/notifications-email');
+	let publishSpy: ReturnType<typeof vi.spyOn>;
+
+	beforeEach(() => {
+		publishSpy = vi.spyOn(eventBus, 'publish').mockResolvedValue();
+	});
+	afterEach(() => {
+		publishSpy.mockRestore();
+	});
+
+	it('publishes PasswordResetRequestedEvent for an existing user', async () => {
 		const user = await UserModel.create({
 			email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
 			password: 'hashed',
@@ -34,21 +36,18 @@ describe('forgotPassword', () => {
 
 		await forgotPassword(user.email);
 
-		expect(sendEmail).toHaveBeenCalledWith(
-			expect.objectContaining({ to: user.email }),
-		);
+		expect(publishSpy).toHaveBeenCalledTimes(1);
+		const event = publishSpy.mock.calls[0][0];
+		expect(event.eventName).toBe('auth.password_reset_requested');
+		expect(event).toMatchObject({ email: user.email });
 	});
 
-	it('resolves silently without sending email for a non-existent user', async () => {
-		const { sendEmail } = await import('@Modules/notifications-email');
-		vi.mocked(sendEmail).mockClear();
-
+	it('resolves silently without publishing for a non-existent user', async () => {
 		await expect(forgotPassword('nobody@example.com')).resolves.toBeUndefined();
-		expect(sendEmail).not.toHaveBeenCalled();
+		expect(publishSpy).not.toHaveBeenCalled();
 	});
 
 	it('is case-insensitive for the email lookup', async () => {
-		const { sendEmail } = await import('@Modules/notifications-email');
 		const email = `UPPER-${crypto.randomUUID().slice(0, 8)}@test.com`;
 		await UserModel.create({
 			email: email.toLowerCase(),
@@ -59,6 +58,6 @@ describe('forgotPassword', () => {
 
 		await forgotPassword(email);
 
-		expect(sendEmail).toHaveBeenCalled();
+		expect(publishSpy).toHaveBeenCalled();
 	});
 });

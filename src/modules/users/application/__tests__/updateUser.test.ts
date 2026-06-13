@@ -24,8 +24,8 @@ describe('updateUser', () => {
 			lastName: 'Name',
 		});
 
-		expect(result.firstName).toBe('Updated');
-		expect(result.lastName).toBe('Name');
+		expect(result.data.firstName).toBe('Updated');
+		expect(result.data.lastName).toBe('Name');
 
 		const inDb = await UserModel.findOne({ id: user.id });
 		expect(inDb!.firstName).toBe('Updated');
@@ -36,7 +36,7 @@ describe('updateUser', () => {
 
 		const result = await updateUser(user.id, { firstName: 'Xi' });
 
-		expect((result as Record<string, unknown>).password).toBeUndefined();
+		expect((result.data as Record<string, unknown>).password).toBeUndefined();
 	});
 
 	it('converts dateOfBirth string to Date', async () => {

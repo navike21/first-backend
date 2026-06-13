@@ -34,7 +34,7 @@ describe('listCollaborators', () => {
 		expect(result.meta.total).toBe(1);
 	});
 
-	it('uses status ne deleted filter for adminView', async () => {
+	it('uses the deletedAt null filter for adminView', async () => {
 		vi.mocked(CollaboratorModel.find).mockReturnValue(
 			mockQueryBuilder([member]) as never,
 		);
@@ -47,12 +47,12 @@ describe('listCollaborators', () => {
 		});
 
 		expect(CollaboratorModel.find).toHaveBeenCalledWith({
-			status: { $ne: 'deleted' },
+			deletedAt: null,
 		});
 		expect(result.data).toHaveLength(1);
 	});
 
-	it('uses active + isActive filter for public view', async () => {
+	it('uses active + isActive + deletedAt filter for public view', async () => {
 		vi.mocked(CollaboratorModel.find).mockReturnValue(
 			mockQueryBuilder([member]) as never,
 		);
@@ -63,6 +63,7 @@ describe('listCollaborators', () => {
 		expect(CollaboratorModel.find).toHaveBeenCalledWith({
 			status: 'active',
 			isActive: true,
+			deletedAt: null,
 		});
 	});
 

@@ -1,3 +1,6 @@
+/** entityType used to anchor a collaborator's stored files (photo) in the storage module. */
+export const COLLABORATOR_ENTITY_TYPE = 'collaborators';
+
 export const COLLABORATOR_PATH_LIST_PUBLIC = '/collaborators';
 export const COLLABORATOR_PATH_LIST_ADMIN = '/collaborators/admin';
 export const COLLABORATOR_PATH_GET_BY_ID = '/collaborators/:id';

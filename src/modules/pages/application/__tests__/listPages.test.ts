@@ -34,7 +34,7 @@ describe('listPages', () => {
 		expect(result.meta.total).toBe(1);
 	});
 
-	it('uses status ne deleted filter for adminView', async () => {
+	it('uses the deletedAt null filter for adminView', async () => {
 		vi.mocked(PageModel.find).mockReturnValue(
 			mockQueryBuilder([page]) as never,
 		);
@@ -43,11 +43,11 @@ describe('listPages', () => {
 		await listPages({ page: 1, limit: 10, adminView: true });
 
 		expect(PageModel.find).toHaveBeenCalledWith({
-			status: { $ne: 'deleted' },
+			deletedAt: null,
 		});
 	});
 
-	it('uses published + isPublished filter for public view', async () => {
+	it('uses published + isPublished + deletedAt filter for public view', async () => {
 		vi.mocked(PageModel.find).mockReturnValue(
 			mockQueryBuilder([page]) as never,
 		);
@@ -58,6 +58,7 @@ describe('listPages', () => {
 		expect(PageModel.find).toHaveBeenCalledWith({
 			status: 'published',
 			isPublished: true,
+			deletedAt: null,
 		});
 	});
 

@@ -68,7 +68,7 @@ export function userGroupsApi(router: Router) {
 	router.delete(
 		'/user-groups/bulk/permanent',
 		authenticate,
-		authorize(PERMISSIONS.USER_GROUPS_PURGE, PERMISSIONS.USER_GROUPS_MANAGE),
+		authorize(PERMISSIONS.USER_GROUPS_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.USER_GROUPS_BULK_PERMANENTLY_DELETED,
 			resource: 'user-groups',
@@ -110,7 +110,7 @@ export function userGroupsApi(router: Router) {
 	router.delete(
 		'/user-groups/:id/permanent',
 		authenticate,
-		authorize(PERMISSIONS.USER_GROUPS_PURGE, PERMISSIONS.USER_GROUPS_MANAGE),
+		authorize(PERMISSIONS.USER_GROUPS_PURGE),
 		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_DELETED, resource: 'user-groups' }),
 		deleteUserGroupController,
 	);

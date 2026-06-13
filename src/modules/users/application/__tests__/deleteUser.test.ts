@@ -18,7 +18,8 @@ const seed = (overrides = {}) =>
 
 describe('deleteUser (hard)', () => {
 	it('removes the user from the database', async () => {
-		const user = await seed();
+		// Hard delete only applies to records already in the trash (deletedAt set).
+		const user = await seed({ deletedAt: new Date() });
 
 		await deleteUser(user.id);
 
@@ -33,14 +34,14 @@ describe('deleteUser (hard)', () => {
 });
 
 describe('deleteUserLogical (soft)', () => {
-	it('sets status to deleted without removing the document', async () => {
+	it('marks the document deleted via deletedAt without removing it', async () => {
 		const user = await seed();
 
 		await deleteUserLogical(user.id);
 
 		const inDb = await UserModel.findOne({ id: user.id });
 		expect(inDb).not.toBeNull();
-		expect(inDb!.status).toBe('deleted');
+		expect(inDb!.deletedAt).toBeInstanceOf(Date);
 	});
 
 	it('returns the user data without password', async () => {
@@ -53,7 +54,7 @@ describe('deleteUserLogical (soft)', () => {
 	});
 
 	it('throws UserNotFoundError when user is already deleted', async () => {
-		const user = await seed({ status: 'deleted' });
+		const user = await seed({ deletedAt: new Date() });
 
 		await expect(deleteUserLogical(user.id)).rejects.toBeInstanceOf(
 			UserNotFoundError,

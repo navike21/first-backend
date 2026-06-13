@@ -9,6 +9,7 @@ const CollaboratorSchema = new Schema(
 		role: localizedStringType,
 		bio: localizedStringType,
 		photoUrl: { type: String },
+		userId: { type: String, ref: 'User' },
 		socialLinks: {
 			linkedin: { type: String },
 			twitter: { type: String },

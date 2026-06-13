@@ -49,8 +49,8 @@ const validBody = {
 describe('portfolioCreateController', () => {
 	it('calls createPortfolio and returns 201', async () => {
 		vi.mocked(createPortfolio).mockResolvedValue({
-			id: '1',
-			slug: 'project',
+			data: { id: '1', slug: 'project' },
+			warnings: [],
 		} as never);
 		const req = { body: validBody } as unknown as Request;
 		const res = makeRes();

@@ -18,7 +18,8 @@ const seed = (overrides = {}) =>
 
 describe('deleteUserGroup', () => {
 	it('deletes the group from the database', async () => {
-		const group = await seed();
+		// Hard delete only applies to groups already in the trash (deletedAt set).
+		const group = await seed({ deletedAt: new Date() });
 
 		await deleteUserGroup(group.id);
 
@@ -33,7 +34,7 @@ describe('deleteUserGroup', () => {
 	});
 
 	it('throws SystemGroupModificationError for system groups', async () => {
-		const group = await seed({ isSystem: true });
+		const group = await seed({ isSystem: true, deletedAt: new Date() });
 
 		await expect(deleteUserGroup(group.id)).rejects.toBeInstanceOf(
 			SystemGroupModificationError,

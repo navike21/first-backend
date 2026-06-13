@@ -1,27 +1,26 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
+import { parseRequestData, getUploadedFile } from '@Helpers/multipartRequest';
 import { updateCollaborator } from '../application/updateCollaborator';
 import { UpdateCollaboratorSchema } from '../schemas/collaborator.schema';
 
 export const collaboratorUpdateController = asyncHandler(async (req, res) => {
 	const id = String(req.params.id);
-	const parsed = UpdateCollaboratorSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
-			validation: parsed.error.issues.map((i) => ({
-				path: i.path.join('.'),
-				message: i.message,
-			})),
-		});
-	}
+	const validated = validate(UpdateCollaboratorSchema, parseRequestData(req));
 
-	const data = await updateCollaborator(id, parsed.data);
+	const result = await updateCollaborator(
+		id,
+		validated,
+		getUploadedFile(req),
+		res.locals.userId as string | undefined,
+	);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_COLLABORATOR_UPDATE',
 		message: 'SUCCESS_COLLABORATOR_UPDATE',
 		ns: 'collaborators',
-		data,
+		data: result.data,
+		warnings: result.warnings,
 	});
 });

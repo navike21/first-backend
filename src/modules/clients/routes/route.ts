@@ -4,6 +4,7 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
+import { acceptImage } from '@Modules/storage';
 import {
 	CLIENT_PATH_CREATE,
 	CLIENT_PATH_LIST,
@@ -34,6 +35,7 @@ export function clientsApi(router: Router) {
 		CLIENT_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_CREATE, PERMISSIONS.CLIENTS_MANAGE),
+		...acceptImage('logo'),
 		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_CREATED, resource: 'clients' }),
 		clientCreateController,
 	);
@@ -77,7 +79,7 @@ export function clientsApi(router: Router) {
 	router.delete(
 		CLIENT_PATH_BULK_PURGE,
 		authenticate,
-		authorize(PERMISSIONS.CLIENTS_PURGE, PERMISSIONS.CLIENTS_MANAGE),
+		authorize(PERMISSIONS.CLIENTS_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.CLIENTS_BULK_PERMANENTLY_DELETED,
 			resource: 'clients',
@@ -104,6 +106,7 @@ export function clientsApi(router: Router) {
 		CLIENT_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_UPDATE, PERMISSIONS.CLIENTS_MANAGE),
+		...acceptImage('logo'),
 		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_UPDATED, resource: 'clients' }),
 		clientUpdateController,
 	);
@@ -111,7 +114,7 @@ export function clientsApi(router: Router) {
 	router.delete(
 		CLIENT_PATH_DELETE_PERMANENT,
 		authenticate,
-		authorize(PERMISSIONS.CLIENTS_PURGE, PERMISSIONS.CLIENTS_MANAGE),
+		authorize(PERMISSIONS.CLIENTS_PURGE),
 		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_PERMANENTLY_DELETED, resource: 'clients' }),
 		clientDeletePermanentController,
 	);

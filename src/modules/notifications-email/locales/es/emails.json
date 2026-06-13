@@ -14,10 +14,10 @@
 		"safety": "Si no solicitaste un restablecimiento de contraseña, puedes ignorar este correo. Tu contraseña no cambiará."
 	},
 	"welcomeEmail": {
-		"subject": "¡Bienvenido a First Backend!",
+		"subject": "¡Bienvenido a {{appName}}!",
 		"heading": "¡Bienvenido, {{firstName}}!",
 		"body": "Tu cuenta ha sido verificada y ahora está completamente activa. Todo está listo para comenzar.",
 		"thanks": "Gracias por unirte a nosotros."
 	},
-	"footer": "© {{year}} First Backend. Todos los derechos reservados."
+	"footer": "© {{year}} {{appName}}. Todos los derechos reservados."
 }

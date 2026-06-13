@@ -19,3 +19,23 @@ export class EmailAlreadyExistsError extends AppError {
 		});
 	}
 }
+
+export class CannotDeleteSelfError extends AppError {
+	constructor() {
+		super({
+			statusCode: 403,
+			code: 'CANNOT_DELETE_SELF',
+			message: 'You cannot delete your own account',
+		});
+	}
+}
+
+export class LastSuperAdminError extends AppError {
+	constructor() {
+		super({
+			statusCode: 409,
+			code: 'LAST_SUPER_ADMIN',
+			message: 'The last super-admin cannot be deleted',
+		});
+	}
+}

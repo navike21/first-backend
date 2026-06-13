@@ -16,13 +16,33 @@ export const successResponse = <T>(
 	res: Response,
 	options: SuccessResponseOptions<T>,
 ): Response<ApiResponse<T>> => {
-	const { data, message = 'OK', ns, statusCode = 200, code, meta } = options;
+	const {
+		data,
+		message = 'OK',
+		ns,
+		statusCode = 200,
+		code,
+		meta,
+		warnings,
+	} = options;
 	const lang = (res.locals.lang as string | undefined) ?? 'en';
 	const translatedMessage = i18next.t(message, {
 		lng: lang,
 		ns,
 		defaultValue: message,
 	});
+
+	// Warning codes are resolved against the global `errors` namespace so any
+	// module can emit a non-blocking warning without wiring its own namespace.
+	const translatedWarnings = warnings?.map((warning) => ({
+		field: warning.field,
+		code: warning.code,
+		message: i18next.t(warning.code, {
+			lng: lang,
+			ns: 'errors',
+			defaultValue: warning.message,
+		}),
+	}));
 
 	const response: ApiResponse<T> = {
 		code,
@@ -34,6 +54,9 @@ export const successResponse = <T>(
 		},
 		statusCode,
 		success: true,
+		...(translatedWarnings && translatedWarnings.length > 0
+			? { warnings: translatedWarnings }
+			: {}),
 	};
 
 	return res.status(statusCode).json(response);

@@ -28,7 +28,9 @@ describe('deleteClientLogical', () => {
 		const result = await deleteClientLogical('1');
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(clientDoc.status).toBe('deleted');
+		// Soft-delete is recorded via deletedAt (there is no 'deleted' status).
+		expect(clientDoc).toHaveProperty('deletedAt');
+		expect((clientDoc as { deletedAt?: Date }).deletedAt).toBeInstanceOf(Date);
 		expect(result).not.toHaveProperty('_id');
 	});
 

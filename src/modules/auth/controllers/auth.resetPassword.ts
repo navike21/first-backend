@@ -1,5 +1,6 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
+import { validate } from '@Helpers/validate';
 import { AppError } from '@Shared/domain/AppError';
 import { ResetPasswordSchema } from '../schemas/auth.schema';
 import { resetPassword } from '../application/resetPassword';
@@ -9,12 +10,9 @@ export const authResetPassword = asyncHandler(async (req, res) => {
 	if (!token)
 		AppError.badRequest('MISSING_TOKEN', 'Reset token is required');
 
-	const parsed = ResetPasswordSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed');
-	}
+	const validated = validate(ResetPasswordSchema, req.body);
 
-	await resetPassword(token, parsed.data.password);
+	await resetPassword(token, validated.password);
 
 	successResponse(res, {
 		statusCode: 200,

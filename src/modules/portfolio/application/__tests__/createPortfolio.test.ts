@@ -57,7 +57,8 @@ describe('createPortfolio', () => {
 		const result = await createPortfolio(validInput);
 
 		expect(PortfolioModel.create).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('_id');
+		expect(result.warnings).toEqual([]);
 	});
 
 	it('throws PortfolioSlugConflictError when slug exists', async () => {
@@ -68,5 +69,15 @@ describe('createPortfolio', () => {
 		await expect(createPortfolio(validInput)).rejects.toThrow(
 			PortfolioSlugConflictError,
 		);
+	});
+
+	it('throws when no cover image is provided (no file, no url)', async () => {
+		vi.mocked(PortfolioModel.findOne).mockResolvedValue(null);
+		const { coverImageUrl: _cover, ...withoutCover } = validInput;
+
+		await expect(
+			createPortfolio(withoutCover as typeof validInput),
+		).rejects.toMatchObject({ code: 'PORTFOLIO_COVER_REQUIRED' });
+		expect(PortfolioModel.create).not.toHaveBeenCalled();
 	});
 });

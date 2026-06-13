@@ -1,11 +1,11 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { AppError } from '@Shared/domain/AppError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
-import { SubscriberSchema } from '../types/subscriber.schema';
+import type { UpdateSubscriberInput } from '../schemas/subscriber.updateSchema';
 
 export async function updateSubscriber(
 	id: string,
-	data: Partial<SubscriberSchema>,
+	data: UpdateSubscriberInput,
 ) {
 	const updated = await SubscriberModel.findOneAndUpdate(
 		{ id },

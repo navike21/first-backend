@@ -32,5 +32,9 @@
 	"DRIVER_NOT_CONFIGURED": "Il driver di archiviazione non è configurato",
 	"AUDIT_LOG_NOT_FOUND": "Voce del log di audit non trovata",
 	"APP_SETTINGS_NOT_FOUND": "Impostazioni dell'applicazione non trovate",
-	"APP_SETTINGS_EMPTY_UPDATE": "È necessario fornire almeno una categoria di impostazioni"
+	"APP_SETTINGS_EMPTY_UPDATE": "È necessario fornire almeno una categoria di impostazioni",
+	"RESOURCE_DUPLICATE": "Esiste già un record con questi valori univoci",
+	"IMAGE_UPLOAD_FAILED": "Il record è stato salvato, ma l'immagine non è stata caricata",
+	"CANNOT_DELETE_SELF": "Non puoi eliminare il tuo account",
+	"LAST_SUPER_ADMIN": "L'ultimo super-amministratore non può essere eliminato"
 }

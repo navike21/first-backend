@@ -16,7 +16,7 @@ describe('updateAppSettings', () => {
 			general: { appName: 'Upserted App' },
 		});
 
-		expect(result.general.appName).toBe('Upserted App');
+		expect(result.data.general.appName).toBe('Upserted App');
 		const doc = await AppSettingsModel.findOne({ id: 'singleton' });
 		expect(doc).not.toBeNull();
 	});
@@ -105,8 +105,8 @@ describe('updateAppSettings', () => {
 			general: { appName: 'Clean Fields' },
 		});
 
-		expect(result).not.toHaveProperty('_id');
-		expect(result).not.toHaveProperty('__v');
-		expect(result.general.appName).toBe('Clean Fields');
+		expect(result.data).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('__v');
+		expect(result.data.general.appName).toBe('Clean Fields');
 	});
 });

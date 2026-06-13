@@ -32,5 +32,9 @@
 	"DRIVER_NOT_CONFIGURED": "O driver de armazenamento não está configurado",
 	"AUDIT_LOG_NOT_FOUND": "Entrada de auditoria não encontrada",
 	"APP_SETTINGS_NOT_FOUND": "Configurações da aplicação não encontradas",
-	"APP_SETTINGS_EMPTY_UPDATE": "Pelo menos uma categoria de configuração deve ser fornecida"
+	"APP_SETTINGS_EMPTY_UPDATE": "Pelo menos uma categoria de configuração deve ser fornecida",
+	"RESOURCE_DUPLICATE": "Já existe um registro com estes valores únicos",
+	"IMAGE_UPLOAD_FAILED": "O registro foi salvo, mas a imagem não pôde ser enviada",
+	"CANNOT_DELETE_SELF": "Você não pode excluir a sua própria conta",
+	"LAST_SUPER_ADMIN": "O último super-administrador não pode ser excluído"
 }

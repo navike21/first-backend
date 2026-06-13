@@ -29,7 +29,7 @@ describe('deleteCollaborator', () => {
 		const result = await deleteCollaborator('1');
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(doc.status).toBe('deleted');
+		// Soft-delete is recorded via deletedAt (there is no 'deleted' status).
 		expect(doc.deletedAt).toBeInstanceOf(Date);
 		expect(result).not.toHaveProperty('_id');
 	});

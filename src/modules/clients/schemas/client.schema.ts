@@ -38,11 +38,29 @@ export const CreateClientSchema = z.object({
 	state: z.string().max(100).trim().optional(),
 	city: z.string().max(100).trim().optional(),
 	address: z.string().max(300).trim().optional(),
+	postalCode: z
+		.string()
+		.max(20, { message: 'CLIENT_POSTAL_CODE_MAX_LENGTH' })
+		.trim()
+		.optional(),
 
 	logoUrl: z.url({ message: 'CLIENT_LOGO_URL_INVALID' }).optional(),
 	website: z.url({ message: 'CLIENT_WEBSITE_INVALID' }).optional(),
 
+	// Company-level contact (distinct from primaryContact).
+	email: z.email({ message: 'CLIENT_EMAIL_INVALID' }).optional(),
+	phone: z.string().max(30).trim().optional(),
+
 	industry: z.string().max(100).trim().optional(),
+
+	// Cross-region: preferred language (ISO) and billing currency (ISO 4217).
+	language: z.string().min(2).max(10).trim().optional(),
+	currency: z
+		.string()
+		.length(3, { message: 'CLIENT_CURRENCY_LENGTH' })
+		.trim()
+		.transform((v) => v.toUpperCase())
+		.optional(),
 
 	primaryContact: z
 		.object({

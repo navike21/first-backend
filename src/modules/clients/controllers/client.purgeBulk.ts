@@ -1,27 +1,16 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
+import { bulkOutcome } from '@Helpers/bulkOutcome';
 import { BulkIdsSchema } from '@Shared/schemas/bulkIds.schema';
 import { purgeClientsBulk } from '../application/purgeClientsBulk';
 
 export const purgeClientsBulkController = asyncHandler(async (req, res) => {
-	const parsed = BulkIdsSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable(
-			'VALIDATION_SCHEMA_ERROR',
-			'Validation failed',
-			parsed.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
-		);
-	}
+	const validated = validate(BulkIdsSchema, req.body);
 
-	const data = await purgeClientsBulk(parsed.data!.ids);
+	const data = await purgeClientsBulk(validated.ids);
 
-	const code =
-		data.processedIds.length === 0
-			? 'CLIENTS_BULK_PURGE_NONE'
-			: data.notFoundIds.length > 0
-				? 'CLIENTS_BULK_PURGE_PARTIAL'
-				: 'CLIENTS_BULK_PURGE_SUCCESS';
+	const code = `CLIENTS_BULK_PURGE_${bulkOutcome(data)}`;
 
 	successResponse(res, { statusCode: 200, code, message: code, ns: 'clients', data });
 });

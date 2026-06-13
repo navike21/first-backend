@@ -32,7 +32,7 @@ describe('deleteUserController', () => {
 		const res = makeRes();
 		const next = vi.fn();
 		await deleteUserController(req, res, next);
-		expect(deleteUser).toHaveBeenCalledWith('u1');
+		expect(deleteUser).toHaveBeenCalledWith('u1', undefined);
 		expect(successResponse).toHaveBeenCalled();
 	});
 });

@@ -82,14 +82,29 @@ export const ALL_PERMISSIONS = Object.values(PERMISSIONS) as [
 	...Permission[],
 ];
 
+/**
+ * Permission set for a "super-admin" group: full access to every resource
+ * EXCEPT physical destruction (`:purge`). A "super-root" uses `*:*`, which also
+ * grants purge. Lets you create an all-powerful admin that still cannot
+ * permanently destroy records.
+ */
+export const SUPER_ADMIN_PERMISSIONS = ALL_PERMISSIONS.filter(
+	(p) => p !== PERMISSIONS.ALL && !p.endsWith(':purge'),
+) as Permission[];
+
 export function hasPermission(
 	userPermissions: string[],
 	required: Permission,
 ): boolean {
 	if (userPermissions.includes(PERMISSIONS.ALL)) return true;
 
-	const [resource] = required.split(':');
-	if (userPermissions.includes(`${resource}:manage`)) return true;
+	const [resource, action] = required.split(':');
+	// `:manage` grants full CRUD but NOT physical destruction. Purge requires an
+	// explicit `:purge` permission (or the `*:*` super-root permission), so
+	// permanently destroying records is always a deliberately granted capability.
+	if (action !== 'purge' && userPermissions.includes(`${resource}:manage`)) {
+		return true;
+	}
 
 	return userPermissions.includes(required);
 }

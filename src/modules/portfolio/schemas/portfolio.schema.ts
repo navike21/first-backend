@@ -26,7 +26,12 @@ export const CreatePortfolioSchema = z.object({
 	shortDescription: LocalizedStringSchema,
 	description: LocalizedStringSchema,
 
-	coverImageUrl: z.url({ message: 'PORTFOLIO_COVER_IMAGE_URL_INVALID' }),
+	// Optional at the schema level so a multipart create can supply it via an
+	// uploaded `cover` file. createPortfolio enforces that a cover (file or URL)
+	// is effectively present.
+	coverImageUrl: z
+		.url({ message: 'PORTFOLIO_COVER_IMAGE_URL_INVALID' })
+		.optional(),
 	gallery: z
 		.array(z.url({ message: 'PORTFOLIO_GALLERY_URL_INVALID' }))
 		.default([]),

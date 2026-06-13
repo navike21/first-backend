@@ -59,6 +59,16 @@ describe('validateFileType', () => {
 		).rejects.toMatchObject({ code: STORAGE_ERRORS.FILE_REQUIRED });
 	});
 
+	it('passes through when no file is present and required is false', async () => {
+		const req = buildReq(undefined);
+		await expect(
+			runMiddleware(req, {
+				allowedMimeTypes: IMAGE_MIME_TYPES,
+				required: false,
+			}),
+		).resolves.toBeUndefined();
+	});
+
 	it('throws FILE_TYPE_NOT_ALLOWED when declared MIME is not in allowed list', async () => {
 		const req = buildReq(buildFile({ mimetype: 'image/gif' }));
 		await expect(

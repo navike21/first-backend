@@ -66,7 +66,8 @@ describe('auditLogListController', () => {
 	});
 
 	it('calls next with AppError when query validation fails', async () => {
-		await expect(run({ page: '0' })).rejects.toMatchObject({ statusCode: 400 });
+		// validate() returns 422 (Unprocessable Entity) for validation errors.
+		await expect(run({ page: '0' })).rejects.toMatchObject({ statusCode: 422 });
 	});
 
 	it('passes error to next when listAuditLogs rejects', async () => {

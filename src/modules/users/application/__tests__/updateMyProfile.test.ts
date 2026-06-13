@@ -17,7 +17,7 @@ describe('updateMyProfile', () => {
 
 		const result = await updateMyProfile(user.id, { firstName: 'Alicia' });
 
-		expect(result.firstName).toBe('Alicia');
+		expect(result.data.firstName).toBe('Alicia');
 
 		const inDb = await UserModel.findOne({ id: user.id });
 		expect(inDb!.firstName).toBe('Alicia');

@@ -14,10 +14,10 @@
 		"safety": "비밀번호 재설정을 요청하지 않으셨다면 이 이메일을 무시하셔도 됩니다. 비밀번호는 변경되지 않습니다."
 	},
 	"welcomeEmail": {
-		"subject": "First Backend에 오신 것을 환영합니다!",
+		"subject": "{{appName}}에 오신 것을 환영합니다!",
 		"heading": "환영합니다, {{firstName}}님!",
 		"body": "계정이 인증되었으며 이제 완전히 활성화되었습니다. 시작할 준비가 되었습니다.",
 		"thanks": "함께해 주셔서 감사합니다."
 	},
-	"footer": "© {{year}} First Backend. 모든 권리 보유."
+	"footer": "© {{year}} {{appName}}. 모든 권리 보유."
 }

@@ -14,10 +14,10 @@
 		"safety": "If you didn't request a password reset, you can safely ignore this email. Your password won't change."
 	},
 	"welcomeEmail": {
-		"subject": "Welcome to First Backend!",
+		"subject": "Welcome to {{appName}}!",
 		"heading": "Welcome, {{firstName}}!",
 		"body": "Your account has been verified and is now fully active. You're all set to get started.",
 		"thanks": "Thanks for joining us."
 	},
-	"footer": "© {{year}} First Backend. All rights reserved."
+	"footer": "© {{year}} {{appName}}. All rights reserved."
 }

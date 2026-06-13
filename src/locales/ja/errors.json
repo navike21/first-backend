@@ -32,5 +32,9 @@
 	"DRIVER_NOT_CONFIGURED": "ストレージドライバーが設定されていません",
 	"AUDIT_LOG_NOT_FOUND": "監査ログエントリが見つかりません",
 	"APP_SETTINGS_NOT_FOUND": "アプリケーション設定が見つかりません",
-	"APP_SETTINGS_EMPTY_UPDATE": "少なくとも1つの設定カテゴリを指定する必要があります"
+	"APP_SETTINGS_EMPTY_UPDATE": "少なくとも1つの設定カテゴリを指定する必要があります",
+	"RESOURCE_DUPLICATE": "これらの一意の値を持つレコードは既に存在します",
+	"IMAGE_UPLOAD_FAILED": "レコードは保存されましたが、画像をアップロードできませんでした",
+	"CANNOT_DELETE_SELF": "自分のアカウントは削除できません",
+	"LAST_SUPER_ADMIN": "最後のスーパー管理者は削除できません"
 }

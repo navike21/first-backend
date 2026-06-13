@@ -15,6 +15,9 @@ export const CreateCollaboratorSchema = z.object({
 	bio: LocalizedStringSchema,
 	photoUrl: z.url({ message: 'COLLABORATOR_PHOTO_URL_INVALID' }).optional(),
 	socialLinks: SocialLinksSchema.optional(),
+	// Optional link to a system user, so an employee shown publicly is not a
+	// duplicate identity (users = access; collaborators = public CMS profile).
+	userId: z.uuid({ message: 'COLLABORATOR_USER_ID_INVALID' }).optional(),
 	order: z.coerce.number().int().default(0),
 	isActive: z.boolean().default(true),
 });

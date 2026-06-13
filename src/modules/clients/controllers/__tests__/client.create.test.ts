@@ -34,8 +34,8 @@ const validBody = {
 describe('clientCreateController', () => {
 	it('calls createClient and returns 201 on valid input', async () => {
 		vi.mocked(createClient).mockResolvedValue({
-			id: '1',
-			businessName: 'Acme',
+			data: { id: '1', businessName: 'Acme' },
+			warnings: [],
 		} as never);
 		const req = { body: validBody } as unknown as Request;
 		const res = makeRes();

@@ -111,7 +111,7 @@ export function storageApi(router: Router) {
 	router.delete(
 		STORAGE_PATH_DELETE_PERMANENT,
 		authenticate,
-		authorize(PERMISSIONS.STORAGE_PURGE, PERMISSIONS.STORAGE_MANAGE),
+		authorize(PERMISSIONS.STORAGE_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.STORAGE_PERMANENTLY_DELETED,
 			resource: 'storage',

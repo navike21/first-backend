@@ -27,7 +27,10 @@ function makeRes() {
 
 describe('updateUserController', () => {
 	it('calls updateUser on valid input', async () => {
-		vi.mocked(updateUser).mockResolvedValue({ id: 'u1' } as never);
+		vi.mocked(updateUser).mockResolvedValue({
+			data: { id: 'u1' },
+			warnings: [],
+		} as never);
 		const req = {
 			params: { id: 'u1' },
 			body: { firstName: 'Jane' },
@@ -35,7 +38,12 @@ describe('updateUserController', () => {
 		const res = makeRes();
 		const next = vi.fn();
 		await updateUserController(req, res, next);
-		expect(updateUser).toHaveBeenCalledWith('u1', expect.any(Object));
+		expect(updateUser).toHaveBeenCalledWith(
+			'u1',
+			expect.any(Object),
+			undefined,
+			undefined,
+		);
 		expect(successResponse).toHaveBeenCalled();
 	});
 

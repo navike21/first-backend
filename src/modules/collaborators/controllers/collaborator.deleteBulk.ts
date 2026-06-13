@@ -1,27 +1,16 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
+import { bulkOutcome } from '@Helpers/bulkOutcome';
 import { BulkIdsSchema } from '@Shared/schemas/bulkIds.schema';
 import { deleteCollaboratorsBulk } from '../application/deleteCollaboratorsBulk';
 
 export const deleteCollaboratorsBulkController = asyncHandler(async (req, res) => {
-	const parsed = BulkIdsSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable(
-			'VALIDATION_SCHEMA_ERROR',
-			'Validation failed',
-			parsed.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
-		);
-	}
+	const validated = validate(BulkIdsSchema, req.body);
 
-	const data = await deleteCollaboratorsBulk(parsed.data!.ids);
+	const data = await deleteCollaboratorsBulk(validated.ids);
 
-	const code =
-		data.processedIds.length === 0
-			? 'COLLABORATORS_BULK_SOFT_DELETE_NONE'
-			: data.notFoundIds.length > 0
-				? 'COLLABORATORS_BULK_SOFT_DELETE_PARTIAL'
-				: 'COLLABORATORS_BULK_SOFT_DELETE_SUCCESS';
+	const code = `COLLABORATORS_BULK_SOFT_DELETE_${bulkOutcome(data)}`;
 
 	successResponse(res, { statusCode: 200, code, message: code, ns: 'collaborators', data });
 });

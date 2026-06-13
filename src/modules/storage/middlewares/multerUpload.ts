@@ -3,7 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { AppError } from '@Shared/domain/AppError';
 import { STORAGE_ERRORS } from '../domain/errors/StorageErrors';
 
-function toAppError(err: multer.MulterError): AppError {
+export function toAppError(err: multer.MulterError): AppError {
 	if (err.code === 'LIMIT_FILE_SIZE') {
 		return new AppError({
 			statusCode: 413,

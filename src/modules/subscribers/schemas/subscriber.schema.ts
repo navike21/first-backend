@@ -1,6 +1,17 @@
 import { z } from 'zod';
 import type { SubscriberSchema } from '../types/subscriber.schema';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
+import { isValidISODateString } from '@Helpers/isValidISODateString';
+
+// Coerces an ISO date string into a Date so the field can be validated as a
+// date. Done in the schema (not a middleware) so `validate(schema, body)` is enough.
+const dateOfBirthField = z.preprocess(
+	(value) =>
+		typeof value === 'string' && isValidISODateString(value)
+			? new Date(value)
+			: value,
+	z.date().optional(),
+);
 
 export const SubscriberRegisterSchema = z.object({
 	id: z.uuid({ message: 'SUBSCRIBER_ID_VALID' }).optional(),
@@ -59,7 +70,7 @@ export const SubscriberRegisterSchema = z.object({
 			profilePictureUrl: z
 				.url({ message: 'SUBSCRIBER_PROFILE_PICTURE_VALID' })
 				.optional(),
-			dateOfBirth: z.date().optional(),
+			dateOfBirth: dateOfBirthField,
 			gender: z.enum(USER_GENDER_ARRAY, {
 				error: (iss) =>
 					iss.input === undefined

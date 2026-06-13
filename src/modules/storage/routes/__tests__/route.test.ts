@@ -44,7 +44,7 @@ describe('storageApi', () => {
 
 		expect(post).toHaveBeenCalledTimes(2);
 		expect(get).toHaveBeenCalledTimes(2);
-		expect(patch).toHaveBeenCalledTimes(1);
+		expect(patch).toHaveBeenCalledTimes(2);
 		expect(del).toHaveBeenCalledTimes(2);
 
 		const postPaths = post.mock.calls.map((call) => call[0]);
@@ -57,6 +57,7 @@ describe('storageApi', () => {
 
 		const patchPaths = patch.mock.calls.map((call) => call[0]);
 		expect(patchPaths).toContain('/storage/:id/restore');
+		expect(patchPaths).toContain('/storage/bulk/restore');
 
 		const deletePaths = del.mock.calls.map((call) => call[0]);
 		expect(deletePaths).toContain('/storage/delete');

@@ -1,5 +1,7 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { deleteEntityFiles } from '@Modules/storage';
 import ClientModel from '../infrastructure/ClientModel';
+import { CLIENT_ENTITY_TYPE } from '../constants/paths';
 
 export async function purgeClientsBulk(ids: string[]) {
 	const clients = await ClientModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
@@ -12,6 +14,12 @@ export async function purgeClientsBulk(ids: string[]) {
 	}
 
 	await ClientModel.deleteMany({ id: { $in: processedIds } });
+	// Remove each purged client's stored files so no blobs are orphaned.
+	await Promise.all(
+		processedIds.map((id) =>
+			deleteEntityFiles(CLIENT_ENTITY_TYPE, id).catch(() => {}),
+		),
+	);
 
 	return {
 		processed: clients.map((c) => cleanMongoFields(c)),

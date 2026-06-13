@@ -4,6 +4,7 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
+import { acceptImage } from '@Modules/storage';
 import {
 	PORTFOLIO_PATH_LIST_PUBLIC,
 	PORTFOLIO_PATH_LIST_ADMIN,
@@ -55,6 +56,7 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_CREATE, PERMISSIONS.PORTFOLIO_MANAGE),
+		...acceptImage('cover'),
 		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_CREATED, resource: 'portfolio' }),
 		portfolioCreateController,
 	);
@@ -93,7 +95,7 @@ export function portfolioApi(router: Router) {
 	router.delete(
 		PORTFOLIO_PATH_BULK_PURGE,
 		authenticate,
-		authorize(PERMISSIONS.PORTFOLIO_PURGE, PERMISSIONS.PORTFOLIO_MANAGE),
+		authorize(PERMISSIONS.PORTFOLIO_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.PORTFOLIO_BULK_PERMANENTLY_DELETED,
 			resource: 'portfolio',
@@ -106,6 +108,7 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_UPDATE, PERMISSIONS.PORTFOLIO_MANAGE),
+		...acceptImage('cover'),
 		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_UPDATED, resource: 'portfolio' }),
 		portfolioUpdateController,
 	);
@@ -113,7 +116,7 @@ export function portfolioApi(router: Router) {
 	router.delete(
 		PORTFOLIO_PATH_DELETE_PERMANENT,
 		authenticate,
-		authorize(PERMISSIONS.PORTFOLIO_PURGE, PERMISSIONS.PORTFOLIO_MANAGE),
+		authorize(PERMISSIONS.PORTFOLIO_PURGE),
 		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_PERMANENTLY_DELETED, resource: 'portfolio' }),
 		portfolioDeletePermanentController,
 	);

@@ -1,3 +1,6 @@
+/** entityType used to anchor a service's stored files (cover) in the storage module. */
+export const SERVICE_ENTITY_TYPE = 'services';
+
 export const SERVICE_PATH_LIST_PUBLIC = '/services';
 export const SERVICE_PATH_LIST_ADMIN = '/services/admin';
 export const SERVICE_PATH_GET_BY_SLUG = '/services/:slug';

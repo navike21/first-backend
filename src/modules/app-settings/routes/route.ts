@@ -1,6 +1,7 @@
 import type { Router } from 'express';
 import { PERMISSIONS } from '@Constants/permissions';
 import { authenticate, authorize } from '@Modules/auth';
+import { acceptImageFields } from '@Modules/storage';
 import { appSettingsGetController } from '../controllers/appSettings.get';
 import { appSettingsUpdateController } from '../controllers/appSettings.update';
 
@@ -11,6 +12,7 @@ export function appSettingsApi(router: Router) {
 		'/app-settings',
 		authenticate,
 		authorize(PERMISSIONS.APP_SETTINGS_UPDATE, PERMISSIONS.APP_SETTINGS_MANAGE),
+		...acceptImageFields(['logo', 'favicon']),
 		appSettingsUpdateController,
 	);
 }

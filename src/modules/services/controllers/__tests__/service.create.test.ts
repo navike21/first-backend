@@ -42,8 +42,8 @@ const validBody = { name: ls, shortDescription: ls, description: ls };
 describe('serviceCreateController', () => {
 	it('calls createService and returns 201', async () => {
 		vi.mocked(createService).mockResolvedValue({
-			id: '1',
-			slug: 'svc',
+			data: { id: '1', slug: 'svc' },
+			warnings: [],
 		} as never);
 		const req = { body: validBody } as unknown as Request;
 		const res = makeRes();

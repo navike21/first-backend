@@ -46,8 +46,11 @@ describe('createCollaborator', () => {
 
 		const result = await createCollaborator(validInput);
 
-		expect(CollaboratorModel.create).toHaveBeenCalledWith(validInput);
-		expect(result).not.toHaveProperty('_id');
-		expect(result.name).toBe('Jane Doe');
+		expect(CollaboratorModel.create).toHaveBeenCalledWith(
+			expect.objectContaining(validInput),
+		);
+		expect(result.data).not.toHaveProperty('_id');
+		expect(result.data.name).toBe('Jane Doe');
+		expect(result.warnings).toEqual([]);
 	});
 });

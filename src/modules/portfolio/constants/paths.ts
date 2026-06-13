@@ -1,3 +1,6 @@
+/** entityType used to anchor a portfolio item's stored files (cover) in the storage module. */
+export const PORTFOLIO_ENTITY_TYPE = 'portfolio';
+
 export const PORTFOLIO_PATH_LIST_PUBLIC = '/portfolio';
 export const PORTFOLIO_PATH_LIST_ADMIN = '/portfolio/admin';
 export const PORTFOLIO_PATH_BY_SERVICE = '/portfolio/by-service/:serviceSlug';

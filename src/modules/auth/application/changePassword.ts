@@ -25,7 +25,10 @@ export async function changePassword({
 	const newHash = await HashedPassword.hash(newPassword);
 
 	await Promise.all([
-		UserModel.findOneAndUpdate({ id: userId }, { $set: { password: newHash } }),
+		UserModel.findOneAndUpdate(
+			{ id: userId },
+			{ $set: { password: newHash, passwordChangedAt: new Date() } },
+		),
 		RefreshTokenModel.updateMany(
 			{ userId, revokedAt: { $exists: false } },
 			{ $set: { revokedAt: new Date() } },

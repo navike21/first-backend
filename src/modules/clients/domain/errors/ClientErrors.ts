@@ -10,12 +10,18 @@ export class ClientNotFoundError extends AppError {
 	}
 }
 
-export class ClientBusinessNameConflictError extends AppError {
+/**
+ * Raised when a client with the same document (documentType + documentNumber +
+ * country) already exists. Uses the shared RESOURCE_DUPLICATE code so the
+ * pre-check and the unique-index (E11000) safety net surface identically.
+ */
+export class ClientDuplicateDocumentError extends AppError {
 	constructor() {
 		super({
 			statusCode: 409,
-			code: 'CLIENT_BUSINESS_NAME_CONFLICT',
-			message: 'A client with this business name already exists',
+			code: 'RESOURCE_DUPLICATE',
+			message: 'A client with this document already exists',
+			details: { keys: ['documentType', 'documentNumber', 'country'] },
 		});
 	}
 }

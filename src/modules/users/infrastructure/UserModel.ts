@@ -21,10 +21,27 @@ export const PRESENCE_STATUS_ARRAY: PresenceStatus[] = [
 	'offline',
 ];
 
+export type ThemePreference = 'light' | 'dark' | 'system';
+export const THEME_PREFERENCE_ARRAY: ThemePreference[] = [
+	'light',
+	'dark',
+	'system',
+];
+
+/** Per-user UI preferences applied by the frontend after login. */
+export interface UserPreferences {
+	/** Preferred language (ISO code); falls back to app-settings.defaultLanguage. */
+	language?: string;
+	/** Hex primary color (#RRGGBB); falls back to app-settings.primaryColor. */
+	primaryColor?: string;
+	theme: ThemePreference;
+}
+
 export interface UserDocument {
 	id: string;
 	email: string;
 	password: string;
+	passwordChangedAt?: Date;
 	firstName: string;
 	lastName: string;
 	dateOfBirth?: Date;
@@ -32,6 +49,7 @@ export interface UserDocument {
 	phone?: string;
 	profilePictureUrl?: string;
 	address?: AddressDocument;
+	preferences: UserPreferences;
 	groupId?: string;
 	isEmailVerified: boolean;
 	status: UserStatus;
@@ -53,6 +71,19 @@ const addressSchema = new Schema<AddressDocument>(
 	{ _id: false },
 );
 
+const preferencesSchema = new Schema<UserPreferences>(
+	{
+		language: { type: String, maxlength: 10 },
+		primaryColor: { type: String, match: /^#[0-9A-Fa-f]{6}$/ },
+		theme: {
+			type: String,
+			enum: THEME_PREFERENCE_ARRAY,
+			default: 'system',
+		},
+	},
+	{ _id: false },
+);
+
 const userSchema = new Schema<UserDocument>(
 	{
 		id: { type: String, required: true, unique: true, default: generateUUID },
@@ -64,6 +95,9 @@ const userSchema = new Schema<UserDocument>(
 			trim: true,
 		},
 		password: { type: String, required: true },
+		// Marks when the password last changed; reset tokens issued before this
+		// are rejected (single-use). See auth/application/resetPassword.
+		passwordChangedAt: { type: Date },
 		firstName: {
 			type: String,
 			required: true,
@@ -83,6 +117,7 @@ const userSchema = new Schema<UserDocument>(
 		phone: { type: String, maxlength: 30, trim: true },
 		profilePictureUrl: { type: String, maxlength: 500 },
 		address: { type: addressSchema },
+		preferences: { type: preferencesSchema, default: () => ({}) },
 		groupId: { type: String, ref: 'UserGroup' },
 		isEmailVerified: { type: Boolean, default: false },
 		status: {

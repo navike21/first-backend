@@ -39,12 +39,13 @@ describe('deleteSubscriberLogical', () => {
 		// Act
 		const result = await deleteSubscriberLogical('s1');
 
-		// Assert
+		// Assert: soft-delete is recorded via deletedAt (not a status change).
 		expect(SubscriberModel.findOneAndUpdate).toHaveBeenCalledWith(
-			{ id: 's1', status: 'active' },
-			{ $set: { status: 'deleted' } },
+			{ id: 's1', deletedAt: null },
+			{ $set: { deletedAt: expect.any(Date) } },
 		);
-		expect(result).toMatchObject({ id: 's1', status: 'deleted' });
+		expect(result).toMatchObject({ id: 's1' });
+		expect((result as { deletedAt?: Date }).deletedAt).toBeInstanceOf(Date);
 	});
 
 	it('throws AppError when no active subscriber is found', async () => {

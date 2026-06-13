@@ -1,19 +1,13 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
 import { deleteFilesLogical } from '../application/deleteFilesLogical';
 import { StorageDeleteSchema } from '../schemas/storage.schema';
 
 export const storageDeleteController = asyncHandler(async (req, res) => {
-	const parsed = StorageDeleteSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', parsed.error.issues.map((i) => ({
-			path: i.path.join('.'),
-			message: i.message,
-		})));
-	}
+	const validated = validate(StorageDeleteSchema, req.body);
 
-	await deleteFilesLogical(parsed.data.ids);
+	await deleteFilesLogical(validated.ids);
 
 	successResponse(res, {
 		statusCode: 200,

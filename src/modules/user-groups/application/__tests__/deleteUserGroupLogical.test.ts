@@ -31,7 +31,8 @@ describe('deleteUserGroupLogical', () => {
 
 		expect(UserGroupModel.findOneAndUpdate).toHaveBeenCalled();
 		expect(result).not.toHaveProperty('_id');
-		expect(result.status).toBe('deleted');
+		// Soft-delete is recorded via deletedAt (there is no 'deleted' status).
+		expect((result as { deletedAt?: Date }).deletedAt).toBeInstanceOf(Date);
 	});
 
 	it('throws UserGroupNotFoundError when group does not exist', async () => {

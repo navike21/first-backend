@@ -7,13 +7,15 @@ import { globalLimiter } from './limiter';
 import { i18nMiddleware } from '@Middlewares/i18nMiddleware';
 
 export const configApp = (app: Express) => {
-	app.use(express.json());
+	// JSON/urlencoded bodies are small (file uploads use multipart via multer);
+	// cap them to limit abuse.
+	app.use(express.json({ limit: '1mb' }));
 
 	app.use(corsConfig);
 
 	app.use(i18nMiddleware);
 
-	app.use(express.urlencoded({ extended: true }));
+	app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 	app.use(cookieParser());
 

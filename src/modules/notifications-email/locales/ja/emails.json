@@ -14,10 +14,10 @@
 		"safety": "パスワードのリセットをリクエストしていない場合は、このメールを無視してください。パスワードは変更されません。"
 	},
 	"welcomeEmail": {
-		"subject": "First Backendへようこそ！",
+		"subject": "{{appName}}へようこそ！",
 		"heading": "ようこそ、{{firstName}}さん！",
 		"body": "アカウントが確認され、完全に有効になりました。準備が整いました。",
 		"thanks": "ご参加ありがとうございます。"
 	},
-	"footer": "© {{year}} First Backend. 無断転載を禁じます。"
+	"footer": "© {{year}} {{appName}}. 無断転載を禁じます。"
 }

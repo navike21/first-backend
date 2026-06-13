@@ -4,6 +4,7 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
+import { acceptImage } from '@Modules/storage';
 import {
 	SERVICE_PATH_LIST_PUBLIC,
 	SERVICE_PATH_LIST_ADMIN,
@@ -52,6 +53,7 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_CREATE, PERMISSIONS.SERVICES_MANAGE),
+		...acceptImage('cover'),
 		captureAudit({ action: AUDIT_ACTIONS.SERVICES_CREATED, resource: 'services' }),
 		serviceCreateController,
 	);
@@ -90,7 +92,7 @@ export function servicesApi(router: Router) {
 	router.delete(
 		SERVICE_PATH_BULK_PURGE,
 		authenticate,
-		authorize(PERMISSIONS.SERVICES_PURGE, PERMISSIONS.SERVICES_MANAGE),
+		authorize(PERMISSIONS.SERVICES_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.SERVICES_BULK_PERMANENTLY_DELETED,
 			resource: 'services',
@@ -103,6 +105,7 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
+		...acceptImage('cover'),
 		captureAudit({ action: AUDIT_ACTIONS.SERVICES_UPDATED, resource: 'services' }),
 		serviceUpdateController,
 	);
@@ -110,7 +113,7 @@ export function servicesApi(router: Router) {
 	router.delete(
 		SERVICE_PATH_DELETE_PERMANENT,
 		authenticate,
-		authorize(PERMISSIONS.SERVICES_PURGE, PERMISSIONS.SERVICES_MANAGE),
+		authorize(PERMISSIONS.SERVICES_PURGE),
 		captureAudit({ action: AUDIT_ACTIONS.SERVICES_PERMANENTLY_DELETED, resource: 'services' }),
 		serviceDeletePermanentController,
 	);

@@ -28,8 +28,8 @@ function makeRes() {
 describe('portfolioUpdateController', () => {
 	it('calls updatePortfolio and returns 200', async () => {
 		vi.mocked(updatePortfolio).mockResolvedValue({
-			id: '1',
-			slug: 'project',
+			data: { id: '1', slug: 'project' },
+			warnings: [],
 		} as never);
 		const req = {
 			params: { id: '1' },
@@ -37,7 +37,12 @@ describe('portfolioUpdateController', () => {
 		} as unknown as Request;
 		const res = makeRes();
 		await portfolioUpdateController(req, res, vi.fn());
-		expect(updatePortfolio).toHaveBeenCalledWith('1', expect.any(Object));
+		expect(updatePortfolio).toHaveBeenCalledWith(
+			'1',
+			expect.any(Object),
+			undefined,
+			undefined,
+		);
 		expect(successResponse).toHaveBeenCalled();
 	});
 

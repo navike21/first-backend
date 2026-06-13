@@ -1,5 +1,6 @@
 import { JwtService } from '@Shared/infrastructure/JwtService';
-import { sendEmail, welcomeEmailTemplate } from '@Modules/notifications-email';
+import { eventBus } from '@Shared/infrastructure/EventBus';
+import { EmailVerifiedEvent } from '@Shared/events/emailEvents';
 import { UserModel } from '@Modules/users';
 import { InvalidTokenError } from '../domain/errors/AuthErrors';
 import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
@@ -22,10 +23,9 @@ export async function verifyEmail(token: string, lang = 'en') {
 
 	if (!user) throw new UserNotFoundError();
 
-	await sendEmail({
-		to: user.email,
-		...welcomeEmailTemplate({ firstName: user.firstName, lang }),
-	});
+	await eventBus.publish(
+		new EmailVerifiedEvent(user.email, user.firstName, lang),
+	);
 
 	return { id: user.id, email: user.email };
 }

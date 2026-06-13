@@ -69,6 +69,26 @@ describe('resetPassword', () => {
 		expect(session).toBeNull();
 	});
 
+	it('rejects a token issued before the last password change (single-use)', async () => {
+		const { JwtService } = await import('@Shared/infrastructure/JwtService');
+		const user = await seedUser();
+		// Simulate a password already changed after the token was issued.
+		await UserModel.findOneAndUpdate(
+			{ id: user.id },
+			{ $set: { passwordChangedAt: new Date() } },
+		);
+
+		vi.mocked(JwtService.verifyEmail).mockReturnValue({
+			sub: user.id,
+			type: 'password_reset',
+			iat: Math.floor((Date.now() - 60_000) / 1000),
+		});
+
+		await expect(
+			resetPassword('replayed-token', 'NewPass1!'),
+		).rejects.toBeInstanceOf(InvalidTokenError);
+	});
+
 	it('throws InvalidTokenError when the JWT is invalid', async () => {
 		const { JwtService } = await import('@Shared/infrastructure/JwtService');
 		vi.mocked(JwtService.verifyEmail).mockImplementation(() => {

@@ -25,17 +25,33 @@ function makeRes() {
 	} as unknown as Response;
 }
 
+const validSubscriber = {
+	firstName: 'John',
+	lastName: 'Doe',
+	contactInformation: { email: 'john@test.com' },
+	personalInformation: { gender: 'male' },
+};
+
 describe('subscriberRegisterBulk', () => {
-	it('calls registerSubscriberBulk with valid array body', async () => {
+	it('validates and calls registerSubscriberBulk with a valid array body', async () => {
 		vi.mocked(registerSubscriberBulk).mockResolvedValue([{ id: '1' }] as never);
-		const req = { body: [{ firstName: 'John' }] } as unknown as Request;
+		const req = { body: [validSubscriber] } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();
 		await subscriberRegisterBulk(req, res, next);
 		expect(registerSubscriberBulk).toHaveBeenCalledWith([
-			{ firstName: 'John' },
+			expect.objectContaining({ firstName: 'John' }),
 		]);
 		expect(successResponse).toHaveBeenCalled();
+	});
+
+	it('calls next with error on an invalid item in the array', async () => {
+		const req = { body: [{ firstName: 'John' }] } as unknown as Request;
+		const res = makeRes();
+		const next = vi.fn();
+		await subscriberRegisterBulk(req, res, next);
+		expect(next).toHaveBeenCalledWith(expect.any(Error));
+		expect(registerSubscriberBulk).not.toHaveBeenCalled();
 	});
 
 	it('calls next with error when body is not an array', async () => {

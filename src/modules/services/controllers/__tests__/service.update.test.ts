@@ -28,8 +28,8 @@ function makeRes() {
 describe('serviceUpdateController', () => {
 	it('calls updateService and returns 200', async () => {
 		vi.mocked(updateService).mockResolvedValue({
-			id: '1',
-			isActive: false,
+			data: { id: '1', isActive: false },
+			warnings: [],
 		} as never);
 		const req = {
 			params: { id: '1' },

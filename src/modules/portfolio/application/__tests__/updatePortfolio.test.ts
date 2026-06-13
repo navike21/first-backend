@@ -31,7 +31,7 @@ describe('updatePortfolio', () => {
 		const result = await updatePortfolio('1', { status: 'published' });
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('_id');
 	});
 
 	it('throws PortfolioNotFoundError when not found', async () => {

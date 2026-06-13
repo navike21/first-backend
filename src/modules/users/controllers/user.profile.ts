@@ -1,9 +1,14 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
-import { UpdateMyProfileSchema } from '../schemas/user.schema';
+import { validate } from '@Helpers/validate';
+import { parseRequestData, getUploadedFile } from '@Helpers/multipartRequest';
+import {
+	UpdateMyProfileSchema,
+	UpdatePreferencesSchema,
+} from '../schemas/user.schema';
 import { getMyProfile } from '../application/getMyProfile';
 import { updateMyProfile } from '../application/updateMyProfile';
+import { updateMyPreferences } from '../application/updateMyPreferences';
 
 export const getMyProfileController = asyncHandler(async (_req, res) => {
 	const userId = res.locals.userId as string;
@@ -18,23 +23,35 @@ export const getMyProfileController = asyncHandler(async (_req, res) => {
 });
 
 export const updateMyProfileController = asyncHandler(async (req, res) => {
-	const parsed = UpdateMyProfileSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
-			validation: parsed.error.issues.map((i) => ({
-				path: i.path.join('.'),
-				message: i.message,
-			})),
-		});
-	}
+	const validated = validate(UpdateMyProfileSchema, parseRequestData(req));
 
 	const userId = res.locals.userId as string;
-	const user = await updateMyProfile(userId, parsed.data);
+	const result = await updateMyProfile(
+		userId,
+		validated,
+		getUploadedFile(req),
+		userId,
+	);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'PROFILE_UPDATED',
 		message: 'PROFILE_UPDATED',
 		ns: 'users',
-		data: user,
+		data: result.data,
+		warnings: result.warnings,
+	});
+});
+
+export const updateMyPreferencesController = asyncHandler(async (req, res) => {
+	const validated = validate(UpdatePreferencesSchema, req.body);
+
+	const userId = res.locals.userId as string;
+	const preferences = await updateMyPreferences(userId, validated);
+	successResponse(res, {
+		statusCode: 200,
+		code: 'PREFERENCES_UPDATED',
+		message: 'PREFERENCES_UPDATED',
+		ns: 'users',
+		data: preferences,
 	});
 });

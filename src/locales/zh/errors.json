@@ -32,5 +32,9 @@
 	"DRIVER_NOT_CONFIGURED": "存储驱动程序未配置",
 	"AUDIT_LOG_NOT_FOUND": "未找到审计日志条目",
 	"APP_SETTINGS_NOT_FOUND": "未找到应用程序设置",
-	"APP_SETTINGS_EMPTY_UPDATE": "至少必须提供一个设置类别"
+	"APP_SETTINGS_EMPTY_UPDATE": "至少必须提供一个设置类别",
+	"RESOURCE_DUPLICATE": "已存在具有这些唯一值的记录",
+	"IMAGE_UPLOAD_FAILED": "记录已保存，但图片上传失败",
+	"CANNOT_DELETE_SELF": "您不能删除自己的账户",
+	"LAST_SUPER_ADMIN": "无法删除最后一个超级管理员"
 }

@@ -21,12 +21,6 @@ import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
 
-import { validateSchema } from '../middlewares/validateSchema';
-import { validateSchemaArray } from '../middlewares/validateSchemaArray';
-
-import { SubscriberRegisterSchema } from '../schemas/subscriber.schema';
-import { SubscriberUpdateSchema } from '../schemas/subscriber.updateSchema';
-
 import { subscriberRegister } from '../controllers/subscriber.register';
 import { subscriberListAll } from '../controllers/subscriber.listAll';
 import { subscriberSearchById } from '../controllers/subscriber.subscriberSearchById';
@@ -36,25 +30,19 @@ import { subscriberDeleteLogicalBulk } from '../controllers/subscriber.deleteLog
 import { subscriberDeletePhysical } from '../controllers/subscriber.delete';
 import { subscriberDeletePhysicalBulk } from '../controllers/subscriber.deleteBulk';
 import { subscriberUpdate } from '../controllers/subscriber.update';
-import { validateUpdateSchema } from '../middlewares/validateUpdateSchema';
 import { subscriberRestoreController } from '../controllers/subscriber.restore';
 import { subscriberTrashController } from '../controllers/subscriber.trash';
 import { subscriberRestoreBulkController } from '../controllers/subscriber.restoreBulk';
 
 export function subscribersApi(router: Router) {
-	// Public — subscribe form
-	router.post(
-		SUBSCRIBER_PATH_REGISTER,
-		validateSchema(SubscriberRegisterSchema),
-		subscriberRegister,
-	);
+	// Public — subscribe form (validation lives in the controller)
+	router.post(SUBSCRIBER_PATH_REGISTER, subscriberRegister);
 
 	// Admin — protected routes
 	router.post(
 		SUBSCRIBER_PATH_REGISTER_BULK,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_CREATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
-		validateSchemaArray(SubscriberRegisterSchema),
 		subscriberRegisterBulk,
 	);
 
@@ -99,7 +87,6 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
-		validateUpdateSchema(SubscriberUpdateSchema),
 		subscriberUpdate,
 	);
 
@@ -128,13 +115,13 @@ export function subscribersApi(router: Router) {
 	router.delete(
 		SUBSCRIBER_PATH_DELETE,
 		authenticate,
-		authorize(PERMISSIONS.SUBSCRIBERS_PURGE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		authorize(PERMISSIONS.SUBSCRIBERS_PURGE),
 		subscriberDeletePhysical,
 	);
 	router.delete(
 		SUBSCRIBER_PATH_DELETE_BULK,
 		authenticate,
-		authorize(PERMISSIONS.SUBSCRIBERS_PURGE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		authorize(PERMISSIONS.SUBSCRIBERS_PURGE),
 		captureAudit({
 			action: AUDIT_ACTIONS.SUBSCRIBERS_BULK_PERMANENTLY_DELETED,
 			resource: 'subscribers',

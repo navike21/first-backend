@@ -1,6 +1,15 @@
 import { z } from 'zod';
 import type { SubscriberSchema } from '../types/subscriber.schema';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
+import { isValidISODateString } from '@Helpers/isValidISODateString';
+
+const dateOfBirthField = z.preprocess(
+	(value) =>
+		typeof value === 'string' && isValidISODateString(value)
+			? new Date(value)
+			: value,
+	z.date().optional(),
+);
 
 type DeepPartial<T> = {
 	[K in keyof T]?: T[K] extends Date
@@ -48,10 +57,12 @@ export const SubscriberUpdateSchema = z.object({
 			profilePictureUrl: z
 				.url({ message: 'SUBSCRIBER_PROFILE_PICTURE_VALID' })
 				.optional(),
-			dateOfBirth: z.date().optional(),
+			dateOfBirth: dateOfBirthField,
 			gender: z.enum(USER_GENDER_ARRAY).optional(),
 		})
 		.optional(),
 
 	status: z.enum(['active', 'inactive'] as const).optional(),
 }) satisfies z.ZodType<SubscriberUpdateSchemaType>;
+
+export type UpdateSubscriberInput = z.infer<typeof SubscriberUpdateSchema>;

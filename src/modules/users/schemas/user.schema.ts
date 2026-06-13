@@ -42,6 +42,19 @@ export const UpdateMyProfileSchema = z.object({
 	address: AddressSchema.optional(),
 });
 
+export const UpdatePreferencesSchema = z
+	.object({
+		language: z.string().min(2).max(10).optional(),
+		primaryColor: z
+			.string()
+			.regex(/^#[0-9a-fA-F]{6}$/, 'PREFERENCES_COLOR_INVALID')
+			.optional(),
+		theme: z.enum(['light', 'dark', 'system']).optional(),
+	})
+	.refine((data) => Object.keys(data).length > 0, {
+		message: 'PREFERENCES_EMPTY_UPDATE',
+	});
+
 export const ListUsersQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).default(1),
 	limit: z.coerce.number().int().min(1).max(100).default(20),
@@ -53,4 +66,5 @@ export const ListUsersQuerySchema = z.object({
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
 export type UpdateMyProfileInput = z.infer<typeof UpdateMyProfileSchema>;
+export type UpdatePreferencesInput = z.infer<typeof UpdatePreferencesSchema>;
 export type ListUsersQuery = z.infer<typeof ListUsersQuerySchema>;

@@ -1,21 +1,13 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
 import { CreateUserGroupSchema } from '../schemas/userGroup.schema';
 import { createUserGroup } from '../application/createUserGroup';
 
 export const createUserGroupController = asyncHandler(async (req, res) => {
-	const parsed = CreateUserGroupSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed', {
-			validation: parsed.error.issues.map((i) => ({
-				path: i.path.join('.'),
-				message: i.message,
-			})),
-		});
-	}
+	const validated = validate(CreateUserGroupSchema, req.body);
 
-	const group = await createUserGroup(parsed.data);
+	const group = await createUserGroup(validated);
 	successResponse(res, {
 		statusCode: 201,
 		code: 'USER_GROUP_CREATED',

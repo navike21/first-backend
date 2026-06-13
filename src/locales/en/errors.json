@@ -32,5 +32,9 @@
 	"DRIVER_NOT_CONFIGURED": "Storage driver is not configured",
 	"AUDIT_LOG_NOT_FOUND": "Audit log entry not found",
 	"APP_SETTINGS_NOT_FOUND": "Application settings not found",
-	"APP_SETTINGS_EMPTY_UPDATE": "At least one settings category must be provided"
+	"APP_SETTINGS_EMPTY_UPDATE": "At least one settings category must be provided",
+	"RESOURCE_DUPLICATE": "A record with these unique values already exists",
+	"IMAGE_UPLOAD_FAILED": "The record was saved, but the image could not be uploaded",
+	"CANNOT_DELETE_SELF": "You cannot delete your own account",
+	"LAST_SUPER_ADMIN": "The last super-admin cannot be deleted"
 }

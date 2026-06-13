@@ -8,19 +8,25 @@ import { authForgotPassword } from '../controllers/auth.forgotPassword';
 import { authResetPassword } from '../controllers/auth.resetPassword';
 import { authGetSessions } from '../controllers/auth.sessions';
 import { authenticate } from '../middlewares/authenticate';
+import { authLimiter } from '@Config/limiter';
 import { captureAudit, AUDIT_ACTIONS } from '@Modules/audit-log';
 
 export function authApi(router: Router) {
 	router.post(
 		'/auth/login',
-		captureAudit({ action: AUDIT_ACTIONS.AUTH_LOGIN, resource: 'auth' }),
+		authLimiter,
+		captureAudit({
+			action: AUDIT_ACTIONS.AUTH_LOGIN,
+			resource: 'auth',
+			captureFailures: true,
+		}),
 		authLogin,
 	);
 	router.post('/auth/refresh', authRefresh);
 	router.post('/auth/logout', authLogout);
 	router.get('/auth/verify-email/:token', authVerifyEmail);
-	router.post('/auth/forgot-password', authForgotPassword);
-	router.post('/auth/reset-password/:token', authResetPassword);
+	router.post('/auth/forgot-password', authLimiter, authForgotPassword);
+	router.post('/auth/reset-password/:token', authLimiter, authResetPassword);
 
 	router.post(
 		'/auth/change-password',

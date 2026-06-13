@@ -44,7 +44,7 @@ describe('getPageBySlug', () => {
 		);
 	});
 
-	it('uses ne deleted filter for adminView', async () => {
+	it('uses the deletedAt null filter for adminView', async () => {
 		vi.mocked(PageModel.findOne).mockReturnValue(
 			mockQueryBuilder({ id: '1', slug: 'home' }) as never,
 		);
@@ -52,7 +52,7 @@ describe('getPageBySlug', () => {
 		await getPageBySlug('home', true);
 
 		expect(PageModel.findOne).toHaveBeenCalledWith(
-			expect.objectContaining({ status: { $ne: 'deleted' } }),
+			expect.objectContaining({ deletedAt: null }),
 		);
 	});
 

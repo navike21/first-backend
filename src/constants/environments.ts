@@ -39,6 +39,10 @@ const EnvSchema = z.object({
 		.enum(['vercel-blob', 's3', 'gcs', 'azure-blob'])
 		.default('vercel-blob'),
 	STORAGE_MAX_FILE_SIZE_BYTES: z.coerce.number().default(10 * 1024 * 1024),
+	// Cap for inline images on create/update endpoints. Lower than the generic
+	// file limit because the request is proxied through serverless functions
+	// (Vercel body limit ~4.5 MB).
+	STORAGE_MAX_IMAGE_SIZE_BYTES: z.coerce.number().default(4 * 1024 * 1024),
 	STORAGE_MAX_FILES_BULK: z.coerce.number().int().min(1).max(20).default(10),
 
 	// Storage — Vercel Blob

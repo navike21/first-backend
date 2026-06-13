@@ -369,15 +369,10 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Update My Profile",
-      "description": "## ✏️ Update My Profile\n\nActualiza los datos del perfil del usuario autenticado. Actualización parcial — solo se modifican los campos enviados.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** requerido. No requiere permiso específico.\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Validación |\n|---|---|---|\n| `firstName` | `string` | 2–50 caracteres |\n| `lastName` | `string` | 2–100 caracteres |\n| `phone` | `string` | Máx. 30 caracteres |\n| `gender` | `string` | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `dateOfBirth` | `string` | Formato `YYYY-MM-DD` |\n| `profilePictureUrl` | `string` | URL válida |\n| `address.street` | `string` | — |\n| `address.city` | `string` | — |\n| `address.state` | `string` | — |\n| `address.country` | `string` | — |\n| `address.postalCode` | `string` | — |\n\n> ⚠️ **No se puede cambiar** `email` ni `password` por esta ruta. Usa `/auth/change-password` para la contraseña.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\nRetorna el perfil actualizado con la misma estructura que **Get My Profile**.",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `avatar`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ✏️ Update My Profile\n\nActualiza los datos del perfil del usuario autenticado. Actualización parcial — solo se modifican los campos enviados.\n\n---\n\n### 🔒 Autenticación\n\n**Bearer Token** requerido. No requiere permiso específico.\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Validación |\n|---|---|---|\n| `firstName` | `string` | 2–50 caracteres |\n| `lastName` | `string` | 2–100 caracteres |\n| `phone` | `string` | Máx. 30 caracteres |\n| `gender` | `string` | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `dateOfBirth` | `string` | Formato `YYYY-MM-DD` |\n| `profilePictureUrl` | `string` | URL válida |\n| `address.street` | `string` | — |\n| `address.city` | `string` | — |\n| `address.state` | `string` | — |\n| `address.country` | `string` | — |\n| `address.postalCode` | `string` | — |\n\n> ⚠️ **No se puede cambiar** `email` ni `password` por esta ruta. Usa `/auth/change-password` para la contraseña.\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\nRetorna el perfil actualizado con la misma estructura que **Get My Profile**.",
       "method": "PATCH",
       "url": "{{ base_url }}/users/me",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_meup_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -386,8 +381,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"firstName\": \"José\",\n  \"lastName\": \"García\",\n  \"phone\": \"+52 55 1234 5678\",\n  \"gender\": \"male\",\n  \"dateOfBirth\": \"1990-06-15\",\n  \"address\": {\n    \"street\": \"Av. Insurgentes Sur 123\",\n    \"city\": \"Ciudad de México\",\n    \"state\": \"CDMX\",\n    \"country\": \"México\",\n    \"postalCode\": \"06600\"\n  }\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_users_me_patch_data",
+            "name": "data",
+            "value": "{\n  \"firstName\": \"José\",\n  \"lastName\": \"García\",\n  \"phone\": \"+52 55 1234 5678\",\n  \"gender\": \"male\",\n  \"dateOfBirth\": \"1990-06-15\",\n  \"address\": {\n    \"street\": \"Av. Insurgentes Sur 123\",\n    \"city\": \"Ciudad de México\",\n    \"state\": \"CDMX\",\n    \"country\": \"México\",\n    \"postalCode\": \"06600\"\n  }\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_users_me_patch_avatar",
+            "name": "avatar",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -401,15 +410,10 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Create User (Admin)",
-      "description": "## ➕ Create User\n\nCrea un nuevo usuario en el sistema. Tras la creación, se envía un **email de verificación** al usuario. El usuario no podrá hacer login hasta que verifique su correo.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:create` o `users:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Validación |\n|---|---|---|---|\n| `email` | `string` | ✅ | Email válido, único en el sistema |\n| `password` | `string` | ✅ | Mín. 8 chars, 1 mayúscula, 1 número |\n| `firstName` | `string` | ✅ | 2–50 caracteres |\n| `lastName` | `string` | ✅ | 2–100 caracteres |\n| `dateOfBirth` | `string` | ❌ | Formato `YYYY-MM-DD` |\n| `gender` | `string` | ❌ | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `phone` | `string` | ❌ | Máx. 30 caracteres |\n| `profilePictureUrl` | `string` | ❌ | URL válida |\n| `address` | `object` | ❌ | `street`, `city`, `state`, `country`, `postalCode` |\n| `groupId` | `string` | ❌ | UUID del grupo de usuario |\n| `status` | `string` | ❌ | `active` \\| `inactive` (default: `active`) |\n\n---\n\n### ✅ Respuesta exitosa `201 Created`\n\nRetorna el usuario creado (sin `password`).\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `UNAUTHORIZED` | No autenticado |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `409` | `EMAIL_ALREADY_EXISTS` | El email ya está registrado |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Campos inválidos |",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `avatar`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ➕ Create User\n\nCrea un nuevo usuario en el sistema. Tras la creación, se envía un **email de verificación** al usuario. El usuario no podrá hacer login hasta que verifique su correo.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:create` o `users:manage`.\n\n---\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Validación |\n|---|---|---|---|\n| `email` | `string` | ✅ | Email válido, único en el sistema |\n| `password` | `string` | ✅ | Mín. 8 chars, 1 mayúscula, 1 número |\n| `firstName` | `string` | ✅ | 2–50 caracteres |\n| `lastName` | `string` | ✅ | 2–100 caracteres |\n| `dateOfBirth` | `string` | ❌ | Formato `YYYY-MM-DD` |\n| `gender` | `string` | ❌ | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `phone` | `string` | ❌ | Máx. 30 caracteres |\n| `profilePictureUrl` | `string` | ❌ | URL válida |\n| `address` | `object` | ❌ | `street`, `city`, `state`, `country`, `postalCode` |\n| `groupId` | `string` | ❌ | UUID del grupo de usuario |\n| `status` | `string` | ❌ | `active` \\| `inactive` (default: `active`) |\n\n---\n\n### ✅ Respuesta exitosa `201 Created`\n\nRetorna el usuario creado (sin `password`).\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `401` | `UNAUTHORIZED` | No autenticado |\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `409` | `EMAIL_ALREADY_EXISTS` | El email ya está registrado |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Campos inválidos |",
       "method": "POST",
       "url": "{{ base_url }}/users",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_ucreate_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -418,8 +422,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"Password1!\",\n  \"firstName\": \"María\",\n  \"lastName\": \"López\",\n  \"dateOfBirth\": \"1995-03-20\",\n  \"gender\": \"female\",\n  \"phone\": \"+52 55 9876 5432\",\n  \"groupId\": \"{{ group_id }}\",\n  \"status\": \"active\"\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_users_create_data",
+            "name": "data",
+            "value": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"Password1!\",\n  \"firstName\": \"María\",\n  \"lastName\": \"López\",\n  \"dateOfBirth\": \"1995-03-20\",\n  \"gender\": \"female\",\n  \"phone\": \"+52 55 9876 5432\",\n  \"groupId\": \"{{ group_id }}\",\n  \"status\": \"active\"\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_users_create_avatar",
+            "name": "avatar",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -507,15 +525,10 @@
       "_type": "request",
       "parentId": "fld_users",
       "name": "Update User (Admin)",
-      "description": "## ✏️ Update User\n\nActualiza los datos de un usuario por su ID. Actualización parcial — solo se modifican los campos enviados.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:update` o `users:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del usuario |\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `firstName` | `string` | 2–50 caracteres |\n| `lastName` | `string` | 2–100 caracteres |\n| `phone` | `string` | Máx. 30 caracteres |\n| `gender` | `string` | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `dateOfBirth` | `string` | Formato `YYYY-MM-DD` |\n| `profilePictureUrl` | `string` | URL válida |\n| `address` | `object` | Objeto de dirección |\n| `groupId` | `string` | UUID del nuevo grupo |\n| `status` | `string` | `active` \\| `inactive` |\n\n> ⚠️ No se puede cambiar `email` ni `password` por esta ruta.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `avatar`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ✏️ Update User\n\nActualiza los datos de un usuario por su ID. Actualización parcial — solo se modifican los campos enviados.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `users:update` o `users:manage`.\n\n---\n\n### 📍 Path Parameters\n\n| Parámetro | Tipo | Descripción |\n|---|---|---|\n| `id` | `string (UUID)` | ID único del usuario |\n\n---\n\n### 📤 Request Body (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `firstName` | `string` | 2–50 caracteres |\n| `lastName` | `string` | 2–100 caracteres |\n| `phone` | `string` | Máx. 30 caracteres |\n| `gender` | `string` | `female` \\| `male` \\| `other` \\| `prefer_not_to_say` |\n| `dateOfBirth` | `string` | Formato `YYYY-MM-DD` |\n| `profilePictureUrl` | `string` | URL válida |\n| `address` | `object` | Objeto de dirección |\n| `groupId` | `string` | UUID del nuevo grupo |\n| `status` | `string` | `active` \\| `inactive` |\n\n> ⚠️ No se puede cambiar `email` ni `password` por esta ruta.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `404` | `USER_NOT_FOUND` | Usuario no encontrado |",
       "method": "PATCH",
       "url": "{{ base_url }}/users/{{ user_id }}",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_uupdate_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -524,8 +537,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"firstName\": \"Carlos\",\n  \"status\": \"inactive\",\n  \"groupId\": \"{{ group_id }}\"\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_users_update_data",
+            "name": "data",
+            "value": "{\n  \"firstName\": \"Carlos\",\n  \"status\": \"inactive\",\n  \"groupId\": \"{{ group_id }}\"\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_users_update_avatar",
+            "name": "avatar",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -1264,15 +1291,10 @@
       "_type": "request",
       "parentId": "fld_appsettings",
       "name": "Update App Settings",
-      "description": "## ✏️ Update App Settings\n\nActualiza la configuración global de la aplicación. Actualización parcial por categoría — solo se modifican los campos enviados. Se requiere enviar **al menos una categoría** (`general`, `notifications` o `appearance`).\n\nTras una actualización exitosa, el **caché de settings se invalida** inmediatamente.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `app-settings:update` o `app-settings:manage`.\n\n---\n\n### 📤 Request Body (al menos una categoría requerida)\n\n**`general`** (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `appName` | `string` | Nombre de la aplicación (1–100 caracteres) |\n| `defaultLanguage` | `string` | Código de idioma (`es`, `en`, `de`, ...) |\n| `timezone` | `string` | Zona horaria IANA (e.g. `America/Mexico_City`) |\n| `maintenanceMode` | `boolean` | Activar modo mantenimiento |\n\n**`notifications`** (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `emailSenderName` | `string` | Nombre del remitente de emails |\n| `emailSenderAddress` | `string` | Email válido del remitente |\n| `welcomeEmailEnabled` | `boolean` | Enviar email de bienvenida al registrarse |\n| `notificationsEnabled` | `boolean` | Habilitar notificaciones globales |\n\n**`appearance`** (todos opcionales, `null` para limpiar)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `logoUrl` | `string \\| null` | URL del logo (o `null` para eliminar) |\n| `primaryColor` | `string` | Color hex `#RRGGBB` |\n| `faviconUrl` | `string \\| null` | URL del favicon (o `null` para eliminar) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\nRetorna la configuración actualizada con la misma estructura que **Get App Settings**.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Campos inválidos o body vacío |",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `logo`, `favicon`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ✏️ Update App Settings\n\nActualiza la configuración global de la aplicación. Actualización parcial por categoría — solo se modifican los campos enviados. Se requiere enviar **al menos una categoría** (`general`, `notifications` o `appearance`).\n\nTras una actualización exitosa, el **caché de settings se invalida** inmediatamente.\n\n---\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `app-settings:update` o `app-settings:manage`.\n\n---\n\n### 📤 Request Body (al menos una categoría requerida)\n\n**`general`** (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `appName` | `string` | Nombre de la aplicación (1–100 caracteres) |\n| `defaultLanguage` | `string` | Código de idioma (`es`, `en`, `de`, ...) |\n| `timezone` | `string` | Zona horaria IANA (e.g. `America/Mexico_City`) |\n| `maintenanceMode` | `boolean` | Activar modo mantenimiento |\n\n**`notifications`** (todos opcionales)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `emailSenderName` | `string` | Nombre del remitente de emails |\n| `emailSenderAddress` | `string` | Email válido del remitente |\n| `welcomeEmailEnabled` | `boolean` | Enviar email de bienvenida al registrarse |\n| `notificationsEnabled` | `boolean` | Habilitar notificaciones globales |\n\n**`appearance`** (todos opcionales, `null` para limpiar)\n\n| Campo | Tipo | Descripción |\n|---|---|---|\n| `logoUrl` | `string \\| null` | URL del logo (o `null` para eliminar) |\n| `primaryColor` | `string` | Color hex `#RRGGBB` |\n| `faviconUrl` | `string \\| null` | URL del favicon (o `null` para eliminar) |\n\n---\n\n### ✅ Respuesta exitosa `200 OK`\n\nRetorna la configuración actualizada con la misma estructura que **Get App Settings**.\n\n---\n\n### ❌ Errores posibles\n\n| Código HTTP | Error | Descripción |\n|---|---|---|\n| `403` | `FORBIDDEN` | Sin permiso suficiente |\n| `422` | `VALIDATION_SCHEMA_ERROR` | Campos inválidos o body vacío |",
       "method": "PATCH",
       "url": "{{ base_url }}/app-settings",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_aspatch_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -1281,8 +1303,29 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"general\": {\n    \"appName\": \"Mi Aplicación\",\n    \"defaultLanguage\": \"es\",\n    \"timezone\": \"America/Mexico_City\",\n    \"maintenanceMode\": false\n  },\n  \"notifications\": {\n    \"emailSenderName\": \"Soporte\",\n    \"emailSenderAddress\": \"soporte@miapp.com\",\n    \"welcomeEmailEnabled\": true,\n    \"notificationsEnabled\": true\n  },\n  \"appearance\": {\n    \"logoUrl\": \"https://cdn.miapp.com/logo.png\",\n    \"primaryColor\": \"#6366f1\",\n    \"faviconUrl\": null\n  }\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_appsettings_patch_data",
+            "name": "data",
+            "value": "{\n  \"general\": {\n    \"appName\": \"Mi Aplicación\",\n    \"defaultLanguage\": \"es\",\n    \"timezone\": \"America/Mexico_City\",\n    \"maintenanceMode\": false\n  },\n  \"notifications\": {\n    \"emailSenderName\": \"Soporte\",\n    \"emailSenderAddress\": \"soporte@miapp.com\",\n    \"welcomeEmailEnabled\": true,\n    \"notificationsEnabled\": true\n  },\n  \"appearance\": {\n    \"logoUrl\": \"https://cdn.miapp.com/logo.png\",\n    \"primaryColor\": \"#6366f1\",\n    \"faviconUrl\": null\n  }\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_appsettings_patch_logo",
+            "name": "logo",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          },
+          {
+            "id": "req_appsettings_patch_favicon",
+            "name": "favicon",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -1320,15 +1363,10 @@
       "_type": "request",
       "parentId": "fld_clients",
       "name": "Create Client",
-      "description": "## ➕ Crear Cliente\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:create` o `clients:manage`.\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `businessName` | `string` | ✅ | Nombre de la empresa (único) |\n| `clientType` | `string` | ✅ | `company` \\| `freelancer` \\| `individual` \\| `government` \\| `ngo` \\| `other` |\n| `country` | `string` | ✅ | Código ISO alpha-2 (ej. `PE`, `MX`, `US`) |\n| `documentType` | `string` | — | `DNI` \\| `RUC` \\| `NIF` \\| `CNPJ` \\| etc. |\n| `documentNumber` | `string` | — | Número de documento |\n| `logoUrl` | `string` | — | URL del logo (sube con Storage primero) |\n| `website` | `string` | — | Sitio web |\n| `industry` | `string` | — | Industria/sector |\n| `primaryContact` | `object` | — | `{ name, email, phone?, position? }` |\n| `notes` | `string` | — | Notas internas |\n\n### ✅ Respuesta exitosa `201 Created`",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `logo`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ➕ Crear Cliente\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:create` o `clients:manage`.\n\n### 📤 Request Body\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `businessName` | `string` | ✅ | Nombre de la empresa (único) |\n| `clientType` | `string` | ✅ | `company` \\| `freelancer` \\| `individual` \\| `government` \\| `ngo` \\| `other` |\n| `country` | `string` | ✅ | Código ISO alpha-2 (ej. `PE`, `MX`, `US`) |\n| `documentType` | `string` | — | `DNI` \\| `RUC` \\| `NIF` \\| `CNPJ` \\| etc. |\n| `documentNumber` | `string` | — | Número de documento |\n| `logoUrl` | `string` | — | URL del logo (sube con Storage primero) |\n| `website` | `string` | — | Sitio web |\n| `industry` | `string` | — | Industria/sector |\n| `primaryContact` | `object` | — | `{ name, email, phone?, position? }` |\n| `notes` | `string` | — | Notas internas |\n\n### ✅ Respuesta exitosa `201 Created`",
       "method": "POST",
       "url": "{{ base_url }}/clients",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_clcreate_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -1337,8 +1375,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"businessName\": \"Acme Corporation\",\n  \"clientType\": \"company\",\n  \"country\": \"US\",\n  \"documentType\": \"EIN\",\n  \"documentNumber\": \"12-3456789\",\n  \"website\": \"https://acme.example.com\",\n  \"industry\": \"Technology\",\n  \"primaryContact\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john@acme.example.com\",\n    \"position\": \"CEO\"\n  }\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_clients_create_data",
+            "name": "data",
+            "value": "{\n  \"businessName\": \"Acme Corporation\",\n  \"clientType\": \"company\",\n  \"country\": \"US\",\n  \"documentType\": \"EIN\",\n  \"documentNumber\": \"12-3456789\",\n  \"website\": \"https://acme.example.com\",\n  \"industry\": \"Technology\",\n  \"primaryContact\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john@acme.example.com\",\n    \"position\": \"CEO\"\n  }\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_clients_create_logo",
+            "name": "logo",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -1411,15 +1463,10 @@
       "_type": "request",
       "parentId": "fld_clients",
       "name": "Update Client",
-      "description": "## ✏️ Actualizar Cliente\n\nActualización parcial — solo se modifican los campos enviados.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:update` o `clients:manage`.",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `logo`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ✏️ Actualizar Cliente\n\nActualización parcial — solo se modifican los campos enviados.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `clients:update` o `clients:manage`.",
       "method": "PATCH",
       "url": "{{ base_url }}/clients/{{ client_id }}",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_clupd_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -1428,8 +1475,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"industry\": \"Ecommerce\",\n  \"notes\": \"Cliente VIP desde 2024\"\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_clients_update_data",
+            "name": "data",
+            "value": "{\n  \"industry\": \"Ecommerce\",\n  \"notes\": \"Cliente VIP desde 2024\"\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_clients_update_logo",
+            "name": "logo",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -1531,15 +1592,10 @@
       "_type": "request",
       "parentId": "fld_services",
       "name": "Create Service",
-      "description": "## ➕ Crear Servicio\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:create` o `services:manage`.\n\n### 📤 Request Body\n\nTodos los campos `LocalizedString` requieren los 10 idiomas: `en`, `es`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`.\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `name` | `LocalizedString` | ✅ | Nombre del servicio |\n| `shortDescription` | `LocalizedString` | ✅ | Descripción corta |\n| `description` | `LocalizedString` | ✅ | Descripción completa |\n| `slug` | `string` | — | Auto-generado de `name.en` si no se especifica |\n| `coverImageUrl` | `string` | — | URL de imagen de portada |\n| `pillars` | `string[]` | — | Pilares de la empresa |\n| `highlights` | `LocalizedString[]` | — | Puntos destacados |\n| `tags` | `string[]` | — | Tags |\n| `order` | `number` | — | Orden de presentación |\n| `isActive` | `boolean` | — | Default `true` |",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `cover`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ➕ Crear Servicio\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:create` o `services:manage`.\n\n### 📤 Request Body\n\nTodos los campos `LocalizedString` requieren los 10 idiomas: `en`, `es`, `de`, `fr`, `it`, `ja`, `ko`, `pt`, `ru`, `zh`.\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `name` | `LocalizedString` | ✅ | Nombre del servicio |\n| `shortDescription` | `LocalizedString` | ✅ | Descripción corta |\n| `description` | `LocalizedString` | ✅ | Descripción completa |\n| `slug` | `string` | — | Auto-generado de `name.en` si no se especifica |\n| `coverImageUrl` | `string` | — | URL de imagen de portada |\n| `pillars` | `string[]` | — | Pilares de la empresa |\n| `highlights` | `LocalizedString[]` | — | Puntos destacados |\n| `tags` | `string[]` | — | Tags |\n| `order` | `number` | — | Orden de presentación |\n| `isActive` | `boolean` | — | Default `true` |",
       "method": "POST",
       "url": "{{ base_url }}/services",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_svcreate_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -1548,8 +1604,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"name\": {\n    \"en\": \"Web Development\",\n    \"es\": \"Desarrollo Web\",\n    \"de\": \"Webentwicklung\",\n    \"fr\": \"Développement Web\",\n    \"it\": \"Sviluppo Web\",\n    \"ja\": \"ウェブ開発\",\n    \"ko\": \"웹 개발\",\n    \"pt\": \"Desenvolvimento Web\",\n    \"ru\": \"Веб-разработка\",\n    \"zh\": \"网页开发\"\n  },\n  \"shortDescription\": {\n    \"en\": \"Modern and scalable web solutions\",\n    \"es\": \"Soluciones web modernas y escalables\",\n    \"de\": \"Moderne und skalierbare Web-Lösungen\",\n    \"fr\": \"Solutions web modernes et évolutives\",\n    \"it\": \"Soluzioni web moderne e scalabili\",\n    \"ja\": \"モダンでスケーラブルなウェブソリューション\",\n    \"ko\": \"현대적이고 확장 가능한 웹 솔루션\",\n    \"pt\": \"Soluções web modernas e escaláveis\",\n    \"ru\": \"Современные и масштабируемые веб-решения\",\n    \"zh\": \"现代可扩展的网络解决方案\"\n  },\n  \"description\": {\n    \"en\": \"Full description here\",\n    \"es\": \"Descripción completa aquí\",\n    \"de\": \"Vollständige Beschreibung\",\n    \"fr\": \"Description complète\",\n    \"it\": \"Descrizione completa\",\n    \"ja\": \"完全な説明\",\n    \"ko\": \"전체 설명\",\n    \"pt\": \"Descrição completa\",\n    \"ru\": \"Полное описание\",\n    \"zh\": \"完整描述\"\n  },\n  \"pillars\": [\"responsibility\", \"tech-adaptation\"],\n  \"tags\": [\"web\", \"nodejs\", \"react\"],\n  \"order\": 1,\n  \"isActive\": true\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_services_create_data",
+            "name": "data",
+            "value": "{\n  \"name\": {\n    \"en\": \"Web Development\",\n    \"es\": \"Desarrollo Web\",\n    \"de\": \"Webentwicklung\",\n    \"fr\": \"Développement Web\",\n    \"it\": \"Sviluppo Web\",\n    \"ja\": \"ウェブ開発\",\n    \"ko\": \"웹 개발\",\n    \"pt\": \"Desenvolvimento Web\",\n    \"ru\": \"Веб-разработка\",\n    \"zh\": \"网页开发\"\n  },\n  \"shortDescription\": {\n    \"en\": \"Modern and scalable web solutions\",\n    \"es\": \"Soluciones web modernas y escalables\",\n    \"de\": \"Moderne und skalierbare Web-Lösungen\",\n    \"fr\": \"Solutions web modernes et évolutives\",\n    \"it\": \"Soluzioni web moderne e scalabili\",\n    \"ja\": \"モダンでスケーラブルなウェブソリューション\",\n    \"ko\": \"현대적이고 확장 가능한 웹 솔루션\",\n    \"pt\": \"Soluções web modernas e escaláveis\",\n    \"ru\": \"Современные и масштабируемые веб-решения\",\n    \"zh\": \"现代可扩展的网络解决方案\"\n  },\n  \"description\": {\n    \"en\": \"Full description here\",\n    \"es\": \"Descripción completa aquí\",\n    \"de\": \"Vollständige Beschreibung\",\n    \"fr\": \"Description complète\",\n    \"it\": \"Descrizione completa\",\n    \"ja\": \"完全な説明\",\n    \"ko\": \"전체 설명\",\n    \"pt\": \"Descrição completa\",\n    \"ru\": \"Полное описание\",\n    \"zh\": \"完整描述\"\n  },\n  \"pillars\": [\"responsibility\", \"tech-adaptation\"],\n  \"tags\": [\"web\", \"nodejs\", \"react\"],\n  \"order\": 1,\n  \"isActive\": true\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_services_create_cover",
+            "name": "cover",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -1563,15 +1633,10 @@
       "_type": "request",
       "parentId": "fld_services",
       "name": "Update Service",
-      "description": "## ✏️ Actualizar Servicio\n\nActualización parcial. El `slug` se usa como identificador en la URL.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:update` o `services:manage`.",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `cover`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ✏️ Actualizar Servicio\n\nActualización parcial. El `slug` se usa como identificador en la URL.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `services:update` o `services:manage`.",
       "method": "PATCH",
       "url": "{{ base_url }}/services/{{ service_slug }}",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_svupd_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -1580,8 +1645,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"isActive\": false,\n  \"order\": 5\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_services_update_data",
+            "name": "data",
+            "value": "{\n  \"isActive\": false,\n  \"order\": 5\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_services_update_cover",
+            "name": "cover",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -1736,15 +1815,10 @@
       "_type": "request",
       "parentId": "fld_portfolio",
       "name": "Create Portfolio",
-      "description": "## ➕ Crear Proyecto de Portafolio\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:create` o `portfolio:manage`.\n\n### 📤 Request Body\n\nTodos los campos `LocalizedString` requieren los 10 idiomas.\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `name` | `LocalizedString` | ✅ | Nombre del proyecto |\n| `shortDescription` | `LocalizedString` | ✅ | Descripción corta |\n| `description` | `LocalizedString` | ✅ | Descripción completa |\n| `coverImageUrl` | `string` (URL) | ✅ | Imagen de portada |\n| `serviceIds` | `string[]` (UUID) | ✅ | IDs de servicios (mín. 1) |\n| `startDate` | `string` (YYYY-MM-DD) | ✅ | Fecha de inicio |\n| `clientId` | `string` (UUID) | — | ID del cliente |\n| `gallery` | `string[]` (URL) | — | Galería de imágenes |\n| `technologies` | `string[]` | — | Tecnologías usadas |\n| `projectUrl` | `string` (URL) | — | URL del proyecto en vivo |\n| `endDate` | `string` (YYYY-MM-DD) | — | Fecha de finalización |\n| `featured` | `boolean` | — | Proyecto destacado |\n| `order` | `number` | — | Orden de presentación |\n| `testimonial` | `object` | — | `{ quote: LocalizedString, authorName, authorPosition? }` |\n| `metrics` | `object[]` | — | `{ label: LocalizedString, value: string }[]` |\n| `status` | `string` | — | `draft` (default) \\| `published` \\| `archived` |",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `cover`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ➕ Crear Proyecto de Portafolio\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:create` o `portfolio:manage`.\n\n### 📤 Request Body\n\nTodos los campos `LocalizedString` requieren los 10 idiomas.\n\n| Campo | Tipo | Requerido | Descripción |\n|---|---|---|---|\n| `name` | `LocalizedString` | ✅ | Nombre del proyecto |\n| `shortDescription` | `LocalizedString` | ✅ | Descripción corta |\n| `description` | `LocalizedString` | ✅ | Descripción completa |\n| `coverImageUrl` | `string` (URL) | ✅ | Imagen de portada |\n| `serviceIds` | `string[]` (UUID) | ✅ | IDs de servicios (mín. 1) |\n| `startDate` | `string` (YYYY-MM-DD) | ✅ | Fecha de inicio |\n| `clientId` | `string` (UUID) | — | ID del cliente |\n| `gallery` | `string[]` (URL) | — | Galería de imágenes |\n| `technologies` | `string[]` | — | Tecnologías usadas |\n| `projectUrl` | `string` (URL) | — | URL del proyecto en vivo |\n| `endDate` | `string` (YYYY-MM-DD) | — | Fecha de finalización |\n| `featured` | `boolean` | — | Proyecto destacado |\n| `order` | `number` | — | Orden de presentación |\n| `testimonial` | `object` | — | `{ quote: LocalizedString, authorName, authorPosition? }` |\n| `metrics` | `object[]` | — | `{ label: LocalizedString, value: string }[]` |\n| `status` | `string` | — | `draft` (default) \\| `published` \\| `archived` |",
       "method": "POST",
       "url": "{{ base_url }}/portfolio",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_ptcreate_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -1753,8 +1827,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"name\": {\n    \"en\": \"E-commerce Platform\",\n    \"es\": \"Plataforma E-commerce\",\n    \"de\": \"E-Commerce-Plattform\",\n    \"fr\": \"Plateforme E-commerce\",\n    \"it\": \"Piattaforma E-commerce\",\n    \"ja\": \"Eコマースプラットフォーム\",\n    \"ko\": \"이커머스 플랫폼\",\n    \"pt\": \"Plataforma de E-commerce\",\n    \"ru\": \"Платформа электронной коммерции\",\n    \"zh\": \"电子商务平台\"\n  },\n  \"shortDescription\": {\n    \"en\": \"A complete e-commerce solution\",\n    \"es\": \"Una solución de e-commerce completa\",\n    \"de\": \"Eine vollständige E-Commerce-Lösung\",\n    \"fr\": \"Une solution e-commerce complète\",\n    \"it\": \"Una soluzione e-commerce completa\",\n    \"ja\": \"完全なEコマースソリューション\",\n    \"ko\": \"완전한 이커머스 솔루션\",\n    \"pt\": \"Uma solução completa de e-commerce\",\n    \"ru\": \"Полное решение для электронной коммерции\",\n    \"zh\": \"完整的电子商务解决方案\"\n  },\n  \"description\": {\n    \"en\": \"Detailed project description\",\n    \"es\": \"Descripción detallada del proyecto\",\n    \"de\": \"Detaillierte Projektbeschreibung\",\n    \"fr\": \"Description détaillée du projet\",\n    \"it\": \"Descrizione dettagliata del progetto\",\n    \"ja\": \"プロジェクトの詳細な説明\",\n    \"ko\": \"프로젝트 상세 설명\",\n    \"pt\": \"Descrição detalhada do projeto\",\n    \"ru\": \"Подробное описание проекта\",\n    \"zh\": \"项目详细描述\"\n  },\n  \"coverImageUrl\": \"https://res.cloudinary.com/example/image/upload/cover.jpg\",\n  \"serviceIds\": [\"SERVICE_UUID_HERE\"],\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-06-30\",\n  \"technologies\": [\"React\", \"Node.js\", \"MongoDB\"],\n  \"featured\": true,\n  \"order\": 1,\n  \"status\": \"published\"\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_portfolio_create_data",
+            "name": "data",
+            "value": "{\n  \"name\": {\n    \"en\": \"E-commerce Platform\",\n    \"es\": \"Plataforma E-commerce\",\n    \"de\": \"E-Commerce-Plattform\",\n    \"fr\": \"Plateforme E-commerce\",\n    \"it\": \"Piattaforma E-commerce\",\n    \"ja\": \"Eコマースプラットフォーム\",\n    \"ko\": \"이커머스 플랫폼\",\n    \"pt\": \"Plataforma de E-commerce\",\n    \"ru\": \"Платформа электронной коммерции\",\n    \"zh\": \"电子商务平台\"\n  },\n  \"shortDescription\": {\n    \"en\": \"A complete e-commerce solution\",\n    \"es\": \"Una solución de e-commerce completa\",\n    \"de\": \"Eine vollständige E-Commerce-Lösung\",\n    \"fr\": \"Une solution e-commerce complète\",\n    \"it\": \"Una soluzione e-commerce completa\",\n    \"ja\": \"完全なEコマースソリューション\",\n    \"ko\": \"완전한 이커머스 솔루션\",\n    \"pt\": \"Uma solução completa de e-commerce\",\n    \"ru\": \"Полное решение для электронной коммерции\",\n    \"zh\": \"完整的电子商务解决方案\"\n  },\n  \"description\": {\n    \"en\": \"Detailed project description\",\n    \"es\": \"Descripción detallada del proyecto\",\n    \"de\": \"Detaillierte Projektbeschreibung\",\n    \"fr\": \"Description détaillée du projet\",\n    \"it\": \"Descrizione dettagliata del progetto\",\n    \"ja\": \"プロジェクトの詳細な説明\",\n    \"ko\": \"프로젝트 상세 설명\",\n    \"pt\": \"Descrição detalhada do projeto\",\n    \"ru\": \"Подробное описание проекта\",\n    \"zh\": \"项目详细描述\"\n  },\n  \"coverImageUrl\": \"https://res.cloudinary.com/example/image/upload/cover.jpg\",\n  \"serviceIds\": [\"SERVICE_UUID_HERE\"],\n  \"startDate\": \"2024-01-15\",\n  \"endDate\": \"2024-06-30\",\n  \"technologies\": [\"React\", \"Node.js\", \"MongoDB\"],\n  \"featured\": true,\n  \"order\": 1,\n  \"status\": \"published\"\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_portfolio_create_cover",
+            "name": "cover",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -1768,15 +1856,10 @@
       "_type": "request",
       "parentId": "fld_portfolio",
       "name": "Update Portfolio",
-      "description": "## ✏️ Actualizar Proyecto de Portafolio\n\nActualización parcial — solo se modifican los campos enviados.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:update` o `portfolio:manage`.\n\n> Guarda el `id` del proyecto en la variable `portfolio_id` del entorno.",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `cover`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\n## ✏️ Actualizar Proyecto de Portafolio\n\nActualización parcial — solo se modifican los campos enviados.\n\n### 🔒 Autenticación y Permisos\n\n**Bearer Token** requerido + permiso `portfolio:update` o `portfolio:manage`.\n\n> Guarda el `id` del proyecto en la variable `portfolio_id` del entorno.",
       "method": "PATCH",
       "url": "{{ base_url }}/portfolio/{{ portfolio_id }}",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_ptupd_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -1785,8 +1868,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"status\": \"published\",\n  \"featured\": true\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_portfolio_update_data",
+            "name": "data",
+            "value": "{\n  \"status\": \"published\",\n  \"featured\": true\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_portfolio_update_cover",
+            "name": "cover",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -2959,15 +3056,10 @@
       "_type": "request",
       "parentId": "fld_collaborators",
       "name": "Create Collaborator (Admin)",
-      "description": "Crea un nuevo colaborador. Bearer + collaborators:create o manage.",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `photo`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\nCrea un nuevo colaborador. Bearer + collaborators:create o manage.",
       "method": "POST",
       "url": "{{ base_url }}/collaborators",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_clbcreate_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -2976,8 +3068,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"name\": \"John Doe\",\n  \"role\": {\n    \"en\": \"Lead Developer\",\n    \"es\": \"Desarrollador Principal\",\n    \"de\": \"Leitentwickler\",\n    \"fr\": \"Developpeur Principal\",\n    \"it\": \"Sviluppatore Principale\",\n    \"ja\": \"リード開発者\",\n    \"ko\": \"리드 개발자\",\n    \"pt\": \"Desenvolvedor Principal\",\n    \"ru\": \"Ведущий разработчик\",\n    \"zh\": \"首席开发者\"\n  },\n  \"bio\": {\n    \"en\": \"Experienced developer\",\n    \"es\": \"Desarrollador con experiencia\",\n    \"de\": \"Erfahrener Entwickler\",\n    \"fr\": \"Developpeur experimente\",\n    \"it\": \"Sviluppatore esperto\",\n    \"ja\": \"経験豊富な開発者\",\n    \"ko\": \"경험 많은 개발자\",\n    \"pt\": \"Desenvolvedor experiente\",\n    \"ru\": \"Опытный разработчик\",\n    \"zh\": \"经验丰富的开发者\"\n  },\n  \"photoUrl\": \"https://example.com/photo.jpg\",\n  \"socialLinks\": {\n    \"linkedin\": \"https://linkedin.com/in/johndoe\",\n    \"github\": \"https://github.com/johndoe\"\n  },\n  \"order\": 1,\n  \"isActive\": true,\n  \"status\": \"active\"\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_collab_create_data",
+            "name": "data",
+            "value": "{\n  \"name\": \"John Doe\",\n  \"role\": {\n    \"en\": \"Lead Developer\",\n    \"es\": \"Desarrollador Principal\",\n    \"de\": \"Leitentwickler\",\n    \"fr\": \"Developpeur Principal\",\n    \"it\": \"Sviluppatore Principale\",\n    \"ja\": \"リード開発者\",\n    \"ko\": \"리드 개발자\",\n    \"pt\": \"Desenvolvedor Principal\",\n    \"ru\": \"Ведущий разработчик\",\n    \"zh\": \"首席开发者\"\n  },\n  \"bio\": {\n    \"en\": \"Experienced developer\",\n    \"es\": \"Desarrollador con experiencia\",\n    \"de\": \"Erfahrener Entwickler\",\n    \"fr\": \"Developpeur experimente\",\n    \"it\": \"Sviluppatore esperto\",\n    \"ja\": \"経験豊富な開発者\",\n    \"ko\": \"경험 많은 개발자\",\n    \"pt\": \"Desenvolvedor experiente\",\n    \"ru\": \"Опытный разработчик\",\n    \"zh\": \"经验丰富的开发者\"\n  },\n  \"photoUrl\": \"https://example.com/photo.jpg\",\n  \"socialLinks\": {\n    \"linkedin\": \"https://linkedin.com/in/johndoe\",\n    \"github\": \"https://github.com/johndoe\"\n  },\n  \"order\": 1,\n  \"isActive\": true,\n  \"status\": \"active\"\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_collab_create_photo",
+            "name": "photo",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",
@@ -2991,15 +3097,10 @@
       "_type": "request",
       "parentId": "fld_collaborators",
       "name": "Update Collaborator (Admin)",
-      "description": "Actualiza colaborador. Bearer + collaborators:update o manage.",
+      "description": "> 📎 **Multipart (subida backend):** acepta `multipart/form-data` con un part **`data`** (el JSON del body de abajo) + part(s) de archivo: `photo`. El backend sube la imagen; si falla, responde igual con el registro y un `warnings[]` (no bloqueante). También acepta **JSON puro** sin archivo (Content-Type: application/json).\n\n---\n\nActualiza colaborador. Bearer + collaborators:update o manage.",
       "method": "PATCH",
       "url": "{{ base_url }}/collaborators/{{ collaborator_id }}",
       "headers": [
-        {
-          "name": "Content-Type",
-          "value": "application/json",
-          "id": "h_clbupd_1"
-        },
         {
           "name": "Accept-Language",
           "value": "{{ lang }}",
@@ -3008,8 +3109,22 @@
       ],
       "parameters": [],
       "body": {
-        "mimeType": "application/json",
-        "text": "{\n  \"isActive\": true,\n  \"order\": 2\n}"
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "id": "req_collab_update_data",
+            "name": "data",
+            "value": "{\n  \"isActive\": true,\n  \"order\": 2\n}",
+            "type": "text"
+          },
+          {
+            "id": "req_collab_update_photo",
+            "name": "photo",
+            "value": "",
+            "type": "file",
+            "fileName": ""
+          }
+        ]
       },
       "authentication": {
         "type": "bearer",

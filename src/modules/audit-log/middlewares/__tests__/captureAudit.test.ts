@@ -78,6 +78,26 @@ describe('captureAudit', () => {
 		expect(mockCreateAuditEntry).not.toHaveBeenCalled();
 	});
 
+	it('logs a failed attempt with success:false when captureFailures is set', async () => {
+		mockCreateAuditEntry.mockResolvedValue(undefined);
+		const res = buildRes(401);
+		const handler = captureAudit({
+			action: 'auth:login',
+			resource: 'auth',
+			captureFailures: true,
+		});
+		handler(buildReq(), res, vi.fn() as NextFunction);
+		res.emit('finish');
+
+		await vi.waitFor(() => expect(mockCreateAuditEntry).toHaveBeenCalledOnce());
+		expect(mockCreateAuditEntry).toHaveBeenCalledWith(
+			expect.objectContaining({
+				action: 'auth:login',
+				metadata: expect.objectContaining({ success: false, statusCode: 401 }),
+			}),
+		);
+	});
+
 	it('falls back to socket.remoteAddress when x-forwarded-for is absent', async () => {
 		mockCreateAuditEntry.mockResolvedValue(undefined);
 		const res = buildRes(201);

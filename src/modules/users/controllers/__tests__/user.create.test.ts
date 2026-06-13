@@ -27,7 +27,10 @@ function makeRes() {
 
 describe('createUserController', () => {
 	it('calls createUser on valid input', async () => {
-		vi.mocked(createUser).mockResolvedValue({ id: 'u1' } as never);
+		vi.mocked(createUser).mockResolvedValue({
+			data: { id: 'u1' },
+			warnings: [],
+		} as never);
 		const req = {
 			body: {
 				email: 'john@example.com',

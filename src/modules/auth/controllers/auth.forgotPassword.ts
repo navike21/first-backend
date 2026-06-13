@@ -1,16 +1,13 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
 import { ForgotPasswordSchema } from '../schemas/auth.schema';
 import { forgotPassword } from '../application/forgotPassword';
 
 export const authForgotPassword = asyncHandler(async (req, res) => {
-	const parsed = ForgotPasswordSchema.safeParse(req.body);
-	if (!parsed.success) {
-		AppError.unprocessable('VALIDATION_SCHEMA_ERROR', 'Validation failed');
-	}
+	const validated = validate(ForgotPasswordSchema, req.body);
 
-	await forgotPassword(parsed.data.email, res.locals.lang as string);
+	await forgotPassword(validated.email, res.locals.lang as string);
 
 	// Siempre responde igual — no revelar si el email existe
 	successResponse(res, {

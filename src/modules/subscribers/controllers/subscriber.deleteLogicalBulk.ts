@@ -1,17 +1,13 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { AppError } from '@Shared/domain/AppError';
+import { validate } from '@Helpers/validate';
 import { BulkDeleteSubscriberSchema } from '../schemas/subscriberBulkDeleteSubscriberSchema';
 import { deleteSubscribersLogicalBulk } from '../application/deleteSubscribersLogicalBulk';
 
 export const subscriberDeleteLogicalBulk = asyncHandler(async (req, res) => {
-	const parsed = BulkDeleteSubscriberSchema.safeParse(req.body);
+	const validated = validate(BulkDeleteSubscriberSchema, req.body);
 
-	if (!parsed.success) {
-		AppError.unprocessable('ERROR_INVALID_BODY', parsed.error.issues.map((i) => i.message).join(', '));
-	}
-
-	const data = await deleteSubscribersLogicalBulk(parsed.data.ids);
+	const data = await deleteSubscribersLogicalBulk(validated.ids);
 
 	let code: string;
 	if (data.deletedIds.length === 0) {

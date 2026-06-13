@@ -14,10 +14,10 @@
 		"safety": "Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail. Votre mot de passe ne changera pas."
 	},
 	"welcomeEmail": {
-		"subject": "Bienvenue sur First Backend !",
+		"subject": "Bienvenue sur {{appName}} !",
 		"heading": "Bienvenue, {{firstName}} !",
 		"body": "Votre compte a été vérifié et est maintenant entièrement actif. Vous êtes prêt à commencer.",
 		"thanks": "Merci de nous avoir rejoints."
 	},
-	"footer": "© {{year}} First Backend. Tous droits réservés."
+	"footer": "© {{year}} {{appName}}. Tous droits réservés."
 }

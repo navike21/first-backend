@@ -30,7 +30,7 @@ describe('updateService', () => {
 		const result = await updateService('1', { isActive: false });
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('_id');
 	});
 
 	it('throws ServiceNotFoundError when not found', async () => {

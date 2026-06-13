@@ -1,5 +1,7 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { deleteEntityFiles } from '@Modules/storage';
 import CollaboratorModel from '../infrastructure/CollaboratorModel';
+import { COLLABORATOR_ENTITY_TYPE } from '../constants/paths';
 
 export async function purgeCollaboratorsBulk(ids: string[]) {
 	const docs = await CollaboratorModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
@@ -12,6 +14,11 @@ export async function purgeCollaboratorsBulk(ids: string[]) {
 	}
 
 	await CollaboratorModel.deleteMany({ id: { $in: processedIds } });
+	await Promise.all(
+		processedIds.map((id) =>
+			deleteEntityFiles(COLLABORATOR_ENTITY_TYPE, id).catch(() => {}),
+		),
+	);
 
 	return {
 		processed: docs.map((d) => cleanMongoFields(d)),

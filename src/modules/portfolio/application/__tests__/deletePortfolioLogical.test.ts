@@ -18,17 +18,19 @@ describe('deletePortfolioLogical', () => {
 		const portfolioDoc = {
 			id: '1',
 			status: 'published',
+			deletedAt: undefined as Date | undefined,
 			save: saveFn,
 			toObject: vi
 				.fn()
-				.mockReturnValue({ id: '1', status: 'deleted', _id: 'm1' }),
+				.mockReturnValue({ id: '1', deletedAt: new Date(), _id: 'm1' }),
 		};
 		vi.mocked(PortfolioModel.findOne).mockResolvedValue(portfolioDoc as never);
 
 		const result = await deletePortfolioLogical('1');
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(portfolioDoc.status).toBe('deleted');
+		// Soft-delete is recorded via deletedAt (there is no 'deleted' status).
+		expect(portfolioDoc.deletedAt).toBeInstanceOf(Date);
 		expect(result).not.toHaveProperty('_id');
 	});
 
