@@ -106,36 +106,33 @@ dentro de un caso de uso de negocio.
   `deleteStorageFilesByIds`) devolviendo **promesas resueltas** (el código hace `.catch`).
 - Tras cambios, deja **lint + typecheck + suite** en verde antes de cerrar.
 
-## Deploy (Vercel) — estado y trampas conocidas
-Auto-deploy por rama vía GitHub: `develop`→Preview, `release`→Preview, `main`→**Production**
+## Deploy (Vercel) y flujo de ramas
+**Flujo (desde 2026-06-13): `feature/*` → `develop` → `main`. NO existe `release`** (se eliminó).
+Auto-deploy por rama vía GitHub: `feature/*` y `develop`→Preview, `main`→**Production**
 (proyecto `prj_rnqv2qn0dktQNctPZFPOfobo0JTL`, team `team_HlO61rBCXDgQTkK5byfxEoEk`).
-Health: `GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta). El **2026-06-13**
-se desplegó el trabajo de la sesión a las 3 ramas y se verificó verde (develop `89e8c96`,
-release `79c0290`, prod `3c59a41`; dominios prod: `first-backend-navike21.vercel.app`,
-`first-backend-alpha.vercel.app`).
-- **Env vars scopeadas por rama.** Preview tiene override `(develop)` y un genérico para el resto
-  (release, features). `MONGO_URI`+`MONGO_DATABASE` son las **únicas requeridas** (`environments.ts`
-  hace `process.exit(1)` si faltan → `FUNCTION_INVOCATION_FAILED`). `NODE_ENV` sólo acepta
-  `development|production|test`; un valor inválido (había `NODE_ENV='release'` en el Preview genérico)
-  **crashea** igual. Fix aplicado: override `NODE_ENV=production` scopeado a la rama `release`.
-- **Producción NO tiene `NODE_ENV`** → default `'development'` (por eso prod corre en modo dev:
-  Ethereal en vez de SMTP real; considerar setear `NODE_ENV=production` en el scope Production).
+Health: `GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta). Dominios prod:
+`first-backend-navike21.vercel.app`, `first-backend-alpha.vercel.app`.
+- **Promoción.** `feature/*`→`develop` es **merge limpio** (la feature nace de develop, comparten
+  ancestro). Pero **`develop` y `main` tienen historias DISJUNTAS (sin merge-base)** → promover a
+  prod es por **cherry-pick** del/los commit(s) (`git cherry-pick -x <sha>`), NO `git merge`
+  (daría "unrelated histories" + conflictos masivos). Los árboles quedan idénticos tras el pick.
+- **Env vars (Vercel).** `MONGO_URI`+`MONGO_DATABASE` son las **únicas requeridas**
+  (`environments.ts` hace `process.exit(1)` si faltan → `FUNCTION_INVOCATION_FAILED`). `NODE_ENV`
+  sólo acepta `development|production|test` (un valor inválido **crashea** igual que si faltara).
+  Scopes actuales: `Preview (develop)` = `NODE_ENV=development`; **feature previews y Production NO
+  tienen `NODE_ENV`** → default `development`. *(Prod corre en modo dev: Ethereal en vez de SMTP
+  real; si se quiere SMTP real + chequeo de JWT seguros, setear `NODE_ENV=production` en Production.)*
 - **Para cambiar env vars usa el Vercel CLI** (`vercel env ls|add|rm`, logueado como `jose-chaponan`,
-  proyecto ya linkeado en `.vercel/project.json`). Los scripts `scripts/setup-env*.mjs` leen el token
-  de `auth.json` que está **muerto (403)** — no los uses para mutar; el CLI v51 usa otro auth.
-  `vercel env add NAME preview <branch> --value X --yes` crea override por rama; el genérico
-  (sin rama) a veces exige desambiguar en modo no-interactivo (usar dashboard si se traba).
+  proyecto linkeado en `.vercel/project.json`). Los scripts `scripts/setup-env*.mjs` leen el token de
+  `auth.json` que está **muerto (403)** — no los uses para mutar; el CLI v51 usa otro auth. `add`/`rm`
+  aceptan rama (`vercel env add NAME preview <branch> --value X --yes`); el genérico **sin rama** se
+  traba en el guard no-interactivo del plugin (workaround: borrarlo para caer al default, o dashboard).
 
 ## Pendientes (no perder de vista)
-- ⏳ **Cosmético (no bloquea):** el Preview **genérico** sigue con `NODE_ENV='release'` (inválido) →
-  cualquier *feature-branch* preview crashea. Cambiarlo a `development` en el dashboard
-  (Settings → Env Vars → NODE_ENV scope Preview/all branches → `development`). No requiere redeploy
-  salvo que haya un feature preview activo.
 - ⚠️ **Acción MANUAL del usuario** (no la hace el código): rotar la credencial de Atlas
-  `navike21_account` y la password del super-admin (estuvieron en plano en scripts locales
-  gitignored — NO en GitHub; rotar por higiene ya que pasaron por el chat).
+  `navike21_account`, la password del super-admin y **`EMAIL_PASS`** (pasaron por el chat / aparecen
+  en `vercel env ls`; rotar en sus consolas y actualizar el env de Vercel).
 - Validar una **subida real contra Vercel** (límite de body serverless).
 - Ejecutar la **migración del front** (`first-frontend`) al contrato multipart
   (`docs/API-UPLOADS.md` §6).
-- Auditoría de 403 amplia (hoy solo login).
 - Módulo **`pages`**: se revisa en sesión aparte (pedido del usuario).
