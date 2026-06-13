@@ -106,7 +106,31 @@ dentro de un caso de uso de negocio.
   `deleteStorageFilesByIds`) devolviendo **promesas resueltas** (el código hace `.catch`).
 - Tras cambios, deja **lint + typecheck + suite** en verde antes de cerrar.
 
+## Deploy (Vercel) — estado y trampas conocidas
+Auto-deploy por rama vía GitHub: `develop`→Preview, `release`→Preview, `main`→**Production**
+(proyecto `prj_rnqv2qn0dktQNctPZFPOfobo0JTL`, team `team_HlO61rBCXDgQTkK5byfxEoEk`).
+Health: `GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta). El **2026-06-13**
+se desplegó el trabajo de la sesión a las 3 ramas y se verificó verde (develop `89e8c96`,
+release `79c0290`, prod `3c59a41`; dominios prod: `first-backend-navike21.vercel.app`,
+`first-backend-alpha.vercel.app`).
+- **Env vars scopeadas por rama.** Preview tiene override `(develop)` y un genérico para el resto
+  (release, features). `MONGO_URI`+`MONGO_DATABASE` son las **únicas requeridas** (`environments.ts`
+  hace `process.exit(1)` si faltan → `FUNCTION_INVOCATION_FAILED`). `NODE_ENV` sólo acepta
+  `development|production|test`; un valor inválido (había `NODE_ENV='release'` en el Preview genérico)
+  **crashea** igual. Fix aplicado: override `NODE_ENV=production` scopeado a la rama `release`.
+- **Producción NO tiene `NODE_ENV`** → default `'development'` (por eso prod corre en modo dev:
+  Ethereal en vez de SMTP real; considerar setear `NODE_ENV=production` en el scope Production).
+- **Para cambiar env vars usa el Vercel CLI** (`vercel env ls|add|rm`, logueado como `jose-chaponan`,
+  proyecto ya linkeado en `.vercel/project.json`). Los scripts `scripts/setup-env*.mjs` leen el token
+  de `auth.json` que está **muerto (403)** — no los uses para mutar; el CLI v51 usa otro auth.
+  `vercel env add NAME preview <branch> --value X --yes` crea override por rama; el genérico
+  (sin rama) a veces exige desambiguar en modo no-interactivo (usar dashboard si se traba).
+
 ## Pendientes (no perder de vista)
+- ⏳ **Cosmético (no bloquea):** el Preview **genérico** sigue con `NODE_ENV='release'` (inválido) →
+  cualquier *feature-branch* preview crashea. Cambiarlo a `development` en el dashboard
+  (Settings → Env Vars → NODE_ENV scope Preview/all branches → `development`). No requiere redeploy
+  salvo que haya un feature preview activo.
 - ⚠️ **Acción MANUAL del usuario** (no la hace el código): rotar la credencial de Atlas
   `navike21_account` y la password del super-admin (estuvieron en plano en scripts locales
   gitignored — NO en GitHub; rotar por higiene ya que pasaron por el chat).
