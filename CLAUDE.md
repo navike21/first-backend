@@ -107,21 +107,21 @@ dentro de un caso de uso de negocio.
 - Tras cambios, deja **lint + typecheck + suite** en verde antes de cerrar.
 
 ## Deploy (Vercel) y flujo de ramas
-**Flujo (desde 2026-06-13): `feature/*` → `develop` → `main`. NO existe `release`** (se eliminó).
-Auto-deploy por rama vía GitHub: `feature/*` y `develop`→Preview, `main`→**Production**
-(proyecto `prj_rnqv2qn0dktQNctPZFPOfobo0JTL`, team `team_HlO61rBCXDgQTkK5byfxEoEk`).
-Health: `GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta). Dominios prod:
+**Flujo (desde 2026-06-14): SOLO existe `main`. Todo sale por `feature/*` desde `main`** → PR →
+merge a `main`. No hay `develop` ni `release` (se eliminaron, junto con ramas y worktrees viejos).
+Como la feature nace de `main`, **el merge de vuelta es limpio** (comparten ancestro) — se acabó el
+dolor de las historias disjuntas/cherry-pick que había entre develop↔main.
+Auto-deploy por rama vía GitHub: `feature/*`→Preview, `main`→**Production** (proyecto
+`prj_rnqv2qn0dktQNctPZFPOfobo0JTL`, team `team_HlO61rBCXDgQTkK5byfxEoEk`). Health:
+`GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta). Dominios prod:
 `first-backend-navike21.vercel.app`, `first-backend-alpha.vercel.app`.
-- **Promoción.** `feature/*`→`develop` es **merge limpio** (la feature nace de develop, comparten
-  ancestro). Pero **`develop` y `main` tienen historias DISJUNTAS (sin merge-base)** → promover a
-  prod es por **cherry-pick** del/los commit(s) (`git cherry-pick -x <sha>`), NO `git merge`
-  (daría "unrelated histories" + conflictos masivos). Los árboles quedan idénticos tras el pick.
 - **Env vars (Vercel).** `MONGO_URI`+`MONGO_DATABASE` son las **únicas requeridas**
   (`environments.ts` hace `process.exit(1)` si faltan → `FUNCTION_INVOCATION_FAILED`). `NODE_ENV`
   sólo acepta `development|production|test` (un valor inválido **crashea** igual que si faltara).
-  Scopes actuales: `Preview (develop)` = `NODE_ENV=development`; **feature previews y Production NO
-  tienen `NODE_ENV`** → default `development`. *(Prod corre en modo dev: Ethereal en vez de SMTP
-  real; si se quiere SMTP real + chequeo de JWT seguros, setear `NODE_ENV=production` en Production.)*
+  Hoy **ni Preview ni Production tienen `NODE_ENV`** → default `development`. Feature previews usan el
+  scope **Preview genérico** (`MONGO_URI`, `MONGO_DATABASE=first-db__release`, JWT, email). *(Prod
+  corre en modo dev: Ethereal en vez de SMTP real; si se quiere SMTP real + chequeo de JWT seguros,
+  setear `NODE_ENV=production` en Production.)*
 - **Para cambiar env vars usa el Vercel CLI** (`vercel env ls|add|rm`, logueado como `jose-chaponan`,
   proyecto linkeado en `.vercel/project.json`). Los scripts `scripts/setup-env*.mjs` leen el token de
   `auth.json` que está **muerto (403)** — no los uses para mutar; el CLI v51 usa otro auth. `add`/`rm`
