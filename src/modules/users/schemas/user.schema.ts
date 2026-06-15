@@ -21,7 +21,8 @@ export const CreateUserSchema = z.object({
 	dateOfBirth: z.iso.date('Invalid date format (YYYY-MM-DD)').optional(),
 	gender: z.enum(USER_GENDER_ARRAY).optional(),
 	phone: z.string().max(30).optional(),
-	profilePictureUrl: z.url().max(500).optional(),
+	// Empty string clears the avatar (unset + delete files); a URL sets it.
+	profilePictureUrl: z.url().max(500).or(z.literal('')).optional(),
 	address: AddressSchema.optional(),
 	groupId: z.string().optional(),
 	status: z.enum(['active', 'inactive']).default('active'),
@@ -38,7 +39,8 @@ export const UpdateMyProfileSchema = z.object({
 	dateOfBirth: z.iso.date('Invalid date format (YYYY-MM-DD)').optional(),
 	gender: z.enum(USER_GENDER_ARRAY).optional(),
 	phone: z.string().max(30).optional(),
-	profilePictureUrl: z.url().max(500).optional(),
+	// Empty string clears the avatar (unset + delete files); a URL sets it.
+	profilePictureUrl: z.url().max(500).or(z.literal('')).optional(),
 	address: AddressSchema.optional(),
 });
 

@@ -53,4 +53,19 @@ describe('updateUser', () => {
 			updateUser('nonexistent-id', { firstName: 'X' }),
 		).rejects.toBeInstanceOf(UserNotFoundError);
 	});
+
+	it('clears the avatar when profilePictureUrl is an empty string', async () => {
+		const user = await seed({
+			profilePictureUrl: 'https://cdn.test/avatar.png',
+		});
+
+		const result = await updateUser(user.id, { profilePictureUrl: '' });
+
+		expect(
+			(result.data as Record<string, unknown>).profilePictureUrl,
+		).toBeUndefined();
+
+		const inDb = await UserModel.findOne({ id: user.id });
+		expect(inDb!.profilePictureUrl).toBeUndefined();
+	});
 });
