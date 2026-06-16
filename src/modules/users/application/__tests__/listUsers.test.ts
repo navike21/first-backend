@@ -46,7 +46,7 @@ describe('listUsers', () => {
 	});
 
 	it('filters by groupId', async () => {
-		await seed({ groupId: 'group-xyz' });
+		await seed({ groupIds: ['group-xyz'] });
 
 		const result = await listUsers({
 			page: 1,
@@ -54,7 +54,9 @@ describe('listUsers', () => {
 			groupId: 'group-xyz',
 		});
 
-		expect(result.items.every((u) => u.groupId === 'group-xyz')).toBe(true);
+		expect(result.items.every((u) => u.groupIds.includes('group-xyz'))).toBe(
+			true,
+		);
 	});
 
 	it('searches by firstName, lastName, and email', async () => {

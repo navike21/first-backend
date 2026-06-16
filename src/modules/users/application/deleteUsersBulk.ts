@@ -11,7 +11,7 @@ export async function deleteUsersBulk(ids: string[], requesterId?: string) {
 	const users = await UserModel.find({
 		id: { $in: targetIds },
 		deletedAt: null,
-		groupId: { $nin: superGroupIds },
+		groupIds: { $nin: superGroupIds },
 	})
 		.select('-password')
 		.lean();

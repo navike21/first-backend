@@ -15,6 +15,9 @@ import { userGroupTrashController } from '../controllers/userGroup.trash';
 import { deleteUserGroupsBulkController } from '../controllers/userGroup.deleteBulk';
 import { restoreUserGroupsBulkController } from '../controllers/userGroup.restoreBulk';
 import { purgeUserGroupsBulkController } from '../controllers/userGroup.purgeBulk';
+import { listGroupMembersController } from '../controllers/userGroup.members.list';
+import { addGroupMembersController } from '../controllers/userGroup.members.add';
+import { removeGroupMemberController } from '../controllers/userGroup.members.remove';
 
 export function userGroupsApi(router: Router) {
 	router.get(
@@ -75,6 +78,47 @@ export function userGroupsApi(router: Router) {
 			getMetadata: (req) => ({ ids: req.body.ids }),
 		}),
 		purgeUserGroupsBulkController,
+	);
+
+	// Membership (users that belong to a group). Membership lives in
+	// `User.groupIds`, so these require BOTH user-groups AND users permissions
+	// (the two authorize() guards are AND-ed; each accepts its own `:manage`/`*:*`).
+	router.get(
+		'/user-groups/:id/members',
+		authenticate,
+		authorize(PERMISSIONS.USERS_READ, PERMISSIONS.USERS_MANAGE),
+		authorize(PERMISSIONS.USER_GROUPS_READ, PERMISSIONS.USER_GROUPS_MANAGE),
+		listGroupMembersController,
+	);
+	router.post(
+		'/user-groups/:id/members',
+		authenticate,
+		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
+		authorize(PERMISSIONS.USER_GROUPS_UPDATE, PERMISSIONS.USER_GROUPS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_MEMBERS_ADDED,
+			resource: 'user-groups',
+			getMetadata: (req) => ({
+				groupId: req.params.id,
+				userIds: req.body.userIds,
+			}),
+		}),
+		addGroupMembersController,
+	);
+	router.delete(
+		'/user-groups/:id/members/:userId',
+		authenticate,
+		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
+		authorize(PERMISSIONS.USER_GROUPS_UPDATE, PERMISSIONS.USER_GROUPS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_MEMBER_REMOVED,
+			resource: 'user-groups',
+			getMetadata: (req) => ({
+				groupId: req.params.id,
+				userId: req.params.userId,
+			}),
+		}),
+		removeGroupMemberController,
 	);
 
 	router.get(

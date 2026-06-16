@@ -11,7 +11,8 @@ export async function listUsers({
 	const filter: Record<string, unknown> = { deletedAt: null };
 
 	if (status) filter.status = status;
-	if (groupId) filter.groupId = groupId;
+	// `groupId` filters users that belong to that group (membership in the array).
+	if (groupId) filter.groupIds = groupId;
 	if (search) {
 		filter.$or = [
 			{ firstName: { $regex: search, $options: 'i' } },

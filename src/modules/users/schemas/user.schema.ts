@@ -24,7 +24,7 @@ export const CreateUserSchema = z.object({
 	// Empty string clears the avatar (unset + delete files); a URL sets it.
 	profilePictureUrl: z.url().max(500).or(z.literal('')).optional(),
 	address: AddressSchema.optional(),
-	groupId: z.string().optional(),
+	groupIds: z.array(z.string()).optional(),
 	status: z.enum(['active', 'inactive']).default('active'),
 });
 

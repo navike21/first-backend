@@ -39,13 +39,13 @@ describe('UserModel', () => {
 		const user = await UserModel.create({
 			...baseUser(),
 			phone: '+1234567890',
-			groupId: 'group-abc',
+			groupIds: ['group-abc'],
 			address: { street: '123 Main St', city: 'NY', country: 'US' },
 			gender: 'male',
 		});
 
 		expect(user.phone).toBe('+1234567890');
-		expect(user.groupId).toBe('group-abc');
+		expect(user.groupIds).toEqual(['group-abc']);
 		expect(user.address?.city).toBe('NY');
 		expect(user.gender).toBe('male');
 	});

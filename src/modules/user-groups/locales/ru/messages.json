@@ -4,5 +4,8 @@
 	"USER_GROUP_DELETED": "Группа пользователей успешно удалена",
 	"USER_GROUP_FOUND": "Группа пользователей получена",
 	"USER_GROUPS_LISTED": "Список групп пользователей получен",
-	"PERMISSIONS_CATALOG": "Доступные права"
+	"PERMISSIONS_CATALOG": "Доступные права",
+	"USER_GROUP_MEMBERS_LISTED": "Участники группы получены",
+	"USER_GROUP_MEMBERS_ADDED": "Участники добавлены в группу",
+	"USER_GROUP_MEMBER_REMOVED": "Участник удалён из группы"
 }

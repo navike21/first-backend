@@ -4,5 +4,8 @@
 	"USER_GROUP_DELETED": "ユーザーグループを削除しました",
 	"USER_GROUP_FOUND": "ユーザーグループを取得しました",
 	"USER_GROUPS_LISTED": "ユーザーグループ一覧を取得しました",
-	"PERMISSIONS_CATALOG": "利用可能な権限"
+	"PERMISSIONS_CATALOG": "利用可能な権限",
+	"USER_GROUP_MEMBERS_LISTED": "グループメンバーを取得しました",
+	"USER_GROUP_MEMBERS_ADDED": "メンバーをグループに追加しました",
+	"USER_GROUP_MEMBER_REMOVED": "メンバーをグループから削除しました"
 }

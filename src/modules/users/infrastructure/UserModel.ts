@@ -50,7 +50,7 @@ export interface UserDocument {
 	profilePictureUrl?: string;
 	address?: AddressDocument;
 	preferences: UserPreferences;
-	groupId?: string;
+	groupIds: string[];
 	isEmailVerified: boolean;
 	status: UserStatus;
 	deletedAt?: Date | null;
@@ -118,7 +118,7 @@ const userSchema = new Schema<UserDocument>(
 		profilePictureUrl: { type: String, maxlength: 500 },
 		address: { type: addressSchema },
 		preferences: { type: preferencesSchema, default: () => ({}) },
-		groupId: { type: String, ref: 'UserGroup' },
+		groupIds: { type: [String], ref: 'UserGroup', default: [] },
 		isEmailVerified: { type: Boolean, default: false },
 		status: {
 			type: String,

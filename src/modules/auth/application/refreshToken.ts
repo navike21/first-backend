@@ -35,7 +35,7 @@ export async function rotateRefreshToken(
 	const user = await UserModel.findOne({ id: payload.sub });
 	if (!user) throw new InvalidTokenError();
 
-	const permissions = await loadUserPermissions(user.groupId);
+	const permissions = await loadUserPermissions(user.groupIds);
 
 	const newJti = generateUUID();
 	const newAccessToken = JwtService.signAccess({ sub: user.id, permissions });

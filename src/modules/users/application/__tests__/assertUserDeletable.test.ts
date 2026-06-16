@@ -23,7 +23,7 @@ const seedUser = (groupId?: string) =>
 		password: 'h',
 		firstName: 'Aa',
 		lastName: 'Bb',
-		groupId,
+		groupIds: groupId ? [groupId] : [],
 	});
 
 describe('assertUserDeletable', () => {
