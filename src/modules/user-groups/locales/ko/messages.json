@@ -4,5 +4,8 @@
 	"USER_GROUP_DELETED": "사용자 그룹이 삭제되었습니다",
 	"USER_GROUP_FOUND": "사용자 그룹을 가져왔습니다",
 	"USER_GROUPS_LISTED": "사용자 그룹 목록을 가져왔습니다",
-	"PERMISSIONS_CATALOG": "사용 가능한 권한"
+	"PERMISSIONS_CATALOG": "사용 가능한 권한",
+	"USER_GROUP_MEMBERS_LISTED": "그룹 구성원을 가져왔습니다",
+	"USER_GROUP_MEMBERS_ADDED": "구성원이 그룹에 추가되었습니다",
+	"USER_GROUP_MEMBER_REMOVED": "구성원이 그룹에서 제거되었습니다"
 }

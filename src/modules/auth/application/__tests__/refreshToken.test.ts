@@ -89,7 +89,7 @@ describe('rotateRefreshToken', () => {
 			password: 'hashed',
 			firstName: 'Al',
 			lastName: 'Bo',
-			groupId: group.id,
+			groupIds: [group.id],
 		});
 		const rt = await seedRT(user.id);
 

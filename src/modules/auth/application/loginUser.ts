@@ -33,7 +33,7 @@ export async function loginUser({
 
 	if (!user.isEmailVerified) throw new EmailNotVerifiedError();
 
-	const permissions = await loadUserPermissions(user.groupId);
+	const permissions = await loadUserPermissions(user.groupIds);
 
 	const jti = generateUUID();
 	const accessToken = JwtService.signAccess({ sub: user.id, permissions });

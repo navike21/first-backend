@@ -4,5 +4,8 @@
 	"USER_GROUP_DELETED": "Grupo de usuarios eliminado exitosamente",
 	"USER_GROUP_FOUND": "Grupo de usuarios obtenido",
 	"USER_GROUPS_LISTED": "Grupos de usuarios obtenidos",
-	"PERMISSIONS_CATALOG": "Permisos disponibles"
+	"PERMISSIONS_CATALOG": "Permisos disponibles",
+	"USER_GROUP_MEMBERS_LISTED": "Miembros del grupo obtenidos",
+	"USER_GROUP_MEMBERS_ADDED": "Miembros añadidos al grupo",
+	"USER_GROUP_MEMBER_REMOVED": "Miembro eliminado del grupo"
 }

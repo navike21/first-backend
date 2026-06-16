@@ -24,14 +24,18 @@ export async function assertUserDeletable(
 	}
 
 	const target = await UserModel.findOne({ id: targetId }).lean();
-	if (!target?.groupId) return;
+	if (!target?.groupIds?.length) return;
 
-	const group = await UserGroupModel.findOne({ id: target.groupId }).lean();
-	const isSuper = group?.permissions?.includes(PERMISSIONS.ALL) ?? false;
-	if (!isSuper) return;
+	// Super groups (holding `*:*`) the target belongs to.
+	const superGroupIds = await UserGroupModel.find({
+		id: { $in: target.groupIds },
+		permissions: PERMISSIONS.ALL,
+	}).distinct('id');
+	if (superGroupIds.length === 0) return;
 
+	// At least one OTHER active user must remain in any of those super groups.
 	const otherActiveSupers = await UserModel.countDocuments({
-		groupId: target.groupId,
+		groupIds: { $in: superGroupIds },
 		deletedAt: null,
 		id: { $ne: targetId },
 	});
