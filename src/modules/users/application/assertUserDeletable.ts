@@ -27,10 +27,15 @@ export async function assertUserDeletable(
 	if (!target?.groupIds?.length) return;
 
 	// Super groups (holding `*:*`) the target belongs to.
-	const superGroupIds = await UserGroupModel.find({
+	// `find().select().lean()` instead of `.distinct()`: the prod connection uses
+	// MongoDB Stable API v1 (strict), which rejects the `distinct` command.
+	const superGroups = await UserGroupModel.find({
 		id: { $in: target.groupIds },
 		permissions: PERMISSIONS.ALL,
-	}).distinct('id');
+	})
+		.select('id')
+		.lean();
+	const superGroupIds = superGroups.map((g) => g.id);
 	if (superGroupIds.length === 0) return;
 
 	// At least one OTHER active user must remain in any of those super groups.
