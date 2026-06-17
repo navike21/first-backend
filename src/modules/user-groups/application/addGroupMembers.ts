@@ -20,10 +20,15 @@ export async function addGroupMembers(
 	if (!group) throw new UserGroupNotFoundError();
 
 	const uniqueIds = [...new Set(userIds)];
-	const existingIds = await UserModel.find({
+	// `find().select().lean()` instead of `.distinct()`: the prod connection uses
+	// MongoDB Stable API v1 (strict), which rejects the `distinct` command.
+	const existing = await UserModel.find({
 		id: { $in: uniqueIds },
 		deletedAt: null,
-	}).distinct('id');
+	})
+		.select('id')
+		.lean();
+	const existingIds = existing.map((u) => u.id);
 
 	const notFoundIds = uniqueIds.filter((id) => !existingIds.includes(id));
 
