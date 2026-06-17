@@ -18,6 +18,7 @@ import { purgeUserGroupsBulkController } from '../controllers/userGroup.purgeBul
 import { listGroupMembersController } from '../controllers/userGroup.members.list';
 import { addGroupMembersController } from '../controllers/userGroup.members.add';
 import { removeGroupMemberController } from '../controllers/userGroup.members.remove';
+import { removeGroupMembersBulkController } from '../controllers/userGroup.members.removeBulk';
 
 export function userGroupsApi(router: Router) {
 	router.get(
@@ -104,6 +105,21 @@ export function userGroupsApi(router: Router) {
 			}),
 		}),
 		addGroupMembersController,
+	);
+	router.delete(
+		'/user-groups/:id/members',
+		authenticate,
+		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
+		authorize(PERMISSIONS.USER_GROUPS_UPDATE, PERMISSIONS.USER_GROUPS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_MEMBERS_REMOVED,
+			resource: 'user-groups',
+			getMetadata: (req) => ({
+				groupId: req.params.id,
+				userIds: req.body.userIds,
+			}),
+		}),
+		removeGroupMembersBulkController,
 	);
 	router.delete(
 		'/user-groups/:id/members/:userId',

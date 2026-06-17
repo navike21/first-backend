@@ -7,5 +7,6 @@
 	"PERMISSIONS_CATALOG": "Доступные права",
 	"USER_GROUP_MEMBERS_LISTED": "Участники группы получены",
 	"USER_GROUP_MEMBERS_ADDED": "Участники добавлены в группу",
-	"USER_GROUP_MEMBER_REMOVED": "Участник удалён из группы"
+	"USER_GROUP_MEMBER_REMOVED": "Участник удалён из группы",
+	"USER_GROUP_MEMBERS_REMOVED": "Участники удалены из группы"
 }

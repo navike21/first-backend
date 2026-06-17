@@ -7,5 +7,6 @@
 	"PERMISSIONS_CATALOG": "Permissões disponíveis",
 	"USER_GROUP_MEMBERS_LISTED": "Membros do grupo obtidos",
 	"USER_GROUP_MEMBERS_ADDED": "Membros adicionados ao grupo",
-	"USER_GROUP_MEMBER_REMOVED": "Membro removido do grupo"
+	"USER_GROUP_MEMBER_REMOVED": "Membro removido do grupo",
+	"USER_GROUP_MEMBERS_REMOVED": "Membros removidos do grupo"
 }

@@ -7,5 +7,6 @@
 	"PERMISSIONS_CATALOG": "Verfügbare Berechtigungen",
 	"USER_GROUP_MEMBERS_LISTED": "Gruppenmitglieder abgerufen",
 	"USER_GROUP_MEMBERS_ADDED": "Mitglieder zur Gruppe hinzugefügt",
-	"USER_GROUP_MEMBER_REMOVED": "Mitglied aus der Gruppe entfernt"
+	"USER_GROUP_MEMBER_REMOVED": "Mitglied aus der Gruppe entfernt",
+	"USER_GROUP_MEMBERS_REMOVED": "Mitglieder aus der Gruppe entfernt"
 }
