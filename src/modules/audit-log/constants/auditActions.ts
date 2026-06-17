@@ -20,6 +20,7 @@ export const AUDIT_ACTIONS = {
 	USER_GROUPS_DELETED: 'user-groups:deleted',
 	USER_GROUPS_MEMBERS_ADDED: 'user-groups:members_added',
 	USER_GROUPS_MEMBER_REMOVED: 'user-groups:member_removed',
+	USER_GROUPS_MEMBERS_REMOVED: 'user-groups:members_removed',
 	CLIENTS_CREATED: 'clients:created',
 	CLIENTS_UPDATED: 'clients:updated',
 	CLIENTS_SOFT_DELETED: 'clients:soft_deleted',

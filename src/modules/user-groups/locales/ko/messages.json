@@ -7,5 +7,6 @@
 	"PERMISSIONS_CATALOG": "사용 가능한 권한",
 	"USER_GROUP_MEMBERS_LISTED": "그룹 구성원을 가져왔습니다",
 	"USER_GROUP_MEMBERS_ADDED": "구성원이 그룹에 추가되었습니다",
-	"USER_GROUP_MEMBER_REMOVED": "구성원이 그룹에서 제거되었습니다"
+	"USER_GROUP_MEMBER_REMOVED": "구성원이 그룹에서 제거되었습니다",
+	"USER_GROUP_MEMBERS_REMOVED": "구성원이 그룹에서 제거되었습니다"
 }

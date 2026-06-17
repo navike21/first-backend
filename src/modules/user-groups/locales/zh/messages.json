@@ -7,5 +7,6 @@
 	"PERMISSIONS_CATALOG": "可用权限",
 	"USER_GROUP_MEMBERS_LISTED": "已获取群组成员",
 	"USER_GROUP_MEMBERS_ADDED": "成员已添加到群组",
-	"USER_GROUP_MEMBER_REMOVED": "成员已从群组中移除"
+	"USER_GROUP_MEMBER_REMOVED": "成员已从群组中移除",
+	"USER_GROUP_MEMBERS_REMOVED": "成员已从群组中移除"
 }
