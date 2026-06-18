@@ -1,4 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import UserGroupModel from '../infrastructure/UserGroupModel';
 
 export async function purgeUserGroupsBulk(ids: string[]) {
@@ -10,6 +11,14 @@ export async function purgeUserGroupsBulk(ids: string[]) {
 	if (processedIds.length === 0) {
 		return { processed: [], processedIds: [], notFoundIds };
 	}
+
+	// Membership lives in `User.groupIds`. Pull every reference to the purged
+	// groups from ALL users (incl. soft-deleted) before destroying the groups,
+	// so a physical purge never leaves dangling group ids.
+	await UserModel.updateMany(
+		{ groupIds: { $in: processedIds } },
+		{ $pull: { groupIds: { $in: processedIds } } },
+	);
 
 	await UserGroupModel.deleteMany({ id: { $in: processedIds } });
 
