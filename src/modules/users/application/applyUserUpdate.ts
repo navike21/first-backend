@@ -1,5 +1,6 @@
 import UserModel from '../infrastructure/UserModel';
 import { UserNotFoundError } from '../domain/errors/UserErrors';
+import { HashedPassword } from '@Modules/auth/domain/value-objects/HashedPassword';
 import {
 	uploadImageSafe,
 	deleteEntityFiles,
@@ -11,6 +12,8 @@ import { USER_ENTITY_TYPE } from '../constants/entity';
 
 interface UpdateInput {
 	dateOfBirth?: string;
+	/** Optional new password (admin-set while editing); hashed before saving. */
+	password?: string;
 	[key: string]: unknown;
 }
 
@@ -57,7 +60,15 @@ export async function applyUserUpdate(
 	const dateOfBirth = input.dateOfBirth
 		? new Date(input.dateOfBirth)
 		: undefined;
-	Object.assign(user, { ...input, ...(dateOfBirth && { dateOfBirth }) });
+	// Strip `password` from the generic field assignment — it must be hashed,
+	// never stored as plaintext. Set separately below.
+	const { password, ...fields } = input;
+	Object.assign(user, { ...fields, ...(dateOfBirth && { dateOfBirth }) });
+	if (password) {
+		user.password = await HashedPassword.hash(password);
+		// Invalidate the target user's existing sessions / reset links.
+		user.passwordChangedAt = new Date();
+	}
 	if (uploadedUrl) user.profilePictureUrl = uploadedUrl;
 	else if (clearAvatar) user.profilePictureUrl = undefined;
 
