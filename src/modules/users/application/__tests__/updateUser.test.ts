@@ -3,6 +3,7 @@ import { withMongo } from '@test/withMongo';
 import UserModel from '@Modules/users/infrastructure/UserModel';
 import { updateUser } from '@Modules/users/application/updateUser';
 import { UserNotFoundError } from '@Modules/users/domain/errors/UserErrors';
+import { HashedPassword } from '@Modules/auth/domain/value-objects/HashedPassword';
 
 withMongo();
 
@@ -46,6 +47,22 @@ describe('updateUser', () => {
 
 		const inDb = await UserModel.findOne({ id: user.id });
 		expect(inDb!.dateOfBirth).toBeInstanceOf(Date);
+	});
+
+	it('hashes a new password and stamps passwordChangedAt, never exposing it', async () => {
+		const user = await seed();
+
+		const result = await updateUser(user.id, { password: 'NewPass1' });
+
+		// Not echoed back in the response.
+		expect((result.data as Record<string, unknown>).password).toBeUndefined();
+
+		const inDb = await UserModel.findOne({ id: user.id });
+		// Stored hashed (not plaintext) and verifiable.
+		expect(inDb!.password).not.toBe('NewPass1');
+		expect(await HashedPassword.compare('NewPass1', inDb!.password)).toBe(true);
+		// Stamped to invalidate the target's existing sessions / reset links.
+		expect(inDb!.passwordChangedAt).toBeInstanceOf(Date);
 	});
 
 	it('throws UserNotFoundError when user does not exist', async () => {

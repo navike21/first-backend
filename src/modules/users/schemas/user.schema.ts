@@ -9,13 +9,15 @@ const AddressSchema = z.object({
 	postalCode: z.string().max(20).optional(),
 });
 
+const PasswordSchema = z
+	.string()
+	.min(8, 'Password must be at least 8 characters')
+	.regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+	.regex(/\d/, 'Password must contain at least one number');
+
 export const CreateUserSchema = z.object({
 	email: z.email('Invalid email address').toLowerCase(),
-	password: z
-		.string()
-		.min(8, 'Password must be at least 8 characters')
-		.regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-		.regex(/\d/, 'Password must contain at least one number'),
+	password: PasswordSchema,
 	firstName: z.string().min(2).max(50).trim(),
 	lastName: z.string().min(2).max(100).trim(),
 	dateOfBirth: z.iso.date('Invalid date format (YYYY-MM-DD)').optional(),
@@ -31,7 +33,12 @@ export const CreateUserSchema = z.object({
 export const UpdateUserSchema = CreateUserSchema.omit({
 	email: true,
 	password: true,
-}).partial();
+})
+	.partial()
+	// An admin (users:update / :manage) may set a NEW password while editing the
+	// user — optional, same strength rules. Email stays immutable here (separate
+	// verified flow). Hashing + passwordChangedAt happen in applyUserUpdate.
+	.extend({ password: PasswordSchema.optional() });
 
 export const UpdateMyProfileSchema = z.object({
 	firstName: z.string().min(2).max(50).trim().optional(),
