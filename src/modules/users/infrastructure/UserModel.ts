@@ -10,7 +10,6 @@ export interface AddressDocument {
 	city?: string;
 	state?: string;
 	country?: string;
-	postalCode?: string;
 }
 
 export type PresenceStatus = 'available' | 'busy' | 'away' | 'offline';
@@ -66,7 +65,6 @@ const addressSchema = new Schema<AddressDocument>(
 		city: { type: String, maxlength: 100 },
 		state: { type: String, maxlength: 100 },
 		country: { type: String, maxlength: 100 },
-		postalCode: { type: String, maxlength: 20 },
 	},
 	{ _id: false },
 );
