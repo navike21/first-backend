@@ -6,7 +6,6 @@ const AddressSchema = z.object({
 	city: z.string().max(100).optional(),
 	state: z.string().max(100).optional(),
 	country: z.string().max(100).optional(),
-	postalCode: z.string().max(20).optional(),
 });
 
 const PasswordSchema = z
