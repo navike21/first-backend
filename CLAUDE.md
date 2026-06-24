@@ -133,6 +133,6 @@ Auto-deploy por rama vía GitHub: `feature/*`→Preview, `main`→**Production**
   `navike21_account`, la password del super-admin y **`EMAIL_PASS`** (pasaron por el chat / aparecen
   en `vercel env ls`; rotar en sus consolas y actualizar el env de Vercel).
 - Validar una **subida real contra Vercel** (límite de body serverless).
-- Ejecutar la **migración del front** (`first-frontend`) al contrato multipart
-  (`docs/API-UPLOADS.md` §6).
-- Módulo **`pages`**: se revisa en sesión aparte (pedido del usuario).
+- Asegurar el uso de multipart para el resto de los módulos en el frontend (`clients`, `collaborators`,
+  `portfolio`, `services`, `app-settings`) cuando se desarrollen en el front. El módulo `users` ya
+  fue migrado y utiliza el contrato multipart.
