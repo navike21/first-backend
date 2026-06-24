@@ -5,6 +5,9 @@ export interface AccessTokenPayload {
 	sub: string;
 	permissions: string[];
 	type: 'access';
+	firstName?: string;
+	lastName?: string;
+	email?: string;
 }
 
 export interface RefreshTokenPayload {

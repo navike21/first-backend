@@ -11,6 +11,11 @@ export interface AuditLogDocument {
 	ipAddress?: string;
 	userAgent?: string;
 	occurredAt: Date;
+	user?: {
+		firstName: string;
+		lastName: string;
+		email: string;
+	};
 }
 
 const auditLogSchema = new Schema<AuditLogDocument>(
@@ -23,6 +28,11 @@ const auditLogSchema = new Schema<AuditLogDocument>(
 		metadata: { type: Schema.Types.Mixed },
 		ipAddress: { type: String },
 		userAgent: { type: String },
+		user: {
+			firstName: { type: String },
+			lastName: { type: String },
+			email: { type: String },
+		},
 		occurredAt: { type: Date, required: true, default: Date.now },
 	},
 	{ timestamps: false },

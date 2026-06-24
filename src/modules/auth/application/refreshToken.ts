@@ -38,7 +38,13 @@ export async function rotateRefreshToken(
 	const permissions = await loadUserPermissions(user.groupIds);
 
 	const newJti = generateUUID();
-	const newAccessToken = JwtService.signAccess({ sub: user.id, permissions });
+	const newAccessToken = JwtService.signAccess({
+		sub: user.id,
+		permissions,
+		firstName: user.firstName,
+		lastName: user.lastName,
+		email: user.email,
+	});
 	const newRefreshToken = JwtService.signRefresh({ sub: user.id, jti: newJti });
 
 	const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS);

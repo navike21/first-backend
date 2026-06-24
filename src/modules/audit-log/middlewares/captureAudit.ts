@@ -21,6 +21,7 @@ export function captureAudit(options: CaptureAuditOptions) {
 			if (!isSuccess && !options.captureFailures) return;
 
 			const userId = res.locals.userId as string | undefined;
+			const user = res.locals.user as { firstName: string; lastName: string; email: string } | undefined;
 			const ipAddress =
 				(req.headers['x-forwarded-for'] as string | undefined) ??
 				req.socket?.remoteAddress;
@@ -31,6 +32,9 @@ export function captureAudit(options: CaptureAuditOptions) {
 				? baseMetadata
 				: { ...baseMetadata, success: false, statusCode: res.statusCode };
 
+			// Only write user details if they exist in locals (which comes from JWT)
+			const populatedUser = user?.firstName && user?.lastName && user?.email ? user : undefined;
+
 			createAuditEntry({
 				userId,
 				action: options.action,
@@ -39,6 +43,7 @@ export function captureAudit(options: CaptureAuditOptions) {
 				metadata,
 				ipAddress,
 				userAgent,
+				user: populatedUser,
 			}).catch((err) => {
 				console.error('[Audit Capture Error]: Failed to create audit log entry:', err);
 			});

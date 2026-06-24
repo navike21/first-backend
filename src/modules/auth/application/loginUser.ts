@@ -36,7 +36,13 @@ export async function loginUser({
 	const permissions = await loadUserPermissions(user.groupIds);
 
 	const jti = generateUUID();
-	const accessToken = JwtService.signAccess({ sub: user.id, permissions });
+	const accessToken = JwtService.signAccess({
+		sub: user.id,
+		permissions,
+		firstName: user.firstName,
+		lastName: user.lastName,
+		email: user.email,
+	});
 	const refreshToken = JwtService.signRefresh({ sub: user.id, jti });
 
 	const expiresAt = new Date(Date.now() + REFRESH_EXPIRES_MS);

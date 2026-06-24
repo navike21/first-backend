@@ -8,6 +8,11 @@ export interface AuditEntryPayload {
 	metadata?: Record<string, unknown>;
 	ipAddress?: string;
 	userAgent?: string;
+	user?: {
+		firstName: string;
+		lastName: string;
+		email: string;
+	};
 }
 
 export async function createAuditEntry(

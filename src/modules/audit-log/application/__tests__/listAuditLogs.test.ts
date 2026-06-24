@@ -1,25 +1,21 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { withMongo } from '@test/withMongo';
-import UserModel from '@Modules/users/infrastructure/UserModel';
 import { listAuditLogs } from '../listAuditLogs';
 import { createAuditEntry } from '../createAuditEntry';
 
 withMongo();
 
 async function seed() {
-	await UserModel.create({
-		id: 'u1',
-		email: 'u1@example.com',
-		password: 'password123',
-		firstName: 'Alice',
-		lastName: 'Smith',
-	});
-
 	await createAuditEntry({
 		action: 'auth:login',
 		resource: 'auth',
 		userId: 'u1',
 		ipAddress: '1.1.1.1',
+		user: {
+			firstName: 'Alice',
+			lastName: 'Smith',
+			email: 'u1@example.com',
+		},
 	});
 	await createAuditEntry({
 		action: 'auth:logout',
@@ -31,6 +27,11 @@ async function seed() {
 		resource: 'users',
 		userId: 'u1',
 		resourceId: 'new-user',
+		user: {
+			firstName: 'Alice',
+			lastName: 'Smith',
+			email: 'u1@example.com',
+		},
 	});
 	await createAuditEntry({
 		action: 'storage:upload',
