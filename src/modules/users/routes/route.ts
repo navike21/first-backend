@@ -44,6 +44,7 @@ export function usersApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.USERS_CREATE, PERMISSIONS.USERS_MANAGE),
 		...acceptImage('avatar'),
+		captureAudit({ action: AUDIT_ACTIONS.USERS_CREATED, resource: 'users' }),
 		createUserController,
 	);
 
@@ -75,6 +76,7 @@ export function usersApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
 		...acceptImage('avatar'),
+		captureAudit({ action: AUDIT_ACTIONS.USERS_UPDATED, resource: 'users' }),
 		updateUserController,
 	);
 

@@ -31,6 +31,7 @@ export function userGroupsApi(router: Router) {
 		'/user-groups',
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_CREATE, PERMISSIONS.USER_GROUPS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_CREATED, resource: 'user-groups' }),
 		createUserGroupController,
 	);
 	router.get(
@@ -147,6 +148,7 @@ export function userGroupsApi(router: Router) {
 		'/user-groups/:id',
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_UPDATE, PERMISSIONS.USER_GROUPS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_UPDATED, resource: 'user-groups' }),
 		updateUserGroupController,
 	);
 	router.patch(
