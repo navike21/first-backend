@@ -173,7 +173,9 @@ describe('captureAudit', () => {
 		await vi.waitFor(() => expect(mockCreateAuditEntry).toHaveBeenCalledOnce());
 		expect(getMetadata).toHaveBeenCalledWith(req);
 		expect(mockCreateAuditEntry).toHaveBeenCalledWith(
-			expect.objectContaining({ metadata: { email: 'test@example.com' } }),
+			expect.objectContaining({
+				metadata: expect.objectContaining({ email: 'test@example.com' }),
+			}),
 		);
 	});
 

@@ -14,6 +14,45 @@ export interface CaptureAuditOptions {
 	captureFailures?: boolean;
 }
 
+function sanitizeObject(obj: any): any {
+	if (obj === null || typeof obj !== 'object') {
+		return obj;
+	}
+
+	if (Array.isArray(obj)) {
+		return obj.map(sanitizeObject);
+	}
+
+	const sanitized: Record<string, any> = {};
+	const sensitiveKeys = new Set([
+		'password',
+		'confirmpassword',
+		'newpassword',
+		'currentpassword',
+		'passwordconfirmation',
+		'token',
+		'secret',
+		'accesstoken',
+		'refreshtoken',
+		'apikey',
+		'authorization',
+		'pin',
+		'card',
+		'cvv',
+	]);
+
+	for (const key of Object.keys(obj)) {
+		const lowerKey = key.toLowerCase();
+		if (sensitiveKeys.has(lowerKey)) {
+			sanitized[key] = '[REDACTED]';
+		} else {
+			sanitized[key] = sanitizeObject(obj[key]);
+		}
+	}
+
+	return sanitized;
+}
+
 export function captureAudit(options: CaptureAuditOptions) {
 	return (req: Request, res: Response, next: NextFunction): void => {
 		res.on('finish', () => {
@@ -26,11 +65,28 @@ export function captureAudit(options: CaptureAuditOptions) {
 				(req.headers['x-forwarded-for'] as string | undefined) ??
 				req.socket?.remoteAddress;
 			const userAgent = req.headers['user-agent'];
-			const resourceId = options.getResourceId?.(req);
-			const baseMetadata = options.getMetadata?.(req);
-			const metadata = isSuccess
-				? baseMetadata
-				: { ...baseMetadata, success: false, statusCode: res.statusCode };
+			const resourceId = options.getResourceId?.(req) ?? (typeof req.params?.id === 'string' ? req.params.id : undefined);
+			
+			const baseMetadata = options.getMetadata?.(req) ?? {};
+			const executionDetails: Record<string, any> = {};
+
+			if (req.body && Object.keys(req.body).length > 0) {
+				executionDetails.payload = sanitizeObject(req.body);
+			}
+
+			if (req.params && Object.keys(req.params).length > 0) {
+				executionDetails.params = { ...req.params };
+			}
+
+			if (req.query && Object.keys(req.query).length > 0) {
+				executionDetails.query = { ...req.query };
+			}
+
+			const metadata = {
+				...baseMetadata,
+				...executionDetails,
+				...(isSuccess ? {} : { success: false, statusCode: res.statusCode }),
+			};
 
 			// Only write user details if they exist in locals (which comes from JWT)
 			const populatedUser = user?.firstName && user?.lastName && user?.email ? user : undefined;
@@ -51,3 +107,4 @@ export function captureAudit(options: CaptureAuditOptions) {
 		next();
 	};
 }
+
