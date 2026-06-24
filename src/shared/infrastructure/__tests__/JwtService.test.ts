@@ -6,7 +6,7 @@ vi.mock('@Constants/environments', () => ({
 		JWT_REFRESH_SECRET: 'refresh-secret-test',
 		JWT_EMAIL_SECRET: 'email-secret-test',
 		JWT_ACCESS_EXPIRES: '15m',
-		JWT_REFRESH_EXPIRES: '7d',
+		JWT_REFRESH_EXPIRES: '1h',
 		JWT_EMAIL_EXPIRES: '24h',
 		JWT_RESET_EXPIRES: '1h',
 	},
