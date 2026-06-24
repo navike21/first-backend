@@ -1,4 +1,5 @@
 import AuditLogModel from '../infrastructure/AuditLogModel';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
 
@@ -44,8 +45,30 @@ export async function listAuditLogs(filters: AuditLogFilters) {
 		AuditLogModel.countDocuments(query),
 	]);
 
+	// Fetch user details for logs to resolve user first/last names
+	const userIds = Array.from(new Set(logs.map((log) => log.userId).filter(Boolean)));
+	const users = await UserModel.find({ id: { $in: userIds } })
+		.select('id firstName lastName email')
+		.lean();
+	const userMap = new Map(users.map((u) => [u.id, u]));
+
+	const populatedLogs = logs.map((log) => {
+		const cleanLog = cleanMongoFields(log);
+		const user = log.userId ? userMap.get(log.userId) : undefined;
+		return {
+			...cleanLog,
+			user: user
+				? {
+						firstName: user.firstName,
+						lastName: user.lastName,
+						email: user.email,
+					}
+				: undefined,
+		};
+	});
+
 	return {
-		data: logs.map(cleanMongoFields),
+		data: populatedLogs,
 		meta: metaInformation({ page, limit, total }),
 	};
 }

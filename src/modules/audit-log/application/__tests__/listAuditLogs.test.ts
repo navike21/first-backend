@@ -1,11 +1,20 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { withMongo } from '@test/withMongo';
+import UserModel from '@Modules/users/infrastructure/UserModel';
 import { listAuditLogs } from '../listAuditLogs';
 import { createAuditEntry } from '../createAuditEntry';
 
 withMongo();
 
 async function seed() {
+	await UserModel.create({
+		id: 'u1',
+		email: 'u1@example.com',
+		password: 'password123',
+		firstName: 'Alice',
+		lastName: 'Smith',
+	});
+
 	await createAuditEntry({
 		action: 'auth:login',
 		resource: 'auth',
@@ -133,5 +142,16 @@ describe('listAuditLogs', () => {
 			expect(entry).not.toHaveProperty('_id');
 			expect(entry).not.toHaveProperty('__v');
 		}
+	});
+
+	it('populates user details for logs when user exists', async () => {
+		const result = await listAuditLogs({ userId: 'u1' });
+
+		expect(result.data.length).toBe(2);
+		expect(result.data[0].user).toEqual({
+			firstName: 'Alice',
+			lastName: 'Smith',
+			email: 'u1@example.com',
+		});
 	});
 });
