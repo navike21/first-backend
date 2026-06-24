@@ -36,13 +36,18 @@ import { subscriberRestoreBulkController } from '../controllers/subscriber.resto
 
 export function subscribersApi(router: Router) {
 	// Public — subscribe form (validation lives in the controller)
-	router.post(SUBSCRIBER_PATH_REGISTER, subscriberRegister);
+	router.post(
+		SUBSCRIBER_PATH_REGISTER,
+		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_CREATED, resource: 'subscribers' }),
+		subscriberRegister,
+	);
 
 	// Admin — protected routes
 	router.post(
 		SUBSCRIBER_PATH_REGISTER_BULK,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_CREATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_CREATED, resource: 'subscribers' }),
 		subscriberRegisterBulk,
 	);
 
@@ -87,6 +92,7 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_UPDATED, resource: 'subscribers' }),
 		subscriberUpdate,
 	);
 
@@ -116,6 +122,7 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_PURGE),
+		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_DELETED, resource: 'subscribers' }),
 		subscriberDeletePhysical,
 	);
 	router.delete(

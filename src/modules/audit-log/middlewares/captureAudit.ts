@@ -39,7 +39,9 @@ export function captureAudit(options: CaptureAuditOptions) {
 				metadata,
 				ipAddress,
 				userAgent,
-			}).catch(() => {});
+			}).catch((err) => {
+				console.error('[Audit Capture Error]: Failed to create audit log entry:', err);
+			});
 		});
 		next();
 	};
