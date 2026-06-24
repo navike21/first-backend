@@ -46,7 +46,7 @@ export async function listAuditLogs(filters: AuditLogFilters) {
 	]);
 
 	// Fetch user details for logs to resolve user first/last names
-	const userIds = Array.from(new Set(logs.map((log) => log.userId).filter(Boolean)));
+	const userIds = Array.from(new Set(logs.map((log) => log.userId).filter((id): id is string => !!id)));
 	const users = await UserModel.find({ id: { $in: userIds } })
 		.select('id firstName lastName email')
 		.lean();
