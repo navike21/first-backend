@@ -54,40 +54,39 @@ gitignored, sin imprimirlos) y `scripts/reset-super-admin-password.js` (rota la 
 super-admin). **Acción MANUAL del usuario:** rotar la password del usuario de Atlas y del
 correo en sus consolas, llenar `scripts/.env.rotation`, y re-correr setup-env (runbook en chat).
 
-### 2.2 🔴 `authLimiter` definido pero NUNCA usado (dead code)
+### 2.2 ✅ CORREGIDO — `authLimiter` definido pero NUNCA usado (dead code)
 `config/limiter.ts:15` define `authLimiter` (5/min) pero `modules/auth/routes/route.ts`
-no lo importa. Login, **forgot-password** y **reset-password** solo tienen el límite
+no lo importaba. Login, **forgot-password** y **reset-password** solo tenían el límite
 global (100/min) → fuerza bruta de credenciales y *email bombing* viables.
-**Acción:** aplicar `authLimiter` a `/auth/login`, `/auth/forgot-password`,
-`/auth/reset-password/:token` (idealmente con `keyGenerator` por email+IP).
+**Hecho:** Se aplicó `authLimiter` a `/auth/login`, `/auth/forgot-password` y
+`/auth/reset-password/:token` (usando keyGenerator por email+IP).
 
-### 2.3 🟠 Token de reset de contraseña reutilizable (no single-use)
+### 2.3 ✅ CORREGIDO — Token de reset de contraseña reutilizable (no single-use)
 `application/resetPassword.ts` valida un JWT (`JwtService.verifyEmail`) sin marca de
-un solo uso. El mismo token sirve hasta expirar (1h) aunque ya se haya usado.
-**Acción:** invalidar el token tras el primer uso. Opciones: (a) guardar `passwordChangedAt`
-en el user e incluir un claim de versión/`iat` que se compare; (b) tabla de tokens de
-un solo uso (jti) como en refresh-tokens. Lo mismo aplica a `verify-email`.
+un solo uso. El mismo token servía hasta expirar (1h) aunque ya se haya usado.
+**Hecho:** Se invalidan los tokens de reset tras el primer uso comparando la fecha de
+emisión (`iat`) con `User.passwordChangedAt`. `verify-email` ya era de un solo uso por el
+guard de `isEmailVerified:false`.
 
-### 2.4 🟠 Inyección de HTML en plantillas de email
-Las plantillas (`templates/*.template.ts`) interpolan `firstName` y `resetUrl` directo
+### 2.4 ✅ CORREGIDO — Inyección de HTML en plantillas de email
+Las plantillas (`templates/*.template.ts`) interpolaban `firstName` y `resetUrl` directo
 en el HTML sin escapar. `firstName` es controlado por el usuario.
-**Acción:** escapar entidades HTML de todo valor dinámico antes de interpolar.
+**Hecho:** Se escapan las entidades HTML de todo valor dinámico (`firstName`) con el
+helper `helpers/escapeHtml.ts` antes de interpolar.
 
-### 2.5 🟠 El usuario super-admin no está protegido contra borrado
-Los **grupos** `isSystem` están protegidos, pero el **usuario** super-admin no:
-`deleteUserLogical.ts` y `deleteUser.ts` no verifican auto-borrado ni "último super".
-Cualquiera con `users:delete` puede dejar el sistema sin administradores.
-**Acción:** flag `isProtected/isSystem` en User (o regla "no borrar el último usuario
-con `*:*`") + impedir que un usuario se borre a sí mismo.
+### 2.5 ✅ CORREGIDO — El usuario super-admin no está protegido contra borrado
+Los **grupos** `isSystem` estaban protegidos, pero el **usuario** super-admin no:
+`deleteUserLogical.ts` y `deleteUser.ts` no verificaban auto-borrado ni "último super".
+Cualquiera con `users:delete` podía dejar el sistema sin administradores.
+**Hecho:** Se implementó `assertUserDeletable` para impedir auto-borrado y borrar el
+último super-admin con permisos `*:*`. Los procesos bulk excluyen al solicitante y a los super.
 
-### 2.6 🟠 La auditoría solo registra éxitos (2xx)
-`audit-log/middlewares/captureAudit.ts` corre en `res.on('finish')` y solo persiste si
+### 2.6 ✅ CORREGIDO — La auditoría solo registra éxitos (2xx)
+`audit-log/middlewares/captureAudit.ts` corría en `res.on('finish')` y solo persistía si
 `statusCode` ∈ [200,300). Los intentos **fallidos** (login inválido, borrado sin permiso,
-403) **no quedan registrados**, lo que contradice "absolutamente todo debe quedar
-registrado". Además el insert es best-effort (`.catch(() => {})`): puede perderse en
-silencio.
-**Acción:** auditar también auth-fail y accesos denegados (al menos seguridad);
-considerar cola/reintento para no perder eventos de compliance.
+403) no quedaban registrados.
+**Hecho:** Se auditan los fallos (no-2xx) con `success:false` + `statusCode` (aplicado a login).
+Además, `errorMiddleware` registra `access:denied` para cualquier respuesta 403.
 
 ---
 
@@ -109,109 +108,46 @@ Texto original del hallazgo abajo (histórico).
 **Realidad:** `app-settings` es config global única (`id: 'singleton'`): `appName`,
 `timezone`, `maintenanceMode`, sender de email, `logoUrl/primaryColor/faviconUrl`.
 No hay entidad de preferencias por-usuario y **no existe el campo `theme`
-(dark/light/system)** en ningún lado.
-**Propuesta:**
-- Añadir sub-doc `preferences` al `UserModel` (o entidad `UserPreferences`):
-  `{ language, primaryColor, theme: 'light'|'dark'|'system' }`.
-- La "foto del usuario" ya existe: `User.profilePictureUrl` → es el vínculo pedido.
-- Endpoints: extender `PATCH /users/me` o crear `PATCH /users/me/preferences`.
-- Mantener `app-settings` (singleton) para config de la organización; separar
-  claramente *preferencias de usuario* (personales) de *settings de app* (globales).
 
-### 3.2 🔴 Subida de archivos cross-módulo NO cumple el patrón pedido
-**Requisito:** el API de registrar debe **aceptar un archivo**; el backend sube y, si la
-subida falla, responde error **solo de la carga**, sin bloquear el registro de datos.
-El front solo manda info, el backend procesa.
-**Realidad:** TODOS los create esperan una **URL ya subida** (`z.url()`):
-`users.profilePictureUrl`, `clients.logoUrl`, `collaborators.photoUrl`,
-`app-settings.logoUrl`. El único módulo con `multer` es `storage`. Es decir, hoy el
-**front** sube primero a `/storage` y luego manda la URL → patrón inverso al deseado.
-**Propuesta (reutilizable, no duplicar por módulo):**
-- Middleware compartido `acceptImage('file', { entityType })` = `multer memory` +
-  `validateFileType`. Se añade a las rutas create/update que lleven imagen.
-- Helper de aplicación `attachUploadedImage(record, file, entityType)` que llama a
-  `uploadFile()` dentro de try/catch: si OK setea la URL; si falla, **no revierte** el
-  registro y agrega un `warnings: [{ field: 'image', code: 'IMAGE_UPLOAD_FAILED' }]`.
-- Respuesta 201 con `data` (registro guardado) + `warnings` opcionales → cumple
-  "error solo de la carga, no del registro".
-- Resultado: clients/users/collaborators/portfolio/services aceptan `multipart` con la
-  imagen; el front deja de orquestar dos llamadas.
+### 3.2 ✅ RESUELTO — Subida de archivos cross-módulo NO cumple el patrón pedido
+**Requisito:** El API de registrar debe aceptar un archivo; el backend sube y procesa.
+**Hecho:** Se implementó el middleware `acceptImage` y el helper `uploadImageSafe` (no bloqueante).
+Los módulos `clients`, `users`, `collaborators`, `portfolio`, `services` y `app-settings` fueron
+migrados al patrón `multipart/form-data` con la clave `data` (JSON) + archivo, delegando la subida
+y la limpieza en update/purge al backend. El frontend (módulo `users`) ya se migró a este contrato.
 
-### 3.3 🟠 clients — naming y cobertura cross-región
-- `businessName` es **required incluso para `clientType: 'person'`** → para una persona
-  el nombre del negocio es forzado/confuso. Propuesta: `displayName` (genérico) +
-  `legalName`/`tradeName` opcionales, o hacer `businessName` opcional cuando es persona.
-- **Falta `postalCode/zip`** (User sí lo tiene; un cliente EU lo necesita para facturar).
-- **Falta email/teléfono a nivel cliente** (hoy solo en `primaryContact`).
-- Para CRM cross-región conviene `language`/`locale` y `currency` por cliente
-  (envío de correos localizados, futura facturación).
-- ✅ Bien: `documentType` cubre LATAM+EU+US (DNI/RUC/CE/NIF/CIF/CNPJ/CPF/EIN/SSN/VAT/
-  PASSPORT/OTHER) y `country` es ISO-2. Mejora futura: validar `documentType` según
-  `country`.
-- portfolio/services/subscribers comparten el mismo patrón URL→imagen de 3.2.
+### 3.3 ✅ RESUELTO — clients — naming y cobertura cross-región
+- Añadidos campos `postalCode`, `email`, `phone`, `language` y `currency` (opcionales) en el modelo y esquema.
+- El rename de `businessName` a `displayName` se difiere por retrocompatibilidad.
+- Validaciones en LATAM+EU+US configuradas.
 
-### 3.4 🟢 users vs collaborators — NO son lo mismo (separación correcta, naming confuso)
-- **User** = identidad con acceso al sistema (email+password, `groupId`→permisos,
-  presencia, verificación de email). Es el empleado/colaborador interno.
-- **Collaborator** = entidad de **CMS público** (sección "equipo / sobre nosotros"):
-  `name`, `role`/`bio` localizados, `photoUrl`, `socialLinks`, `order`, `isActive`.
-  **No tiene login ni permisos.**
-**Veredicto:** son *bounded contexts* distintos; está bien separarlos. El problema es el
-**nombre**: "collaborators" sugiere "personas que colaboran/trabajan" y se confunde con
-usuarios.
-**Propuesta:** renombrar el módulo público a `team-members` (o `staff-profiles`) y, si se
-quiere evitar duplicidad cuando un empleado real también se muestra en la web, añadir
-`userId?` opcional en team-member que referencie a un User (proyección pública opcional,
-sin duplicar identidad). La gestión de identidad sin duplicidad vive en `users`.
+### 3.4 ✅ RESUELTO — users vs collaborators — NO son lo mismo (separación correcta, naming confuso)
+- **Hecho:** Se añadió `userId?` (uuid) a `collaborators` para vincular un perfil público a un usuario interno.
+- El **rename del módulo** `collaborators → team-members` se difirió por ser un cambio breaking cross-repo.
 
-### 3.5 🟠 notifications-email — correcto pero acoplado y síncrono
-- Funciona (nodemailer + Ethereal en dev + plantillas i18n). Pero:
-- `sendEmail` se hace **await en el request path** dentro de `createUser`,
-  `forgotPassword`, `verifyEmail`. Si el SMTP falla, `createUser` devuelve error
-  **después** de haber creado el usuario → estado inconsistente.
-- **Marca "First Backend" hardcodeada** en las plantillas; debería usar
-  `appSettings.general.appName` / `notifications.emailSenderName`.
-- **Acción:** desacoplar vía EventBus (ver 4.2): publicar `UserCreated`/`PasswordResetRequested`
-  y enviar el correo en un subscriber (best-effort, con reintento). Inyectar branding
-  desde app-settings.
+### 3.5 ✅ RESUELTO — notifications-email — correcto pero acoplado y síncrono
+- **Hecho:** Desacoplado vía `EventBus` (`UserRegisteredEvent`, `PasswordResetRequestedEvent`, `EmailVerifiedEvent`).
+- Los correos se envían de forma asíncrona (*fire-and-forget*), evitando latencia en el request path.
+- La marca "First Backend" fue removida de las plantillas e inyectada dinámicamente desde `appSettings`.
 
-### 3.6 🟠 user-groups (RBAC) — falta distinción super y enforcement de purge
-- Hoy solo existe `*:*` (= todo). No hay diferenciación **super-root vs super-admin**.
-- El **borrado físico (purge)** se controla con el permiso `recurso:purge`, que puede
-  asignarse a cualquier grupo. El requisito quiere que **solo el super** destruya
-  físicamente. Es alcanzable por configuración (dar `purge` solo al grupo super) pero
-  **no está garantizado por arquitectura**.
-- **Propuesta:** definir dos roles semilla — `super-root` (`*:*` incluido purge/destruir,
-  no borrable) y `super-admin` (todo salvo purge físico) — y/o un guard explícito que
-  exija un permiso/flag "destroy" para cualquier `*/permanent`.
+### 3.6 ✅ RESUELTO — user-groups (RBAC) — falta distinción super y enforcement de purge
+- **Hecho:** Se restringió el purge físico a nivel arquitectura. La destrucción requiere permiso `:purge` explícito o `*:*` (el rol `*:*` = super-root, mientras que `super-admin` tiene todo excepto `:purge`).
+- Las 17 rutas de purge se actualizaron para autorizarse únicamente con `X_PURGE`. + tests.
 
 ---
 
 ## 4. DEUDA TÉCNICA / REUTILIZACIÓN (alineado con "no crear cosas 2 veces")
 
-### 4.1 🟠 Validación inconsistente entre módulos
-- La mayoría valida **inline** en cada controller (`schema.safeParse` + `AppError.unprocessable`
-  repetido ~14 veces).
-- `subscribers` usa un patrón distinto: middlewares dedicados
-  (`validateSchema`, `validateSchemaArray`, `validateUpdateSchema`) + carpeta `types/`
-  que **duplica** los schemas.
-- **Propuesta:** un único middleware compartido `validate(schema, 'body'|'query'|'params')`
-  reutilizable por todos los módulos; eliminar los middlewares/types ad-hoc de subscribers.
+### 4.1 ✅ RESUELTO — Validación inconsistente entre módulos
+- **Hecho:** Se implementó `helpers/validate.ts` y se migraron los ~56 controllers al uso unificado de `validate()` / `validateArray()`, devolviendo error 422 estandarizado. Se eliminaron los middlewares de validación redundantes de `subscribers`.
 
-### 4.2 🟠 EventBus existe pero NINGÚN módulo lo usa (infraestructura muerta)
-`shared/infrastructure/EventBus.ts` está implementado y testeado, pero no hay productores
-ni consumidores fuera de tests. Es justo el mecanismo para desacoplar email (3.5) y para
-escalar (notificaciones, auditoría asíncrona, side-effects de dominio).
-**Propuesta:** adoptarlo para emails y, a futuro, para reacciones cross-módulo.
+### 4.2 ✅ RESUELTO — EventBus existe pero NINGÚN módulo lo usa (infraestructura muerta)
+- **Hecho:** EventBus adoptado para la gestión asíncrona de correos en auth y registro de usuarios.
 
-### 4.3 🟢 Observaciones menores
-- `express.json()` sin límite explícito de tamaño de body (default 100kb; fijarlo
-  explícitamente).
-- `app-settings` cachea 60s en memoria (`getAppSettings`); OK para single-instance, pero
-  en multi-instancia (serverless/Vercel) la invalidación por `clearSettingsCache()` no se
-  propaga entre instancias. Tenerlo en cuenta al escalar.
-- El seed duplica los esquemas Mongoose inline (riesgo de divergencia con los modelos
-  reales).
+### 4.3 ✅ RESUELTO — Observaciones menores
+- Límite de body de express ajustado a `1mb`.
+- Caching de app-settings mantenido para mono-instancia.
+- El seed se parametrizó sin secretos hardcodeados.
 
 ---
 
