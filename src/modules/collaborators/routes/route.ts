@@ -49,25 +49,6 @@ export function collaboratorsApi(router: Router) {
 		authorize(PERMISSIONS.COLLABORATORS_READ, PERMISSIONS.COLLABORATORS_MANAGE),
 		collaboratorListAdminController,
 	);
-	router.get(COLLABORATOR_PATH_GET_BY_ID, collaboratorGetByIdController);
-
-	router.post(
-		COLLABORATOR_PATH_CREATE,
-		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_CREATE, PERMISSIONS.COLLABORATORS_MANAGE),
-		...acceptImage('photo'),
-		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_CREATED, resource: 'collaborators' }),
-		collaboratorCreateController,
-	);
-
-	router.patch(
-		COLLABORATOR_PATH_RESTORE,
-		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_UPDATE, PERMISSIONS.COLLABORATORS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_RESTORED, resource: 'collaborators' }),
-		collaboratorRestoreController,
-	);
-
 	// Bulk operations (before :id routes to avoid conflicts)
 	router.delete(
 		COLLABORATOR_PATH_BULK_DELETE,
@@ -101,6 +82,25 @@ export function collaboratorsApi(router: Router) {
 			getMetadata: (req) => ({ ids: req.body.ids }),
 		}),
 		purgeCollaboratorsBulkController,
+	);
+
+	router.get(COLLABORATOR_PATH_GET_BY_ID, collaboratorGetByIdController);
+
+	router.post(
+		COLLABORATOR_PATH_CREATE,
+		authenticate,
+		authorize(PERMISSIONS.COLLABORATORS_CREATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		...acceptImage('photo'),
+		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_CREATED, resource: 'collaborators' }),
+		collaboratorCreateController,
+	);
+
+	router.patch(
+		COLLABORATOR_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.COLLABORATORS_UPDATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_RESTORED, resource: 'collaborators' }),
+		collaboratorRestoreController,
 	);
 
 	router.patch(

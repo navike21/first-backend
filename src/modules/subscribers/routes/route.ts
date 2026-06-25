@@ -71,13 +71,6 @@ export function subscribersApi(router: Router) {
 	);
 
 	router.patch(
-		SUBSCRIBER_PATH_RESTORE,
-		authenticate,
-		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_RESTORED, resource: 'subscribers' }),
-		subscriberRestoreController,
-	);
-	router.patch(
 		SUBSCRIBER_PATH_RESTORE_BULK,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
@@ -88,6 +81,14 @@ export function subscribersApi(router: Router) {
 		}),
 		subscriberRestoreBulkController,
 	);
+
+	router.patch(
+		SUBSCRIBER_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_RESTORED, resource: 'subscribers' }),
+		subscriberRestoreController,
+	);
 	router.patch(
 		SUBSCRIBER_PATH_UPDATE,
 		authenticate,
@@ -96,17 +97,7 @@ export function subscribersApi(router: Router) {
 		subscriberUpdate,
 	);
 
-	router.delete(
-		SUBSCRIBER_PATH_DELETE_LOGIC,
-		authenticate,
-		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
-		captureAudit({
-			action: AUDIT_ACTIONS.SUBSCRIBERS_BULK_SOFT_DELETED,
-			resource: 'subscribers',
-			getMetadata: (req) => ({ ids: req.body.ids }),
-		}),
-		subscriberDeleteLogical,
-	);
+	// Bulk operations
 	router.delete(
 		SUBSCRIBER_PATH_DELETE_LOGIC_BULK,
 		authenticate,
@@ -119,13 +110,6 @@ export function subscribersApi(router: Router) {
 		subscriberDeleteLogicalBulk,
 	);
 	router.delete(
-		SUBSCRIBER_PATH_DELETE,
-		authenticate,
-		authorize(PERMISSIONS.SUBSCRIBERS_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_DELETED, resource: 'subscribers' }),
-		subscriberDeletePhysical,
-	);
-	router.delete(
 		SUBSCRIBER_PATH_DELETE_BULK,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_PURGE),
@@ -135,5 +119,25 @@ export function subscribersApi(router: Router) {
 			getMetadata: (req) => ({ ids: req.body.ids }),
 		}),
 		subscriberDeletePhysicalBulk,
+	);
+
+	// Individual operations
+	router.delete(
+		SUBSCRIBER_PATH_DELETE_LOGIC,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_DELETE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_BULK_SOFT_DELETED,
+			resource: 'subscribers',
+			getMetadata: (req) => ({ ids: req.body.ids }),
+		}),
+		subscriberDeleteLogical,
+	);
+	router.delete(
+		SUBSCRIBER_PATH_DELETE,
+		authenticate,
+		authorize(PERMISSIONS.SUBSCRIBERS_PURGE),
+		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_DELETED, resource: 'subscribers' }),
+		subscriberDeletePhysical,
 	);
 }

@@ -52,23 +52,6 @@ export function portfolioApi(router: Router) {
 	router.get(PORTFOLIO_PATH_BY_SERVICE, portfolioListByServiceController);
 	router.get(PORTFOLIO_PATH_GET_BY_SLUG, portfolioGetBySlugController);
 
-	router.post(
-		PORTFOLIO_PATH_CREATE,
-		authenticate,
-		authorize(PERMISSIONS.PORTFOLIO_CREATE, PERMISSIONS.PORTFOLIO_MANAGE),
-		...acceptImage('cover'),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_CREATED, resource: 'portfolio' }),
-		portfolioCreateController,
-	);
-
-	router.patch(
-		PORTFOLIO_PATH_RESTORE,
-		authenticate,
-		authorize(PERMISSIONS.PORTFOLIO_UPDATE, PERMISSIONS.PORTFOLIO_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_RESTORED, resource: 'portfolio' }),
-		portfolioRestoreController,
-	);
-
 	// Bulk operations (before :id routes to avoid conflicts)
 	router.delete(
 		PORTFOLIO_PATH_BULK_DELETE,
@@ -102,6 +85,23 @@ export function portfolioApi(router: Router) {
 			getMetadata: (req) => ({ ids: req.body.ids }),
 		}),
 		purgePortfolioBulkController,
+	);
+
+	router.post(
+		PORTFOLIO_PATH_CREATE,
+		authenticate,
+		authorize(PERMISSIONS.PORTFOLIO_CREATE, PERMISSIONS.PORTFOLIO_MANAGE),
+		...acceptImage('cover'),
+		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_CREATED, resource: 'portfolio' }),
+		portfolioCreateController,
+	);
+
+	router.patch(
+		PORTFOLIO_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.PORTFOLIO_UPDATE, PERMISSIONS.PORTFOLIO_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_RESTORED, resource: 'portfolio' }),
+		portfolioRestoreController,
 	);
 
 	router.patch(

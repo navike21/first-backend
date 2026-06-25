@@ -70,26 +70,7 @@ export function usersApi(router: Router) {
 		getUserByIdController,
 	);
 
-	// Update
-	router.patch(
-		'/users/:id',
-		authenticate,
-		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
-		...acceptImage('avatar'),
-		captureAudit({ action: AUDIT_ACTIONS.USERS_UPDATED, resource: 'users' }),
-		updateUserController,
-	);
-
-	// Restore individual
-	router.patch(
-		'/users/:id/restore',
-		authenticate,
-		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.USERS_RESTORED, resource: 'users' }),
-		userRestoreController,
-	);
-
-	// Bulk operations
+	// Bulk operations (before :id routes to avoid conflicts)
 	router.delete(
 		'/users/bulk',
 		authenticate,
@@ -122,6 +103,25 @@ export function usersApi(router: Router) {
 			getMetadata: (req) => ({ ids: req.body.ids }),
 		}),
 		purgeUsersBulkController,
+	);
+
+	// Update
+	router.patch(
+		'/users/:id',
+		authenticate,
+		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
+		...acceptImage('avatar'),
+		captureAudit({ action: AUDIT_ACTIONS.USERS_UPDATED, resource: 'users' }),
+		updateUserController,
+	);
+
+	// Restore individual
+	router.patch(
+		'/users/:id/restore',
+		authenticate,
+		authorize(PERMISSIONS.USERS_UPDATE, PERMISSIONS.USERS_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.USERS_RESTORED, resource: 'users' }),
+		userRestoreController,
 	);
 
 	// Soft delete individual

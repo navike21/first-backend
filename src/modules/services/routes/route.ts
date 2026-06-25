@@ -49,23 +49,6 @@ export function servicesApi(router: Router) {
 	);
 	router.get(SERVICE_PATH_GET_BY_SLUG, serviceGetBySlugController);
 
-	router.post(
-		SERVICE_PATH_CREATE,
-		authenticate,
-		authorize(PERMISSIONS.SERVICES_CREATE, PERMISSIONS.SERVICES_MANAGE),
-		...acceptImage('cover'),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_CREATED, resource: 'services' }),
-		serviceCreateController,
-	);
-
-	router.patch(
-		SERVICE_PATH_RESTORE,
-		authenticate,
-		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_RESTORED, resource: 'services' }),
-		serviceRestoreController,
-	);
-
 	// Bulk operations (before :id routes to avoid conflicts)
 	router.delete(
 		SERVICE_PATH_BULK_DELETE,
@@ -99,6 +82,23 @@ export function servicesApi(router: Router) {
 			getMetadata: (req) => ({ ids: req.body.ids }),
 		}),
 		purgeServicesBulkController,
+	);
+
+	router.post(
+		SERVICE_PATH_CREATE,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_CREATE, PERMISSIONS.SERVICES_MANAGE),
+		...acceptImage('cover'),
+		captureAudit({ action: AUDIT_ACTIONS.SERVICES_CREATED, resource: 'services' }),
+		serviceCreateController,
+	);
+
+	router.patch(
+		SERVICE_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.SERVICES_RESTORED, resource: 'services' }),
+		serviceRestoreController,
 	);
 
 	router.patch(

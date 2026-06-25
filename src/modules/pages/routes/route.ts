@@ -58,22 +58,6 @@ export function pagesApi(router: Router) {
 	);
 	router.get(PAGES_PATH_GET_BY_SLUG, pageGetBySlugPublicController);
 
-	router.post(
-		PAGES_PATH_CREATE,
-		authenticate,
-		authorize(PERMISSIONS.PAGES_CREATE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PAGES_CREATED, resource: 'pages' }),
-		pageCreateController,
-	);
-
-	router.patch(
-		PAGES_PATH_RESTORE,
-		authenticate,
-		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PAGES_RESTORED, resource: 'pages' }),
-		pageRestoreController,
-	);
-
 	// Bulk operations (before :slug routes to avoid conflicts)
 	router.delete(
 		PAGES_PATH_BULK_DELETE,
@@ -107,6 +91,22 @@ export function pagesApi(router: Router) {
 			getMetadata: (req) => ({ ids: req.body.ids }),
 		}),
 		purgePagesBulkController,
+	);
+
+	router.post(
+		PAGES_PATH_CREATE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_CREATE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.PAGES_CREATED, resource: 'pages' }),
+		pageCreateController,
+	);
+
+	router.patch(
+		PAGES_PATH_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.PAGES_RESTORED, resource: 'pages' }),
+		pageRestoreController,
 	);
 
 	router.patch(
