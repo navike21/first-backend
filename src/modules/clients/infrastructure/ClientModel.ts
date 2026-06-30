@@ -33,7 +33,6 @@ const clientSchema = new Schema<ClientDocument>(
 		province: { type: String, maxLength: 100 },
 		district: { type: String, maxLength: 100 },
 		address: { type: String, maxLength: 300 },
-		postalCode: { type: String, maxLength: 20 },
 		logoUrl: { type: String },
 		website: { type: String },
 		email: { type: String },

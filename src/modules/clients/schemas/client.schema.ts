@@ -42,11 +42,6 @@ export const CreateClientSchema = z.object({
 	province: z.string().max(100).trim().optional(),
 	district: z.string().max(100).trim().optional(),
 	address: z.string().max(300).trim().optional(),
-	postalCode: z
-		.string()
-		.max(20, { message: 'CLIENT_POSTAL_CODE_MAX_LENGTH' })
-		.trim()
-		.optional(),
 
 	logoUrl: z.url({ message: 'CLIENT_LOGO_URL_INVALID' }).optional(),
 	website: z.url({ message: 'CLIENT_WEBSITE_INVALID' }).optional(),
