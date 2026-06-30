@@ -35,8 +35,12 @@ export const CreateClientSchema = z.object({
 		.length(2, { message: 'CLIENT_COUNTRY_LENGTH' })
 		.transform((v) => v.toUpperCase()),
 
-	state: z.string().max(100).trim().optional(),
-	city: z.string().max(100).trim().optional(),
+	// Structured location (geo module): ubigeo code + denormalized division
+	// names. `country` (ISO-2) stays above.
+	ubigeoCode: z.string().max(12).trim().optional(),
+	region: z.string().max(100).trim().optional(),
+	province: z.string().max(100).trim().optional(),
+	district: z.string().max(100).trim().optional(),
 	address: z.string().max(300).trim().optional(),
 	postalCode: z
 		.string()
