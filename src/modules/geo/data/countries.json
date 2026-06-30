@@ -1,0 +1,22 @@
+[
+  { "code": "PE", "code3": "PER", "name": "Perú", "nameEn": "Peru", "flag": "🇵🇪", "dialCode": "+51", "hasDivisions": true },
+  { "code": "AR", "code3": "ARG", "name": "Argentina", "nameEn": "Argentina", "flag": "🇦🇷", "dialCode": "+54", "hasDivisions": false },
+  { "code": "BO", "code3": "BOL", "name": "Bolivia", "nameEn": "Bolivia", "flag": "🇧🇴", "dialCode": "+591", "hasDivisions": false },
+  { "code": "BR", "code3": "BRA", "name": "Brasil", "nameEn": "Brazil", "flag": "🇧🇷", "dialCode": "+55", "hasDivisions": false },
+  { "code": "CL", "code3": "CHL", "name": "Chile", "nameEn": "Chile", "flag": "🇨🇱", "dialCode": "+56", "hasDivisions": false },
+  { "code": "CO", "code3": "COL", "name": "Colombia", "nameEn": "Colombia", "flag": "🇨🇴", "dialCode": "+57", "hasDivisions": false },
+  { "code": "EC", "code3": "ECU", "name": "Ecuador", "nameEn": "Ecuador", "flag": "🇪🇨", "dialCode": "+593", "hasDivisions": false },
+  { "code": "PY", "code3": "PRY", "name": "Paraguay", "nameEn": "Paraguay", "flag": "🇵🇾", "dialCode": "+595", "hasDivisions": false },
+  { "code": "UY", "code3": "URY", "name": "Uruguay", "nameEn": "Uruguay", "flag": "🇺🇾", "dialCode": "+598", "hasDivisions": false },
+  { "code": "VE", "code3": "VEN", "name": "Venezuela", "nameEn": "Venezuela", "flag": "🇻🇪", "dialCode": "+58", "hasDivisions": false },
+  { "code": "ES", "code3": "ESP", "name": "España", "nameEn": "Spain", "flag": "🇪🇸", "dialCode": "+34", "hasDivisions": false },
+  { "code": "US", "code3": "USA", "name": "Estados Unidos", "nameEn": "United States", "flag": "🇺🇸", "dialCode": "+1", "hasDivisions": false },
+  { "code": "DE", "code3": "DEU", "name": "Alemania", "nameEn": "Germany", "flag": "🇩🇪", "dialCode": "+49", "hasDivisions": false },
+  { "code": "FR", "code3": "FRA", "name": "Francia", "nameEn": "France", "flag": "🇫🇷", "dialCode": "+33", "hasDivisions": false },
+  { "code": "PT", "code3": "PRT", "name": "Portugal", "nameEn": "Portugal", "flag": "🇵🇹", "dialCode": "+351", "hasDivisions": false },
+  { "code": "IT", "code3": "ITA", "name": "Italia", "nameEn": "Italy", "flag": "🇮🇹", "dialCode": "+39", "hasDivisions": false },
+  { "code": "JP", "code3": "JPN", "name": "Japón", "nameEn": "Japan", "flag": "🇯🇵", "dialCode": "+81", "hasDivisions": false },
+  { "code": "KR", "code3": "KOR", "name": "Corea del Sur", "nameEn": "South Korea", "flag": "🇰🇷", "dialCode": "+82", "hasDivisions": false },
+  { "code": "CN", "code3": "CHN", "name": "China", "nameEn": "China", "flag": "🇨🇳", "dialCode": "+86", "hasDivisions": false },
+  { "code": "RU", "code3": "RUS", "name": "Rusia", "nameEn": "Russia", "flag": "🇷🇺", "dialCode": "+7", "hasDivisions": false }
+]

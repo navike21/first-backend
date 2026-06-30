@@ -14,6 +14,7 @@ import { servicesApi } from '@Modules/services';
 import { portfolioApi } from '@Modules/portfolio';
 import { pagesApi } from '@Modules/pages';
 import { collaboratorsApi } from '@Modules/collaborators';
+import { geoApi } from '@Modules/geo';
 
 const router: Router = Router();
 
@@ -34,6 +35,7 @@ const mainRouter = () => {
 	portfolioApi(v1Router);
 	pagesApi(v1Router);
 	collaboratorsApi(v1Router);
+	geoApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 

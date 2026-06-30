@@ -69,6 +69,7 @@
 		"tsconfig-paths": "^4.2.0",
 		"tsx": "^4.21.0",
 		"typescript": "^6.0.3",
+		"ubigeo-peru": "^2.0.2",
 		"vitest": "^4.1.5"
 	},
 	"dependencies": {

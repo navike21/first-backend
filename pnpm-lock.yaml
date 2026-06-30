@@ -159,6 +159,9 @@ importers:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
+      ubigeo-peru:
+        specifier: ^2.0.2
+        version: 2.0.2
       vitest:
         specifier: ^4.1.5
         version: 4.1.5(@types/node@25.6.0)(@vitest/coverage-istanbul@4.1.5)(@vitest/coverage-v8@4.1.5)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(tsx@4.21.0))
@@ -3014,6 +3017,9 @@ packages:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  ubigeo-peru@2.0.2:
+    resolution: {integrity: sha512-AFMlOcnB9cj2Y77ruZ2qej1UJISsMR59Nc6GgKJLR+Oz85ivCjJgLDH96IxSISwpku9QzHM4UtdLhWmdnDW96A==}
 
   undefsafe@2.0.5:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
@@ -6521,6 +6527,8 @@ snapshots:
   typedarray@0.0.6: {}
 
   typescript@6.0.3: {}
+
+  ubigeo-peru@2.0.2: {}
 
   undefsafe@2.0.5: {}
 
