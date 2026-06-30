@@ -11,6 +11,9 @@ export const clientTrashController = asyncHandler(async (req, res) => {
 		code: 'SUCCESS_CLIENT_TRASH_LIST',
 		message: 'SUCCESS_CLIENT_TRASH_LIST',
 		ns: 'clients',
-		data: result,
+		// Keep the same shape as the main list (top-level data array + meta) so
+		// consumers read `res.data` / `res.meta` uniformly.
+		data: result.data,
+		meta: result.meta,
 	});
 });

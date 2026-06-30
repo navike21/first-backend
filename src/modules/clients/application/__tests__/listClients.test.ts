@@ -33,11 +33,14 @@ describe('listClients', () => {
 		expect(result.meta.total).toBe(1);
 	});
 
-	it('throws when list is empty', async () => {
+	it('returns an empty list (no 404) when there are no clients', async () => {
 		vi.mocked(ClientModel.find).mockReturnValue(mockQueryBuilder([]) as never);
 		vi.mocked(ClientModel.countDocuments).mockResolvedValue(0);
 
-		await expect(listClients({ page: 1, limit: 10 })).rejects.toThrow();
+		const result = await listClients({ page: 1, limit: 10 });
+
+		expect(result.data).toHaveLength(0);
+		expect(result.meta.total).toBe(0);
 	});
 
 	it('applies search filter when provided', async () => {

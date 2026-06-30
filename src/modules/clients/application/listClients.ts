@@ -1,7 +1,6 @@
 import { QueryFilter } from 'mongoose';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import { AppError } from '@Shared/domain/AppError';
 import ClientModel from '../infrastructure/ClientModel';
 import type { ClientDocument } from '../infrastructure/ClientModel';
 
@@ -50,10 +49,8 @@ export async function listClients({
 		ClientModel.countDocuments(query),
 	]);
 
-	if (data.length === 0) {
-		AppError.notFound('CLIENT_LIST_EMPTY', 'Client list empty');
-	}
-
+	// An empty result is a valid 200 with an empty list (consistent with users
+	// and audit-log) — never a 404; that would surface a spurious error toast.
 	return {
 		data: data.map(cleanMongoFields),
 		meta: metaInformation({ page, limit, total }),
