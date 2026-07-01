@@ -29,7 +29,10 @@ export async function createUser(
 	const existing = await UserModel.findOne({ email: input.email });
 	if (existing) throw new EmailAlreadyExistsError();
 
-	const hashedPassword = await HashedPassword.hash(input.password);
+	// Passwordless creation (invite flow): only hash when a password was given.
+	const hashedPassword = input.password
+		? await HashedPassword.hash(input.password)
+		: undefined;
 	const dateOfBirth = input.dateOfBirth
 		? new Date(input.dateOfBirth)
 		: undefined;

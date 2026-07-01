@@ -16,7 +16,9 @@ const PasswordSchema = z
 
 export const CreateUserSchema = z.object({
 	email: z.email('Invalid email address').toLowerCase(),
-	password: PasswordSchema,
+	// Optional: omit to create a passwordless user (invite flow); if provided it
+	// must meet the strength rules. The user sets it later via forgot-password.
+	password: PasswordSchema.optional(),
 	firstName: z.string().min(2).max(50).trim(),
 	lastName: z.string().min(2).max(100).trim(),
 	dateOfBirth: z.iso.date('Invalid date format (YYYY-MM-DD)').optional(),

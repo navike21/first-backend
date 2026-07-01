@@ -28,6 +28,10 @@ export async function loginUser({
 	const user = await UserModel.findOne({ email: email.toLowerCase() });
 	if (!user) throw new InvalidCredentialsError();
 
+	// Passwordless user (created via invite, not yet set): cannot log in until a
+	// password is set through the forgot-password flow.
+	if (!user.password) throw new InvalidCredentialsError();
+
 	const isValid = await HashedPassword.compare(password, user.password);
 	if (!isValid) throw new InvalidCredentialsError();
 

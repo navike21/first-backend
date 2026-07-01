@@ -39,7 +39,9 @@ export interface UserPreferences {
 export interface UserDocument {
 	id: string;
 	email: string;
-	password: string;
+	// Optional: a user may be created without a password (invite flow) and set
+	// it later via forgot-password. Login rejects passwordless users.
+	password?: string;
 	passwordChangedAt?: Date;
 	firstName: string;
 	lastName: string;
@@ -92,7 +94,7 @@ const userSchema = new Schema<UserDocument>(
 			lowercase: true,
 			trim: true,
 		},
-		password: { type: String, required: true },
+		password: { type: String },
 		// Marks when the password last changed; reset tokens issued before this
 		// are rejected (single-use). See auth/application/resetPassword.
 		passwordChangedAt: { type: Date },

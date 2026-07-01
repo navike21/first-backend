@@ -19,6 +19,10 @@ export async function changePassword({
 	const user = await UserModel.findOne({ id: userId });
 	if (!user) throw new UserNotFoundError();
 
+	// Passwordless user (invite flow): no current password to verify against —
+	// they must set one via forgot-password, not change it here.
+	if (!user.password) throw new InvalidCredentialsError();
+
 	const isValid = await HashedPassword.compare(currentPassword, user.password);
 	if (!isValid) throw new InvalidCredentialsError();
 
