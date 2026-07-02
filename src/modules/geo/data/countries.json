@@ -1,5 +1,5 @@
 [
-  { "code": "PE", "code3": "PER", "name": "Perú", "nameEn": "Peru", "flag": "🇵🇪", "dialCode": "+51", "hasDivisions": true },
+  { "code": "PE", "code3": "PER", "name": "Perú", "nameEn": "Peru", "flag": "🇵🇪", "dialCode": "+51", "hasDivisions": true, "divisionLevels": ["Departamento", "Provincia", "Distrito"] },
   { "code": "AR", "code3": "ARG", "name": "Argentina", "nameEn": "Argentina", "flag": "🇦🇷", "dialCode": "+54", "hasDivisions": false },
   { "code": "BO", "code3": "BOL", "name": "Bolivia", "nameEn": "Bolivia", "flag": "🇧🇴", "dialCode": "+591", "hasDivisions": false },
   { "code": "BR", "code3": "BRA", "name": "Brasil", "nameEn": "Brazil", "flag": "🇧🇷", "dialCode": "+55", "hasDivisions": false },

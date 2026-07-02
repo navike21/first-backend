@@ -9,6 +9,8 @@ export interface Country {
 	flag: string;
 	dialCode: string;
 	hasDivisions: boolean;
+	/** Ordered division level labels (e.g. Departamento/Provincia/Distrito). */
+	divisionLevels?: string[];
 }
 
 export interface DivisionNode {
