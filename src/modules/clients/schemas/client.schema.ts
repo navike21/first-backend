@@ -1,7 +1,25 @@
 import { z } from 'zod';
 import { DOCUMENT_TYPES_ARRAY } from '../constants/documentTypes';
+import { CONFIG_DOCUMENT_TYPES } from '@Modules/config';
 
-export const CreateClientSchema = z.object({
+/** Validates the document number against the selected type's pattern (DNI = 8
+ * digits, RUC = 11, etc.). Same rules the frontend applies. */
+const checkDocumentNumber = (
+	d: { documentType?: string; documentNumber?: string },
+	ctx: z.RefinementCtx,
+) => {
+	if (!d.documentType || !d.documentNumber) return;
+	const def = CONFIG_DOCUMENT_TYPES.find((t) => t.value === d.documentType);
+	if (def?.pattern && !new RegExp(def.pattern).test(d.documentNumber)) {
+		ctx.addIssue({
+			code: 'custom',
+			message: 'CLIENT_DOCUMENT_NUMBER_INVALID',
+			path: ['documentNumber'],
+		});
+	}
+};
+
+const clientObject = z.object({
 	businessName: z
 		.string({
 			error: (iss) =>
@@ -90,7 +108,10 @@ export const CreateClientSchema = z.object({
 	status: z.enum(['active', 'inactive'] as const).optional(),
 });
 
-export const UpdateClientSchema = CreateClientSchema.partial();
+export const CreateClientSchema = clientObject.superRefine(checkDocumentNumber);
+export const UpdateClientSchema = clientObject
+	.partial()
+	.superRefine(checkDocumentNumber);
 
 export const ListClientsQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).default(1),
