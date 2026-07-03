@@ -113,7 +113,7 @@ export const DOCUMENT_TYPES: DocumentTypeDef[] = [
 	},
 ];
 
-// ── Supported languages (endonyms) ─────────────────────────────────────────────
+// ── Supported languages (endonyms — used by the language switcher, not the config API) ──
 export const LANGUAGES: LanguageDef[] = [
 	{ value: 'es', label: 'Español' },
 	{ value: 'en', label: 'English' },
@@ -125,6 +125,20 @@ export const LANGUAGES: LanguageDef[] = [
 	{ value: 'ko', label: '한국어' },
 	{ value: 'ru', label: 'Русский' },
 	{ value: 'zh', label: '中文' },
+];
+
+// ── Client types ───────────────────────────────────────────────────────────────
+export const CLIENT_TYPES: IndustryDef[] = [
+	{ value: 'person', label: { es: 'Persona', en: 'Person', de: 'Person', fr: 'Personne', it: 'Persona', pt: 'Pessoa', ja: '個人', ko: '개인', zh: '个人', ru: 'Физическое лицо' } },
+	{ value: 'company', label: { es: 'Empresa', en: 'Company', de: 'Unternehmen', fr: 'Entreprise', it: 'Azienda', pt: 'Empresa', ja: '法人', ko: '법인', zh: '企业', ru: 'Юридическое лицо' } },
+];
+
+// ── Genders ────────────────────────────────────────────────────────────────────
+export const GENDERS: IndustryDef[] = [
+	{ value: 'female', label: { es: 'Femenino', en: 'Female', de: 'Weiblich', fr: 'Féminin', it: 'Femminile', pt: 'Feminino', ja: '女性', ko: '여성', zh: '女', ru: 'Женский' } },
+	{ value: 'male', label: { es: 'Masculino', en: 'Male', de: 'Männlich', fr: 'Masculin', it: 'Maschile', pt: 'Masculino', ja: '男性', ko: '남성', zh: '男', ru: 'Мужской' } },
+	{ value: 'other', label: { es: 'Otro', en: 'Other', de: 'Divers', fr: 'Autre', it: 'Altro', pt: 'Outro', ja: 'その他', ko: '기타', zh: '其他', ru: 'Другое' } },
+	{ value: 'prefer_not_to_say', label: { es: 'Prefiero no decir', en: 'Prefer not to say', de: 'Keine Angabe', fr: 'Préfère ne pas préciser', it: 'Preferisco non dirlo', pt: 'Prefiro não dizer', ja: '回答しない', ko: '응답하지 않음', zh: '不愿透露', ru: 'Не указывать' } },
 ];
 
 // ── Industries ─────────────────────────────────────────────────────────────────

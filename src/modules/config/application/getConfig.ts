@@ -1,6 +1,8 @@
 import {
+	CLIENT_TYPES,
 	CURRENCIES,
 	DOCUMENT_TYPES,
+	GENDERS,
 	INDUSTRIES,
 	LANGUAGES,
 	type LocalizedLabel,
@@ -11,11 +13,21 @@ export const CONFIG_GROUPS = [
 	'documentTypes',
 	'languages',
 	'industries',
+	'clientTypes',
+	'genders',
 ] as const;
 export type ConfigGroup = (typeof CONFIG_GROUPS)[number];
 
 function resolve(label: LocalizedLabel, lang: string): string {
 	return (label as unknown as Record<string, string>)[lang] ?? label.en;
+}
+
+function makeDisplayNames(type: 'language' | 'region', lang: string): Intl.DisplayNames | null {
+	try {
+		return new Intl.DisplayNames([lang], { type });
+	} catch {
+		return null;
+	}
 }
 
 /**
@@ -34,6 +46,7 @@ export function getConfig(groups: string[], lang: string) {
 			symbol: c.symbol,
 		}));
 	}
+
 	if (want('documentTypes')) {
 		result.documentTypes = DOCUMENT_TYPES.map((d) => ({
 			value: d.value,
@@ -42,13 +55,35 @@ export function getConfig(groups: string[], lang: string) {
 			maxLength: d.maxLength,
 		}));
 	}
+
 	if (want('languages')) {
-		result.languages = LANGUAGES.map((l) => ({ value: l.value, label: l.label }));
+		const dn = makeDisplayNames('language', lang);
+		result.languages = LANGUAGES.map((l) => ({
+			value: l.value,
+			// Localized name in the requested language (e.g. lang=es → "inglés", lang=en → "English")
+			// Falls back to the endonym if Intl cannot resolve it.
+			label: dn?.of(l.value) ?? l.label,
+		}));
 	}
+
 	if (want('industries')) {
 		result.industries = INDUSTRIES.map((i) => ({
 			value: i.value,
 			label: resolve(i.label, lang),
+		}));
+	}
+
+	if (want('clientTypes')) {
+		result.clientTypes = CLIENT_TYPES.map((c) => ({
+			value: c.value,
+			label: resolve(c.label, lang),
+		}));
+	}
+
+	if (want('genders')) {
+		result.genders = GENDERS.map((g) => ({
+			value: g.value,
+			label: resolve(g.label, lang),
 		}));
 	}
 
