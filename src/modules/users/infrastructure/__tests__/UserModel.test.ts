@@ -40,13 +40,13 @@ describe('UserModel', () => {
 			...baseUser(),
 			phone: '+1234567890',
 			groupIds: ['group-abc'],
-			address: { street: '123 Main St', city: 'NY', country: 'US' },
+			address: { address: '123 Main St', region: 'Lima', country: 'PE' },
 			gender: 'male',
 		});
 
 		expect(user.phone).toBe('+1234567890');
 		expect(user.groupIds).toEqual(['group-abc']);
-		expect(user.address?.city).toBe('NY');
+		expect(user.address?.region).toBe('Lima');
 		expect(user.gender).toBe('male');
 	});
 

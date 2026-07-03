@@ -2,10 +2,14 @@ import { z } from 'zod';
 import { USER_GENDER_ARRAY } from '@Constants/userGender';
 
 const AddressSchema = z.object({
-	street: z.string().max(255).optional(),
-	city: z.string().max(100).optional(),
-	state: z.string().max(100).optional(),
-	country: z.string().max(100).optional(),
+	country: z.string().max(10).optional(),
+	ubigeoCode: z.string().max(10).optional(),
+	region: z.string().max(100).optional(),
+	province: z.string().max(100).optional(),
+	district: z.string().max(100).optional(),
+	address: z.string().max(255).optional(),
+	addressNumber: z.string().max(50).optional(),
+	addressInterior: z.string().max(100).optional(),
 });
 
 const PasswordSchema = z

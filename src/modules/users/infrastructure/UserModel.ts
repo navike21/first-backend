@@ -6,10 +6,14 @@ export type UserStatus = 'active' | 'inactive';
 import generateUUID from '@Helpers/uuid';
 
 export interface AddressDocument {
-	street?: string;
-	city?: string;
-	state?: string;
 	country?: string;
+	ubigeoCode?: string;
+	region?: string;
+	province?: string;
+	district?: string;
+	address?: string;
+	addressNumber?: string;
+	addressInterior?: string;
 }
 
 export type PresenceStatus = 'available' | 'busy' | 'away' | 'offline';
@@ -63,10 +67,14 @@ export interface UserDocument {
 
 const addressSchema = new Schema<AddressDocument>(
 	{
-		street: { type: String, maxlength: 255 },
-		city: { type: String, maxlength: 100 },
-		state: { type: String, maxlength: 100 },
-		country: { type: String, maxlength: 100 },
+		country: { type: String, maxlength: 10, trim: true },
+		ubigeoCode: { type: String, maxlength: 10, trim: true },
+		region: { type: String, maxlength: 100, trim: true },
+		province: { type: String, maxlength: 100, trim: true },
+		district: { type: String, maxlength: 100, trim: true },
+		address: { type: String, maxlength: 255, trim: true },
+		addressNumber: { type: String, maxlength: 50, trim: true },
+		addressInterior: { type: String, maxlength: 100, trim: true },
 	},
 	{ _id: false },
 );
