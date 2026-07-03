@@ -15,23 +15,20 @@ describe('getConfig', () => {
 		expect(Object.keys(result)).toEqual(['languages']);
 	});
 
-	it('resolves labels to the requested language (es), falling back to en', () => {
-		const es = getConfig(['currencies'], 'es').currencies as {
-			value: string;
-			label: string;
-		}[];
-		const en = getConfig(['currencies'], 'en').currencies as {
-			value: string;
-			label: string;
-		}[];
-		const de = getConfig(['currencies'], 'de').currencies as {
-			value: string;
-			label: string;
-		}[];
+	it('resolves labels to the requested language, falling back to en for unknown langs', () => {
+		const es = getConfig(['currencies'], 'es').currencies as { value: string; label: string }[];
+		const en = getConfig(['currencies'], 'en').currencies as { value: string; label: string }[];
+		const de = getConfig(['currencies'], 'de').currencies as { value: string; label: string }[];
+		const ja = getConfig(['currencies'], 'ja').currencies as { value: string; label: string }[];
+		const ko = getConfig(['currencies'], 'ko').currencies as { value: string; label: string }[];
+		const xx = getConfig(['currencies'], 'xx').currencies as { value: string; label: string }[];
 		expect(es.find((c) => c.value === 'PEN')?.label).toBe('Soles');
 		expect(en.find((c) => c.value === 'PEN')?.label).toBe('Peruvian Sol');
-		// Non es/en falls back to English.
-		expect(de.find((c) => c.value === 'PEN')?.label).toBe('Peruvian Sol');
+		expect(de.find((c) => c.value === 'PEN')?.label).toBe('Peruanischer Sol');
+		expect(ja.find((c) => c.value === 'PEN')?.label).toBe('ペルーソル');
+		expect(ko.find((c) => c.value === 'USD')?.label).toBe('미국 달러');
+		// Truly unknown lang falls back to English.
+		expect(xx.find((c) => c.value === 'PEN')?.label).toBe('Peruvian Sol');
 	});
 
 	it('exposes the DNI/RUC validation patterns', () => {

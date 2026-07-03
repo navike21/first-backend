@@ -15,9 +15,7 @@ export const CONFIG_GROUPS = [
 export type ConfigGroup = (typeof CONFIG_GROUPS)[number];
 
 function resolve(label: LocalizedLabel, lang: string): string {
-	// Labels are authored in es + en; other languages fall back to English
-	// (same convention as the module i18n stubs).
-	return lang === 'es' ? label.es : label.en;
+	return (label as unknown as Record<string, string>)[lang] ?? label.en;
 }
 
 /**
