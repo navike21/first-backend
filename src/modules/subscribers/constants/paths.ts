@@ -11,3 +11,5 @@ export const SUBSCRIBER_PATH_DELETE_LOGIC_BULK =
 export const SUBSCRIBER_PATH_RESTORE = '/subscriber/restore/:id';
 export const SUBSCRIBER_PATH_TRASH = '/subscriber/trash';
 export const SUBSCRIBER_PATH_RESTORE_BULK = '/subscriber/restore-bulk';
+
+export const SUBSCRIBER_ENTITY_TYPE = 'subscribers';

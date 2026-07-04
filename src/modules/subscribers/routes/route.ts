@@ -15,6 +15,7 @@ import {
 	SUBSCRIBER_PATH_UPDATE,
 } from '../constants/paths';
 
+import { acceptImage } from '@Modules/storage';
 import { authenticate } from '@Modules/auth';
 import { authorize } from '@Modules/auth';
 import { PERMISSIONS } from '@Constants/permissions';
@@ -38,6 +39,7 @@ export function subscribersApi(router: Router) {
 	// Public — subscribe form (validation lives in the controller)
 	router.post(
 		SUBSCRIBER_PATH_REGISTER,
+		...acceptImage('photo'),
 		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_CREATED, resource: 'subscribers' }),
 		subscriberRegister,
 	);
@@ -93,6 +95,7 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
+		...acceptImage('photo'),
 		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_UPDATED, resource: 'subscribers' }),
 		subscriberUpdate,
 	);
