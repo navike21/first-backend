@@ -25,8 +25,8 @@ export const authLogin = asyncHandler(async (req, res) => {
 
 	res.cookie(REFRESH_COOKIE, refreshToken, {
 		httpOnly: true,
-		secure: ENV.NODE_ENV === 'production',
-		sameSite: 'strict',
+		secure: ENV.NODE_ENV !== 'test',
+		sameSite: 'none',
 		maxAge: refreshExpiresMs,
 		path: AUTH_COOKIE_PATH,
 	});

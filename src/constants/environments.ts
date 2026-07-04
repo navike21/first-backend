@@ -19,8 +19,8 @@ const EnvSchema = z.object({
 		.string()
 		.default('dev_refresh_secret_change_in_production'),
 	JWT_EMAIL_SECRET: z.string().default('dev_email_secret_change_in_production'),
-	JWT_ACCESS_EXPIRES: z.string().default('15m'),
-	JWT_REFRESH_EXPIRES: z.string().default('1h'),
+	JWT_ACCESS_EXPIRES: z.string().default('8h'),
+	JWT_REFRESH_EXPIRES: z.string().default('30d'),
 	JWT_EMAIL_EXPIRES: z.string().default('24h'),
 	JWT_RESET_EXPIRES: z.string().default('1h'),
 
