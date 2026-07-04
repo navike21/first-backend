@@ -14,10 +14,15 @@ import ServiceModel from '../infrastructure/ServiceModel';
 import { SERVICE_ENTITY_TYPE } from '../constants/paths';
 import type { UpdateServiceInput } from '../schemas/service.schema';
 
+interface ServiceFiles {
+	cover?: IncomingFile;
+	icon?: IncomingFile;
+}
+
 export async function updateService(
 	id: string,
 	input: UpdateServiceInput,
-	file?: IncomingFile,
+	files?: ServiceFiles,
 	uploadedBy?: string,
 ): Promise<MutationResult<Record<string, unknown>>> {
 	const service = await ServiceModel.findOne({ id, status: 'active' });
@@ -32,14 +37,13 @@ export async function updateService(
 	}
 
 	const warnings: ResponseWarning[] = [];
-	let uploadedUrl: string | undefined;
-	let newStorageId: string | undefined;
+	const newStorageIds: string[] = [];
 
-	if (file) {
+	if (files?.cover) {
 		const uploaded = await uploadImageSafe({
-			buffer: file.buffer,
-			originalName: file.originalName,
-			mimeType: file.mimeType,
+			buffer: files.cover.buffer,
+			originalName: files.cover.originalName,
+			mimeType: files.cover.mimeType,
 			entityType: SERVICE_ENTITY_TYPE,
 			entityId: id,
 			field: 'cover',
@@ -47,29 +51,42 @@ export async function updateService(
 		});
 		if (uploaded.warning) warnings.push(uploaded.warning);
 		if (uploaded.url && uploaded.storageId) {
-			uploadedUrl = uploaded.url;
-			newStorageId = uploaded.storageId;
+			input = { ...input, coverImageUrl: uploaded.url };
+			newStorageIds.push(uploaded.storageId);
 		}
 	}
 
-	Object.assign(
-		service,
-		input,
-		uploadedUrl ? { coverImageUrl: uploadedUrl } : {},
-	);
+	if (files?.icon) {
+		const uploaded = await uploadImageSafe({
+			buffer: files.icon.buffer,
+			originalName: files.icon.originalName,
+			mimeType: files.icon.mimeType,
+			entityType: SERVICE_ENTITY_TYPE,
+			entityId: id,
+			field: 'icon',
+			uploadedBy,
+		});
+		if (uploaded.warning) warnings.push(uploaded.warning);
+		if (uploaded.url && uploaded.storageId) {
+			input = { ...input, icon: uploaded.url };
+			newStorageIds.push(uploaded.storageId);
+		}
+	}
+
+	Object.assign(service, input);
 
 	try {
 		await service.save();
 	} catch (error) {
-		if (newStorageId) {
-			await deleteStorageFilesByIds([newStorageId]).catch(() => {});
+		if (newStorageIds.length > 0) {
+			await deleteStorageFilesByIds(newStorageIds).catch(() => {});
 		}
 		throw error;
 	}
 
-	if (newStorageId) {
+	if (newStorageIds.length > 0) {
 		await deleteEntityFiles(SERVICE_ENTITY_TYPE, id, {
-			exceptStorageIds: [newStorageId],
+			exceptStorageIds: newStorageIds,
 		}).catch(() => {});
 	}
 

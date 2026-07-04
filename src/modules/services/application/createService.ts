@@ -9,9 +9,14 @@ import ServiceModel from '../infrastructure/ServiceModel';
 import { SERVICE_ENTITY_TYPE } from '../constants/paths';
 import type { CreateServiceInput } from '../schemas/service.schema';
 
+interface ServiceFiles {
+	cover?: IncomingFile;
+	icon?: IncomingFile;
+}
+
 export async function createService(
 	input: CreateServiceInput,
-	file?: IncomingFile,
+	files?: ServiceFiles,
 	uploadedBy?: string,
 ): Promise<MutationResult<Record<string, unknown>>> {
 	const slug = input.slug ?? generateSlug(input.name.en);
@@ -21,13 +26,14 @@ export async function createService(
 
 	const id = generateUUID();
 	let coverImageUrl = input.coverImageUrl;
+	let iconUrl = input.icon;
 	const warnings: ResponseWarning[] = [];
 
-	if (file) {
+	if (files?.cover) {
 		const uploaded = await uploadImageSafe({
-			buffer: file.buffer,
-			originalName: file.originalName,
-			mimeType: file.mimeType,
+			buffer: files.cover.buffer,
+			originalName: files.cover.originalName,
+			mimeType: files.cover.mimeType,
 			entityType: SERVICE_ENTITY_TYPE,
 			entityId: id,
 			field: 'cover',
@@ -37,12 +43,27 @@ export async function createService(
 		if (uploaded.warning) warnings.push(uploaded.warning);
 	}
 
+	if (files?.icon) {
+		const uploaded = await uploadImageSafe({
+			buffer: files.icon.buffer,
+			originalName: files.icon.originalName,
+			mimeType: files.icon.mimeType,
+			entityType: SERVICE_ENTITY_TYPE,
+			entityId: id,
+			field: 'icon',
+			uploadedBy,
+		});
+		if (uploaded.url) iconUrl = uploaded.url;
+		if (uploaded.warning) warnings.push(uploaded.warning);
+	}
+
 	try {
 		const service = await ServiceModel.create({
 			...input,
 			id,
 			slug,
 			coverImageUrl,
+			icon: iconUrl,
 		});
 		return {
 			data: cleanMongoFields(
@@ -51,7 +72,9 @@ export async function createService(
 			warnings,
 		};
 	} catch (error) {
-		if (file) await deleteEntityFiles(SERVICE_ENTITY_TYPE, id).catch(() => {});
+		if (files?.cover || files?.icon) {
+			await deleteEntityFiles(SERVICE_ENTITY_TYPE, id).catch(() => {});
+		}
 		throw error;
 	}
 }

@@ -4,7 +4,7 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
-import { acceptImage } from '@Modules/storage';
+import { acceptImageFields } from '@Modules/storage';
 import {
 	SERVICE_PATH_LIST_PUBLIC,
 	SERVICE_PATH_LIST_ADMIN,
@@ -88,7 +88,7 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_CREATE, PERMISSIONS.SERVICES_MANAGE),
-		...acceptImage('cover'),
+		...acceptImageFields(['cover', 'icon']),
 		captureAudit({ action: AUDIT_ACTIONS.SERVICES_CREATED, resource: 'services' }),
 		serviceCreateController,
 	);
@@ -105,7 +105,7 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
-		...acceptImage('cover'),
+		...acceptImageFields(['cover', 'icon']),
 		captureAudit({ action: AUDIT_ACTIONS.SERVICES_UPDATED, resource: 'services' }),
 		serviceUpdateController,
 	);

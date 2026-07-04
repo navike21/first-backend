@@ -1,7 +1,7 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
 import { validate } from '@Helpers/validate';
-import { parseRequestData, getUploadedFile } from '@Helpers/multipartRequest';
+import { parseRequestData, getUploadedFileField } from '@Helpers/multipartRequest';
 import { createService } from '../application/createService';
 import { CreateServiceSchema } from '../schemas/service.schema';
 
@@ -10,7 +10,10 @@ export const serviceCreateController = asyncHandler(async (req, res) => {
 
 	const result = await createService(
 		validated,
-		getUploadedFile(req),
+		{
+			cover: getUploadedFileField(req, 'cover'),
+			icon: getUploadedFileField(req, 'icon'),
+		},
 		res.locals.userId as string | undefined,
 	);
 	successResponse(res, {

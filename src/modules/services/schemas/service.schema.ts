@@ -15,7 +15,7 @@ export const CreateServiceSchema = z.object({
 	shortDescription: LocalizedStringSchema,
 	description: LocalizedStringSchema,
 
-	icon: z.string().max(100).trim().optional(),
+	icon: z.string().max(2000).trim().optional(),
 	coverImageUrl: z
 		.url({ message: 'SERVICE_COVER_IMAGE_URL_INVALID' })
 		.optional(),

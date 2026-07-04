@@ -1,6 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import { AppError } from '@Shared/domain/AppError';
 import ServiceModel from '../infrastructure/ServiceModel';
 
 interface ListServicesAdminParams {
@@ -23,10 +22,6 @@ export async function listServicesAdmin({
 			.lean(),
 		ServiceModel.countDocuments(query),
 	]);
-
-	if (data.length === 0) {
-		AppError.notFound('SERVICE_LIST_EMPTY', 'Service list empty');
-	}
 
 	return {
 		data: data.map(cleanMongoFields),

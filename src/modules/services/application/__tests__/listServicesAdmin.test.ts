@@ -30,10 +30,12 @@ describe('listServicesAdmin', () => {
 		expect(result.data).toHaveLength(1);
 	});
 
-	it('throws when empty', async () => {
+	it('returns empty array when no services', async () => {
 		vi.mocked(ServiceModel.find).mockReturnValue(mockQB([]) as never);
 		vi.mocked(ServiceModel.countDocuments).mockResolvedValue(0);
 
-		await expect(listServicesAdmin({ page: 1, limit: 10 })).rejects.toThrow();
+		const result = await listServicesAdmin({ page: 1, limit: 10 });
+		expect(result.data).toHaveLength(0);
+		expect(result.meta.total).toBe(0);
 	});
 });
