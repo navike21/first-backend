@@ -1,7 +1,6 @@
 import { QueryFilter } from 'mongoose';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import { AppError } from '@Shared/domain/AppError';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 import { SubscriberSchema } from '../types/subscriber.schema';
 
@@ -9,12 +8,14 @@ interface ListAllParams {
 	limit: number;
 	page: number;
 	status?: string;
+	search?: string;
 }
 
 export async function listAllSubscribers({
 	limit,
 	page,
 	status,
+	search,
 }: ListAllParams) {
 	const skip = (page - 1) * limit;
 	const query: QueryFilter<SubscriberSchema> = {
@@ -23,6 +24,15 @@ export async function listAllSubscribers({
 
 	if (status) {
 		query.status = status;
+	}
+
+	if (search) {
+		const regex = new RegExp(search, 'i');
+		query.$or = [
+			{ firstName: regex },
+			{ lastName: regex },
+			{ 'contactInformation.email': regex },
+		];
 	}
 
 	const [data, total] = await Promise.all([
@@ -35,14 +45,11 @@ export async function listAllSubscribers({
 				lastName: 1,
 				contactInformation: 1,
 				personalInformation: 1,
+				status: 1,
 			})
 			.lean(),
 		SubscriberModel.countDocuments(query),
 	]);
-
-	if (data.length === 0) {
-		AppError.notFound('SUBSCRIBER_LIST_EMPTY', 'Subscriber list empty');
-	}
 
 	return {
 		data: data.map((item) => cleanMongoFields(item)),

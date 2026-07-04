@@ -19,25 +19,27 @@ interface ServiceFiles {
 	icon?: IncomingFile;
 }
 
-export async function updateService(
+interface AppliedUploads {
+	input: UpdateServiceInput;
+	warnings: ResponseWarning[];
+	storageIds: string[];
+}
+
+async function checkSlugConflict(id: string, slug?: string): Promise<void> {
+	if (!slug) return;
+	const conflict = await ServiceModel.findOne({ slug, id: { $ne: id } });
+	if (conflict) throw new ServiceSlugConflictError();
+}
+
+async function applyFileUploads(
 	id: string,
+	files: ServiceFiles | undefined,
 	input: UpdateServiceInput,
-	files?: ServiceFiles,
 	uploadedBy?: string,
-): Promise<MutationResult<Record<string, unknown>>> {
-	const service = await ServiceModel.findOne({ id, status: 'active' });
-	if (!service) throw new ServiceNotFoundError();
-
-	if (input.slug) {
-		const conflict = await ServiceModel.findOne({
-			slug: input.slug,
-			id: { $ne: id },
-		});
-		if (conflict) throw new ServiceSlugConflictError();
-	}
-
+): Promise<AppliedUploads> {
 	const warnings: ResponseWarning[] = [];
-	const newStorageIds: string[] = [];
+	const storageIds: string[] = [];
+	let updatedInput = input;
 
 	if (files?.cover) {
 		const uploaded = await uploadImageSafe({
@@ -51,8 +53,8 @@ export async function updateService(
 		});
 		if (uploaded.warning) warnings.push(uploaded.warning);
 		if (uploaded.url && uploaded.storageId) {
-			input = { ...input, coverImageUrl: uploaded.url };
-			newStorageIds.push(uploaded.storageId);
+			updatedInput = { ...updatedInput, coverImageUrl: uploaded.url };
+			storageIds.push(uploaded.storageId);
 		}
 	}
 
@@ -68,25 +70,41 @@ export async function updateService(
 		});
 		if (uploaded.warning) warnings.push(uploaded.warning);
 		if (uploaded.url && uploaded.storageId) {
-			input = { ...input, icon: uploaded.url };
-			newStorageIds.push(uploaded.storageId);
+			updatedInput = { ...updatedInput, icon: uploaded.url };
+			storageIds.push(uploaded.storageId);
 		}
 	}
 
-	Object.assign(service, input);
+	return { input: updatedInput, warnings, storageIds };
+}
+
+export async function updateService(
+	id: string,
+	input: UpdateServiceInput,
+	files?: ServiceFiles,
+	uploadedBy?: string,
+): Promise<MutationResult<Record<string, unknown>>> {
+	const service = await ServiceModel.findOne({ id, status: 'active' });
+	if (!service) throw new ServiceNotFoundError();
+
+	await checkSlugConflict(id, input.slug);
+
+	const { input: updatedInput, warnings, storageIds } = await applyFileUploads(id, files, input, uploadedBy);
+
+	Object.assign(service, updatedInput);
 
 	try {
 		await service.save();
 	} catch (error) {
-		if (newStorageIds.length > 0) {
-			await deleteStorageFilesByIds(newStorageIds).catch(() => {});
+		if (storageIds.length > 0) {
+			await deleteStorageFilesByIds(storageIds).catch(() => {});
 		}
 		throw error;
 	}
 
-	if (newStorageIds.length > 0) {
+	if (storageIds.length > 0) {
 		await deleteEntityFiles(SERVICE_ENTITY_TYPE, id, {
-			exceptStorageIds: newStorageIds,
+			exceptStorageIds: storageIds,
 		}).catch(() => {});
 	}
 

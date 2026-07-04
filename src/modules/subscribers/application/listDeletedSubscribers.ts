@@ -9,7 +9,7 @@ export async function listDeletedSubscribers({ page, limit }: { page: number; li
 			.sort({ deletedAt: -1 })
 			.skip(skip)
 			.limit(limit)
-			.select({ id: 1, firstName: 1, lastName: 1, contactInformation: 1, personalInformation: 1 })
+			.select({ id: 1, firstName: 1, lastName: 1, contactInformation: 1, personalInformation: 1, status: 1, deletedAt: 1 })
 			.lean(),
 		SubscriberModel.countDocuments({ deletedAt: { $ne: null } }),
 	]);

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { SubscriberSchema } from '@Modules/subscribers/types/subscriber.schema';
-import { AppError } from '@Shared/domain/AppError';
 import { listAllSubscribers } from '@Modules/subscribers/application/listAllSubscribers';
 import SubscriberModel from '@Modules/subscribers/infrastructure/SubscriberModel';
 
@@ -51,7 +50,7 @@ describe('Subscribers listAllSubscribers', () => {
 		expect(result.meta).toMatchObject({ page: 1, limit: 2, total: 2 });
 	});
 
-	it('throws AppError when subscriber list is empty', async () => {
+	it('returns empty data and meta when subscriber list is empty', async () => {
 		// Arrange
 		vi.mocked(SubscriberModel.find).mockReturnValue(
 			buildFindChain([]) as unknown as ReturnType<typeof SubscriberModel.find>,
@@ -62,10 +61,12 @@ describe('Subscribers listAllSubscribers', () => {
 			>,
 		);
 
-		// Act & Assert
-		await expect(
-			listAllSubscribers({ limit: 10, page: 1 }),
-		).rejects.toBeInstanceOf(AppError);
+		// Act
+		const result = await listAllSubscribers({ limit: 10, page: 1 });
+
+		// Assert
+		expect(result.data).toHaveLength(0);
+		expect(result.meta).toMatchObject({ total: 0 });
 	});
 
 	it('filters subscribers by the provided status', async () => {
@@ -94,6 +95,32 @@ describe('Subscribers listAllSubscribers', () => {
 		// Assert
 		expect(SubscriberModel.find).toHaveBeenCalledWith(
 			expect.objectContaining({ status: 'inactive' }),
+		);
+		expect(result.data).toHaveLength(1);
+	});
+
+	it('applies search filter across name and email fields', async () => {
+		// Arrange
+		const mockSubscribers: MockSubscriber[] = [
+			{ id: 's4', firstName: 'Diana', lastName: 'Prince' },
+		];
+		vi.mocked(SubscriberModel.find).mockReturnValue(
+			buildFindChain(mockSubscribers) as unknown as ReturnType<
+				typeof SubscriberModel.find
+			>,
+		);
+		vi.mocked(SubscriberModel.countDocuments).mockResolvedValue(
+			1 as unknown as Awaited<
+				ReturnType<typeof SubscriberModel.countDocuments>
+			>,
+		);
+
+		// Act
+		const result = await listAllSubscribers({ limit: 10, page: 1, search: 'diana' });
+
+		// Assert
+		expect(SubscriberModel.find).toHaveBeenCalledWith(
+			expect.objectContaining({ $or: expect.any(Array) }),
 		);
 		expect(result.data).toHaveLength(1);
 	});

@@ -4,7 +4,7 @@ export const REFRESH_COOKIE = 'refreshToken';
 export const AUTH_COOKIE_PATH = '/api/v1/auth';
 
 function msFromJwtExpiry(duration: string): number {
-	const m = /^(\d+)(s|m|h|d|w)$/.exec(duration);
+	const m = /^(\d+)([smhdw])$/.exec(duration);
 	if (!m) return 30 * 24 * 60 * 60 * 1000; // 30d fallback
 	const v = parseInt(m[1], 10);
 	const units: Record<string, number> = {
