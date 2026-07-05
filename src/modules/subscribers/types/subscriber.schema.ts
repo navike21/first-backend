@@ -1,5 +1,16 @@
 import { UserGender } from '@Constants/userGender';
 
+export interface SubscriberLocation {
+	countryCode?: string;
+	ubigeoCode?: string;
+	region?: string;
+	province?: string;
+	district?: string;
+	address?: string;
+	addressNumber?: string;
+	addressInterior?: string;
+}
+
 export interface SubscriberSchema {
 	id?: string;
 	firstName: string;
@@ -7,8 +18,8 @@ export interface SubscriberSchema {
 	contactInformation: {
 		email: string;
 		phoneNumber?: string;
-		address?: string;
 	};
+	location?: SubscriberLocation;
 	personalInformation: {
 		profilePictureUrl?: string;
 		dateOfBirth?: Date;

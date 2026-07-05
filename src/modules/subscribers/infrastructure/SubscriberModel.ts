@@ -36,15 +36,23 @@ const subscriberSchema = new Schema<SubscriberSchema>({
 				},
 			},
 			phoneNumber: {
-				type: Number,
-				required: false,
-				minLength: 9,
-				maxLength: 15,
-			},
-			address: {
 				type: String,
 				required: false,
+				maxLength: 20,
 			},
+		},
+	},
+	location: {
+		required: false,
+		type: {
+			countryCode: { type: String, required: false, maxLength: 2 },
+			ubigeoCode: { type: String, required: false, maxLength: 10 },
+			region: { type: String, required: false, maxLength: 100 },
+			province: { type: String, required: false, maxLength: 100 },
+			district: { type: String, required: false, maxLength: 100 },
+			address: { type: String, required: false, maxLength: 300 },
+			addressNumber: { type: String, required: false, maxLength: 50 },
+			addressInterior: { type: String, required: false, maxLength: 100 },
 		},
 	},
 	personalInformation: {

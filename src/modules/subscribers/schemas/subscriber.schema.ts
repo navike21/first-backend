@@ -47,14 +47,7 @@ export const SubscriberRegisterSchema = z.object({
 
 			phoneNumber: z
 				.string()
-				.min(9, { message: 'SUBSCRIBER_PHONE_NUMBER_MIN_LENGTH' })
-				.max(15, { message: 'SUBSCRIBER_PHONE_NUMBER_MAX_LENGTH' })
-				.optional(),
-
-			address: z
-				.string()
-				.min(10, { message: 'SUBSCRIBER_ADDRESS_MIN_LENGTH' })
-				.max(300, { message: 'SUBSCRIBER_ADDRESS_MAX_LENGTH' })
+				.max(20, { message: 'SUBSCRIBER_PHONE_NUMBER_MAX_LENGTH' })
 				.optional(),
 		},
 		{
@@ -64,6 +57,17 @@ export const SubscriberRegisterSchema = z.object({
 					: 'SUBSCRIBER_CONTACT_INFORMATION_INVALID',
 		},
 	),
+
+	location: z.object({
+		countryCode: z.string().max(2).transform((c) => c.toUpperCase()).optional(),
+		ubigeoCode: z.string().max(10).optional(),
+		region: z.string().max(100).optional(),
+		province: z.string().max(100).optional(),
+		district: z.string().max(100).optional(),
+		address: z.string().max(300).optional(),
+		addressNumber: z.string().max(50).optional(),
+		addressInterior: z.string().max(100).optional(),
+	}).optional(),
 
 	personalInformation: z.object(
 		{
