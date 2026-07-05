@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-const langField = z.string().min(1, { message: 'LOCALIZED_FIELD_REQUIRED' });
+// Each language field is optional (empty string allowed); callers enforce that
+// at least the primary language is present via their own schema refinements.
+const langField = z.string().trim();
 
 export const LocalizedStringSchema = z.object({
 	en: langField,
