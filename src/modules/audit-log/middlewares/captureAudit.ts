@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { logError } from '@Helpers/log';
 import { createAuditEntry } from '../application/createAuditEntry';
 
 export interface CaptureAuditOptions {
@@ -14,16 +15,16 @@ export interface CaptureAuditOptions {
 	captureFailures?: boolean;
 }
 
-function sanitizeObject(obj: any): any {
+function sanitizeObject(obj: unknown): unknown {
 	if (obj === null || typeof obj !== 'object') {
 		return obj;
 	}
 
 	if (Array.isArray(obj)) {
-		return obj.map(sanitizeObject);
+		return (obj as unknown[]).map(sanitizeObject);
 	}
 
-	const sanitized: Record<string, any> = {};
+	const sanitized: Record<string, unknown> = {};
 	const sensitiveKeys = new Set([
 		'password',
 		'confirmpassword',
@@ -41,12 +42,12 @@ function sanitizeObject(obj: any): any {
 		'cvv',
 	]);
 
-	for (const key of Object.keys(obj)) {
+	for (const key of Object.keys(obj as Record<string, unknown>)) {
 		const lowerKey = key.toLowerCase();
 		if (sensitiveKeys.has(lowerKey)) {
 			sanitized[key] = '[REDACTED]';
 		} else {
-			sanitized[key] = sanitizeObject(obj[key]);
+			sanitized[key] = sanitizeObject((obj as Record<string, unknown>)[key]);
 		}
 	}
 
@@ -68,7 +69,7 @@ export function captureAudit(options: CaptureAuditOptions) {
 			const resourceId = options.getResourceId?.(req) ?? (typeof req.params?.id === 'string' ? req.params.id : undefined);
 			
 			const baseMetadata = options.getMetadata?.(req) ?? {};
-			const executionDetails: Record<string, any> = {};
+			const executionDetails: Record<string, unknown> = {};
 
 			if (req.body && Object.keys(req.body).length > 0) {
 				executionDetails.payload = sanitizeObject(req.body);
@@ -101,7 +102,7 @@ export function captureAudit(options: CaptureAuditOptions) {
 				userAgent,
 				user: populatedUser,
 			}).catch((err) => {
-				console.error('[Audit Capture Error]: Failed to create audit log entry:', err);
+				logError(`[Audit Capture Error]: Failed to create audit log entry: ${String(err)}`);
 			});
 		});
 		next();

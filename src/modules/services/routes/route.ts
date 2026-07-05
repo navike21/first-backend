@@ -9,6 +9,7 @@ import {
 	SERVICE_PATH_LIST_PUBLIC,
 	SERVICE_PATH_LIST_ADMIN,
 	SERVICE_PATH_GET_BY_SLUG,
+	SERVICE_PATH_GET_BY_ID,
 	SERVICE_PATH_CREATE,
 	SERVICE_PATH_UPDATE,
 	SERVICE_PATH_DELETE,
@@ -22,6 +23,7 @@ import {
 import { serviceListPublicController } from '../controllers/service.listPublic';
 import { serviceListAdminController } from '../controllers/service.listAdmin';
 import { serviceGetBySlugController } from '../controllers/service.getBySlug';
+import { serviceGetByIdController } from '../controllers/service.getById';
 import { serviceCreateController } from '../controllers/service.create';
 import { serviceUpdateController } from '../controllers/service.update';
 import { serviceDeleteController } from '../controllers/service.delete';
@@ -46,6 +48,12 @@ export function servicesApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_READ, PERMISSIONS.SERVICES_MANAGE),
 		serviceListAdminController,
+	);
+	router.get(
+		SERVICE_PATH_GET_BY_ID,
+		authenticate,
+		authorize(PERMISSIONS.SERVICES_READ, PERMISSIONS.SERVICES_MANAGE),
+		serviceGetByIdController,
 	);
 	router.get(SERVICE_PATH_GET_BY_SLUG, serviceGetBySlugController);
 
