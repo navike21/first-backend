@@ -4,6 +4,8 @@ import { AppError } from '@Shared/domain/AppError';
 import ServiceModel from '@Modules/services/infrastructure/ServiceModel';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
+const SLUG_LANGS = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'] as const;
+
 interface ListPortfolioByServiceParams {
 	serviceSlug: string;
 	page: number;
@@ -16,7 +18,7 @@ export async function listPortfolioByService({
 	limit,
 }: ListPortfolioByServiceParams) {
 	const service = await ServiceModel.findOne({
-		slug: serviceSlug,
+		$or: SLUG_LANGS.map((l) => ({ [`slug.${l}`]: serviceSlug })),
 		status: 'active',
 	}).lean();
 	if (!service) {

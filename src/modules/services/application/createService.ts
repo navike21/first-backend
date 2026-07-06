@@ -1,6 +1,5 @@
 import generateUUID from '@Helpers/uuid';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
-import { generateSlug } from '@Helpers/generateSlug';
 import { uploadImageSafe, deleteEntityFiles } from '@Modules/storage';
 import type { IncomingFile } from '@Types/incomingFile';
 import type { MutationResult, ResponseWarning } from '@Types/responseStructure';
@@ -14,15 +13,21 @@ interface ServiceFiles {
 	icon?: IncomingFile;
 }
 
+async function checkSlugConflict(slug?: CreateServiceInput['slug'], excludeId?: string): Promise<void> {
+	const entries = Object.entries(slug ?? {}).filter(([, v]) => v?.trim());
+	if (!entries.length) return;
+	const orQuery = entries.map(([lang, value]) => ({ [`slug.${lang}`]: value }));
+	const filter = excludeId ? { $or: orQuery, id: { $ne: excludeId } } : { $or: orQuery };
+	const existing = await ServiceModel.findOne(filter);
+	if (existing) throw new ServiceSlugConflictError();
+}
+
 export async function createService(
 	input: CreateServiceInput,
 	files?: ServiceFiles,
 	uploadedBy?: string,
 ): Promise<MutationResult<Record<string, unknown>>> {
-	const slug = input.slug ?? generateSlug(input.name.en);
-
-	const existing = await ServiceModel.findOne({ slug });
-	if (existing) throw new ServiceSlugConflictError();
+	await checkSlugConflict(input.slug);
 
 	const id = generateUUID();
 	let coverImageUrl = input.coverImageUrl;
@@ -61,7 +66,6 @@ export async function createService(
 		const service = await ServiceModel.create({
 			...input,
 			id,
-			slug,
 			coverImageUrl,
 			icon: iconUrl,
 		});

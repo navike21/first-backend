@@ -41,7 +41,7 @@ describe('service.schema', () => {
 	it('CreateServiceSchema rejects invalid slug format', () => {
 		const result = CreateServiceSchema.safeParse({
 			...validService,
-			slug: 'Invalid Slug!',
+			slug: { en: 'Invalid Slug!' },
 		});
 		expect(result.success).toBe(false);
 	});
@@ -49,7 +49,7 @@ describe('service.schema', () => {
 	it('CreateServiceSchema accepts valid slug', () => {
 		const result = CreateServiceSchema.safeParse({
 			...validService,
-			slug: 'valid-slug-123',
+			slug: { en: 'valid-slug-123', es: 'slug-valido-123' },
 		});
 		expect(result.success).toBe(true);
 	});

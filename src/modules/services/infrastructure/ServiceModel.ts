@@ -7,7 +7,7 @@ import type { Pillar } from '../constants/pillars';
 
 export interface ServiceDocument {
 	id: string;
-	slug: string;
+	slug: LocalizedString;
 	name: LocalizedString;
 	shortDescription: LocalizedString;
 	description: LocalizedString;
@@ -27,7 +27,7 @@ export interface ServiceDocument {
 const serviceSchema = new Schema<ServiceDocument>(
 	{
 		id: { type: String, required: true, unique: true, default: generateUUID },
-		slug: { type: String, required: true, unique: true, lowercase: true },
+		slug: { type: localizedStringType },
 		name: { type: localizedStringType, required: true },
 		shortDescription: { type: localizedStringType, required: true },
 		description: { type: localizedStringType, required: true },
@@ -49,7 +49,6 @@ const serviceSchema = new Schema<ServiceDocument>(
 	{ timestamps: true },
 );
 
-serviceSchema.index({ slug: 1 }, { unique: true });
 serviceSchema.index({ isActive: 1, order: 1 });
 
 export default model<ServiceDocument>('Service', serviceSchema);

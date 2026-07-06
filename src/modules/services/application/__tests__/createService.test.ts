@@ -7,10 +7,6 @@ vi.mock('@Constants/environments', () => ({
 vi.mock('@Modules/services/infrastructure/ServiceModel', () => ({
 	default: { findOne: vi.fn(), create: vi.fn() },
 }));
-vi.mock('@Helpers/generateSlug', () => ({
-	generateSlug: vi.fn().mockReturnValue('web-development'),
-}));
-
 import { createService } from '@Modules/services/application/createService';
 import ServiceModel from '@Modules/services/infrastructure/ServiceModel';
 import { ServiceSlugConflictError } from '@Modules/services/domain/errors/ServiceErrors';
@@ -32,6 +28,7 @@ const validInput = {
 	shortDescription: locStr,
 	description: locStr,
 };
+const localizedSlug = { en: 'web-dev', es: 'desarrollo-web' };
 
 describe('createService', () => {
 	it('creates service and returns cleaned data', async () => {
@@ -39,11 +36,11 @@ describe('createService', () => {
 		vi.mocked(ServiceModel.create).mockResolvedValue({
 			...validInput,
 			id: 'uuid-1',
-			slug: 'web-development',
+			slug: localizedSlug,
 			toObject: vi.fn().mockReturnValue({
 				...validInput,
 				id: 'uuid-1',
-				slug: 'web-development',
+				slug: localizedSlug,
 				_id: 'mongo-1',
 			}),
 		} as never);
@@ -59,15 +56,15 @@ describe('createService', () => {
 		vi.mocked(ServiceModel.findOne).mockResolvedValue(null);
 		vi.mocked(ServiceModel.create).mockResolvedValue({
 			...validInput,
-			slug: 'custom-slug',
+			slug: localizedSlug,
 			toObject: vi
 				.fn()
-				.mockReturnValue({ slug: 'custom-slug', _id: 'mongo-1' }),
+				.mockReturnValue({ slug: localizedSlug, _id: 'mongo-1' }),
 		} as never);
 
-		await createService({ ...validInput, slug: 'custom-slug' });
+		await createService({ ...validInput, slug: localizedSlug });
 		expect(ServiceModel.create).toHaveBeenCalledWith(
-			expect.objectContaining({ slug: 'custom-slug' }),
+			expect.objectContaining({ slug: localizedSlug }),
 		);
 	});
 
@@ -76,8 +73,8 @@ describe('createService', () => {
 			id: 'existing',
 		} as never);
 
-		await expect(createService(validInput)).rejects.toThrow(
-			ServiceSlugConflictError,
-		);
+		await expect(
+			createService({ ...validInput, slug: localizedSlug }),
+		).rejects.toThrow(ServiceSlugConflictError);
 	});
 });
