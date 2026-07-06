@@ -38,7 +38,7 @@ describe('subscriberUpdate', () => {
 		const res = makeRes();
 		const next = vi.fn();
 		await subscriberUpdate(req, res, next);
-		expect(updateSubscriber).toHaveBeenCalledWith('1', { firstName: 'Jane' });
+		expect(updateSubscriber).toHaveBeenCalledWith('1', expect.objectContaining({ firstName: 'Jane' }), undefined, undefined);
 		expect(successResponse).toHaveBeenCalled();
 	});
 });

@@ -1,3 +1,4 @@
+import { Error as MongooseError } from 'mongoose';
 import { AppError } from '@Shared/domain/AppError';
 import { logError } from '@Helpers/log';
 import { errorResponse } from '@Helpers/responseStructure';
@@ -76,6 +77,19 @@ export const errorMiddleware = (
 			details: error.keyValue
 				? { keys: Object.keys(error.keyValue) }
 				: undefined,
+		});
+	}
+
+	// Mongoose schema validation failure — surface as 422 instead of 500
+	if (error instanceof MongooseError.ValidationError) {
+		const details = Object.fromEntries(
+			Object.entries(error.errors).map(([k, v]) => [k, v.message]),
+		);
+		return errorResponse(res, {
+			statusCode: 422,
+			code: 'VALIDATION_SCHEMA_ERROR',
+			message: error.message,
+			details,
 		});
 	}
 

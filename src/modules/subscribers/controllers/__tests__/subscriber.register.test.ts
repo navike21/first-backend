@@ -41,6 +41,8 @@ describe('subscriberRegister', () => {
 		await subscriberRegister(req, res, next);
 		expect(registerSubscriber).toHaveBeenCalledWith(
 			expect.objectContaining({ firstName: 'John' }),
+			undefined,
+			undefined,
 		);
 		expect(successResponse).toHaveBeenCalled();
 	});

@@ -38,9 +38,11 @@ describe('registerSubscriber', () => {
 		// Act
 		const result = await registerSubscriber(input);
 
-		// Assert
-		expect(SubscriberModel.create).toHaveBeenCalledWith(input);
-		expect(result).not.toHaveProperty('_id');
-		expect(result.firstName).toBe('Alice');
+		// Assert — registerSubscriber adds `id` and wraps personalInformation, so use objectContaining
+		expect(SubscriberModel.create).toHaveBeenCalledWith(
+			expect.objectContaining({ firstName: 'Alice', lastName: 'Smith' }),
+		);
+		expect(result.data).not.toHaveProperty('_id');
+		expect(result.data.firstName).toBe('Alice');
 	});
 });
