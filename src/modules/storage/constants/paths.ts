@@ -6,3 +6,4 @@ export const STORAGE_PATH_DELETE_PERMANENT = '/storage/delete/permanent';
 export const STORAGE_PATH_RESTORE = '/storage/:id/restore';
 export const STORAGE_PATH_TRASH = '/storage/trash';
 export const STORAGE_PATH_BULK_RESTORE = '/storage/bulk/restore';
+export const STORAGE_PATH_EDITOR_IMAGE = '/storage/editor-image';

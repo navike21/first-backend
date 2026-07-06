@@ -6,6 +6,7 @@ import { ALL_ALLOWED_MIME_TYPES } from '../constants/allowedMimeTypes';
 import {
 	STORAGE_PATH_DELETE,
 	STORAGE_PATH_DELETE_PERMANENT,
+	STORAGE_PATH_EDITOR_IMAGE,
 	STORAGE_PATH_FILES,
 	STORAGE_PATH_RESTORE,
 	STORAGE_PATH_TRASH,
@@ -17,6 +18,7 @@ import {
 	storageUploadBulkController,
 	storageUploadController,
 } from '../controllers/storage.upload';
+import { storageEditorImageController } from '../controllers/storage.editorImage';
 import { storageDeleteController } from '../controllers/storage.delete';
 import { storageDeletePermanentController } from '../controllers/storage.deletePermanent';
 import { storageListController } from '../controllers/storage.list';
@@ -28,6 +30,7 @@ import {
 	createMulterSingle,
 } from '../middlewares/multerUpload';
 import { validateFileType } from '../middlewares/validateFileType';
+import { acceptImage } from '../middlewares/acceptImage';
 import { captureAudit, AUDIT_ACTIONS } from '@Modules/audit-log';
 
 export function storageApi(router: Router) {
@@ -47,6 +50,13 @@ export function storageApi(router: Router) {
 		allowedMimeTypes: ALL_ALLOWED_MIME_TYPES,
 		field: 'files',
 	});
+
+	router.post(
+		STORAGE_PATH_EDITOR_IMAGE,
+		authenticate,
+		...acceptImage('image'),
+		storageEditorImageController,
+	);
 
 	router.post(
 		STORAGE_PATH_UPLOAD,

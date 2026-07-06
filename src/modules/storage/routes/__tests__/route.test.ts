@@ -42,7 +42,7 @@ describe('storageApi', () => {
 
 		storageApi(mockRouter);
 
-		expect(post).toHaveBeenCalledTimes(2);
+		expect(post).toHaveBeenCalledTimes(3);
 		expect(get).toHaveBeenCalledTimes(2);
 		expect(patch).toHaveBeenCalledTimes(2);
 		expect(del).toHaveBeenCalledTimes(2);
@@ -50,6 +50,7 @@ describe('storageApi', () => {
 		const postPaths = post.mock.calls.map((call) => call[0]);
 		expect(postPaths).toContain('/storage/upload');
 		expect(postPaths).toContain('/storage/upload-bulk');
+		expect(postPaths).toContain('/storage/editor-image');
 
 		const getPaths = get.mock.calls.map((call) => call[0]);
 		expect(getPaths).toContain('/storage/files');
