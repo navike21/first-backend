@@ -67,6 +67,49 @@ describe('listCollaborators', () => {
 		});
 	});
 
+	it('adds a case-insensitive name regex filter when search is given', async () => {
+		vi.mocked(CollaboratorModel.find).mockReturnValue(
+			mockQueryBuilder([member]) as never,
+		);
+		vi.mocked(CollaboratorModel.countDocuments).mockResolvedValue(1);
+
+		await listCollaborators({ page: 1, limit: 10, adminView: true, search: 'Jane' });
+
+		expect(CollaboratorModel.find).toHaveBeenCalledWith({
+			deletedAt: null,
+			name: { $regex: 'Jane', $options: 'i' },
+		});
+	});
+
+	it('filters by isActive for adminView', async () => {
+		vi.mocked(CollaboratorModel.find).mockReturnValue(
+			mockQueryBuilder([member]) as never,
+		);
+		vi.mocked(CollaboratorModel.countDocuments).mockResolvedValue(1);
+
+		await listCollaborators({ page: 1, limit: 10, adminView: true, isActive: false });
+
+		expect(CollaboratorModel.find).toHaveBeenCalledWith({
+			deletedAt: null,
+			isActive: false,
+		});
+	});
+
+	it('ignores isActive for the public view (already forced true)', async () => {
+		vi.mocked(CollaboratorModel.find).mockReturnValue(
+			mockQueryBuilder([member]) as never,
+		);
+		vi.mocked(CollaboratorModel.countDocuments).mockResolvedValue(1);
+
+		await listCollaborators({ page: 1, limit: 10, adminView: false, isActive: false });
+
+		expect(CollaboratorModel.find).toHaveBeenCalledWith({
+			status: 'active',
+			isActive: true,
+			deletedAt: null,
+		});
+	});
+
 	it('returns correct meta pagination', async () => {
 		vi.mocked(CollaboratorModel.find).mockReturnValue(
 			mockQueryBuilder([member, member]) as never,

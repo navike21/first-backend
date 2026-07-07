@@ -6,7 +6,8 @@ const CollaboratorSchema = new Schema(
 	{
 		id: { type: String, default: generateUUID, index: true },
 		name: { type: String, required: true, trim: true, maxlength: 100 },
-		role: localizedStringType,
+		role: { type: String, required: true, trim: true, maxlength: 50 },
+		level: { type: String, trim: true, maxlength: 50 },
 		bio: localizedStringType,
 		photoUrl: { type: String },
 		userId: { type: String, ref: 'User' },

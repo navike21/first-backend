@@ -40,7 +40,7 @@ const localizedName = {
 
 const validBody = {
 	name: 'Jane Doe',
-	role: localizedName,
+	role: 'developer',
 	bio: localizedName,
 };
 

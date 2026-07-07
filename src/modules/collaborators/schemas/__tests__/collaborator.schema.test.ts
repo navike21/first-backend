@@ -20,7 +20,7 @@ const localizedName = {
 
 const validMember = {
 	name: 'Jane Doe',
-	role: localizedName,
+	role: 'developer',
 	bio: localizedName,
 };
 
@@ -46,11 +46,29 @@ describe('team.schema', () => {
 		expect(result.success).toBe(false);
 	});
 
-	it('CreateCollaboratorSchema rejects incomplete localizedString in role', () => {
+	it('CreateCollaboratorSchema rejects an empty role', () => {
 		const result = CreateCollaboratorSchema.safeParse({
 			name: 'Jane',
-			role: { en: 'Developer' },
+			role: '',
 			bio: localizedName,
+		});
+		expect(result.success).toBe(false);
+	});
+
+	it('CreateCollaboratorSchema accepts an optional level', () => {
+		const result = CreateCollaboratorSchema.safeParse({
+			...validMember,
+			level: 'senior',
+		});
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.level).toBe('senior');
+	});
+
+	it('CreateCollaboratorSchema rejects incomplete localizedString in bio', () => {
+		const result = CreateCollaboratorSchema.safeParse({
+			name: 'Jane',
+			role: 'developer',
+			bio: { en: 'Developer' },
 		});
 		expect(result.success).toBe(false);
 	});

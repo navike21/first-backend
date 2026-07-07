@@ -84,7 +84,12 @@ export function collaboratorsApi(router: Router) {
 		purgeCollaboratorsBulkController,
 	);
 
-	router.get(COLLABORATOR_PATH_GET_BY_ID, collaboratorGetByIdController);
+	router.get(
+		COLLABORATOR_PATH_GET_BY_ID,
+		authenticate,
+		authorize(PERMISSIONS.COLLABORATORS_READ, PERMISSIONS.COLLABORATORS_MANAGE),
+		collaboratorGetByIdController,
+	);
 
 	router.post(
 		COLLABORATOR_PATH_CREATE,

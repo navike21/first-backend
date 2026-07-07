@@ -11,7 +11,13 @@ const SocialLinksSchema = z.object({
 
 export const CreateCollaboratorSchema = z.object({
 	name: z.string().min(1).max(100).trim(),
-	role: LocalizedStringSchema,
+	// Config API value (group 'collaboratorRoles') — a curated, admin-facing
+	// picklist rather than free text, so it stays consistent across the team.
+	// Not a strict enum here on purpose: the picklist is expected to evolve
+	// (see product vision docs), and a hard enum would force this schema and
+	// the config data list to change in lockstep.
+	role: z.string().trim().min(1).max(50),
+	level: z.string().trim().max(50).optional(),
 	bio: LocalizedStringSchema,
 	photoUrl: z.url({ message: 'COLLABORATOR_PHOTO_URL_INVALID' }).optional(),
 	socialLinks: SocialLinksSchema.optional(),
@@ -27,6 +33,8 @@ export const UpdateCollaboratorSchema = CreateCollaboratorSchema.partial();
 export const ListCollaboratorQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).default(1),
 	limit: z.coerce.number().int().min(1).max(100).default(10),
+	search: z.string().trim().optional(),
+	isActive: z.coerce.boolean().optional(),
 });
 
 export type createCollaboratorInput = z.infer<typeof CreateCollaboratorSchema>;

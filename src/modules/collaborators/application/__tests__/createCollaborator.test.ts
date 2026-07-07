@@ -26,7 +26,7 @@ const localizedName = {
 
 const validInput = {
 	name: 'Jane Doe',
-	role: localizedName,
+	role: 'developer',
 	bio: localizedName,
 	order: 0,
 	isActive: true,

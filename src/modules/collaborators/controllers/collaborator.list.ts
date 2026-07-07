@@ -9,6 +9,7 @@ export const collaboratorListPublicController = asyncHandler(async (req, res) =>
 		page: query.page,
 		limit: query.limit,
 		adminView: false,
+		search: query.search,
 	});
 	successResponse(res, {
 		statusCode: 200,
@@ -26,6 +27,8 @@ export const collaboratorListAdminController = asyncHandler(async (req, res) => 
 		page: query.page,
 		limit: query.limit,
 		adminView: true,
+		search: query.search,
+		isActive: query.isActive,
 	});
 	successResponse(res, {
 		statusCode: 200,
