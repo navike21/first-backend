@@ -86,4 +86,12 @@ describe('getConfig', () => {
 		expect(result.languages).toBeDefined();
 		expect(result.currencies).toBeUndefined();
 	});
+
+	it('returns technologies with language-agnostic labels', () => {
+		const en = getConfig(['technologies'], 'en').technologies as { value: string; label: string }[];
+		const es = getConfig(['technologies'], 'es').technologies as { value: string; label: string }[];
+		expect(en.find((t) => t.value === 'react')?.label).toBe('React');
+		expect(en.find((t) => t.value === 'nodejs')?.label).toBe('Node.js');
+		expect(es.find((t) => t.value === 'react')?.label).toBe('React');
+	});
 });

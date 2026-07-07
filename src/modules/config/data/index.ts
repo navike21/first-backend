@@ -171,3 +171,54 @@ export const INDUSTRIES: IndustryDef[] = [
 	{ value: 'government', label: { es: 'Gobierno', en: 'Government', de: 'Regierung', fr: 'Gouvernement', it: 'Governo', pt: 'Governo', ja: '政府・行政', ko: '정부', zh: '政府', ru: 'Государственное управление' } },
 	{ value: 'other', label: { es: 'Otro', en: 'Other', de: 'Sonstiges', fr: 'Autre', it: 'Altro', pt: 'Outro', ja: 'その他', ko: '기타', zh: '其他', ru: 'Другое' } },
 ];
+
+// ── Technologies (language-agnostic proper nouns) ──────────────────────────────
+export interface TechDef {
+	value: string;
+	label: string;
+}
+
+export const TECHNOLOGIES: TechDef[] = [
+	{ value: 'react', label: 'React' },
+	{ value: 'vue', label: 'Vue.js' },
+	{ value: 'angular', label: 'Angular' },
+	{ value: 'nextjs', label: 'Next.js' },
+	{ value: 'nuxtjs', label: 'Nuxt.js' },
+	{ value: 'svelte', label: 'Svelte' },
+	{ value: 'nodejs', label: 'Node.js' },
+	{ value: 'express', label: 'Express' },
+	{ value: 'nestjs', label: 'NestJS' },
+	{ value: 'typescript', label: 'TypeScript' },
+	{ value: 'javascript', label: 'JavaScript' },
+	{ value: 'python', label: 'Python' },
+	{ value: 'django', label: 'Django' },
+	{ value: 'fastapi', label: 'FastAPI' },
+	{ value: 'laravel', label: 'Laravel' },
+	{ value: 'php', label: 'PHP' },
+	{ value: 'java', label: 'Java' },
+	{ value: 'springboot', label: 'Spring Boot' },
+	{ value: 'dotnet', label: '.NET' },
+	{ value: 'csharp', label: 'C#' },
+	{ value: 'go', label: 'Go' },
+	{ value: 'rust', label: 'Rust' },
+	{ value: 'ruby', label: 'Ruby' },
+	{ value: 'rails', label: 'Ruby on Rails' },
+	{ value: 'mongodb', label: 'MongoDB' },
+	{ value: 'postgresql', label: 'PostgreSQL' },
+	{ value: 'mysql', label: 'MySQL' },
+	{ value: 'redis', label: 'Redis' },
+	{ value: 'elasticsearch', label: 'Elasticsearch' },
+	{ value: 'graphql', label: 'GraphQL' },
+	{ value: 'rest', label: 'REST API' },
+	{ value: 'docker', label: 'Docker' },
+	{ value: 'kubernetes', label: 'Kubernetes' },
+	{ value: 'aws', label: 'AWS' },
+	{ value: 'gcp', label: 'Google Cloud' },
+	{ value: 'azure', label: 'Azure' },
+	{ value: 'vercel', label: 'Vercel' },
+	{ value: 'tailwindcss', label: 'Tailwind CSS' },
+	{ value: 'figma', label: 'Figma' },
+	{ value: 'wordpress', label: 'WordPress' },
+	{ value: 'shopify', label: 'Shopify' },
+	{ value: 'stripe', label: 'Stripe' },
+];

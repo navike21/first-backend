@@ -5,6 +5,7 @@ import {
 	GENDERS,
 	INDUSTRIES,
 	LANGUAGES,
+	TECHNOLOGIES,
 	type LocalizedLabel,
 } from '../data';
 
@@ -15,6 +16,7 @@ export const CONFIG_GROUPS = [
 	'industries',
 	'clientTypes',
 	'genders',
+	'technologies',
 ] as const;
 export type ConfigGroup = (typeof CONFIG_GROUPS)[number];
 
@@ -84,6 +86,13 @@ export function getConfig(groups: string[], lang: string) {
 		result.genders = GENDERS.map((g) => ({
 			value: g.value,
 			label: resolve(g.label, lang),
+		}));
+	}
+
+	if (want('technologies')) {
+		result.technologies = TECHNOLOGIES.map((t) => ({
+			value: t.value,
+			label: t.label,
 		}));
 	}
 
