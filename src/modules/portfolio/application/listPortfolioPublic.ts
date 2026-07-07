@@ -1,6 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
-import { AppError } from '@Shared/domain/AppError';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
 interface ListPortfolioPublicParams {
@@ -27,10 +26,6 @@ export async function listPortfolioPublic({
 			.lean(),
 		PortfolioModel.countDocuments(query),
 	]);
-
-	if (data.length === 0) {
-		AppError.notFound('PORTFOLIO_LIST_EMPTY', 'Portfolio list empty');
-	}
 
 	return {
 		data: data.map(cleanMongoFields),

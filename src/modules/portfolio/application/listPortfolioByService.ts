@@ -38,10 +38,6 @@ export async function listPortfolioByService({
 		PortfolioModel.countDocuments(query),
 	]);
 
-	if (data.length === 0) {
-		AppError.notFound('PORTFOLIO_LIST_EMPTY', 'Portfolio list empty');
-	}
-
 	return {
 		data: data.map(cleanMongoFields),
 		meta: metaInformation({ page, limit, total }),

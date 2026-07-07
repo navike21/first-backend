@@ -44,10 +44,12 @@ describe('listPortfolioAdmin', () => {
 		expect(result.data).toHaveLength(1);
 	});
 
-	it('throws when empty', async () => {
+	it('returns empty list when no items exist', async () => {
 		vi.mocked(PortfolioModel.find).mockReturnValue(mockQB([]) as never);
 		vi.mocked(PortfolioModel.countDocuments).mockResolvedValue(0);
 
-		await expect(listPortfolioAdmin({ page: 1, limit: 10 })).rejects.toThrow();
+		const result = await listPortfolioAdmin({ page: 1, limit: 10 });
+		expect(result.data).toHaveLength(0);
+		expect(result.meta.total).toBe(0);
 	});
 });

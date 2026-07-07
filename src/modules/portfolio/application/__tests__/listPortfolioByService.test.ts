@@ -52,15 +52,15 @@ describe('listPortfolioByService', () => {
 		).rejects.toThrow();
 	});
 
-	it('throws when portfolio list empty for service', async () => {
+	it('returns empty list when service has no portfolio items', async () => {
 		vi.mocked(ServiceModel.findOne).mockReturnValue({
 			lean: vi.fn().mockResolvedValue({ id: 'svc-1' }),
 		} as never);
 		vi.mocked(PortfolioModel.find).mockReturnValue(mockQB([]) as never);
 		vi.mocked(PortfolioModel.countDocuments).mockResolvedValue(0);
 
-		await expect(
-			listPortfolioByService({ serviceSlug: 'web', page: 1, limit: 10 }),
-		).rejects.toThrow();
+		const result = await listPortfolioByService({ serviceSlug: 'web', page: 1, limit: 10 });
+		expect(result.data).toHaveLength(0);
+		expect(result.meta.total).toBe(0);
 	});
 });
