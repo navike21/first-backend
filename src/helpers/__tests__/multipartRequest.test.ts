@@ -4,6 +4,8 @@ import { AppError } from '@Shared/domain/AppError';
 import {
 	parseRequestData,
 	getUploadedFile,
+	getUploadedFileField,
+	getUploadedFileArray,
 } from '@Helpers/multipartRequest';
 
 describe('parseRequestData', () => {
@@ -51,5 +53,52 @@ describe('getUploadedFile', () => {
 			originalName: 'logo.png',
 			mimeType: 'image/png',
 		});
+	});
+});
+
+describe('getUploadedFileField', () => {
+	it('returns undefined when the named field is absent', () => {
+		const req = { files: {} } as unknown as Request;
+		expect(getUploadedFileField(req, 'cover')).toBeUndefined();
+	});
+
+	it('maps the first file of a named field into an IncomingFile', () => {
+		const req = {
+			files: {
+				cover: [
+					{ buffer: Buffer.from('a'), originalname: 'a.png', mimetype: 'image/png' },
+					{ buffer: Buffer.from('b'), originalname: 'b.png', mimetype: 'image/png' },
+				],
+			},
+		} as unknown as Request;
+
+		expect(getUploadedFileField(req, 'cover')).toEqual({
+			buffer: Buffer.from('a'),
+			originalName: 'a.png',
+			mimeType: 'image/png',
+		});
+	});
+});
+
+describe('getUploadedFileArray', () => {
+	it('returns an empty array when the named field is absent', () => {
+		const req = { files: {} } as unknown as Request;
+		expect(getUploadedFileArray(req, 'gallery')).toEqual([]);
+	});
+
+	it('maps every file of a named field into IncomingFiles, preserving order', () => {
+		const req = {
+			files: {
+				gallery: [
+					{ buffer: Buffer.from('a'), originalname: 'a.png', mimetype: 'image/png' },
+					{ buffer: Buffer.from('b'), originalname: 'b.png', mimetype: 'image/png' },
+				],
+			},
+		} as unknown as Request;
+
+		expect(getUploadedFileArray(req, 'gallery')).toEqual([
+			{ buffer: Buffer.from('a'), originalName: 'a.png', mimeType: 'image/png' },
+			{ buffer: Buffer.from('b'), originalName: 'b.png', mimeType: 'image/png' },
+		]);
 	});
 });

@@ -71,6 +71,30 @@ describe('deleteEntityFiles', () => {
 		expect(StorageFileModel.deleteMany).toHaveBeenCalledWith(expectedFilter);
 	});
 
+	it('scopes the filter to a field, leaving other fields untouched', async () => {
+		vi.mocked(StorageFileModel.find).mockReturnValue(
+			mockQueryBuilder([
+				{ id: 'gal-1', original: { url: 'https://cdn/gal-1.jpg' } },
+			]) as never,
+		);
+		vi.mocked(StorageFileModel.deleteMany).mockResolvedValue({} as never);
+		mockDelete.mockResolvedValue(undefined);
+
+		await deleteEntityFiles('portfolio', 'p-1', {
+			field: 'gallery',
+			exceptStorageIds: ['gal-2'],
+		});
+
+		const expectedFilter = {
+			entityType: 'portfolio',
+			entityId: 'p-1',
+			field: 'gallery',
+			id: { $nin: ['gal-2'] },
+		};
+		expect(StorageFileModel.find).toHaveBeenCalledWith(expectedFilter);
+		expect(StorageFileModel.deleteMany).toHaveBeenCalledWith(expectedFilter);
+	});
+
 	it('is a no-op when the entity has no files', async () => {
 		vi.mocked(StorageFileModel.find).mockReturnValue(
 			mockQueryBuilder([]) as never,

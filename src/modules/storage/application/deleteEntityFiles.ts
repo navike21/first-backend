@@ -4,13 +4,16 @@ import { removeStorageBlobs } from './removeStorageBlobs';
 export interface DeleteEntityFilesOptions {
 	/** Storage ids to keep (e.g. a freshly uploaded image during a replacement). */
 	exceptStorageIds?: string[];
+	/** Scope the deletion to files uploaded under this field (e.g. 'cover'), leaving other fields (e.g. 'gallery') untouched. */
+	field?: string;
 }
 
 /**
- * Removes every stored file (blobs + DB records) attached to an entity, using
- * the `entityType`/`entityId` anchor recorded at upload time. Used for physical
- * entity purge and, with `exceptStorageIds`, for image replacement (delete the
- * old variants while keeping the new one).
+ * Removes stored files (blobs + DB records) attached to an entity, using the
+ * `entityType`/`entityId` anchor recorded at upload time. Used for physical
+ * entity purge (no options — wipes everything) and, with `exceptStorageIds`
+ * and/or `field`, for image replacement (delete the old variants of one field
+ * while keeping the new one and any other field's files untouched).
  */
 export async function deleteEntityFiles(
 	entityType: string,
@@ -18,6 +21,9 @@ export async function deleteEntityFiles(
 	options: DeleteEntityFilesOptions = {},
 ): Promise<void> {
 	const filter: Record<string, unknown> = { entityType, entityId };
+	if (options.field) {
+		filter.field = options.field;
+	}
 	if (options.exceptStorageIds && options.exceptStorageIds.length > 0) {
 		filter.id = { $nin: options.exceptStorageIds };
 	}

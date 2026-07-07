@@ -4,12 +4,15 @@ export { uploadImageSafe } from './application/uploadImageSafe';
 export { deleteFilesLogical } from './application/deleteFilesLogical';
 export { deleteFilesPermanent } from './application/deleteFilesPermanent';
 export { deleteEntityFiles } from './application/deleteEntityFiles';
+export type { DeleteEntityFilesOptions } from './application/deleteEntityFiles';
 export { deleteStorageFilesByIds } from './application/deleteStorageFilesByIds';
+export { listEntityFiles } from './application/listEntityFiles';
+export type { ListEntityFilesOptions } from './application/listEntityFiles';
 export { getStorageDriver } from './infrastructure/StorageService';
 export { acceptImage } from './middlewares/acceptImage';
 export type { AcceptImageOptions } from './middlewares/acceptImage';
 export { acceptImageFields } from './middlewares/acceptImageFields';
-export type { AcceptImageFieldsOptions } from './middlewares/acceptImageFields';
+export type { AcceptImageFieldsOptions, ImageFieldSpec } from './middlewares/acceptImageFields';
 export type { StorageFile, StorageDriver } from './domain/StorageDriver';
 export type { UploadInput } from './application/uploadFile';
 export type {

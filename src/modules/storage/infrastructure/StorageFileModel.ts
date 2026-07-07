@@ -10,6 +10,8 @@ export interface StorageFileDocument {
 	id: string;
 	entityType: string;
 	entityId: string;
+	/** Distinguishes multiple images under the same entity (e.g. 'cover' vs 'gallery'). */
+	field?: string;
 	originalName: string;
 	mimeType: string;
 	size: number;
@@ -37,6 +39,7 @@ const storageFileSchema = new Schema<StorageFileDocument>(
 		id: { type: String, required: true, unique: true, default: generateUUID },
 		entityType: { type: String, required: true, maxlength: 50 },
 		entityId: { type: String, required: true },
+		field: { type: String, maxlength: 50 },
 		originalName: { type: String, required: true, maxlength: 255 },
 		mimeType: { type: String, required: true },
 		size: { type: Number, required: true },

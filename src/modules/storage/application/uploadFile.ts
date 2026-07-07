@@ -18,6 +18,8 @@ export interface UploadInput {
 	entityId: string;
 	quality?: number;
 	uploadedBy?: string;
+	/** Distinguishes multiple images under the same entity (e.g. 'cover' vs 'gallery'). */
+	field?: string;
 }
 
 const DEFAULT_QUALITY = 80;
@@ -69,6 +71,7 @@ export async function uploadFile(
 	const record = await StorageFileModel.create({
 		entityType: input.entityType,
 		entityId: input.entityId,
+		field: input.field,
 		originalName: input.originalName,
 		mimeType: input.mimeType,
 		size: input.buffer.length,

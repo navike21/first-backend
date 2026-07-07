@@ -52,3 +52,21 @@ export function getUploadedFileField(
 		mimeType: file.mimetype,
 	};
 }
+
+/**
+ * Maps every file under a named field from a multi-field multipart upload
+ * (`req.files` shaped as `{ [field]: File[] }`, populated by
+ * `acceptImageFields` with a `maxCount > 1`) into IncomingFiles, in the order
+ * they were sent.
+ */
+export function getUploadedFileArray(req: Request, name: string): IncomingFile[] {
+	const files = req.files as
+		| Record<string, Express.Multer.File[]>
+		| undefined;
+	const group = files?.[name] ?? [];
+	return group.map((file) => ({
+		buffer: file.buffer,
+		originalName: file.originalname,
+		mimeType: file.mimetype,
+	}));
+}
