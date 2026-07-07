@@ -14,6 +14,7 @@ export async function createPortfolio(
 	input: CreatePortfolioInput,
 	file?: IncomingFile,
 	uploadedBy?: string,
+	galleryFiles: IncomingFile[] = [],
 ): Promise<MutationResult<Record<string, unknown>>> {
 	const slug = input.slug ?? generateSlug(input.name.en);
 
@@ -46,12 +47,34 @@ export async function createPortfolio(
 		);
 	}
 
+	// Nothing pre-exists on create, so the gallery is entirely whatever was
+	// just uploaded, in the order the files arrived.
+	const galleryUploads = await Promise.all(
+		galleryFiles.map((galleryFile) =>
+			uploadImageSafe({
+				buffer: galleryFile.buffer,
+				originalName: galleryFile.originalName,
+				mimeType: galleryFile.mimeType,
+				entityType: PORTFOLIO_ENTITY_TYPE,
+				entityId: id,
+				field: 'gallery',
+				uploadedBy,
+			}),
+		),
+	);
+	const gallery: string[] = [];
+	for (const uploaded of galleryUploads) {
+		if (uploaded.url) gallery.push(uploaded.url);
+		if (uploaded.warning) warnings.push(uploaded.warning);
+	}
+
 	try {
 		const portfolio = await PortfolioModel.create({
 			...input,
 			id,
 			slug,
 			coverImageUrl,
+			gallery,
 		});
 		return {
 			data: cleanMongoFields(
@@ -60,7 +83,9 @@ export async function createPortfolio(
 			warnings,
 		};
 	} catch (error) {
-		if (file) await deleteEntityFiles(PORTFOLIO_ENTITY_TYPE, id).catch(() => {});
+		if (file || galleryFiles.length) {
+			await deleteEntityFiles(PORTFOLIO_ENTITY_TYPE, id).catch(() => {});
+		}
 		throw error;
 	}
 }

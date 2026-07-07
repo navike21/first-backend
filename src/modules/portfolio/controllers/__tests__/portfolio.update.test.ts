@@ -42,6 +42,7 @@ describe('portfolioUpdateController', () => {
 			expect.any(Object),
 			undefined,
 			undefined,
+			[],
 		);
 		expect(successResponse).toHaveBeenCalled();
 	});

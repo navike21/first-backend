@@ -1,5 +1,7 @@
-/** entityType used to anchor a portfolio item's stored files (cover) in the storage module. */
+/** entityType used to anchor a portfolio item's stored files (cover, gallery) in the storage module. */
 export const PORTFOLIO_ENTITY_TYPE = 'portfolio';
+/** Max number of gallery photos allowed per portfolio item. */
+export const PORTFOLIO_GALLERY_MAX_ITEMS = 10;
 
 export const PORTFOLIO_PATH_LIST_PUBLIC = '/portfolio';
 export const PORTFOLIO_PATH_LIST_ADMIN = '/portfolio/admin';

@@ -1,8 +1,23 @@
 import { z } from 'zod';
 import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
 import { PORTFOLIO_STATUSES_ARRAY } from '../constants/portfolioStatus';
+import { PORTFOLIO_GALLERY_MAX_ITEMS } from '../constants/paths';
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+// Reconciles the gallery on update: existing photos to keep (by URL) and
+// newly uploaded files (by their position among the `gallery` multipart
+// parts), in the final order the client wants them persisted in.
+export const GalleryOrderTokenSchema = z.union([
+	z.object({
+		type: z.literal('existing'),
+		url: z.url({ message: 'PORTFOLIO_GALLERY_URL_INVALID' }),
+	}),
+	z.object({
+		type: z.literal('new'),
+		index: z.number().int().min(0),
+	}),
+]);
 
 const MetricSchema = z.object({
 	label: LocalizedStringSchema,
@@ -34,6 +49,7 @@ export const CreatePortfolioSchema = z.object({
 		.optional(),
 	gallery: z
 		.array(z.url({ message: 'PORTFOLIO_GALLERY_URL_INVALID' }))
+		.max(PORTFOLIO_GALLERY_MAX_ITEMS)
 		.default([]),
 
 	clientId: z.uuid({ message: 'PORTFOLIO_CLIENT_ID_INVALID' }).optional(),
@@ -57,7 +73,11 @@ export const CreatePortfolioSchema = z.object({
 	status: z.enum(PORTFOLIO_STATUSES_ARRAY).default('draft'),
 });
 
-export const UpdatePortfolioSchema = CreatePortfolioSchema.partial();
+export const UpdatePortfolioSchema = CreatePortfolioSchema.partial().extend({
+	// Input-only: reconciles the gallery when present. Omitting it entirely
+	// leaves the existing gallery untouched (same semantics as omitting `cover`).
+	galleryOrder: z.array(GalleryOrderTokenSchema).max(PORTFOLIO_GALLERY_MAX_ITEMS).optional(),
+});
 
 export const ListPortfolioQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).default(1),
@@ -71,6 +91,7 @@ export const ListPortfolioAdminQuerySchema = ListPortfolioQuerySchema.extend({
 
 export type CreatePortfolioInput = z.infer<typeof CreatePortfolioSchema>;
 export type UpdatePortfolioInput = z.infer<typeof UpdatePortfolioSchema>;
+export type GalleryOrderToken = z.infer<typeof GalleryOrderTokenSchema>;
 export type ListPortfolioQuery = z.infer<typeof ListPortfolioQuerySchema>;
 export type ListPortfolioAdminQuery = z.infer<
 	typeof ListPortfolioAdminQuerySchema

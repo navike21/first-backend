@@ -1,7 +1,11 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
 import { validate } from '@Helpers/validate';
-import { parseRequestData, getUploadedFile } from '@Helpers/multipartRequest';
+import {
+	parseRequestData,
+	getUploadedFileField,
+	getUploadedFileArray,
+} from '@Helpers/multipartRequest';
 import { updatePortfolio } from '../application/updatePortfolio';
 import { UpdatePortfolioSchema } from '../schemas/portfolio.schema';
 
@@ -12,8 +16,9 @@ export const portfolioUpdateController = asyncHandler(async (req, res) => {
 	const result = await updatePortfolio(
 		id,
 		validated,
-		getUploadedFile(req),
+		getUploadedFileField(req, 'cover'),
 		res.locals.userId as string | undefined,
+		getUploadedFileArray(req, 'gallery'),
 	);
 	successResponse(res, {
 		statusCode: 200,

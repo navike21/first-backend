@@ -4,7 +4,7 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
-import { acceptImage } from '@Modules/storage';
+import { acceptImageFields } from '@Modules/storage';
 import {
 	PORTFOLIO_PATH_LIST_PUBLIC,
 	PORTFOLIO_PATH_LIST_ADMIN,
@@ -20,7 +20,11 @@ import {
 	PORTFOLIO_PATH_BULK_DELETE,
 	PORTFOLIO_PATH_BULK_RESTORE,
 	PORTFOLIO_PATH_BULK_PURGE,
+	PORTFOLIO_GALLERY_MAX_ITEMS,
 } from '../constants/paths';
+
+const acceptPortfolioMedia = () =>
+	acceptImageFields([{ name: 'cover' }, { name: 'gallery', maxCount: PORTFOLIO_GALLERY_MAX_ITEMS }]);
 import { portfolioListPublicController } from '../controllers/portfolio.listPublic';
 import { portfolioListByServiceController } from '../controllers/portfolio.listByService';
 import { portfolioGetBySlugController } from '../controllers/portfolio.getBySlug';
@@ -99,7 +103,7 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_CREATE, PERMISSIONS.PORTFOLIO_MANAGE),
-		...acceptImage('cover'),
+		...acceptPortfolioMedia(),
 		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_CREATED, resource: 'portfolio' }),
 		portfolioCreateController,
 	);
@@ -116,7 +120,7 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_UPDATE, PERMISSIONS.PORTFOLIO_MANAGE),
-		...acceptImage('cover'),
+		...acceptPortfolioMedia(),
 		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_UPDATED, resource: 'portfolio' }),
 		portfolioUpdateController,
 	);
