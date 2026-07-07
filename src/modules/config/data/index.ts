@@ -172,6 +172,34 @@ export const INDUSTRIES: IndustryDef[] = [
 	{ value: 'other', label: { es: 'Otro', en: 'Other', de: 'Sonstiges', fr: 'Autre', it: 'Altro', pt: 'Outro', ja: 'その他', ko: '기타', zh: '其他', ru: 'Другое' } },
 ];
 
+// ── Collaborator roles ──────────────────────────────────────────────────────────
+export const COLLABORATOR_ROLES: IndustryDef[] = [
+	{ value: 'ceo', label: { es: 'CEO / Director general', en: 'CEO', de: 'CEO', fr: 'PDG', it: 'CEO', pt: 'CEO', ja: 'CEO', ko: 'CEO', zh: '首席执行官', ru: 'Генеральный директор' } },
+	{ value: 'founder', label: { es: 'Fundador/a', en: 'Founder', de: 'Gründer/in', fr: 'Fondateur/trice', it: 'Fondatore/trice', pt: 'Fundador(a)', ja: '創業者', ko: '창업자', zh: '创始人', ru: 'Основатель' } },
+	{ value: 'manager', label: { es: 'Gerente', en: 'Manager', de: 'Manager/in', fr: 'Responsable', it: 'Manager', pt: 'Gerente', ja: 'マネージャー', ko: '매니저', zh: '经理', ru: 'Менеджер' } },
+	{ value: 'project_manager', label: { es: 'Project Manager', en: 'Project Manager', de: 'Projektmanager/in', fr: 'Chef de projet', it: 'Project Manager', pt: 'Gerente de Projetos', ja: 'プロジェクトマネージャー', ko: '프로젝트 매니저', zh: '项目经理', ru: 'Руководитель проекта' } },
+	{ value: 'developer', label: { es: 'Desarrollador/a', en: 'Developer', de: 'Entwickler/in', fr: 'Développeur/se', it: 'Sviluppatore/trice', pt: 'Desenvolvedor(a)', ja: '開発者', ko: '개발자', zh: '开发人员', ru: 'Разработчик' } },
+	{ value: 'designer', label: { es: 'Diseñador/a', en: 'Designer', de: 'Designer/in', fr: 'Designer', it: 'Designer', pt: 'Designer', ja: 'デザイナー', ko: '디자이너', zh: '设计师', ru: 'Дизайнер' } },
+	{ value: 'marketing', label: { es: 'Marketing', en: 'Marketing', de: 'Marketing', fr: 'Marketing', it: 'Marketing', pt: 'Marketing', ja: 'マーケティング', ko: '마케팅', zh: '市场营销', ru: 'Маркетинг' } },
+	{ value: 'sales', label: { es: 'Ventas', en: 'Sales', de: 'Vertrieb', fr: 'Ventes', it: 'Vendite', pt: 'Vendas', ja: '営業', ko: '영업', zh: '销售', ru: 'Продажи' } },
+	{ value: 'support', label: { es: 'Atención al cliente', en: 'Customer Support', de: 'Kundensupport', fr: 'Support client', it: 'Assistenza clienti', pt: 'Atendimento ao cliente', ja: 'カスタマーサポート', ko: '고객 지원', zh: '客户支持', ru: 'Служба поддержки' } },
+	{ value: 'operations', label: { es: 'Operaciones', en: 'Operations', de: 'Betrieb', fr: 'Opérations', it: 'Operazioni', pt: 'Operações', ja: 'オペレーション', ko: '운영', zh: '运营', ru: 'Операции' } },
+	{ value: 'hr', label: { es: 'Recursos Humanos', en: 'Human Resources', de: 'Personalwesen', fr: 'Ressources humaines', it: 'Risorse umane', pt: 'Recursos Humanos', ja: '人事', ko: '인사', zh: '人力资源', ru: 'Отдел кадров' } },
+	{ value: 'finance', label: { es: 'Finanzas', en: 'Finance', de: 'Finanzen', fr: 'Finance', it: 'Finanza', pt: 'Finanças', ja: '財務', ko: '재무', zh: '财务', ru: 'Финансы' } },
+	{ value: 'other', label: { es: 'Otro', en: 'Other', de: 'Sonstiges', fr: 'Autre', it: 'Altro', pt: 'Outro', ja: 'その他', ko: '기타', zh: '其他', ru: 'Другое' } },
+];
+
+// ── Collaborator seniority levels ───────────────────────────────────────────────
+export const COLLABORATOR_LEVELS: IndustryDef[] = [
+	{ value: 'intern', label: { es: 'Practicante', en: 'Intern', de: 'Praktikant/in', fr: 'Stagiaire', it: 'Stagista', pt: 'Estagiário(a)', ja: 'インターン', ko: '인턴', zh: '实习生', ru: 'Стажёр' } },
+	{ value: 'junior', label: { es: 'Junior', en: 'Junior', de: 'Junior', fr: 'Junior', it: 'Junior', pt: 'Júnior', ja: 'ジュニア', ko: '주니어', zh: '初级', ru: 'Младший специалист' } },
+	{ value: 'mid', label: { es: 'Intermedio', en: 'Mid-level', de: 'Mittlere Ebene', fr: 'Intermédiaire', it: 'Intermedio', pt: 'Pleno', ja: '中堅', ko: '중급', zh: '中级', ru: 'Средний уровень' } },
+	{ value: 'senior', label: { es: 'Senior', en: 'Senior', de: 'Senior', fr: 'Senior', it: 'Senior', pt: 'Sênior', ja: 'シニア', ko: '시니어', zh: '高级', ru: 'Старший специалист' } },
+	{ value: 'lead', label: { es: 'Líder de equipo', en: 'Lead', de: 'Teamleiter/in', fr: 'Chef d’équipe', it: 'Team Leader', pt: 'Líder de equipe', ja: 'リード', ko: '리드', zh: '组长', ru: 'Ведущий специалист' } },
+	{ value: 'director', label: { es: 'Director/a', en: 'Director', de: 'Direktor/in', fr: 'Directeur/trice', it: 'Direttore/trice', pt: 'Diretor(a)', ja: 'ディレクター', ko: '디렉터', zh: '总监', ru: 'Директор' } },
+	{ value: 'executive', label: { es: 'Ejecutivo/a', en: 'Executive', de: 'Führungskraft', fr: 'Cadre dirigeant', it: 'Dirigente', pt: 'Executivo(a)', ja: '役員', ko: '임원', zh: '高管', ru: 'Руководитель высшего звена' } },
+];
+
 // ── Technologies (language-agnostic proper nouns) ──────────────────────────────
 export interface TechDef {
 	value: string;

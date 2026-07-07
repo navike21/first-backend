@@ -1,5 +1,7 @@
 import {
 	CLIENT_TYPES,
+	COLLABORATOR_LEVELS,
+	COLLABORATOR_ROLES,
 	CURRENCIES,
 	DOCUMENT_TYPES,
 	GENDERS,
@@ -17,6 +19,8 @@ export const CONFIG_GROUPS = [
 	'clientTypes',
 	'genders',
 	'technologies',
+	'collaboratorRoles',
+	'collaboratorLevels',
 ] as const;
 export type ConfigGroup = (typeof CONFIG_GROUPS)[number];
 
@@ -93,6 +97,20 @@ export function getConfig(groups: string[], lang: string) {
 		result.technologies = TECHNOLOGIES.map((t) => ({
 			value: t.value,
 			label: t.label,
+		}));
+	}
+
+	if (want('collaboratorRoles')) {
+		result.collaboratorRoles = COLLABORATOR_ROLES.map((r) => ({
+			value: r.value,
+			label: resolve(r.label, lang),
+		}));
+	}
+
+	if (want('collaboratorLevels')) {
+		result.collaboratorLevels = COLLABORATOR_LEVELS.map((l) => ({
+			value: l.value,
+			label: resolve(l.label, lang),
 		}));
 	}
 

@@ -94,4 +94,20 @@ describe('getConfig', () => {
 		expect(en.find((t) => t.value === 'nodejs')?.label).toBe('Node.js');
 		expect(es.find((t) => t.value === 'react')?.label).toBe('React');
 	});
+
+	it('returns collaboratorRoles with localized labels', () => {
+		const es = getConfig(['collaboratorRoles'], 'es').collaboratorRoles as { value: string; label: string }[];
+		const en = getConfig(['collaboratorRoles'], 'en').collaboratorRoles as { value: string; label: string }[];
+		expect(es.find((r) => r.value === 'developer')?.label).toBe('Desarrollador/a');
+		expect(en.find((r) => r.value === 'developer')?.label).toBe('Developer');
+		expect(en.find((r) => r.value === 'other')?.label).toBe('Other');
+	});
+
+	it('returns collaboratorLevels with localized labels', () => {
+		const es = getConfig(['collaboratorLevels'], 'es').collaboratorLevels as { value: string; label: string }[];
+		const en = getConfig(['collaboratorLevels'], 'en').collaboratorLevels as { value: string; label: string }[];
+		expect(es.find((l) => l.value === 'senior')?.label).toBe('Senior');
+		expect(es.find((l) => l.value === 'intern')?.label).toBe('Practicante');
+		expect(en.find((l) => l.value === 'lead')?.label).toBe('Lead');
+	});
 });
