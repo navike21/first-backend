@@ -8,6 +8,7 @@ import { acceptImage } from '@Modules/storage';
 import {
 	PORTFOLIO_PATH_LIST_PUBLIC,
 	PORTFOLIO_PATH_LIST_ADMIN,
+	PORTFOLIO_PATH_GET_BY_ID,
 	PORTFOLIO_PATH_BY_SERVICE,
 	PORTFOLIO_PATH_GET_BY_SLUG,
 	PORTFOLIO_PATH_CREATE,
@@ -23,6 +24,7 @@ import {
 import { portfolioListPublicController } from '../controllers/portfolio.listPublic';
 import { portfolioListByServiceController } from '../controllers/portfolio.listByService';
 import { portfolioGetBySlugController } from '../controllers/portfolio.getBySlug';
+import { portfolioGetByIdController } from '../controllers/portfolio.getById';
 import { portfolioListAdminController } from '../controllers/portfolio.listAdmin';
 import { portfolioCreateController } from '../controllers/portfolio.create';
 import { portfolioUpdateController } from '../controllers/portfolio.update';
@@ -48,6 +50,12 @@ export function portfolioApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_READ, PERMISSIONS.PORTFOLIO_MANAGE),
 		portfolioListAdminController,
+	);
+	router.get(
+		PORTFOLIO_PATH_GET_BY_ID,
+		authenticate,
+		authorize(PERMISSIONS.PORTFOLIO_READ, PERMISSIONS.PORTFOLIO_MANAGE),
+		portfolioGetByIdController,
 	);
 	router.get(PORTFOLIO_PATH_BY_SERVICE, portfolioListByServiceController);
 	router.get(PORTFOLIO_PATH_GET_BY_SLUG, portfolioGetBySlugController);
