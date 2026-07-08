@@ -24,7 +24,8 @@ const PageSeoSchema = z.object({
 	metaTitle: LocalizedStringSchema.optional(),
 	metaDescription: LocalizedStringSchema.optional(),
 	keywords: LocalizedStringSchema.optional(),
-	ogImage: z.url({ message: 'PAGE_SEO_OG_IMAGE_INVALID' }).optional(),
+	// Empty string clears a previously stored image (mirrors coverImageUrl '').
+	ogImage: z.url({ message: 'PAGE_SEO_OG_IMAGE_INVALID' }).optional().or(z.literal('')),
 });
 
 export const SectionSettingsSchema = z

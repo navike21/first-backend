@@ -4,7 +4,7 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
-import { acceptImage } from '@Modules/storage';
+import { acceptImageFields } from '@Modules/storage';
 import {
 	PAGES_PATH_LIST_PUBLIC,
 	PAGES_PATH_LIST_ADMIN,
@@ -125,7 +125,7 @@ export function pagesApi(router: Router) {
 		PAGES_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_CREATE, PERMISSIONS.PAGES_MANAGE),
-		...acceptImage('cover'),
+		...acceptImageFields(['cover', 'ogImage']),
 		captureAudit({ action: AUDIT_ACTIONS.PAGES_CREATED, resource: 'pages' }),
 		pageCreateController,
 	);
@@ -142,7 +142,7 @@ export function pagesApi(router: Router) {
 		PAGES_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
-		...acceptImage('cover'),
+		...acceptImageFields(['cover', 'ogImage']),
 		captureAudit({ action: AUDIT_ACTIONS.PAGES_UPDATED, resource: 'pages' }),
 		pageUpdateController,
 	);

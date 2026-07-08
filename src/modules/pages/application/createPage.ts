@@ -10,6 +10,11 @@ import type { CreatePageInput } from '../schemas/page.schema';
 import { assertValidParent, computeFullPath } from './pageHierarchy';
 import { recordPageRevision } from './pageRevisions';
 
+export interface PageFiles {
+	cover?: IncomingFile;
+	ogImage?: IncomingFile;
+}
+
 async function checkSlugConflict(slug: CreatePageInput['slug'], parentId?: string | null): Promise<void> {
 	const entries = Object.entries(slug ?? {}).filter(([, v]) => v?.trim());
 	if (!entries.length) return;
@@ -22,9 +27,29 @@ async function checkSlugConflict(slug: CreatePageInput['slug'], parentId?: strin
 	if (existing) throw new PageSlugConflictError();
 }
 
+async function uploadPageImage(
+	id: string,
+	field: 'cover' | 'ogImage',
+	file: IncomingFile,
+	uploadedBy: string | undefined,
+	warnings: ResponseWarning[],
+): Promise<string | undefined> {
+	const uploaded = await uploadImageSafe({
+		buffer: file.buffer,
+		originalName: file.originalName,
+		mimeType: file.mimeType,
+		entityType: PAGE_ENTITY_TYPE,
+		entityId: id,
+		field,
+		uploadedBy,
+	});
+	if (uploaded.warning) warnings.push(uploaded.warning);
+	return uploaded.url;
+}
+
 export async function createPage(
 	input: CreatePageInput,
-	file: IncomingFile | undefined,
+	files: PageFiles | undefined,
 	createdBy: string | undefined,
 ): Promise<MutationResult<Record<string, unknown>>> {
 	await assertValidParent(undefined, input.parentId);
@@ -32,20 +57,17 @@ export async function createPage(
 
 	const id = generateUUID();
 	let coverImageUrl = input.coverImageUrl;
+	// '' means "no image" on create — normalize so the document never stores ''.
+	let seo = input.seo?.ogImage === '' ? { ...input.seo, ogImage: undefined } : input.seo;
 	const warnings: ResponseWarning[] = [];
 
-	if (file) {
-		const uploaded = await uploadImageSafe({
-			buffer: file.buffer,
-			originalName: file.originalName,
-			mimeType: file.mimeType,
-			entityType: PAGE_ENTITY_TYPE,
-			entityId: id,
-			field: 'cover',
-			uploadedBy: createdBy,
-		});
-		if (uploaded.url) coverImageUrl = uploaded.url;
-		if (uploaded.warning) warnings.push(uploaded.warning);
+	if (files?.cover) {
+		const url = await uploadPageImage(id, 'cover', files.cover, createdBy, warnings);
+		if (url) coverImageUrl = url;
+	}
+	if (files?.ogImage) {
+		const url = await uploadPageImage(id, 'ogImage', files.ogImage, createdBy, warnings);
+		if (url) seo = { ...(seo ?? {}), ogImage: url };
 	}
 
 	let parentFullPath;
@@ -60,6 +82,7 @@ export async function createPage(
 			...input,
 			id,
 			coverImageUrl,
+			seo,
 			fullPath,
 			createdBy,
 			updatedBy: createdBy,
@@ -67,7 +90,7 @@ export async function createPage(
 		await recordPageRevision(id, doc.toObject(), createdBy);
 		return { data: cleanMongoFields(doc.toObject()), warnings };
 	} catch (error) {
-		if (file) {
+		if (files?.cover || files?.ogImage) {
 			await deleteEntityFiles(PAGE_ENTITY_TYPE, id).catch(() => {});
 		}
 		throw error;

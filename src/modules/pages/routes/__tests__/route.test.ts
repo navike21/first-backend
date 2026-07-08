@@ -12,7 +12,7 @@ vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { verifyAccess: vi.fn() },
 }));
 vi.mock('@Modules/storage', () => ({
-	acceptImage: vi.fn(() => [(_req: unknown, _res: unknown, next: () => void) => next()]),
+	acceptImageFields: vi.fn(() => [(_req: unknown, _res: unknown, next: () => void) => next()]),
 	uploadImageSafe: vi.fn(),
 	deleteEntityFiles: vi.fn(),
 	deleteStorageFilesByIds: vi.fn(),
