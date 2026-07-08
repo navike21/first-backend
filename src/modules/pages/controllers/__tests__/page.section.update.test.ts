@@ -29,7 +29,7 @@ describe('pageSectionUpdateController', () => {
 	it('calls updateSection and returns 200 on valid input', async () => {
 		vi.mocked(updateSection).mockResolvedValue({ id: '1' } as never);
 		const req = {
-			params: { slug: 'home', sectionId: 'sec-1' },
+			params: { id: '1', sectionId: 'sec-1' },
 			body: { content: { headline: 'Hi' } },
 		} as unknown as Request;
 		const res = makeRes();
@@ -38,7 +38,7 @@ describe('pageSectionUpdateController', () => {
 		await pageSectionUpdateController(req, res, next);
 
 		expect(updateSection).toHaveBeenCalledWith(
-			'home',
+			'1',
 			'sec-1',
 			expect.any(Object),
 		);
@@ -47,7 +47,7 @@ describe('pageSectionUpdateController', () => {
 
 	it('calls next with error on invalid body (bad order value)', async () => {
 		const req = {
-			params: { slug: 'home', sectionId: 'sec-1' },
+			params: { id: '1', sectionId: 'sec-1' },
 			body: { order: 'not-a-number-at-all-xyz' },
 		} as unknown as Request;
 		const res = makeRes();
@@ -61,7 +61,7 @@ describe('pageSectionUpdateController', () => {
 	it('calls next with error when updateSection rejects', async () => {
 		vi.mocked(updateSection).mockRejectedValue(new Error('section not found'));
 		const req = {
-			params: { slug: 'home', sectionId: 'bad-id' },
+			params: { id: '1', sectionId: 'bad-id' },
 			body: {},
 		} as unknown as Request;
 		const res = makeRes();

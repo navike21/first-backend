@@ -1,0 +1,12 @@
+{
+	"SUCCESS_TAG_CREATE": "タグが正常に作成されました",
+	"SUCCESS_TAG_LIST": "タグが正常に取得されました",
+	"SUCCESS_TAG_FOUND": "タグが正常に見つかりました",
+	"SUCCESS_TAG_UPDATE": "タグが正常に更新されました",
+	"SUCCESS_TAG_DELETED": "タグが正常に削除されました",
+	"SUCCESS_TAG_RESTORED": "タグが正常に復元されました",
+	"SUCCESS_TAG_PURGED": "タグが完全に削除されました",
+	"SUCCESS_TAG_TRASH_LIST": "ゴミ箱が正常に取得されました",
+	"TAG_NOT_FOUND": "タグが見つかりません",
+	"TAG_SLUG_CONFLICT": "このスラッグを持つタグはすでに存在します"
+}

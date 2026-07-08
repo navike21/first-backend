@@ -8,7 +8,13 @@
 	"SUCCESS_PAGE_SECTION_UPDATED": "部分更新成功",
 	"SUCCESS_PAGE_SECTION_DELETED": "部分删除成功",
 	"SUCCESS_PAGE_SECTIONS_REORDERED": "部分重新排序成功",
+	"SUCCESS_PAGE_REVISIONS_LIST": "历史记录获取成功",
+	"SUCCESS_PAGE_REVISION_RESTORED": "版本恢复成功",
 	"PAGE_NOT_FOUND": "页面未找到",
 	"PAGE_SLUG_CONFLICT": "具有此 slug 的页面已存在",
-	"PAGE_SECTION_NOT_FOUND": "部分未找到"
+	"PAGE_SECTION_NOT_FOUND": "部分未找到",
+	"PAGE_INVALID_PARENT": "页面不能成为自己的上级",
+	"PAGE_PARENT_NOT_FOUND": "未找到父页面",
+	"PAGE_HAS_CHILDREN": "此页面有子页面,无法永久删除",
+	"PAGE_REVISION_NOT_FOUND": "未找到该版本"
 }

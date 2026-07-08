@@ -1,0 +1,12 @@
+export const CATEGORY_PATH_LIST_PUBLIC = '/categories';
+export const CATEGORY_PATH_LIST_ADMIN = '/categories/admin';
+export const CATEGORY_PATH_GET_BY_ID = '/categories/:id';
+export const CATEGORY_PATH_CREATE = '/categories';
+export const CATEGORY_PATH_UPDATE = '/categories/:id';
+export const CATEGORY_PATH_DELETE = '/categories/:id';
+export const CATEGORY_PATH_PURGE = '/categories/:id/permanent';
+export const CATEGORY_PATH_TRASH = '/categories/trash';
+export const CATEGORY_PATH_RESTORE = '/categories/:id/restore';
+export const CATEGORY_PATH_BULK_DELETE = '/categories/bulk';
+export const CATEGORY_PATH_BULK_RESTORE = '/categories/bulk/restore';
+export const CATEGORY_PATH_BULK_PURGE = '/categories/bulk/permanent';

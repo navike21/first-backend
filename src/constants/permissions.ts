@@ -72,6 +72,20 @@ export const PERMISSIONS = {
 	COLLABORATORS_PURGE: 'collaborators:purge',
 	COLLABORATORS_MANAGE: 'collaborators:manage',
 
+	CATEGORIES_READ: 'categories:read',
+	CATEGORIES_CREATE: 'categories:create',
+	CATEGORIES_UPDATE: 'categories:update',
+	CATEGORIES_DELETE: 'categories:delete',
+	CATEGORIES_PURGE: 'categories:purge',
+	CATEGORIES_MANAGE: 'categories:manage',
+
+	TAGS_READ: 'tags:read',
+	TAGS_CREATE: 'tags:create',
+	TAGS_UPDATE: 'tags:update',
+	TAGS_DELETE: 'tags:delete',
+	TAGS_PURGE: 'tags:purge',
+	TAGS_MANAGE: 'tags:manage',
+
 	ALL: '*:*',
 } as const;
 

@@ -2,8 +2,8 @@ import PageModel from '../infrastructure/PageModel';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { PageNotFoundError } from '../domain/errors/PageErrors';
 
-export async function reorderSections(slug: string, order: string[]) {
-	const doc = await PageModel.findOne({ slug, deletedAt: null });
+export async function reorderSections(id: string, order: string[]) {
+	const doc = await PageModel.findOne({ id, deletedAt: null });
 	if (!doc) throw new PageNotFoundError();
 
 	const sectionMap = new Map(

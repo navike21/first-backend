@@ -8,7 +8,13 @@
 	"SUCCESS_PAGE_SECTION_UPDATED": "Section updated successfully",
 	"SUCCESS_PAGE_SECTION_DELETED": "Section deleted successfully",
 	"SUCCESS_PAGE_SECTIONS_REORDERED": "Sections reordered successfully",
+	"SUCCESS_PAGE_REVISIONS_LIST": "Revisions retrieved successfully",
+	"SUCCESS_PAGE_REVISION_RESTORED": "Revision restored successfully",
 	"PAGE_NOT_FOUND": "Page not found",
 	"PAGE_SLUG_CONFLICT": "A page with this slug already exists",
-	"PAGE_SECTION_NOT_FOUND": "Section not found"
+	"PAGE_SECTION_NOT_FOUND": "Section not found",
+	"PAGE_INVALID_PARENT": "A page cannot be its own ancestor",
+	"PAGE_PARENT_NOT_FOUND": "Parent page not found",
+	"PAGE_HAS_CHILDREN": "This page has child pages and cannot be permanently deleted",
+	"PAGE_REVISION_NOT_FOUND": "Revision not found"
 }

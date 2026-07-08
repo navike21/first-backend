@@ -8,7 +8,13 @@
 	"SUCCESS_PAGE_SECTION_UPDATED": "Раздел успешно обновлён",
 	"SUCCESS_PAGE_SECTION_DELETED": "Раздел успешно удалён",
 	"SUCCESS_PAGE_SECTIONS_REORDERED": "Разделы успешно переупорядочены",
+	"SUCCESS_PAGE_REVISIONS_LIST": "История успешно получена",
+	"SUCCESS_PAGE_REVISION_RESTORED": "Версия успешно восстановлена",
 	"PAGE_NOT_FOUND": "Страница не найдена",
 	"PAGE_SLUG_CONFLICT": "Страница с таким слагом уже существует",
-	"PAGE_SECTION_NOT_FOUND": "Раздел не найден"
+	"PAGE_SECTION_NOT_FOUND": "Раздел не найден",
+	"PAGE_INVALID_PARENT": "Страница не может быть своим собственным предком",
+	"PAGE_PARENT_NOT_FOUND": "Родительская страница не найдена",
+	"PAGE_HAS_CHILDREN": "У этой страницы есть дочерние страницы, её нельзя удалить безвозвратно",
+	"PAGE_REVISION_NOT_FOUND": "Версия не найдена"
 }

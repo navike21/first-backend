@@ -7,6 +7,14 @@ vi.mock('@Constants/environments', () => ({
 vi.mock('@Modules/pages/infrastructure/PageModel', () => ({
 	default: { findOne: vi.fn() },
 }));
+vi.mock('@Modules/pages/infrastructure/PageRevisionModel', () => ({
+	default: { create: vi.fn().mockResolvedValue({}) },
+}));
+vi.mock('@Modules/storage', () => ({
+	uploadImageSafe: vi.fn(),
+	deleteEntityFiles: vi.fn().mockResolvedValue(undefined),
+	deleteStorageFilesByIds: vi.fn().mockResolvedValue(undefined),
+}));
 
 import { updatePage } from '@Modules/pages/application/updatePage';
 import PageModel from '@Modules/pages/infrastructure/PageModel';
@@ -20,37 +28,37 @@ describe('updatePage', () => {
 		const saveFn = vi.fn().mockResolvedValue(undefined);
 		const doc = {
 			id: '1',
-			slug: 'home',
+			slug: { en: 'home' },
+			parentId: null,
+			set: vi.fn(),
 			save: saveFn,
 			toObject: vi
 				.fn()
-				.mockReturnValue({ id: '1', slug: 'home', _id: 'mongo1' }),
+				.mockReturnValue({ id: '1', slug: { en: 'home' }, _id: 'mongo1' }),
 		};
 		vi.mocked(PageModel.findOne).mockResolvedValue(doc as never);
 
-		const result = await updatePage('home', { isPublished: true });
+		const result = await updatePage('1', { status: 'published' }, undefined, 'user-1');
 
 		expect(saveFn).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('_id');
 	});
 
 	it('throws PageNotFoundError when page does not exist', async () => {
 		vi.mocked(PageModel.findOne).mockResolvedValue(null as never);
 
-		await expect(updatePage('not-found', {})).rejects.toThrow(
-			PageNotFoundError,
-		);
+		await expect(updatePage('not-found', {}, undefined, 'user-1')).rejects.toThrow(PageNotFoundError);
 	});
 
-	it('throws PageSlugConflictError on duplicate slug', async () => {
-		const doc = { id: '1', slug: 'home', save: vi.fn() };
-		const conflictDoc = { id: '2', slug: 'about' };
+	it('throws PageSlugConflictError on duplicate sibling slug', async () => {
+		const doc = { id: '1', slug: { en: 'home' }, parentId: null, set: vi.fn(), save: vi.fn() };
+		const conflictDoc = { id: '2', slug: { en: 'about' } };
 		vi.mocked(PageModel.findOne)
 			.mockResolvedValueOnce(doc as never)
 			.mockResolvedValueOnce(conflictDoc as never);
 
-		await expect(updatePage('home', { slug: 'about' })).rejects.toThrow(
-			PageSlugConflictError,
-		);
+		await expect(
+			updatePage('1', { slug: { en: 'about' } }, undefined, 'user-1'),
+		).rejects.toThrow(PageSlugConflictError);
 	});
 });

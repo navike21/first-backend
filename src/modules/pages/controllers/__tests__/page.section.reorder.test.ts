@@ -29,7 +29,7 @@ describe('pageSectionReorderController', () => {
 	it('calls reorderSections and returns 200 on valid input', async () => {
 		vi.mocked(reorderSections).mockResolvedValue({ id: '1' } as never);
 		const req = {
-			params: { slug: 'home' },
+			params: { id: '1' },
 			body: { order: ['sec-2', 'sec-1'] },
 		} as unknown as Request;
 		const res = makeRes();
@@ -37,13 +37,13 @@ describe('pageSectionReorderController', () => {
 
 		await pageSectionReorderController(req, res, next);
 
-		expect(reorderSections).toHaveBeenCalledWith('home', ['sec-2', 'sec-1']);
+		expect(reorderSections).toHaveBeenCalledWith('1', ['sec-2', 'sec-1']);
 		expect(successResponse).toHaveBeenCalled();
 	});
 
 	it('calls next with error on empty order array', async () => {
 		const req = {
-			params: { slug: 'home' },
+			params: { id: '1' },
 			body: { order: [] },
 		} as unknown as Request;
 		const res = makeRes();

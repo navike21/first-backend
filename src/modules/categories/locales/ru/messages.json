@@ -1,0 +1,15 @@
+{
+	"SUCCESS_CATEGORY_CREATE": "Категория успешно создана",
+	"SUCCESS_CATEGORY_LIST": "Категории успешно получены",
+	"SUCCESS_CATEGORY_FOUND": "Категория успешно найдена",
+	"SUCCESS_CATEGORY_UPDATE": "Категория успешно обновлена",
+	"SUCCESS_CATEGORY_DELETED": "Категория успешно удалена",
+	"SUCCESS_CATEGORY_RESTORED": "Категория успешно восстановлена",
+	"SUCCESS_CATEGORY_PURGED": "Категория безвозвратно удалена",
+	"SUCCESS_CATEGORY_TRASH_LIST": "Корзина успешно получена",
+	"CATEGORY_NOT_FOUND": "Категория не найдена",
+	"CATEGORY_SLUG_CONFLICT": "Категория с таким слагом уже существует",
+	"CATEGORY_INVALID_PARENT": "Категория не может быть своим собственным предком",
+	"CATEGORY_PARENT_NOT_FOUND": "Родительская категория не найдена",
+	"CATEGORY_HAS_CHILDREN": "У этой категории есть дочерние категории, её нельзя удалить безвозвратно"
+}

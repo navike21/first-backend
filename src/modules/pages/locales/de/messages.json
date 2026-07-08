@@ -8,7 +8,13 @@
 	"SUCCESS_PAGE_SECTION_UPDATED": "Abschnitt erfolgreich aktualisiert",
 	"SUCCESS_PAGE_SECTION_DELETED": "Abschnitt erfolgreich gelöscht",
 	"SUCCESS_PAGE_SECTIONS_REORDERED": "Abschnitte erfolgreich neu angeordnet",
+	"SUCCESS_PAGE_REVISIONS_LIST": "Verlauf erfolgreich abgerufen",
+	"SUCCESS_PAGE_REVISION_RESTORED": "Version erfolgreich wiederhergestellt",
 	"PAGE_NOT_FOUND": "Seite nicht gefunden",
 	"PAGE_SLUG_CONFLICT": "Eine Seite mit diesem Slug existiert bereits",
-	"PAGE_SECTION_NOT_FOUND": "Abschnitt nicht gefunden"
+	"PAGE_SECTION_NOT_FOUND": "Abschnitt nicht gefunden",
+	"PAGE_INVALID_PARENT": "Eine Seite kann nicht ihr eigener Vorfahre sein",
+	"PAGE_PARENT_NOT_FOUND": "Übergeordnete Seite nicht gefunden",
+	"PAGE_HAS_CHILDREN": "Diese Seite hat untergeordnete Seiten und kann nicht endgültig gelöscht werden",
+	"PAGE_REVISION_NOT_FOUND": "Version nicht gefunden"
 }

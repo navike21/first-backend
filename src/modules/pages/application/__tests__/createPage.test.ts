@@ -7,6 +7,13 @@ vi.mock('@Constants/environments', () => ({
 vi.mock('@Modules/pages/infrastructure/PageModel', () => ({
 	default: { findOne: vi.fn(), create: vi.fn() },
 }));
+vi.mock('@Modules/pages/infrastructure/PageRevisionModel', () => ({
+	default: { create: vi.fn().mockResolvedValue({}) },
+}));
+vi.mock('@Modules/storage', () => ({
+	uploadImageSafe: vi.fn(),
+	deleteEntityFiles: vi.fn().mockResolvedValue(undefined),
+}));
 
 import { createPage } from '@Modules/pages/application/createPage';
 import PageModel from '@Modules/pages/infrastructure/PageModel';
@@ -26,14 +33,16 @@ const localizedName = {
 };
 
 const validInput = {
-	slug: 'home',
 	title: localizedName,
-	isPublished: false,
+	slug: { en: 'home', es: 'inicio' },
+	status: 'draft' as const,
+	categoryIds: [],
+	tagIds: [],
 };
 
 describe('createPage', () => {
 	it('creates a page and returns cleaned data', async () => {
-		vi.mocked(PageModel.findOne).mockResolvedValue(null);
+		vi.mocked(PageModel.findOne).mockResolvedValue(null as never);
 		vi.mocked(PageModel.create).mockResolvedValue({
 			...validInput,
 			id: '550e8400-e29b-41d4-a716-446655440000',
@@ -44,15 +53,15 @@ describe('createPage', () => {
 			}),
 		} as never);
 
-		const result = await createPage(validInput);
+		const result = await createPage(validInput, undefined, 'user-1');
 
 		expect(PageModel.create).toHaveBeenCalled();
-		expect(result).not.toHaveProperty('_id');
+		expect(result.data).not.toHaveProperty('_id');
 	});
 
-	it('throws PageSlugConflictError when slug already exists', async () => {
+	it('throws PageSlugConflictError when a sibling with the same slug already exists', async () => {
 		vi.mocked(PageModel.findOne).mockResolvedValue({ id: 'existing' } as never);
 
-		await expect(createPage(validInput)).rejects.toThrow(PageSlugConflictError);
+		await expect(createPage(validInput, undefined, 'user-1')).rejects.toThrow(PageSlugConflictError);
 	});
 });

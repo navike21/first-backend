@@ -19,7 +19,7 @@ import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes() {
 	return {
-		locals: {},
+		locals: { userId: 'user-1' },
 		status: vi.fn().mockReturnThis(),
 		json: vi.fn().mockReturnThis(),
 	} as unknown as Response;
@@ -38,11 +38,11 @@ const localizedName = {
 	zh: '首页',
 };
 
-const validBody = { slug: 'home', title: localizedName };
+const validBody = { title: localizedName, slug: { en: 'home' } };
 
 describe('pageCreateController', () => {
 	it('calls createPage and returns 201 on valid input', async () => {
-		vi.mocked(createPage).mockResolvedValue({ id: '1', slug: 'home' } as never);
+		vi.mocked(createPage).mockResolvedValue({ data: { id: '1' }, warnings: [] } as never);
 		const req = { body: validBody } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();

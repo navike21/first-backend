@@ -3,8 +3,8 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { PageNotFoundError } from '../domain/errors/PageErrors';
 import { CreateSectionInput } from '../schemas/page.schema';
 
-export async function addSection(slug: string, input: CreateSectionInput) {
-	const doc = await PageModel.findOne({ slug, deletedAt: null });
+export async function addSection(id: string, input: CreateSectionInput) {
+	const doc = await PageModel.findOne({ id, deletedAt: null });
 	if (!doc) throw new PageNotFoundError();
 
 	const { randomUUID } = await import('node:crypto');

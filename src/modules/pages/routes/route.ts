@@ -4,10 +4,12 @@ import { authorize } from '@Modules/auth/middlewares/authorize';
 import { PERMISSIONS } from '@Constants/permissions';
 import { captureAudit } from '@Modules/audit-log/middlewares/captureAudit';
 import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
+import { acceptImage } from '@Modules/storage';
 import {
 	PAGES_PATH_LIST_PUBLIC,
 	PAGES_PATH_LIST_ADMIN,
-	PAGES_PATH_GET_BY_SLUG,
+	PAGES_PATH_RESOLVE_PUBLIC,
+	PAGES_PATH_GET_BY_ID,
 	PAGES_PATH_CREATE,
 	PAGES_PATH_UPDATE,
 	PAGES_PATH_DELETE,
@@ -21,12 +23,15 @@ import {
 	PAGES_PATH_BULK_DELETE,
 	PAGES_PATH_BULK_RESTORE,
 	PAGES_PATH_BULK_PURGE,
+	PAGES_PATH_REVISIONS_LIST,
+	PAGES_PATH_REVISIONS_RESTORE,
 } from '../constants/paths';
 import {
 	pageListPublicController,
 	pageListAdminController,
 } from '../controllers/page.list';
-import { pageGetBySlugPublicController } from '../controllers/page.getBySlug';
+import { pageResolvePublicController } from '../controllers/page.resolve';
+import { pageGetByIdController } from '../controllers/page.getById';
 import { pageCreateController } from '../controllers/page.create';
 import { pageUpdateController } from '../controllers/page.update';
 import { pageDeleteController } from '../controllers/page.delete';
@@ -40,9 +45,12 @@ import { pageSectionReorderController } from '../controllers/page.section.reorde
 import { deletePagesBulkController } from '../controllers/page.deleteBulk';
 import { restorePagesBulkController } from '../controllers/page.restoreBulk';
 import { purgePagesBulkController } from '../controllers/page.purgeBulk';
+import { pageRevisionsListController } from '../controllers/page.revisions.list';
+import { pageRevisionsRestoreController } from '../controllers/page.revisions.restore';
 
 export function pagesApi(router: Router) {
 	router.get(PAGES_PATH_LIST_PUBLIC, pageListPublicController);
+	router.get(PAGES_PATH_RESOLVE_PUBLIC, pageResolvePublicController);
 
 	router.get(
 		PAGES_PATH_TRASH,
@@ -56,9 +64,8 @@ export function pagesApi(router: Router) {
 		authorize(PERMISSIONS.PAGES_READ, PERMISSIONS.PAGES_MANAGE),
 		pageListAdminController,
 	);
-	router.get(PAGES_PATH_GET_BY_SLUG, pageGetBySlugPublicController);
 
-	// Bulk operations (before :slug routes to avoid conflicts)
+	// Bulk operations (before :id routes to avoid conflicts)
 	router.delete(
 		PAGES_PATH_BULK_DELETE,
 		authenticate,
@@ -93,10 +100,32 @@ export function pagesApi(router: Router) {
 		purgePagesBulkController,
 	);
 
+	router.get(
+		PAGES_PATH_REVISIONS_LIST,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_READ, PERMISSIONS.PAGES_MANAGE),
+		pageRevisionsListController,
+	);
+	router.post(
+		PAGES_PATH_REVISIONS_RESTORE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.PAGE_REVISION_RESTORED, resource: 'pages' }),
+		pageRevisionsRestoreController,
+	);
+
+	router.get(
+		PAGES_PATH_GET_BY_ID,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_READ, PERMISSIONS.PAGES_MANAGE),
+		pageGetByIdController,
+	);
+
 	router.post(
 		PAGES_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_CREATE, PERMISSIONS.PAGES_MANAGE),
+		...acceptImage('cover'),
 		captureAudit({ action: AUDIT_ACTIONS.PAGES_CREATED, resource: 'pages' }),
 		pageCreateController,
 	);
@@ -113,6 +142,7 @@ export function pagesApi(router: Router) {
 		PAGES_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
+		...acceptImage('cover'),
 		captureAudit({ action: AUDIT_ACTIONS.PAGES_UPDATED, resource: 'pages' }),
 		pageUpdateController,
 	);

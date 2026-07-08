@@ -26,6 +26,9 @@ export const pageListAdminController = asyncHandler(async (req, res) => {
 		page: query.page,
 		limit: query.limit,
 		adminView: true,
+		search: query.search,
+		status: query.status,
+		parentId: query.parentId,
 	});
 	successResponse(res, {
 		statusCode: 200,

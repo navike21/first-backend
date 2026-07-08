@@ -5,10 +5,10 @@ import { addSection } from '../application/addSection';
 import { CreateSectionSchema } from '../schemas/page.schema';
 
 export const pageSectionAddController = asyncHandler(async (req, res) => {
-	const slug = String(req.params.slug);
+	const id = String(req.params.id);
 	const validated = validate(CreateSectionSchema, req.body);
 
-	const data = await addSection(slug, validated);
+	const data = await addSection(id, validated);
 	successResponse(res, {
 		statusCode: 201,
 		code: 'SUCCESS_PAGE_SECTION_ADDED',

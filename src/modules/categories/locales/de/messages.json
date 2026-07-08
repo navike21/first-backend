@@ -1,0 +1,15 @@
+{
+	"SUCCESS_CATEGORY_CREATE": "Kategorie erfolgreich erstellt",
+	"SUCCESS_CATEGORY_LIST": "Kategorien erfolgreich abgerufen",
+	"SUCCESS_CATEGORY_FOUND": "Kategorie erfolgreich gefunden",
+	"SUCCESS_CATEGORY_UPDATE": "Kategorie erfolgreich aktualisiert",
+	"SUCCESS_CATEGORY_DELETED": "Kategorie erfolgreich gelöscht",
+	"SUCCESS_CATEGORY_RESTORED": "Kategorie erfolgreich wiederhergestellt",
+	"SUCCESS_CATEGORY_PURGED": "Kategorie endgültig gelöscht",
+	"SUCCESS_CATEGORY_TRASH_LIST": "Papierkorb erfolgreich abgerufen",
+	"CATEGORY_NOT_FOUND": "Kategorie nicht gefunden",
+	"CATEGORY_SLUG_CONFLICT": "Eine Kategorie mit diesem Slug existiert bereits",
+	"CATEGORY_INVALID_PARENT": "Eine Kategorie kann nicht ihr eigener Vorfahre sein",
+	"CATEGORY_PARENT_NOT_FOUND": "Übergeordnete Kategorie nicht gefunden",
+	"CATEGORY_HAS_CHILDREN": "Diese Kategorie hat untergeordnete Kategorien und kann nicht endgültig gelöscht werden"
+}

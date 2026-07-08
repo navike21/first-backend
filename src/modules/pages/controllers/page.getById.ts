@@ -1,10 +1,10 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
-import { getPageBySlug } from '../application/getPageBySlug';
+import { getPageById } from '../application/getPageById';
 
-export const pageGetBySlugPublicController = asyncHandler(async (req, res) => {
-	const slug = String(req.params.slug);
-	const data = await getPageBySlug(slug, false);
+export const pageGetByIdController = asyncHandler(async (req, res) => {
+	const id = String(req.params.id);
+	const data = await getPageById(id);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_PAGE_FOUND',

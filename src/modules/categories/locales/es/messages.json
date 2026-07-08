@@ -1,0 +1,15 @@
+{
+	"SUCCESS_CATEGORY_CREATE": "Categoría creada exitosamente",
+	"SUCCESS_CATEGORY_LIST": "Categorías recuperadas exitosamente",
+	"SUCCESS_CATEGORY_FOUND": "Categoría encontrada exitosamente",
+	"SUCCESS_CATEGORY_UPDATE": "Categoría actualizada exitosamente",
+	"SUCCESS_CATEGORY_DELETED": "Categoría eliminada exitosamente",
+	"SUCCESS_CATEGORY_RESTORED": "Categoría restaurada exitosamente",
+	"SUCCESS_CATEGORY_PURGED": "Categoría eliminada permanentemente",
+	"SUCCESS_CATEGORY_TRASH_LIST": "Papelera recuperada exitosamente",
+	"CATEGORY_NOT_FOUND": "Categoría no encontrada",
+	"CATEGORY_SLUG_CONFLICT": "Ya existe una categoría con este slug",
+	"CATEGORY_INVALID_PARENT": "Una categoría no puede ser su propio ancestro",
+	"CATEGORY_PARENT_NOT_FOUND": "Categoría padre no encontrada",
+	"CATEGORY_HAS_CHILDREN": "Esta categoría tiene categorías hijas y no puede eliminarse permanentemente"
+}

@@ -29,14 +29,14 @@ describe('pageSectionDeleteController', () => {
 	it('calls deleteSection and returns 200', async () => {
 		vi.mocked(deleteSection).mockResolvedValue({ id: '1' } as never);
 		const req = {
-			params: { slug: 'home', sectionId: 'sec-1' },
+			params: { id: '1', sectionId: 'sec-1' },
 		} as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();
 
 		await pageSectionDeleteController(req, res, next);
 
-		expect(deleteSection).toHaveBeenCalledWith('home', 'sec-1');
+		expect(deleteSection).toHaveBeenCalledWith('1', 'sec-1');
 		expect(successResponse).toHaveBeenCalled();
 	});
 });

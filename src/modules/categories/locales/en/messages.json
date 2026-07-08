@@ -1,0 +1,15 @@
+{
+	"SUCCESS_CATEGORY_CREATE": "Category created successfully",
+	"SUCCESS_CATEGORY_LIST": "Categories retrieved successfully",
+	"SUCCESS_CATEGORY_FOUND": "Category found successfully",
+	"SUCCESS_CATEGORY_UPDATE": "Category updated successfully",
+	"SUCCESS_CATEGORY_DELETED": "Category deleted successfully",
+	"SUCCESS_CATEGORY_RESTORED": "Category restored successfully",
+	"SUCCESS_CATEGORY_PURGED": "Category permanently deleted",
+	"SUCCESS_CATEGORY_TRASH_LIST": "Trash retrieved successfully",
+	"CATEGORY_NOT_FOUND": "Category not found",
+	"CATEGORY_SLUG_CONFLICT": "A category with this slug already exists",
+	"CATEGORY_INVALID_PARENT": "A category cannot be its own ancestor",
+	"CATEGORY_PARENT_NOT_FOUND": "Parent category not found",
+	"CATEGORY_HAS_CHILDREN": "This category has child categories and cannot be permanently deleted"
+}

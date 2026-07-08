@@ -8,7 +8,7 @@ vi.mock('@Modules/pages/infrastructure/PageModel', () => ({
 	default: { findOne: vi.fn() },
 }));
 
-import { getPageBySlug } from '@Modules/pages/application/getPageBySlug';
+import { resolvePageByPath } from '@Modules/pages/application/resolvePageByPath';
 import PageModel from '@Modules/pages/infrastructure/PageModel';
 import { PageNotFoundError } from '@Modules/pages/domain/errors/PageErrors';
 
@@ -16,43 +16,31 @@ const mockQueryBuilder = (result: unknown) => ({
 	lean: vi.fn().mockResolvedValue(result),
 });
 
-describe('getPageBySlug', () => {
+describe('resolvePageByPath', () => {
 	it('returns page data when found (public)', async () => {
 		vi.mocked(PageModel.findOne).mockReturnValue(
 			mockQueryBuilder({
 				id: '1',
-				slug: 'home',
+				fullPath: { en: 'home' },
 				_id: 'mongo1',
 			}) as never,
 		);
 
-		const result = await getPageBySlug('home');
+		const result = await resolvePageByPath('home', 'en');
 
 		expect(result).not.toHaveProperty('_id');
-		expect(result.slug).toBe('home');
+		expect(result.fullPath.en).toBe('home');
 	});
 
-	it('uses published filter for public view', async () => {
+	it('resolves by fullPath for the given language and only publicly visible pages', async () => {
 		vi.mocked(PageModel.findOne).mockReturnValue(
-			mockQueryBuilder({ id: '1', slug: 'home' }) as never,
+			mockQueryBuilder({ id: '1', fullPath: { en: 'home' } }) as never,
 		);
 
-		await getPageBySlug('home', false);
+		await resolvePageByPath('home', 'en');
 
 		expect(PageModel.findOne).toHaveBeenCalledWith(
-			expect.objectContaining({ status: 'published', isPublished: true }),
-		);
-	});
-
-	it('uses the deletedAt null filter for adminView', async () => {
-		vi.mocked(PageModel.findOne).mockReturnValue(
-			mockQueryBuilder({ id: '1', slug: 'home' }) as never,
-		);
-
-		await getPageBySlug('home', true);
-
-		expect(PageModel.findOne).toHaveBeenCalledWith(
-			expect.objectContaining({ deletedAt: null }),
+			expect.objectContaining({ 'fullPath.en': 'home', deletedAt: null }),
 		);
 	});
 
@@ -61,6 +49,6 @@ describe('getPageBySlug', () => {
 			mockQueryBuilder(null) as never,
 		);
 
-		await expect(getPageBySlug('not-found')).rejects.toThrow(PageNotFoundError);
+		await expect(resolvePageByPath('not-found', 'en')).rejects.toThrow(PageNotFoundError);
 	});
 });

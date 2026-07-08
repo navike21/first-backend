@@ -18,7 +18,7 @@ const mockQueryBuilder = (items: unknown[]) => ({
 	lean: vi.fn().mockResolvedValue(items),
 });
 
-const page = { id: '1', slug: 'home', status: 'published', _id: 'mongo1' };
+const page = { id: '1', slug: { en: 'home' }, status: 'published', _id: 'mongo1' };
 
 describe('listPages', () => {
 	it('returns paginated public pages', async () => {
@@ -47,7 +47,7 @@ describe('listPages', () => {
 		});
 	});
 
-	it('uses published + isPublished + deletedAt filter for public view', async () => {
+	it('uses published-or-due-scheduled + deletedAt filter for public view', async () => {
 		vi.mocked(PageModel.find).mockReturnValue(
 			mockQueryBuilder([page]) as never,
 		);
@@ -56,9 +56,11 @@ describe('listPages', () => {
 		await listPages({ page: 1, limit: 10, adminView: false });
 
 		expect(PageModel.find).toHaveBeenCalledWith({
-			status: 'published',
-			isPublished: true,
 			deletedAt: null,
+			$or: [
+				{ status: 'published' },
+				{ status: 'scheduled', scheduledAt: expect.objectContaining({ $lte: expect.any(Date) }) },
+			],
 		});
 	});
 

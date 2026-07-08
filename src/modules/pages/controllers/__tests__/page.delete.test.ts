@@ -29,15 +29,15 @@ describe('pageDeleteController', () => {
 	it('calls deletePage and returns 200', async () => {
 		vi.mocked(deletePage).mockResolvedValue({
 			id: '1',
-			status: 'deleted',
+			deletedAt: new Date(),
 		} as never);
-		const req = { params: { slug: 'home' } } as unknown as Request;
+		const req = { params: { id: '1' } } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();
 
 		await pageDeleteController(req, res, next);
 
-		expect(deletePage).toHaveBeenCalledWith('home');
+		expect(deletePage).toHaveBeenCalledWith('1');
 		expect(successResponse).toHaveBeenCalled();
 	});
 });

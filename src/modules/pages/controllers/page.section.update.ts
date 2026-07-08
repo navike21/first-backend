@@ -5,11 +5,11 @@ import { updateSection } from '../application/updateSection';
 import { UpdateSectionSchema } from '../schemas/page.schema';
 
 export const pageSectionUpdateController = asyncHandler(async (req, res) => {
-	const slug = String(req.params.slug);
+	const id = String(req.params.id);
 	const sectionId = String(req.params.sectionId);
 	const validated = validate(UpdateSectionSchema, req.body);
 
-	const data = await updateSection(slug, sectionId, validated);
+	const data = await updateSection(id, sectionId, validated);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_PAGE_SECTION_UPDATED',

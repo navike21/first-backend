@@ -29,3 +29,43 @@ export class PageSectionNotFoundError extends AppError {
 		});
 	}
 }
+
+export class PageInvalidParentError extends AppError {
+	constructor() {
+		super({
+			statusCode: 422,
+			code: 'PAGE_INVALID_PARENT',
+			message: 'PAGE_INVALID_PARENT',
+		});
+	}
+}
+
+export class PageParentNotFoundError extends AppError {
+	constructor() {
+		super({
+			statusCode: 404,
+			code: 'PAGE_PARENT_NOT_FOUND',
+			message: 'PAGE_PARENT_NOT_FOUND',
+		});
+	}
+}
+
+export class PageHasChildrenError extends AppError {
+	constructor() {
+		super({
+			statusCode: 409,
+			code: 'PAGE_HAS_CHILDREN',
+			message: 'PAGE_HAS_CHILDREN',
+		});
+	}
+}
+
+export class PageRevisionNotFoundError extends AppError {
+	constructor() {
+		super({
+			statusCode: 404,
+			code: 'PAGE_REVISION_NOT_FOUND',
+			message: 'PAGE_REVISION_NOT_FOUND',
+		});
+	}
+}

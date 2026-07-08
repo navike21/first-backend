@@ -1,0 +1,12 @@
+{
+	"SUCCESS_TAG_CREATE": "Tag criada com sucesso",
+	"SUCCESS_TAG_LIST": "Tags recuperadas com sucesso",
+	"SUCCESS_TAG_FOUND": "Tag encontrada com sucesso",
+	"SUCCESS_TAG_UPDATE": "Tag atualizada com sucesso",
+	"SUCCESS_TAG_DELETED": "Tag excluída com sucesso",
+	"SUCCESS_TAG_RESTORED": "Tag restaurada com sucesso",
+	"SUCCESS_TAG_PURGED": "Tag excluída permanentemente",
+	"SUCCESS_TAG_TRASH_LIST": "Lixeira recuperada com sucesso",
+	"TAG_NOT_FOUND": "Tag não encontrada",
+	"TAG_SLUG_CONFLICT": "Já existe uma tag com este slug"
+}

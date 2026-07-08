@@ -5,10 +5,10 @@ import { reorderSections } from '../application/reorderSections';
 import { ReorderSectionsSchema } from '../schemas/page.schema';
 
 export const pageSectionReorderController = asyncHandler(async (req, res) => {
-	const slug = String(req.params.slug);
+	const id = String(req.params.id);
 	const validated = validate(ReorderSectionsSchema, req.body);
 
-	const data = await reorderSections(slug, validated.order);
+	const data = await reorderSections(id, validated.order);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_PAGE_SECTIONS_REORDERED',

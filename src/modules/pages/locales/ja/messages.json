@@ -8,7 +8,13 @@
 	"SUCCESS_PAGE_SECTION_UPDATED": "セクションが正常に更新されました",
 	"SUCCESS_PAGE_SECTION_DELETED": "セクションが正常に削除されました",
 	"SUCCESS_PAGE_SECTIONS_REORDERED": "セクションが正常に並べ替えられました",
+	"SUCCESS_PAGE_REVISIONS_LIST": "履歴が正常に取得されました",
+	"SUCCESS_PAGE_REVISION_RESTORED": "バージョンが正常に復元されました",
 	"PAGE_NOT_FOUND": "ページが見つかりません",
 	"PAGE_SLUG_CONFLICT": "このスラッグを持つページはすでに存在します",
-	"PAGE_SECTION_NOT_FOUND": "セクションが見つかりません"
+	"PAGE_SECTION_NOT_FOUND": "セクションが見つかりません",
+	"PAGE_INVALID_PARENT": "ページは自分自身の親にはなれません",
+	"PAGE_PARENT_NOT_FOUND": "親ページが見つかりません",
+	"PAGE_HAS_CHILDREN": "このページには子ページがあるため完全に削除できません",
+	"PAGE_REVISION_NOT_FOUND": "バージョンが見つかりません"
 }

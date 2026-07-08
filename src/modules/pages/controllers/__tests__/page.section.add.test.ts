@@ -29,7 +29,7 @@ describe('pageSectionAddController', () => {
 	it('calls addSection and returns 201 on valid input', async () => {
 		vi.mocked(addSection).mockResolvedValue({ id: '1' } as never);
 		const req = {
-			params: { slug: 'home' },
+			params: { id: '1' },
 			body: { type: 'hero' },
 		} as unknown as Request;
 		const res = makeRes();
@@ -43,7 +43,7 @@ describe('pageSectionAddController', () => {
 
 	it('calls next with error on invalid body', async () => {
 		const req = {
-			params: { slug: 'home' },
+			params: { id: '1' },
 			body: { type: 'invalid-type' },
 		} as unknown as Request;
 		const res = makeRes();

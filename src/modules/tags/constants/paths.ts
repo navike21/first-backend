@@ -1,0 +1,12 @@
+export const TAG_PATH_LIST_PUBLIC = '/tags';
+export const TAG_PATH_LIST_ADMIN = '/tags/admin';
+export const TAG_PATH_GET_BY_ID = '/tags/:id';
+export const TAG_PATH_CREATE = '/tags';
+export const TAG_PATH_UPDATE = '/tags/:id';
+export const TAG_PATH_DELETE = '/tags/:id';
+export const TAG_PATH_PURGE = '/tags/:id/permanent';
+export const TAG_PATH_TRASH = '/tags/trash';
+export const TAG_PATH_RESTORE = '/tags/:id/restore';
+export const TAG_PATH_BULK_DELETE = '/tags/bulk';
+export const TAG_PATH_BULK_RESTORE = '/tags/bulk/restore';
+export const TAG_PATH_BULK_PURGE = '/tags/bulk/permanent';

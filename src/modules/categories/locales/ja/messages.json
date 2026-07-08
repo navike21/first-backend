@@ -1,0 +1,15 @@
+{
+	"SUCCESS_CATEGORY_CREATE": "カテゴリーが正常に作成されました",
+	"SUCCESS_CATEGORY_LIST": "カテゴリーが正常に取得されました",
+	"SUCCESS_CATEGORY_FOUND": "カテゴリーが正常に見つかりました",
+	"SUCCESS_CATEGORY_UPDATE": "カテゴリーが正常に更新されました",
+	"SUCCESS_CATEGORY_DELETED": "カテゴリーが正常に削除されました",
+	"SUCCESS_CATEGORY_RESTORED": "カテゴリーが正常に復元されました",
+	"SUCCESS_CATEGORY_PURGED": "カテゴリーが完全に削除されました",
+	"SUCCESS_CATEGORY_TRASH_LIST": "ゴミ箱が正常に取得されました",
+	"CATEGORY_NOT_FOUND": "カテゴリーが見つかりません",
+	"CATEGORY_SLUG_CONFLICT": "このスラッグを持つカテゴリーはすでに存在します",
+	"CATEGORY_INVALID_PARENT": "カテゴリーは自分自身の親にはなれません",
+	"CATEGORY_PARENT_NOT_FOUND": "親カテゴリーが見つかりません",
+	"CATEGORY_HAS_CHILDREN": "このカテゴリーには子カテゴリーがあるため完全に削除できません"
+}

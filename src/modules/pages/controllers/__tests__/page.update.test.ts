@@ -19,7 +19,7 @@ import { successResponse } from '@Helpers/responseStructure';
 
 function makeRes() {
 	return {
-		locals: {},
+		locals: { userId: 'user-1' },
 		status: vi.fn().mockReturnThis(),
 		json: vi.fn().mockReturnThis(),
 	} as unknown as Response;
@@ -28,12 +28,12 @@ function makeRes() {
 describe('pageUpdateController', () => {
 	it('calls updatePage and returns 200 on valid input', async () => {
 		vi.mocked(updatePage).mockResolvedValue({
-			id: '1',
-			slug: 'home',
+			data: { id: '1', slug: { en: 'home' } },
+			warnings: [],
 		} as never);
 		const req = {
-			params: { slug: 'home' },
-			body: { isPublished: true },
+			params: { id: '1' },
+			body: { status: 'published' },
 		} as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();
@@ -46,8 +46,8 @@ describe('pageUpdateController', () => {
 
 	it('calls next with error on invalid body', async () => {
 		const req = {
-			params: { slug: 'home' },
-			body: { slug: 'INVALID SLUG!' },
+			params: { id: '1' },
+			body: { slug: { en: 'INVALID SLUG!' } },
 		} as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();

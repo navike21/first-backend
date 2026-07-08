@@ -8,7 +8,13 @@
 	"SUCCESS_PAGE_SECTION_UPDATED": "Seção atualizada com sucesso",
 	"SUCCESS_PAGE_SECTION_DELETED": "Seção excluída com sucesso",
 	"SUCCESS_PAGE_SECTIONS_REORDERED": "Seções reordenadas com sucesso",
+	"SUCCESS_PAGE_REVISIONS_LIST": "Histórico recuperado com sucesso",
+	"SUCCESS_PAGE_REVISION_RESTORED": "Versão restaurada com sucesso",
 	"PAGE_NOT_FOUND": "Página não encontrada",
 	"PAGE_SLUG_CONFLICT": "Já existe uma página com este slug",
-	"PAGE_SECTION_NOT_FOUND": "Seção não encontrada"
+	"PAGE_SECTION_NOT_FOUND": "Seção não encontrada",
+	"PAGE_INVALID_PARENT": "Uma página não pode ser seu próprio ancestral",
+	"PAGE_PARENT_NOT_FOUND": "Página pai não encontrada",
+	"PAGE_HAS_CHILDREN": "Esta página possui páginas filhas e não pode ser excluída permanentemente",
+	"PAGE_REVISION_NOT_FOUND": "Versão não encontrada"
 }

@@ -3,8 +3,8 @@ import { successResponse } from '@Helpers/responseStructure';
 import { restorePage } from '../application/restorePage';
 
 export const pageRestoreController = asyncHandler(async (req, res) => {
-	const slug = String(req.params.slug);
-	const data = await restorePage(slug);
+	const id = String(req.params.id);
+	const data = await restorePage(id);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_PAGE_RESTORED',

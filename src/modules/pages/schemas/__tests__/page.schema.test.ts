@@ -6,6 +6,7 @@ import {
 	UpdateSectionSchema,
 	ReorderSectionsSchema,
 	ListPagesQuerySchema,
+	ResolvePageQuerySchema,
 } from '@Modules/pages/schemas/page.schema';
 
 const localizedName = {
@@ -22,7 +23,7 @@ const localizedName = {
 };
 
 const validPage = {
-	slug: 'home-page',
+	slug: { en: 'home-page' },
 	title: localizedName,
 };
 
@@ -32,15 +33,15 @@ describe('page.schema', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('CreatePageSchema rejects missing slug', () => {
+	it('CreatePageSchema allows a page with no slug at all', () => {
 		const result = CreatePageSchema.safeParse({ title: localizedName });
-		expect(result.success).toBe(false);
+		expect(result.success).toBe(true);
 	});
 
 	it('CreatePageSchema rejects slug with uppercase letters', () => {
 		const result = CreatePageSchema.safeParse({
 			...validPage,
-			slug: 'Home-Page',
+			slug: { en: 'Home-Page' },
 		});
 		expect(result.success).toBe(false);
 	});
@@ -48,7 +49,7 @@ describe('page.schema', () => {
 	it('CreatePageSchema rejects slug with spaces', () => {
 		const result = CreatePageSchema.safeParse({
 			...validPage,
-			slug: 'home page',
+			slug: { en: 'home page' },
 		});
 		expect(result.success).toBe(false);
 	});
@@ -56,24 +57,38 @@ describe('page.schema', () => {
 	it('CreatePageSchema accepts slug with dashes and numbers', () => {
 		const result = CreatePageSchema.safeParse({
 			...validPage,
-			slug: 'about-us-2024',
+			slug: { en: 'about-us-2024' },
 		});
 		expect(result.success).toBe(true);
 	});
 
 	it('CreatePageSchema rejects missing title', () => {
-		const result = CreatePageSchema.safeParse({ slug: 'home' });
+		const result = CreatePageSchema.safeParse({ slug: { en: 'home' } });
 		expect(result.success).toBe(false);
 	});
 
-	it('CreatePageSchema defaults isPublished to false', () => {
+	it('CreatePageSchema defaults status to draft', () => {
 		const result = CreatePageSchema.safeParse(validPage);
 		expect(result.success).toBe(true);
-		if (result.success) expect(result.data.isPublished).toBe(false);
+		if (result.success) expect(result.data.status).toBe('draft');
+	});
+
+	it('CreatePageSchema requires scheduledAt when status is scheduled', () => {
+		const result = CreatePageSchema.safeParse({ ...validPage, status: 'scheduled' });
+		expect(result.success).toBe(false);
+	});
+
+	it('CreatePageSchema accepts a scheduled page with scheduledAt', () => {
+		const result = CreatePageSchema.safeParse({
+			...validPage,
+			status: 'scheduled',
+			scheduledAt: new Date().toISOString(),
+		});
+		expect(result.success).toBe(true);
 	});
 
 	it('UpdatePageSchema allows partial data', () => {
-		const result = UpdatePageSchema.safeParse({ isPublished: true });
+		const result = UpdatePageSchema.safeParse({ status: 'published' });
 		expect(result.success).toBe(true);
 	});
 
@@ -134,5 +149,11 @@ describe('page.schema', () => {
 			expect(result.data.page).toBe(3);
 			expect(result.data.limit).toBe(25);
 		}
+	});
+
+	it('ResolvePageQuerySchema requires path and a supported lang', () => {
+		expect(ResolvePageQuerySchema.safeParse({ path: 'home', lang: 'en' }).success).toBe(true);
+		expect(ResolvePageQuerySchema.safeParse({ path: '', lang: 'en' }).success).toBe(false);
+		expect(ResolvePageQuerySchema.safeParse({ path: 'home', lang: 'xx' }).success).toBe(false);
 	});
 });

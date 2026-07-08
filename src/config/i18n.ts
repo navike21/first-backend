@@ -12,6 +12,8 @@ import { servicesLocales } from '../modules/services/locales';
 import { portfolioLocales } from '../modules/portfolio/locales';
 import { pagesLocales } from '../modules/pages/locales';
 import { collaboratorsLocales } from '../modules/collaborators/locales';
+import { categoriesLocales } from '../modules/categories/locales';
+import { tagsLocales } from '../modules/tags/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -31,6 +33,8 @@ export async function initI18n(): Promise<void> {
 				portfolio: portfolioLocales[lang],
 				pages: pagesLocales[lang],
 				collaborators: collaboratorsLocales[lang],
+				categories: categoriesLocales[lang],
+				tags: tagsLocales[lang],
 			},
 		]),
 	);
@@ -55,6 +59,8 @@ export async function initI18n(): Promise<void> {
 			'portfolio',
 			'pages',
 			'collaborators',
+			'categories',
+			'tags',
 		],
 		defaultNS: 'errors',
 	});

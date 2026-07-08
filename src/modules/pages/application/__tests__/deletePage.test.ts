@@ -17,17 +17,17 @@ describe('deletePage', () => {
 		const saveFn = vi.fn().mockResolvedValue(undefined);
 		const doc = {
 			id: '1',
-			slug: 'home',
+			slug: { en: 'home' },
 			status: 'published',
 			deletedAt: undefined as Date | undefined,
 			save: saveFn,
 			toObject: vi
 				.fn()
-				.mockReturnValue({ id: '1', status: 'deleted', _id: 'mongo1' }),
+				.mockReturnValue({ id: '1', status: 'published', _id: 'mongo1' }),
 		};
 		vi.mocked(PageModel.findOne).mockResolvedValue(doc as never);
 
-		const result = await deletePage('home');
+		const result = await deletePage('1');
 
 		expect(saveFn).toHaveBeenCalled();
 		// Soft-delete is recorded via deletedAt (there is no 'deleted' status).

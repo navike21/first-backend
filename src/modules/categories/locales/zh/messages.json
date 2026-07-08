@@ -1,0 +1,15 @@
+{
+	"SUCCESS_CATEGORY_CREATE": "分类创建成功",
+	"SUCCESS_CATEGORY_LIST": "分类检索成功",
+	"SUCCESS_CATEGORY_FOUND": "分类查找成功",
+	"SUCCESS_CATEGORY_UPDATE": "分类更新成功",
+	"SUCCESS_CATEGORY_DELETED": "分类删除成功",
+	"SUCCESS_CATEGORY_RESTORED": "分类恢复成功",
+	"SUCCESS_CATEGORY_PURGED": "分类已永久删除",
+	"SUCCESS_CATEGORY_TRASH_LIST": "回收站检索成功",
+	"CATEGORY_NOT_FOUND": "分类未找到",
+	"CATEGORY_SLUG_CONFLICT": "具有此 slug 的分类已存在",
+	"CATEGORY_INVALID_PARENT": "分类不能成为自己的上级",
+	"CATEGORY_PARENT_NOT_FOUND": "未找到父分类",
+	"CATEGORY_HAS_CHILDREN": "此分类有子分类,无法永久删除"
+}

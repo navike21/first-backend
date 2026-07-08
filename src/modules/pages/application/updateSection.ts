@@ -7,11 +7,11 @@ import {
 import { UpdateSectionInput } from '../schemas/page.schema';
 
 export async function updateSection(
-	slug: string,
+	id: string,
 	sectionId: string,
 	input: UpdateSectionInput,
 ) {
-	const doc = await PageModel.findOne({ slug, deletedAt: null });
+	const doc = await PageModel.findOne({ id, deletedAt: null });
 	if (!doc) throw new PageNotFoundError();
 
 	const section = doc.sections.find(

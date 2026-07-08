@@ -89,6 +89,26 @@ export const AUDIT_ACTIONS = {
 	SUBSCRIBERS_BULK_SOFT_DELETED: 'subscribers:bulk_soft_deleted',
 	SUBSCRIBERS_BULK_RESTORED: 'subscribers:bulk_restored',
 	SUBSCRIBERS_BULK_PERMANENTLY_DELETED: 'subscribers:bulk_permanently_deleted',
+
+	PAGE_REVISION_RESTORED: 'pages:revision_restored',
+
+	CATEGORIES_CREATED: 'categories:created',
+	CATEGORIES_UPDATED: 'categories:updated',
+	CATEGORIES_SOFT_DELETED: 'categories:soft_deleted',
+	CATEGORIES_PERMANENTLY_DELETED: 'categories:permanently_deleted',
+	CATEGORIES_RESTORED: 'categories:restored',
+	CATEGORIES_BULK_SOFT_DELETED: 'categories:bulk_soft_deleted',
+	CATEGORIES_BULK_RESTORED: 'categories:bulk_restored',
+	CATEGORIES_BULK_PERMANENTLY_DELETED: 'categories:bulk_permanently_deleted',
+
+	TAGS_CREATED: 'tags:created',
+	TAGS_UPDATED: 'tags:updated',
+	TAGS_SOFT_DELETED: 'tags:soft_deleted',
+	TAGS_PERMANENTLY_DELETED: 'tags:permanently_deleted',
+	TAGS_RESTORED: 'tags:restored',
+	TAGS_BULK_SOFT_DELETED: 'tags:bulk_soft_deleted',
+	TAGS_BULK_RESTORED: 'tags:bulk_restored',
+	TAGS_BULK_PERMANENTLY_DELETED: 'tags:bulk_permanently_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

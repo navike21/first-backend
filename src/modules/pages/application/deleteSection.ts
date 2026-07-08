@@ -5,8 +5,8 @@ import {
 	PageSectionNotFoundError,
 } from '../domain/errors/PageErrors';
 
-export async function deleteSection(slug: string, sectionId: string) {
-	const doc = await PageModel.findOne({ slug, deletedAt: null });
+export async function deleteSection(id: string, sectionId: string) {
+	const doc = await PageModel.findOne({ id, deletedAt: null });
 	if (!doc) throw new PageNotFoundError();
 
 	const idx = doc.sections.findIndex(
