@@ -5,12 +5,13 @@ import { listDeletedCollaborators } from '../application/listDeletedCollaborator
 export const collaboratorTrashController = asyncHandler(async (req, res) => {
 	const page = Number(req.query.page) || 1;
 	const limit = Number(req.query.limit) || 20;
-	const result = await listDeletedCollaborators({ page, limit });
+	const { data, meta } = await listDeletedCollaborators({ page, limit });
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_COLLABORATOR_TRASH_LIST',
 		message: 'SUCCESS_COLLABORATOR_TRASH_LIST',
 		ns: 'collaborators',
-		data: result,
+		data,
+		meta,
 	});
 });
