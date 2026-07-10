@@ -36,6 +36,7 @@ const siteConfigSchema = new Schema<SiteConfigDocument>(
 		},
 		layout: {
 			contentWidth: { type: String, enum: CONTENT_WIDTHS, default: 'boxed' },
+			boxedMaxWidth: { type: Number, min: 640, max: 1920, default: 1200 },
 		},
 	},
 	{ timestamps: true },

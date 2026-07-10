@@ -40,6 +40,8 @@ export interface FooterConfig {
 
 export interface LayoutConfig {
 	contentWidth: ContentWidth;
+	/** Max content width in px, only meaningful when contentWidth === 'boxed'. */
+	boxedMaxWidth: number;
 }
 
 export interface SiteConfigData {
@@ -67,5 +69,5 @@ export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
 		showNewsletter: false,
 		copyright: emptyLocalized(),
 	},
-	layout: { contentWidth: 'boxed' },
+	layout: { contentWidth: 'boxed', boxedMaxWidth: 1200 },
 };

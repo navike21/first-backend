@@ -38,6 +38,12 @@ const footerUpdateSchema = z
 const layoutUpdateSchema = z
 	.object({
 		contentWidth: z.enum(CONTENT_WIDTHS, { error: 'SITE_CONFIG_CONTENT_WIDTH_INVALID' }).optional(),
+		boxedMaxWidth: z
+			.number({ error: 'SITE_CONFIG_MAX_WIDTH_INVALID' })
+			.int({ error: 'SITE_CONFIG_MAX_WIDTH_INVALID' })
+			.min(640, { error: 'SITE_CONFIG_MAX_WIDTH_INVALID' })
+			.max(1920, { error: 'SITE_CONFIG_MAX_WIDTH_INVALID' })
+			.optional(),
 	})
 	.optional();
 
