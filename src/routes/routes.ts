@@ -16,6 +16,7 @@ import { pagesApi } from '@Modules/pages';
 import { collaboratorsApi } from '@Modules/collaborators';
 import { categoriesApi } from '@Modules/categories';
 import { tagsApi } from '@Modules/tags';
+import { siteConfigApi } from '@Modules/site-config';
 import { geoApi } from '@Modules/geo';
 import { configApi } from '@Modules/config';
 
@@ -40,6 +41,7 @@ const mainRouter = () => {
 	collaboratorsApi(v1Router);
 	categoriesApi(v1Router);
 	tagsApi(v1Router);
+	siteConfigApi(v1Router);
 	geoApi(v1Router);
 	configApi(v1Router);
 

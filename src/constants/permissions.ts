@@ -37,6 +37,10 @@ export const PERMISSIONS = {
 	APP_SETTINGS_UPDATE: 'app-settings:update',
 	APP_SETTINGS_MANAGE: 'app-settings:manage',
 
+	SITE_CONFIG_READ: 'site-config:read',
+	SITE_CONFIG_UPDATE: 'site-config:update',
+	SITE_CONFIG_MANAGE: 'site-config:manage',
+
 	CLIENTS_READ: 'clients:read',
 	CLIENTS_CREATE: 'clients:create',
 	CLIENTS_UPDATE: 'clients:update',

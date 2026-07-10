@@ -92,6 +92,8 @@ export const AUDIT_ACTIONS = {
 
 	PAGE_REVISION_RESTORED: 'pages:revision_restored',
 
+	SITE_CONFIG_UPDATED: 'site-config:updated',
+
 	CATEGORIES_CREATED: 'categories:created',
 	CATEGORIES_UPDATED: 'categories:updated',
 	CATEGORIES_SOFT_DELETED: 'categories:soft_deleted',

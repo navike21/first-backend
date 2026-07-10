@@ -14,6 +14,7 @@ import { pagesLocales } from '../modules/pages/locales';
 import { collaboratorsLocales } from '../modules/collaborators/locales';
 import { categoriesLocales } from '../modules/categories/locales';
 import { tagsLocales } from '../modules/tags/locales';
+import { siteConfigLocales } from '../modules/site-config/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -35,6 +36,7 @@ export async function initI18n(): Promise<void> {
 				collaborators: collaboratorsLocales[lang],
 				categories: categoriesLocales[lang],
 				tags: tagsLocales[lang],
+				'site-config': siteConfigLocales[lang],
 			},
 		]),
 	);
@@ -61,6 +63,7 @@ export async function initI18n(): Promise<void> {
 			'collaborators',
 			'categories',
 			'tags',
+			'site-config',
 		],
 		defaultNS: 'errors',
 	});
