@@ -1,6 +1,12 @@
 import { Schema, model } from 'mongoose';
 import type { SiteConfigData } from '../constants/siteConfigDefaults';
-import { SITE_CONFIG_DEFAULTS, HEADER_VARIANTS, FOOTER_VARIANTS, CONTENT_WIDTHS } from '../constants/siteConfigDefaults';
+import {
+	SITE_CONFIG_DEFAULTS,
+	HEADER_VARIANTS,
+	FOOTER_VARIANTS,
+	CONTENT_WIDTHS,
+	SOCIAL_NETWORKS,
+} from '../constants/siteConfigDefaults';
 
 export interface SiteConfigDocument extends SiteConfigData {
 	id: string;
@@ -41,6 +47,7 @@ const siteConfigSchema = new Schema<SiteConfigDocument>(
 			contentWidth: { type: String, enum: CONTENT_WIDTHS, default: 'boxed' },
 			boxedMaxWidth: { type: Number, min: 640, max: 1920, default: 1200 },
 		},
+		social: Object.fromEntries(SOCIAL_NETWORKS.map((network) => [network, { type: String, default: '' }])),
 	},
 	{ timestamps: true },
 );

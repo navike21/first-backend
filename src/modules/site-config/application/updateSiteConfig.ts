@@ -24,6 +24,7 @@ function buildSetPayload(data: SiteConfigUpdate): Record<string, unknown> {
 	if (data.header) flatten('header', data.header, set);
 	if (data.footer) flatten('footer', data.footer, set);
 	if (data.layout) flatten('layout', data.layout, set);
+	if (data.social) flatten('social', data.social, set);
 	return set;
 }
 

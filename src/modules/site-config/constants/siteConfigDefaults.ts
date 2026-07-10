@@ -50,10 +50,32 @@ export interface LayoutConfig {
 	boxedMaxWidth: number;
 }
 
+export const SOCIAL_NETWORKS = [
+	'facebook',
+	'instagram',
+	'x',
+	'whatsapp',
+	'linkedin',
+	'youtube',
+	'tiktok',
+	'telegram',
+	'pinterest',
+	'github',
+] as const;
+export type SocialNetwork = (typeof SOCIAL_NETWORKS)[number];
+
+/** Single source of truth for social URLs across the public site ('' = hidden). */
+export type SocialConfig = Record<SocialNetwork, string>;
+
 export interface SiteConfigData {
 	header: HeaderConfig;
 	footer: FooterConfig;
 	layout: LayoutConfig;
+	social: SocialConfig;
+}
+
+export function emptySocial(): SocialConfig {
+	return Object.fromEntries(SOCIAL_NETWORKS.map((network) => [network, ''])) as SocialConfig;
 }
 
 export function emptyLocalized(): LocalizedString {
@@ -76,4 +98,5 @@ export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
 		copyright: emptyLocalized(),
 	},
 	layout: { contentWidth: 'boxed', boxedMaxWidth: 1200 },
+	social: emptySocial(),
 };

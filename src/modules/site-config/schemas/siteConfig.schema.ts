@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
-import { HEADER_VARIANTS, FOOTER_VARIANTS, CONTENT_WIDTHS } from '../constants/siteConfigDefaults';
+import { HEADER_VARIANTS, FOOTER_VARIANTS, CONTENT_WIDTHS, SOCIAL_NETWORKS } from '../constants/siteConfigDefaults';
 
 const headerUpdateSchema = z
 	.object({
@@ -52,14 +52,30 @@ const layoutUpdateSchema = z
 	})
 	.optional();
 
+const socialUpdateSchema = z
+	.object(
+		Object.fromEntries(
+			SOCIAL_NETWORKS.map((network) => [
+				network,
+				z.string({ error: 'SITE_CONFIG_URL_INVALID' }).trim().max(300).optional(),
+			]),
+		),
+	)
+	.optional();
+
 export const SiteConfigUpdateSchema = z
 	.object({
 		header: headerUpdateSchema,
 		footer: footerUpdateSchema,
 		layout: layoutUpdateSchema,
+		social: socialUpdateSchema,
 	})
 	.refine(
-		(data) => data.header !== undefined || data.footer !== undefined || data.layout !== undefined,
+		(data) =>
+			data.header !== undefined ||
+			data.footer !== undefined ||
+			data.layout !== undefined ||
+			data.social !== undefined,
 		{ message: 'SITE_CONFIG_EMPTY_UPDATE' },
 	);
 

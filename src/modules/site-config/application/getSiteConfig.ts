@@ -20,6 +20,7 @@ function mergeWithDefaults(doc: Partial<SiteConfigData>): SiteConfigData {
 		},
 		footer: { ...SITE_CONFIG_DEFAULTS.footer, ...doc.footer },
 		layout: { ...SITE_CONFIG_DEFAULTS.layout, ...doc.layout },
+		social: { ...SITE_CONFIG_DEFAULTS.social, ...doc.social },
 	};
 }
 
