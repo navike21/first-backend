@@ -16,5 +16,6 @@
 	"PAGE_INVALID_PARENT": "页面不能成为自己的上级",
 	"PAGE_PARENT_NOT_FOUND": "未找到父页面",
 	"PAGE_HAS_CHILDREN": "此页面有子页面,无法永久删除",
-	"PAGE_REVISION_NOT_FOUND": "未找到该版本"
+	"PAGE_REVISION_NOT_FOUND": "未找到该版本",
+	"SUCCESS_PAGE_SECTIONS_REPLACED": "章节保存成功"
 }

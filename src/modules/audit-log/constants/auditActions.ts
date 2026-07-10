@@ -91,6 +91,7 @@ export const AUDIT_ACTIONS = {
 	SUBSCRIBERS_BULK_PERMANENTLY_DELETED: 'subscribers:bulk_permanently_deleted',
 
 	PAGE_REVISION_RESTORED: 'pages:revision_restored',
+	PAGE_SECTIONS_REPLACED: 'pages:sections_replaced',
 
 	SITE_CONFIG_UPDATED: 'site-config:updated',
 

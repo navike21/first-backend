@@ -54,6 +54,14 @@ export const ReorderSectionsSchema = z.object({
 	order: z.array(z.string()).min(1),
 });
 
+// Full replace used by the visual builder: one PUT per save (and one page
+// revision), instead of granular add/update/delete calls.
+export const ReplaceSectionsSchema = z.object({
+	sections: z
+		.array(CreateSectionSchema.extend({ sectionId: z.uuid().optional() }))
+		.max(50),
+});
+
 export const PAGE_STATUSES = ['draft', 'scheduled', 'published'] as const;
 
 export const CreatePageSchema = z
@@ -111,3 +119,4 @@ export type UpdatePageInput = z.infer<typeof UpdatePageSchema>;
 export type CreateSectionInput = z.infer<typeof CreateSectionSchema>;
 export type UpdateSectionInput = z.infer<typeof UpdateSectionSchema>;
 export type ReorderSectionsInput = z.infer<typeof ReorderSectionsSchema>;
+export type ReplaceSectionsInput = z.infer<typeof ReplaceSectionsSchema>;

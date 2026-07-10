@@ -16,5 +16,6 @@
 	"PAGE_INVALID_PARENT": "Una pagina non può essere un proprio antenato",
 	"PAGE_PARENT_NOT_FOUND": "Pagina principale non trovata",
 	"PAGE_HAS_CHILDREN": "Questa pagina ha pagine figlie e non può essere eliminata definitivamente",
-	"PAGE_REVISION_NOT_FOUND": "Versione non trovata"
+	"PAGE_REVISION_NOT_FOUND": "Versione non trovata",
+	"SUCCESS_PAGE_SECTIONS_REPLACED": "Sezioni salvate con successo"
 }

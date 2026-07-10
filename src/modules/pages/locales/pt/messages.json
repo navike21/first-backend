@@ -16,5 +16,6 @@
 	"PAGE_INVALID_PARENT": "Uma página não pode ser seu próprio ancestral",
 	"PAGE_PARENT_NOT_FOUND": "Página pai não encontrada",
 	"PAGE_HAS_CHILDREN": "Esta página possui páginas filhas e não pode ser excluída permanentemente",
-	"PAGE_REVISION_NOT_FOUND": "Versão não encontrada"
+	"PAGE_REVISION_NOT_FOUND": "Versão não encontrada",
+	"SUCCESS_PAGE_SECTIONS_REPLACED": "Seções salvas com sucesso"
 }

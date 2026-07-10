@@ -16,5 +16,6 @@
 	"PAGE_INVALID_PARENT": "A page cannot be its own ancestor",
 	"PAGE_PARENT_NOT_FOUND": "Parent page not found",
 	"PAGE_HAS_CHILDREN": "This page has child pages and cannot be permanently deleted",
-	"PAGE_REVISION_NOT_FOUND": "Revision not found"
+	"PAGE_REVISION_NOT_FOUND": "Revision not found",
+	"SUCCESS_PAGE_SECTIONS_REPLACED": "Sections saved successfully"
 }

@@ -16,5 +16,6 @@
 	"PAGE_INVALID_PARENT": "ページは自分自身の親にはなれません",
 	"PAGE_PARENT_NOT_FOUND": "親ページが見つかりません",
 	"PAGE_HAS_CHILDREN": "このページには子ページがあるため完全に削除できません",
-	"PAGE_REVISION_NOT_FOUND": "バージョンが見つかりません"
+	"PAGE_REVISION_NOT_FOUND": "バージョンが見つかりません",
+	"SUCCESS_PAGE_SECTIONS_REPLACED": "セクションを保存しました"
 }

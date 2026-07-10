@@ -16,5 +16,6 @@
 	"PAGE_INVALID_PARENT": "Страница не может быть своим собственным предком",
 	"PAGE_PARENT_NOT_FOUND": "Родительская страница не найдена",
 	"PAGE_HAS_CHILDREN": "У этой страницы есть дочерние страницы, её нельзя удалить безвозвратно",
-	"PAGE_REVISION_NOT_FOUND": "Версия не найдена"
+	"PAGE_REVISION_NOT_FOUND": "Версия не найдена",
+	"SUCCESS_PAGE_SECTIONS_REPLACED": "Секции успешно сохранены"
 }

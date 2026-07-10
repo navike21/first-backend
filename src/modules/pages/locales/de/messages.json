@@ -16,5 +16,6 @@
 	"PAGE_INVALID_PARENT": "Eine Seite kann nicht ihr eigener Vorfahre sein",
 	"PAGE_PARENT_NOT_FOUND": "Übergeordnete Seite nicht gefunden",
 	"PAGE_HAS_CHILDREN": "Diese Seite hat untergeordnete Seiten und kann nicht endgültig gelöscht werden",
-	"PAGE_REVISION_NOT_FOUND": "Version nicht gefunden"
+	"PAGE_REVISION_NOT_FOUND": "Version nicht gefunden",
+	"SUCCESS_PAGE_SECTIONS_REPLACED": "Abschnitte erfolgreich gespeichert"
 }

@@ -12,6 +12,7 @@ export const PAGES_PATH_SECTION_ADD = '/pages/:id/sections';
 export const PAGES_PATH_SECTION_UPDATE = '/pages/:id/sections/:sectionId';
 export const PAGES_PATH_SECTION_DELETE = '/pages/:id/sections/:sectionId';
 export const PAGES_PATH_SECTIONS_REORDER = '/pages/:id/sections/reorder';
+export const PAGES_PATH_SECTIONS_REPLACE = '/pages/:id/sections';
 export const PAGES_PATH_DELETE_PERMANENT = '/pages/:id/permanent';
 export const PAGES_PATH_TRASH = '/pages/trash';
 export const PAGES_PATH_RESTORE = '/pages/:id/restore';

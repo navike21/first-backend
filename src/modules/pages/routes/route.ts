@@ -20,6 +20,7 @@ import {
 	PAGES_PATH_SECTION_UPDATE,
 	PAGES_PATH_SECTION_DELETE,
 	PAGES_PATH_SECTIONS_REORDER,
+	PAGES_PATH_SECTIONS_REPLACE,
 	PAGES_PATH_BULK_DELETE,
 	PAGES_PATH_BULK_RESTORE,
 	PAGES_PATH_BULK_PURGE,
@@ -42,6 +43,7 @@ import { pageSectionAddController } from '../controllers/page.section.add';
 import { pageSectionUpdateController } from '../controllers/page.section.update';
 import { pageSectionDeleteController } from '../controllers/page.section.delete';
 import { pageSectionReorderController } from '../controllers/page.section.reorder';
+import { pageSectionsReplaceController } from '../controllers/page.sections.replace';
 import { deletePagesBulkController } from '../controllers/page.deleteBulk';
 import { restorePagesBulkController } from '../controllers/page.restoreBulk';
 import { purgePagesBulkController } from '../controllers/page.purgeBulk';
@@ -173,6 +175,13 @@ export function pagesApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
 		pageSectionReorderController,
+	);
+	router.put(
+		PAGES_PATH_SECTIONS_REPLACE,
+		authenticate,
+		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
+		captureAudit({ action: AUDIT_ACTIONS.PAGE_SECTIONS_REPLACED, resource: 'pages' }),
+		pageSectionsReplaceController,
 	);
 	router.patch(
 		PAGES_PATH_SECTION_UPDATE,
