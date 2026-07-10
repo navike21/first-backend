@@ -20,6 +20,8 @@ const siteConfigSchema = new Schema<SiteConfigDocument>(
 			cta: {
 				enabled: { type: Boolean, default: false },
 				label: { type: Schema.Types.Mixed, default: () => SITE_CONFIG_DEFAULTS.header.cta.label },
+				linkType: { type: String, enum: ['page', 'url'], default: 'page' },
+				pageId: { type: String, default: null },
 				url: { type: String, default: '' },
 			},
 			mobile: {

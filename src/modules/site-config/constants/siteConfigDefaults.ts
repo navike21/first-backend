@@ -22,6 +22,9 @@ export interface HeaderConfig {
 	cta: {
 		enabled: boolean;
 		label: LocalizedString;
+		/** 'page' links to a CMS page by id; 'url' uses the free-form url field. */
+		linkType: 'page' | 'url';
+		pageId: string | null;
 		url: string;
 	};
 	mobile: {
@@ -59,7 +62,7 @@ export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
 		variant: 'logo-left-menu-right',
 		sticky: true,
 		transparent: false,
-		cta: { enabled: false, label: emptyLocalized(), url: '' },
+		cta: { enabled: false, label: emptyLocalized(), linkType: 'page', pageId: null, url: '' },
 		mobile: { logoPosition: 'left', menuIconPosition: 'right' },
 	},
 	footer: {

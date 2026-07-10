@@ -11,6 +11,10 @@ const headerUpdateSchema = z
 			.object({
 				enabled: z.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' }).optional(),
 				label: LocalizedStringSchema.optional(),
+				linkType: z.enum(['page', 'url'], { error: 'SITE_CONFIG_LINK_TYPE_INVALID' }).optional(),
+				pageId: z
+					.union([z.uuid({ error: 'SITE_CONFIG_PAGE_ID_INVALID' }), z.literal(''), z.null()])
+					.optional(),
 				url: z.string({ error: 'SITE_CONFIG_URL_INVALID' }).trim().max(500).optional(),
 			})
 			.optional(),
