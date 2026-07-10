@@ -10,6 +10,7 @@ const headerUpdateSchema = z
 		cta: z
 			.object({
 				enabled: z.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' }).optional(),
+				labelMode: z.enum(['page', 'custom'], { error: 'SITE_CONFIG_LABEL_MODE_INVALID' }).optional(),
 				label: LocalizedStringSchema.optional(),
 				linkType: z.enum(['page', 'url'], { error: 'SITE_CONFIG_LINK_TYPE_INVALID' }).optional(),
 				pageId: z

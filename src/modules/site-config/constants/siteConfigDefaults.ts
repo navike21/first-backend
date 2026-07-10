@@ -21,6 +21,9 @@ export interface HeaderConfig {
 	transparent: boolean;
 	cta: {
 		enabled: boolean;
+		/** 'page' = the consumer renders the linked page's localized title;
+		 * 'custom' = it renders the label field below. */
+		labelMode: 'page' | 'custom';
 		label: LocalizedString;
 		/** 'page' links to a CMS page by id; 'url' uses the free-form url field. */
 		linkType: 'page' | 'url';
@@ -62,7 +65,7 @@ export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
 		variant: 'logo-left-menu-right',
 		sticky: true,
 		transparent: false,
-		cta: { enabled: false, label: emptyLocalized(), linkType: 'page', pageId: null, url: '' },
+		cta: { enabled: false, labelMode: 'page', label: emptyLocalized(), linkType: 'page', pageId: null, url: '' },
 		mobile: { logoPosition: 'left', menuIconPosition: 'right' },
 	},
 	footer: {
