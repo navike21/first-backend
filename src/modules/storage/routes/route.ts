@@ -14,6 +14,7 @@ import {
 	STORAGE_PATH_UPLOAD,
 	STORAGE_PATH_UPLOAD_BULK,
 	STORAGE_PATH_BULK_RESTORE,
+	STORAGE_PATH_USAGES,
 } from '../constants/paths';
 import {
 	storageUploadBulkController,
@@ -27,6 +28,7 @@ import { storageListController } from '../controllers/storage.list';
 import { storageRestoreController } from '../controllers/storage.restore';
 import { storageTrashController } from '../controllers/storage.trash';
 import { storageRestoreBulkController } from '../controllers/storage.restoreBulk';
+import { storageUsagesController } from '../controllers/storage.usages';
 import {
 	createMulterArray,
 	createMulterSingle,
@@ -104,6 +106,12 @@ export function storageApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.STORAGE_READ, PERMISSIONS.STORAGE_MANAGE),
 		storageListController,
+	);
+	router.get(
+		STORAGE_PATH_USAGES,
+		authenticate,
+		authorize(PERMISSIONS.STORAGE_READ, PERMISSIONS.STORAGE_MANAGE),
+		storageUsagesController,
 	);
 
 	router.patch(
