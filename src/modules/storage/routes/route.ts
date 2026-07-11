@@ -6,6 +6,7 @@ import { ALL_ALLOWED_MIME_TYPES } from '../constants/allowedMimeTypes';
 import {
 	STORAGE_PATH_DELETE,
 	STORAGE_PATH_DELETE_PERMANENT,
+	STORAGE_PATH_DIRECT_UPLOAD,
 	STORAGE_PATH_EDITOR_IMAGE,
 	STORAGE_PATH_FILES,
 	STORAGE_PATH_RESTORE,
@@ -19,6 +20,7 @@ import {
 	storageUploadController,
 } from '../controllers/storage.upload';
 import { storageEditorImageController } from '../controllers/storage.editorImage';
+import { storageDirectUploadController } from '../controllers/storage.directUpload';
 import { storageDeleteController } from '../controllers/storage.delete';
 import { storageDeletePermanentController } from '../controllers/storage.deletePermanent';
 import { storageListController } from '../controllers/storage.list';
@@ -57,6 +59,13 @@ export function storageApi(router: Router) {
 		...acceptImage('image'),
 		storageEditorImageController,
 	);
+
+	// No `authenticate` here on purpose: this single route serves both the
+	// authenticated browser (token request — checked manually inside the
+	// controller/use-case) AND Vercel's own upload-completed webhook callback
+	// (verified internally by handleUpload, never carries our JWT). See
+	// application/directUpload.ts.
+	router.post(STORAGE_PATH_DIRECT_UPLOAD, storageDirectUploadController);
 
 	router.post(
 		STORAGE_PATH_UPLOAD,

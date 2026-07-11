@@ -77,4 +77,8 @@ describe('GCSDriver', () => {
 			driver.uploadBuffer(Buffer.from('data'), 'path', 'image/jpeg'),
 		).rejects.toThrow('gcs error');
 	});
+
+	it('supportsDirectUpload returns false (not implemented for this driver)', () => {
+		expect(driver.supportsDirectUpload()).toBe(false);
+	});
 });

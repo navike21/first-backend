@@ -156,4 +156,91 @@ describe('page.schema', () => {
 		expect(ResolvePageQuerySchema.safeParse({ path: '', lang: 'en' }).success).toBe(false);
 		expect(ResolvePageQuerySchema.safeParse({ path: 'home', lang: 'xx' }).success).toBe(false);
 	});
+
+	describe('settings.background', () => {
+		it('accepts an image background on desktop', () => {
+			const result = CreateSectionSchema.safeParse({
+				type: 'columns',
+				settings: {
+					background: {
+						desktop: { type: 'image', url: 'https://cdn/bg.jpg', position: 'top', fullScreen: true, parallax: true },
+					},
+				},
+			});
+			expect(result.success).toBe(true);
+		});
+
+		it('accepts an uploaded video background with two format files', () => {
+			const result = CreateSectionSchema.safeParse({
+				type: 'columns',
+				settings: {
+					background: {
+						desktop: {
+							type: 'video',
+							sourceKind: 'upload',
+							files: [
+								{ url: 'https://blob/x.mp4', mimeType: 'video/mp4' },
+								{ url: 'https://blob/x.webm', mimeType: 'video/webm' },
+							],
+							parallax: false,
+						},
+					},
+				},
+			});
+			expect(result.success).toBe(true);
+		});
+
+		it('accepts an embed video background (YouTube/Vimeo URL)', () => {
+			const result = CreateSectionSchema.safeParse({
+				type: 'columns',
+				settings: {
+					background: {
+						mobile: { type: 'video', sourceKind: 'embed', embedUrl: 'https://youtube.com/watch?v=abc', parallax: false },
+					},
+				},
+			});
+			expect(result.success).toBe(true);
+		});
+
+		it('accepts independent config per breakpoint (desktop/tablet/mobile)', () => {
+			const result = CreateSectionSchema.safeParse({
+				type: 'columns',
+				settings: {
+					background: {
+						desktop: { type: 'image', url: 'https://cdn/desktop.jpg' },
+						tablet: { type: 'none' },
+						mobile: { type: 'video', sourceKind: 'embed', embedUrl: 'https://vimeo.com/1' },
+					},
+				},
+			});
+			expect(result.success).toBe(true);
+		});
+
+		it('rejects an unknown background type', () => {
+			const result = CreateSectionSchema.safeParse({
+				type: 'columns',
+				settings: { background: { desktop: { type: 'audio' } } },
+			});
+			expect(result.success).toBe(false);
+		});
+
+		it('rejects more than 2 video files', () => {
+			const result = CreateSectionSchema.safeParse({
+				type: 'columns',
+				settings: {
+					background: {
+						desktop: {
+							type: 'video',
+							files: [
+								{ url: 'https://blob/a.mp4' },
+								{ url: 'https://blob/b.webm' },
+								{ url: 'https://blob/c.ogg' },
+							],
+						},
+					},
+				},
+			});
+			expect(result.success).toBe(false);
+		});
+	});
 });

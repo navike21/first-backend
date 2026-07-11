@@ -79,6 +79,45 @@ describe('listStorageFiles', () => {
 		);
 	});
 
+	it('filters by kind=image via isImage', async () => {
+		vi.mocked(StorageFileModel.find).mockReturnValue(
+			mockQueryBuilder([file]) as never,
+		);
+		vi.mocked(StorageFileModel.countDocuments).mockResolvedValue(1);
+
+		await listStorageFiles({ kind: 'image' });
+
+		expect(StorageFileModel.find).toHaveBeenCalledWith(
+			expect.objectContaining({ isImage: true }),
+		);
+	});
+
+	it('filters by kind=video via mimeType $in', async () => {
+		vi.mocked(StorageFileModel.find).mockReturnValue(
+			mockQueryBuilder([]) as never,
+		);
+		vi.mocked(StorageFileModel.countDocuments).mockResolvedValue(0);
+
+		await listStorageFiles({ kind: 'video' });
+
+		expect(StorageFileModel.find).toHaveBeenCalledWith(
+			expect.objectContaining({ mimeType: { $in: ['video/mp4', 'video/webm'] } }),
+		);
+	});
+
+	it('applies a case-insensitive search on originalName', async () => {
+		vi.mocked(StorageFileModel.find).mockReturnValue(
+			mockQueryBuilder([]) as never,
+		);
+		vi.mocked(StorageFileModel.countDocuments).mockResolvedValue(0);
+
+		await listStorageFiles({ search: 'logo' });
+
+		expect(StorageFileModel.find).toHaveBeenCalledWith(
+			expect.objectContaining({ originalName: { $regex: 'logo', $options: 'i' } }),
+		);
+	});
+
 	it('respects custom page and limit', async () => {
 		vi.mocked(StorageFileModel.find).mockReturnValue(
 			mockQueryBuilder([file]) as never,

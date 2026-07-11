@@ -79,4 +79,10 @@ describe('VercelBlobDriver', () => {
 			).rejects.toThrow('delete failed');
 		});
 	});
+
+	describe('supportsDirectUpload', () => {
+		it('returns true', () => {
+			expect(driver.supportsDirectUpload()).toBe(true);
+		});
+	});
 });

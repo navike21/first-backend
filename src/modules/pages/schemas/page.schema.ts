@@ -28,6 +28,45 @@ const PageSeoSchema = z.object({
 	ogImage: z.url({ message: 'PAGE_SEO_OG_IMAGE_INVALID' }).optional().or(z.literal('')),
 });
 
+const BackgroundNoneSchema = z.object({ type: z.literal('none') });
+
+const BackgroundImageSchema = z.object({
+	type: z.literal('image'),
+	url: z.url({ message: 'SECTION_BACKGROUND_IMAGE_URL_INVALID' }).optional().or(z.literal('')),
+	position: z.enum(['top', 'center', 'bottom']).default('center'),
+	fullScreen: z.boolean().default(false),
+	parallax: z.boolean().default(false),
+});
+
+const BackgroundVideoFileSchema = z.object({
+	url: z.url({ message: 'SECTION_BACKGROUND_VIDEO_URL_INVALID' }),
+	mimeType: z.string().optional(),
+});
+
+const BackgroundVideoSchema = z.object({
+	type: z.literal('video'),
+	sourceKind: z.enum(['upload', 'embed']).default('upload'),
+	files: z.array(BackgroundVideoFileSchema).max(2).default([]),
+	embedUrl: z.url({ message: 'SECTION_BACKGROUND_EMBED_URL_INVALID' }).optional().or(z.literal('')),
+	parallax: z.boolean().default(false),
+});
+
+const BackgroundConfigSchema = z.discriminatedUnion('type', [
+	BackgroundNoneSchema,
+	BackgroundImageSchema,
+	BackgroundVideoSchema,
+]);
+
+// Un fondo por breakpoint (desktop/tablet/mobile), cada uno imagen o video
+// independiente entre sí — no hereda del anterior.
+export const SectionBackgroundSchema = z
+	.object({
+		desktop: BackgroundConfigSchema.optional(),
+		tablet: BackgroundConfigSchema.optional(),
+		mobile: BackgroundConfigSchema.optional(),
+	})
+	.optional();
+
 export const SectionSettingsSchema = z
 	.object({
 		columns: z.number().int().min(1).max(12).optional(),
@@ -35,7 +74,7 @@ export const SectionSettingsSchema = z
 		mobileColumns: z.number().int().min(1).max(12).optional(),
 		hiddenOnTablet: z.boolean().optional(),
 		hiddenOnMobile: z.boolean().optional(),
-		background: z.string().optional(),
+		background: SectionBackgroundSchema,
 		paddingTop: z.string().optional(),
 		paddingBottom: z.string().optional(),
 		fullWidth: z.boolean().optional(),

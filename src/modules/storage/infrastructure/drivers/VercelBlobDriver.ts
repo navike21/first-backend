@@ -19,4 +19,8 @@ export class VercelBlobDriver implements StorageDriver {
 	async delete(url: string): Promise<void> {
 		await del(url, { token: ENV.BLOB_READ_WRITE_TOKEN });
 	}
+
+	supportsDirectUpload(): boolean {
+		return true;
+	}
 }

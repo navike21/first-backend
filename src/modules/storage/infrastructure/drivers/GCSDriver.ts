@@ -39,4 +39,8 @@ export class GCSDriver implements StorageDriver {
 			: url;
 		await this.storage.bucket(this.bucket).file(key).delete();
 	}
+
+	supportsDirectUpload(): boolean {
+		return false;
+	}
 }

@@ -72,4 +72,8 @@ describe('S3Driver', () => {
 			driver.uploadBuffer(Buffer.from('data'), 'path', 'image/jpeg'),
 		).rejects.toThrow('s3 error');
 	});
+
+	it('supportsDirectUpload returns false (not implemented for this driver)', () => {
+		expect(driver.supportsDirectUpload()).toBe(false);
+	});
 });

@@ -36,4 +36,8 @@ export class AzureBlobDriver implements StorageDriver {
 			.getBlockBlobClient(blobName)
 			.delete();
 	}
+
+	supportsDirectUpload(): boolean {
+		return false;
+	}
 }

@@ -44,6 +44,10 @@ const EnvSchema = z.object({
 	// (Vercel body limit ~4.5 MB).
 	STORAGE_MAX_IMAGE_SIZE_BYTES: z.coerce.number().default(4 * 1024 * 1024),
 	STORAGE_MAX_FILES_BULK: z.coerce.number().int().min(1).max(20).default(10),
+	// Video bypasses the Express body entirely via direct browser-to-storage
+	// upload (see application/directUpload.ts), so this is NOT constrained by
+	// the ~4.5 MB serverless body cap that limits STORAGE_MAX_IMAGE_SIZE_BYTES.
+	STORAGE_MAX_VIDEO_SIZE_BYTES: z.coerce.number().default(50 * 1024 * 1024),
 
 	// Storage — Vercel Blob
 	BLOB_READ_WRITE_TOKEN: z.string().optional(),

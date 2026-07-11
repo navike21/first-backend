@@ -19,6 +19,11 @@ export const DOCUMENT_MIME_TYPES = [
 	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ] as const;
 
+// Only reachable via direct browser-to-storage upload (application/directUpload.ts),
+// never through the multer/Express body pipeline — kept separate from
+// ALL_ALLOWED_MIME_TYPES on purpose (that list gates the multer-based routes).
+export const VIDEO_MIME_TYPES = ['video/mp4', 'video/webm'] as const;
+
 export const ALL_ALLOWED_MIME_TYPES = [
 	...IMAGE_MIME_TYPES,
 	...DOCUMENT_MIME_TYPES,

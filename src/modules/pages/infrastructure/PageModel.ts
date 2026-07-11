@@ -5,6 +5,39 @@ import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import { SECTION_TYPES } from '../constants/sectionTypes';
 import { PAGE_STATUSES } from '../schemas/page.schema';
 
+// Superset plano de imagen+video (Mongoose no tiene discriminated unions
+// nativas) — Zod (page.schema.ts) es el límite estricto de validación; este
+// schema solo debe evitar descartar en silencio campos que Zod ya validó.
+const BackgroundConfigSchema = new Schema(
+	{
+		type: { type: String, enum: ['none', 'image', 'video'] },
+		// imagen
+		url: { type: String },
+		position: { type: String, enum: ['top', 'center', 'bottom'] },
+		fullScreen: { type: Boolean },
+		// video
+		sourceKind: { type: String, enum: ['upload', 'embed'] },
+		files: {
+			type: [
+				new Schema({ url: { type: String }, mimeType: { type: String } }, { _id: false }),
+			],
+		},
+		embedUrl: { type: String },
+		// compartido imagen+video
+		parallax: { type: Boolean },
+	},
+	{ _id: false },
+);
+
+const SectionBackgroundSchema = new Schema(
+	{
+		desktop: { type: BackgroundConfigSchema },
+		tablet: { type: BackgroundConfigSchema },
+		mobile: { type: BackgroundConfigSchema },
+	},
+	{ _id: false },
+);
+
 const SectionSettingsSchema = new Schema(
 	{
 		columns: { type: Number },
@@ -12,7 +45,7 @@ const SectionSettingsSchema = new Schema(
 		mobileColumns: { type: Number },
 		hiddenOnTablet: { type: Boolean },
 		hiddenOnMobile: { type: Boolean },
-		background: { type: String },
+		background: { type: SectionBackgroundSchema },
 		paddingTop: { type: String },
 		paddingBottom: { type: String },
 		fullWidth: { type: Boolean },

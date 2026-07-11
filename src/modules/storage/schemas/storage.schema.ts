@@ -40,6 +40,9 @@ export const StorageListQuerySchema = z.object({
 	entityType: z.string().max(50).optional(),
 	entityId: z.uuid().optional(),
 	uploadedBy: z.uuid().optional(),
+	/** Media-library picker filter: image vs video files. */
+	kind: z.enum(['image', 'video'] as const).optional(),
+	search: z.string().trim().max(200).optional(),
 });
 
 export type StorageUploadBody = z.infer<typeof StorageUploadBodySchema>;

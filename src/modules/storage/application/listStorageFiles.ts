@@ -1,4 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { VIDEO_MIME_TYPES } from '../constants/allowedMimeTypes';
 import StorageFileModel from '../infrastructure/StorageFileModel';
 
 export interface ListStorageFilesQuery {
@@ -8,6 +9,8 @@ export interface ListStorageFilesQuery {
 	entityType?: string;
 	entityId?: string;
 	uploadedBy?: string;
+	kind?: 'image' | 'video';
+	search?: string;
 }
 
 export async function listStorageFiles(query: ListStorageFilesQuery) {
@@ -20,6 +23,9 @@ export async function listStorageFiles(query: ListStorageFilesQuery) {
 	if (query.entityType) filter.entityType = query.entityType;
 	if (query.entityId) filter.entityId = query.entityId;
 	if (query.uploadedBy) filter.uploadedBy = query.uploadedBy;
+	if (query.kind === 'image') filter.isImage = true;
+	if (query.kind === 'video') filter.mimeType = { $in: VIDEO_MIME_TYPES };
+	if (query.search) filter.originalName = { $regex: query.search, $options: 'i' };
 
 	const [items, total] = await Promise.all([
 		StorageFileModel.find(filter)

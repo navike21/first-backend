@@ -47,4 +47,8 @@ export class S3Driver implements StorageDriver {
 			new DeleteObjectCommand({ Bucket: this.bucket, Key: key }),
 		);
 	}
+
+	supportsDirectUpload(): boolean {
+		return false;
+	}
 }
