@@ -31,6 +31,10 @@ const PageSeoSchema = z.object({
 export const SectionSettingsSchema = z
 	.object({
 		columns: z.number().int().min(1).max(12).optional(),
+		tabletColumns: z.number().int().min(1).max(12).optional(),
+		mobileColumns: z.number().int().min(1).max(12).optional(),
+		hiddenOnTablet: z.boolean().optional(),
+		hiddenOnMobile: z.boolean().optional(),
 		background: z.string().optional(),
 		paddingTop: z.string().optional(),
 		paddingBottom: z.string().optional(),

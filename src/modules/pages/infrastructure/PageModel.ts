@@ -8,6 +8,10 @@ import { PAGE_STATUSES } from '../schemas/page.schema';
 const SectionSettingsSchema = new Schema(
 	{
 		columns: { type: Number },
+		tabletColumns: { type: Number },
+		mobileColumns: { type: Number },
+		hiddenOnTablet: { type: Boolean },
+		hiddenOnMobile: { type: Boolean },
 		background: { type: String },
 		paddingTop: { type: String },
 		paddingBottom: { type: String },
