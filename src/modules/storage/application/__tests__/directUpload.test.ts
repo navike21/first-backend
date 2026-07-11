@@ -30,7 +30,13 @@ import { requestDirectUpload } from '../directUpload';
 function makeReq(body: unknown, authHeader?: string): Request {
 	return {
 		body,
-		headers: authHeader ? { authorization: authHeader } : {},
+		originalUrl: '/api/v1/storage/direct-upload',
+		headers: {
+			...(authHeader && { authorization: authHeader }),
+			'x-forwarded-proto': 'https',
+			'x-forwarded-host': 'first-backend-navike21.vercel.app',
+			host: 'internal-host',
+		},
 	} as unknown as Request;
 }
 
@@ -82,6 +88,10 @@ describe('requestDirectUpload', () => {
 			originalName: 'clip.mp4',
 			size: 123,
 		});
+		// Explicit callbackUrl (built from the forwarded headers, not
+		// req.protocol/hostname) — without it, onUploadCompleted silently never
+		// fires behind Vercel's proxy (confirmed via production runtime logs).
+		expect(tokenConfig.callbackUrl).toBe('https://first-backend-navike21.vercel.app/api/v1/storage/direct-upload');
 	});
 
 	it('does not require auth for the upload-completed webhook phase, and registers a StorageFile record', async () => {

@@ -56,6 +56,16 @@ export async function requestDirectUpload(req: Request) {
 		);
 	}
 
+	// handleUpload can't reliably auto-detect a callback URL behind Vercel's
+	// proxy (confirmed in production logs: "no callbackUrl could be
+	// determined" — onUploadCompleted never fires without it, silently
+	// skipping the StorageFile record). Read the forwarded headers directly
+	// rather than req.protocol/req.hostname, which depend on Express's
+	// `trust proxy` setting (not configured here) to be accurate.
+	const proto = (req.headers['x-forwarded-proto'] as string | undefined) ?? 'https';
+	const host = (req.headers['x-forwarded-host'] as string | undefined) ?? req.headers.host;
+	const callbackUrl = `${proto}://${host}${req.originalUrl}`;
+
 	return handleUpload({
 		body,
 		request: req,
@@ -72,6 +82,7 @@ export async function requestDirectUpload(req: Request) {
 				allowedContentTypes: [...VIDEO_MIME_TYPES],
 				maximumSizeInBytes: ENV.STORAGE_MAX_VIDEO_SIZE_BYTES,
 				tokenPayload: JSON.stringify(tokenPayload),
+				callbackUrl,
 			};
 		},
 		onUploadCompleted: async ({ blob, tokenPayload: tokenPayloadRaw }) => {
