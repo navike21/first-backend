@@ -15,6 +15,7 @@ import {
 	STORAGE_PATH_UPLOAD_BULK,
 	STORAGE_PATH_BULK_RESTORE,
 	STORAGE_PATH_USAGES,
+	STORAGE_PATH_VIDEO_COVER,
 } from '../constants/paths';
 import {
 	storageUploadBulkController,
@@ -22,6 +23,7 @@ import {
 } from '../controllers/storage.upload';
 import { storageEditorImageController } from '../controllers/storage.editorImage';
 import { storageDirectUploadController } from '../controllers/storage.directUpload';
+import { storageAttachVideoCoverController } from '../controllers/storage.attachVideoCover';
 import { storageDeleteController } from '../controllers/storage.delete';
 import { storageDeletePermanentController } from '../controllers/storage.deletePermanent';
 import { storageListController } from '../controllers/storage.list';
@@ -68,6 +70,14 @@ export function storageApi(router: Router) {
 	// (verified internally by handleUpload, never carries our JWT). See
 	// application/directUpload.ts.
 	router.post(STORAGE_PATH_DIRECT_UPLOAD, storageDirectUploadController);
+
+	router.post(
+		STORAGE_PATH_VIDEO_COVER,
+		authenticate,
+		authorize(PERMISSIONS.STORAGE_UPLOAD, PERMISSIONS.STORAGE_MANAGE),
+		...acceptImage('cover', { required: true }),
+		storageAttachVideoCoverController,
+	);
 
 	router.post(
 		STORAGE_PATH_UPLOAD,
