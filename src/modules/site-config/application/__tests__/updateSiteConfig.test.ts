@@ -54,4 +54,17 @@ describe('updateSiteConfig', () => {
 		const fresh = await getSiteConfig();
 		expect(fresh.layout.contentWidth).toBe('full');
 	});
+
+	it('updates the maps provider without touching other categories', async () => {
+		await SiteConfigModel.create({
+			id: 'singleton',
+			footer: { variant: 'cta-columns', columns: 3 },
+		});
+
+		await updateSiteConfig({ maps: { provider: 'osm' } });
+
+		const doc = await SiteConfigModel.findOne({ id: 'singleton' }).lean();
+		expect(doc!.maps.provider).toBe('osm');
+		expect(doc!.footer.variant).toBe('cta-columns');
+	});
 });

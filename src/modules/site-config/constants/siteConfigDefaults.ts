@@ -67,11 +67,19 @@ export type SocialNetwork = (typeof SOCIAL_NETWORKS)[number];
 /** Single source of truth for social URLs across the public site ('' = hidden). */
 export type SocialConfig = Record<SocialNetwork, string>;
 
+export const MAP_PROVIDERS = ['google', 'osm'] as const;
+export type MapProvider = (typeof MAP_PROVIDERS)[number];
+
+export interface MapsConfig {
+	provider: MapProvider;
+}
+
 export interface SiteConfigData {
 	header: HeaderConfig;
 	footer: FooterConfig;
 	layout: LayoutConfig;
 	social: SocialConfig;
+	maps: MapsConfig;
 }
 
 export function emptySocial(): SocialConfig {
@@ -99,4 +107,5 @@ export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
 	},
 	layout: { contentWidth: 'boxed', boxedMaxWidth: 1200 },
 	social: emptySocial(),
+	maps: { provider: 'google' },
 };
