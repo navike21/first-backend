@@ -87,11 +87,26 @@ describe('requestDirectUpload', () => {
 			uploadedBy: 'user-1',
 			originalName: 'clip.mp4',
 			size: 123,
+			id: undefined,
 		});
 		// Explicit callbackUrl (built from the forwarded headers, not
 		// req.protocol/hostname) — without it, onUploadCompleted silently never
 		// fires behind Vercel's proxy (confirmed via production runtime logs).
 		expect(tokenConfig.callbackUrl).toBe('https://first-backend-navike21.vercel.app/api/v1/storage/direct-upload');
+	});
+
+	it('forwards a client-supplied id into the token payload', async () => {
+		const req = makeReq({ type: 'blob.generate-client-token' }, 'Bearer valid');
+
+		await requestDirectUpload(req);
+
+		const options = mockHandleUpload.mock.calls[0][0];
+		const tokenConfig = await options.onBeforeGenerateToken(
+			'videos/x.mp4',
+			JSON.stringify({ originalName: 'clip.mp4', size: 123, id: 'client-generated-id' }),
+		);
+
+		expect(JSON.parse(tokenConfig.tokenPayload).id).toBe('client-generated-id');
 	});
 
 	it('does not require auth for the upload-completed webhook phase, and registers a StorageFile record', async () => {
@@ -117,6 +132,27 @@ describe('requestDirectUpload', () => {
 				original: { pathname: 'videos/x.mp4', url: 'https://blob/x.mp4' },
 				uploadedBy: 'user-1',
 			}),
+		);
+	});
+
+	it('uses the client-supplied id when creating the StorageFile record', async () => {
+		const req = makeReq({ type: 'blob.upload-completed' });
+
+		await requestDirectUpload(req);
+
+		const options = mockHandleUpload.mock.calls[0][0];
+		await options.onUploadCompleted({
+			blob: { url: 'https://blob/x.mp4', pathname: 'videos/x.mp4', contentType: 'video/mp4' },
+			tokenPayload: JSON.stringify({
+				uploadedBy: 'user-1',
+				originalName: 'clip.mp4',
+				size: 123,
+				id: 'client-generated-id',
+			}),
+		});
+
+		expect(mockCreate).toHaveBeenCalledWith(
+			expect.objectContaining({ id: 'client-generated-id' }),
 		);
 	});
 });

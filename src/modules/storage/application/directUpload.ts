@@ -13,12 +13,17 @@ import StorageFileModel from '../infrastructure/StorageFileModel';
 interface ClientPayload {
 	originalName?: string;
 	size?: number;
+	/** Client-generated id so it can reference this record right after upload
+	 * (e.g. to attach a cover image) without waiting on a round-trip — see
+	 * attachVideoCover.ts. Falls back to Mongoose's default when absent. */
+	id?: string;
 }
 
 interface TokenPayload {
 	uploadedBy?: string;
 	originalName: string;
 	size: number;
+	id?: string;
 }
 
 /**
@@ -77,6 +82,7 @@ export async function requestDirectUpload(req: Request) {
 				uploadedBy,
 				originalName: clientPayload.originalName ?? 'video',
 				size: clientPayload.size ?? 0,
+				id: clientPayload.id,
 			};
 			return {
 				allowedContentTypes: [...VIDEO_MIME_TYPES],
@@ -90,6 +96,7 @@ export async function requestDirectUpload(req: Request) {
 				? (JSON.parse(tokenPayloadRaw) as TokenPayload)
 				: { originalName: 'video', size: 0 };
 			await StorageFileModel.create({
+				...(payload.id ? { id: payload.id } : {}),
 				entityType: 'editor',
 				entityId: generateUUID(),
 				field: 'video',
