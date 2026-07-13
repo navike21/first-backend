@@ -1,6 +1,12 @@
 import { z } from 'zod';
 import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
-import { HEADER_VARIANTS, FOOTER_VARIANTS, CONTENT_WIDTHS, SOCIAL_NETWORKS } from '../constants/siteConfigDefaults';
+import {
+	HEADER_VARIANTS,
+	FOOTER_VARIANTS,
+	CONTENT_WIDTHS,
+	SOCIAL_NETWORKS,
+	MAP_PROVIDERS,
+} from '../constants/siteConfigDefaults';
 
 const headerUpdateSchema = z
 	.object({
@@ -63,19 +69,27 @@ const socialUpdateSchema = z
 	)
 	.optional();
 
+const mapsUpdateSchema = z
+	.object({
+		provider: z.enum(MAP_PROVIDERS, { error: 'SITE_CONFIG_MAP_PROVIDER_INVALID' }).optional(),
+	})
+	.optional();
+
 export const SiteConfigUpdateSchema = z
 	.object({
 		header: headerUpdateSchema,
 		footer: footerUpdateSchema,
 		layout: layoutUpdateSchema,
 		social: socialUpdateSchema,
+		maps: mapsUpdateSchema,
 	})
 	.refine(
 		(data) =>
 			data.header !== undefined ||
 			data.footer !== undefined ||
 			data.layout !== undefined ||
-			data.social !== undefined,
+			data.social !== undefined ||
+			data.maps !== undefined,
 		{ message: 'SITE_CONFIG_EMPTY_UPDATE' },
 	);
 

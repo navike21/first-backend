@@ -6,6 +6,7 @@ import {
 	FOOTER_VARIANTS,
 	CONTENT_WIDTHS,
 	SOCIAL_NETWORKS,
+	MAP_PROVIDERS,
 } from '../constants/siteConfigDefaults';
 
 export interface SiteConfigDocument extends SiteConfigData {
@@ -48,6 +49,9 @@ const siteConfigSchema = new Schema<SiteConfigDocument>(
 			boxedMaxWidth: { type: Number, min: 640, max: 1920, default: 1200 },
 		},
 		social: Object.fromEntries(SOCIAL_NETWORKS.map((network) => [network, { type: String, default: '' }])),
+		maps: {
+			provider: { type: String, enum: MAP_PROVIDERS, default: SITE_CONFIG_DEFAULTS.maps.provider },
+		},
 	},
 	{ timestamps: true },
 );

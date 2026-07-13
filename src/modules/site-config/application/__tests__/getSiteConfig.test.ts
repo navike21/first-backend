@@ -35,6 +35,14 @@ describe('getSiteConfig', () => {
 		expect(config.layout.contentWidth).toBe('boxed');
 	});
 
+	it('merges a partial maps document with defaults', async () => {
+		await SiteConfigModel.create({ id: 'singleton', maps: { provider: 'osm' } });
+
+		const config = await getSiteConfig();
+
+		expect(config.maps.provider).toBe('osm');
+	});
+
 	it('serves from cache within the TTL', async () => {
 		await getSiteConfig();
 		await SiteConfigModel.create({ id: 'singleton', footer: { variant: 'centered' } });
