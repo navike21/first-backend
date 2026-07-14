@@ -181,6 +181,7 @@ modules/<name>/
 | `collaborators` | Public-facing team profiles (distinct from `users` — see note below) |
 | `subscribers` | Newsletter list, public registration |
 | `categories` / `tags` | Shared taxonomy for content (portfolio, services, pages) |
+| `forms` | Admin-defined public forms (8 field types: text/textarea/email/phone/select/radio/checkbox/date) + submissions inbox, email-notified per form |
 | `storage` | Cloud file storage abstraction (4 drivers), single/bulk upload, MIME validation by magic bytes, image variants |
 | `site-config` | Global site-wide presentation settings (header/footer/social/maps provider) — distinct from `app-settings` |
 | `app-settings` | Organization-level config singleton (branding, notifications, appearance) |
@@ -220,6 +221,23 @@ trusted as the only line of defense.
 
 </details>
 
+<details>
+<summary><strong><code>forms</code> — dynamic validation, a first for this codebase</strong></summary>
+
+Every other module validates a hand-written, static Zod schema. A form's
+fields are admin-authored **data**, not code, so the submission schema is
+built at request time from the target form's own field list
+(`buildSubmissionSchema`, in `schemas/`): one Zod rule per field type
+(`z.email()`, `z.boolean()`, `z.enum(options)`, …), keyed by each field's
+server-assigned `fieldId` (never by label — labels are localized and
+mutable), with `.strict()` rejecting any key that isn't a real field on
+that form. Submissions live in their own collection (`FormSubmissionModel`,
+tied by `formId`) — same precedent as `pages`' revisions. Soft-deleting a
+form does **not** cascade to its submissions (still triageable in trash);
+purging one does.
+
+</details>
+
 ## RBAC — Permissions
 
 `resource:action` strings, plus the `resource:manage` wildcard (grants full
@@ -248,6 +266,8 @@ permanently destroy records.
 | `collaborators` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
 | `categories` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
 | `tags` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `forms` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `forms-submissions` | `read`, `delete`, `purge`, `manage` — deliberately separate from `forms`: a support/sales role can triage submissions without being able to redefine the form itself |
 | Super-root | `*:*` |
 
 `config` and `geo` are public, read-only reference endpoints — no permission

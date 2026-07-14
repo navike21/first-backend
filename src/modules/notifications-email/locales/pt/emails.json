@@ -19,5 +19,10 @@
 		"body": "Sua conta foi verificada e está agora totalmente ativa. Você está pronto para começar.",
 		"thanks": "Obrigado por se juntar a nós."
 	},
+	"formSubmissionReceived": {
+		"subject": "Nova resposta: {{formTitle}}",
+		"heading": "Nova resposta para \"{{formTitle}}\"",
+		"body": "Você recebeu uma nova resposta de formulário. Detalhes abaixo:"
+	},
 	"footer": "© {{year}} {{appName}}. Todos os direitos reservados."
 }

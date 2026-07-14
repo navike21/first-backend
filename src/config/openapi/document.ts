@@ -22,6 +22,7 @@ import '@Modules/app-settings/app-settings.openapi';
 import '@Modules/audit-log/audit-log.openapi';
 import '@Modules/config/config.openapi';
 import '@Modules/geo/geo.openapi';
+import '@Modules/forms/forms.openapi';
 
 export function buildOpenApiDocument() {
 	const generator = new OpenApiGeneratorV3(registry.definitions);

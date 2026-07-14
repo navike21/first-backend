@@ -90,6 +90,21 @@ export const PERMISSIONS = {
 	TAGS_PURGE: 'tags:purge',
 	TAGS_MANAGE: 'tags:manage',
 
+	FORMS_READ: 'forms:read',
+	FORMS_CREATE: 'forms:create',
+	FORMS_UPDATE: 'forms:update',
+	FORMS_DELETE: 'forms:delete',
+	FORMS_PURGE: 'forms:purge',
+	FORMS_MANAGE: 'forms:manage',
+
+	// Separate from FORMS_* on purpose: lets a sales/support role triage
+	// submissions (read/delete) without being able to redefine the form
+	// itself. No CREATE/UPDATE — submissions are never admin-authored.
+	FORMS_SUBMISSIONS_READ: 'forms-submissions:read',
+	FORMS_SUBMISSIONS_DELETE: 'forms-submissions:delete',
+	FORMS_SUBMISSIONS_PURGE: 'forms-submissions:purge',
+	FORMS_SUBMISSIONS_MANAGE: 'forms-submissions:manage',
+
 	ALL: '*:*',
 } as const;
 

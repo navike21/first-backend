@@ -113,6 +113,25 @@ export const AUDIT_ACTIONS = {
 	TAGS_BULK_SOFT_DELETED: 'tags:bulk_soft_deleted',
 	TAGS_BULK_RESTORED: 'tags:bulk_restored',
 	TAGS_BULK_PERMANENTLY_DELETED: 'tags:bulk_permanently_deleted',
+
+	FORMS_CREATED: 'forms:created',
+	FORMS_UPDATED: 'forms:updated',
+	FORMS_SOFT_DELETED: 'forms:soft_deleted',
+	FORMS_PERMANENTLY_DELETED: 'forms:permanently_deleted',
+	FORMS_RESTORED: 'forms:restored',
+	FORMS_BULK_SOFT_DELETED: 'forms:bulk_soft_deleted',
+	FORMS_BULK_RESTORED: 'forms:bulk_restored',
+	FORMS_BULK_PERMANENTLY_DELETED: 'forms:bulk_permanently_deleted',
+
+	FORM_SUBMISSION_RECEIVED: 'forms:submission_received',
+	FORM_SUBMISSION_MARKED_READ: 'forms:submission_marked_read',
+	FORM_SUBMISSION_SOFT_DELETED: 'forms:submission_soft_deleted',
+	FORM_SUBMISSION_RESTORED: 'forms:submission_restored',
+	FORM_SUBMISSION_PERMANENTLY_DELETED: 'forms:submission_permanently_deleted',
+	FORM_SUBMISSION_BULK_SOFT_DELETED: 'forms:submission_bulk_soft_deleted',
+	FORM_SUBMISSION_BULK_RESTORED: 'forms:submission_bulk_restored',
+	FORM_SUBMISSION_BULK_PERMANENTLY_DELETED:
+		'forms:submission_bulk_permanently_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

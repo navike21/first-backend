@@ -9,6 +9,7 @@ export const EMAIL_EVENTS = {
 	USER_REGISTERED: 'user.registered',
 	PASSWORD_RESET_REQUESTED: 'auth.password_reset_requested',
 	EMAIL_VERIFIED: 'auth.email_verified',
+	FORM_SUBMISSION_RECEIVED: 'form.submission_received',
 } as const;
 
 export class UserRegisteredEvent extends DomainEvent {
@@ -52,5 +53,23 @@ export class EmailVerifiedEvent extends DomainEvent {
 
 	get eventName(): string {
 		return EMAIL_EVENTS.EMAIL_VERIFIED;
+	}
+}
+
+export class FormSubmissionReceivedEvent extends DomainEvent {
+	constructor(
+		// Plural: a form can notify several addresses — the subscriber sends to
+		// each independently (Promise.allSettled) so one bad address doesn't
+		// block the rest.
+		public readonly recipients: string[],
+		public readonly formTitle: string,
+		public readonly submissionData: Record<string, string>,
+		public readonly lang: string,
+	) {
+		super();
+	}
+
+	get eventName(): string {
+		return EMAIL_EVENTS.FORM_SUBMISSION_RECEIVED;
 	}
 }

@@ -19,5 +19,10 @@
 		"body": "Il tuo account è stato verificato ed è ora completamente attivo. Sei pronto per iniziare.",
 		"thanks": "Grazie per esserti unito a noi."
 	},
+	"formSubmissionReceived": {
+		"subject": "Nuovo invio: {{formTitle}}",
+		"heading": "Nuovo invio per \"{{formTitle}}\"",
+		"body": "Hai ricevuto un nuovo invio di modulo. Dettagli qui sotto:"
+	},
 	"footer": "© {{year}} {{appName}}. Tutti i diritti riservati."
 }

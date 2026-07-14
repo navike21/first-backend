@@ -6,11 +6,13 @@ import {
 	type UserRegisteredEvent,
 	type PasswordResetRequestedEvent,
 	type EmailVerifiedEvent,
+	type FormSubmissionReceivedEvent,
 } from '@Shared/events/emailEvents';
 import { sendEmail } from './sendEmail';
 import { verifyEmailTemplate } from '../templates/verifyEmail.template';
 import { welcomeEmailTemplate } from '../templates/welcomeEmail.template';
 import { passwordResetTemplate } from '../templates/passwordReset.template';
+import { formSubmissionReceivedTemplate } from '../templates/formSubmissionReceived.template';
 
 /**
  * Fire-and-forget delivery: a failed email must never break the request that
@@ -93,6 +95,26 @@ export function registerEmailSubscribers(): void {
 						}),
 					}),
 				),
+			);
+		},
+	);
+
+	eventBus.subscribe<FormSubmissionReceivedEvent>(
+		EMAIL_EVENTS.FORM_SUBMISSION_RECEIVED,
+		(event) => {
+			dispatch(
+				resolveAppName().then(async (appName) => {
+					const email = formSubmissionReceivedTemplate({
+						formTitle: event.formTitle,
+						submissionData: event.submissionData,
+						lang: event.lang,
+						appName,
+					});
+					// One recipient failing to send must not block the others.
+					await Promise.allSettled(
+						event.recipients.map((to) => sendEmail({ to, ...email })),
+					);
+				}),
 			);
 		},
 	);

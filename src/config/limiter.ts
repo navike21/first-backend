@@ -29,3 +29,17 @@ export const authLimiter = rateLimit({
 		message: 'Too many login attempts.',
 	},
 });
+
+// Public form submissions are more spam-prone than the subscribe form
+// (arbitrary admin-defined forms, no CAPTCHA yet) — stricter than
+// globalLimiter, per-IP.
+export const formSubmissionLimiter = rateLimit({
+	windowMs: 60_000,
+	max: 10,
+	store: new MongoRateLimitStore('form-submission-limiter'),
+	message: {
+		success: false,
+		statusCode: 429,
+		message: 'Too many form submissions, please try again later.',
+	},
+});

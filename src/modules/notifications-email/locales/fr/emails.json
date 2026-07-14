@@ -19,5 +19,10 @@
 		"body": "Votre compte a été vérifié et est maintenant entièrement actif. Vous êtes prêt à commencer.",
 		"thanks": "Merci de nous avoir rejoints."
 	},
+	"formSubmissionReceived": {
+		"subject": "Nouvelle soumission : {{formTitle}}",
+		"heading": "Nouvelle soumission pour « {{formTitle}} »",
+		"body": "Vous avez reçu une nouvelle soumission de formulaire. Détails ci-dessous :"
+	},
 	"footer": "© {{year}} {{appName}}. Tous droits réservés."
 }

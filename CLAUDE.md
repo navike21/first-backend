@@ -24,7 +24,7 @@ Se construye paso a paso; prioriza arquitectura entendible/escalable, middleware
 (HTTP delgados) · `domain/errors/` · `infrastructure/` (modelo Mongoose) · `routes/` ·
 `schemas/` (Zod) · `constants/` · `locales/` (10 idiomas) · `index.ts` (API pública).
 Módulos: auth, users, user-groups, clients, services, portfolio, pages, collaborators,
-subscribers, storage, audit-log, app-settings, notifications-email, health.
+subscribers, forms, storage, audit-log, app-settings, notifications-email, health.
 Aliases: `@Modules`, `@Helpers`, `@Shared`, `@Constants`, `@Middlewares`, `@Config`, `@Types`,
 `@test`. Respuestas vía `successResponse`/`errorResponse` (`helpers/responseStructure`).
 i18n: errores globales en `src/locales/<lang>/errors.json`; mensajes por módulo en
@@ -108,6 +108,30 @@ Storage es **agnóstico** (vercel-blob/s3/gcs/azure vía `STORAGE_DRIVER`). Imá
 ## users vs collaborators
 NO son lo mismo: `users` = identidad con acceso (login, grupo, permisos); `collaborators` =
 entidad CMS pública (equipo). Separación intencional.
+
+## `forms` — schemas de validación dinámicos (patrón nuevo, reutilizable)
+A diferencia de todo otro módulo (schema Zod estático escrito a mano), los campos de un
+formulario son **datos** definidos por el admin — así que el schema de una respuesta se
+construye en tiempo de request desde `form.fields` vía `buildSubmissionSchema(fields)`
+(`modules/forms/schemas/buildSubmissionSchema.ts`): un `switch` por `field.type` (8 tipos:
+text/textarea/email/phone/select/radio/checkbox/date) que arma un `z.object(shape)`.
+**Convención a mantener si se repite este patrón en otro módulo:**
+- Clave cada campo por su `fieldId` (uuid asignado por el servidor en create/update), **nunca
+  por label** — el label es `LocalizedString` y mutable, no sirve como identidad.
+- Termina con `.strict()` — rechaza keys de campos que no existen en ESE formulario
+  (defensa extra más allá del rate limiter en el submit público).
+- `FormSubmissionModel` es una colección separada ligada por `formId` (mismo precedente que
+  `PageRevisionModel`), con `data: Schema.Types.Mixed` como contraparte a nivel BD del schema
+  dinámico. Soft-delete de un formulario NO cascada a sus respuestas (siguen en papelera,
+  triageables); purge SÍ cascada (`FormSubmissionModel.deleteMany({formId})`).
+- Permisos separados: `forms:*` (definición del formulario) vs `forms-submissions:*` (leer/
+  borrar respuestas, sin `create`/`update` — nunca las autora un admin) — permite un rol
+  "solo ve leads" sin poder editar el diseño del formulario.
+- Notificación por email por-formulario (`Form.notificationEmails: string[]`), NO un
+  "correo de admin" global en `app-settings` — un formulario de postulación laboral y uno de
+  contacto notifican a gente distinta. Ver `FormSubmissionReceivedEvent` en
+  `@Shared/events/emailEvents.ts` (patrón event-driven de la sección de abajo, `recipients`
+  en plural con `Promise.allSettled`).
 
 ## RBAC y seguridad (Sprint 0 hecho)
 - Permisos `recurso:accion` + comodín `recurso:manage` + super `*:*` (`@Constants/permissions`).
