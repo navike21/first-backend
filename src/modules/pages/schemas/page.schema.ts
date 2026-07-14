@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
 import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import { SECTION_TYPES } from '../constants/sectionTypes';
+import { sanitizePageSectionContent } from './sanitizePageSectionContent';
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -95,7 +96,10 @@ export const CreateSectionSchema = z.object({
 	type: z.enum(SECTION_TYPES),
 	order: z.coerce.number().int().default(0),
 	settings: SectionSettingsSchema,
-	content: z.record(z.string(), z.unknown()).default({}),
+	content: z
+		.record(z.string(), z.unknown())
+		.default({})
+		.transform(sanitizePageSectionContent),
 });
 
 export const UpdateSectionSchema = CreateSectionSchema.omit({
