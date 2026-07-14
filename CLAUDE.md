@@ -63,6 +63,19 @@ Helpers reusables en `src/config/openapi/responses.ts` (`successResponse`, `comm
   (ambos, en Vercel) — sin cambio de código, requiere redeploy.
 - `*.openapi.ts` está excluido de coverage (`vitest.config.ts`) — es config declarativa sin
   lógica que testear, nunca se ejecuta fuera de `/docs`.
+- **Gotcha de Vercel (ya resuelto, no reintroducir):** `swagger-ui-express` sirve sus
+  estáticos (`swagger-ui-bundle.js`, `.css`, iconos) vía `express.static()` leyendo
+  `node_modules/swagger-ui-dist` en disco — Vercel's Node File Trace **no** los detecta
+  (solo sigue `require()`, no lecturas de filesystem en runtime), así que sin ayuda esos
+  archivos NO se empaquetan en la función serverless: el endpoint responde 200 pero con
+  el HTML de fallback en vez del JS real (`SwaggerUIBundle is not defined` en consola).
+  Arreglado con `functions["api/index.js"].includeFiles` en `vercel.json` apuntando al
+  symlink `node_modules/swagger-ui-dist/**` (⚠️ el patrón vía `.pnpm/swagger-ui-dist@**/...`
+  NO funciona, ni siquiera en un deploy real — probado). Verificar con
+  `vercel deploy` (preview) + `curl` al asset (debe pesar ~1.5MB, no ~3KB) antes de
+  confiar en que un cambio a este mecanismo sigue funcionando — `pnpm typecheck`/`lint`/
+  `test` no lo detectan, y ni siquiera `vercel build` local confirma `includeFiles`
+  de forma fiable (hay que probar contra un deploy real).
 
 ## Patrón de subida de imágenes (backend-driven) — establecido en este repo
 El front manda **un solo request**; el backend sube. Detalle en `docs/API-UPLOADS.md`.
