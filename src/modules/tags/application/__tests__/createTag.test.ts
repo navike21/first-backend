@@ -25,7 +25,12 @@ const localizedName = {
 	zh: '精选',
 };
 
-const validInput = { name: localizedName, slug: 'featured', order: 0, isActive: true };
+const validInput = {
+	name: localizedName,
+	slug: 'featured',
+	order: 0,
+	isActive: true,
+};
 
 describe('createTag', () => {
 	it('creates a tag and returns cleaned data', async () => {
@@ -33,7 +38,9 @@ describe('createTag', () => {
 		vi.mocked(TagModel.create).mockResolvedValue({
 			...validInput,
 			id: '1',
-			toObject: vi.fn().mockReturnValue({ ...validInput, id: '1', _id: 'mongo1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ ...validInput, id: '1', _id: 'mongo1' }),
 		} as never);
 
 		const result = await createTag(validInput);

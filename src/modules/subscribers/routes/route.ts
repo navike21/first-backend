@@ -40,7 +40,10 @@ export function subscribersApi(router: Router) {
 	router.post(
 		SUBSCRIBER_PATH_REGISTER,
 		...acceptImage('photo'),
-		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_CREATED, resource: 'subscribers' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_CREATED,
+			resource: 'subscribers',
+		}),
 		subscriberRegister,
 	);
 
@@ -49,7 +52,10 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_REGISTER_BULK,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_CREATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_CREATED, resource: 'subscribers' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_CREATED,
+			resource: 'subscribers',
+		}),
 		subscriberRegisterBulk,
 	);
 
@@ -88,7 +94,10 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_RESTORE,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_RESTORED, resource: 'subscribers' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_RESTORED,
+			resource: 'subscribers',
+		}),
 		subscriberRestoreController,
 	);
 	router.patch(
@@ -96,7 +105,10 @@ export function subscribersApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_UPDATE, PERMISSIONS.SUBSCRIBERS_MANAGE),
 		...acceptImage('photo'),
-		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_UPDATED, resource: 'subscribers' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_UPDATED,
+			resource: 'subscribers',
+		}),
 		subscriberUpdate,
 	);
 
@@ -140,7 +152,10 @@ export function subscribersApi(router: Router) {
 		SUBSCRIBER_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.SUBSCRIBERS_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.SUBSCRIBERS_DELETED, resource: 'subscribers' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SUBSCRIBERS_DELETED,
+			resource: 'subscribers',
+		}),
 		subscriberDeletePhysical,
 	);
 }

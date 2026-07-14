@@ -15,7 +15,13 @@ export type StorageUsageModule =
 	| 'pages'
 	| 'app-settings';
 
-export type StorageUsageContext = 'cover' | 'gallery' | 'ogImage' | 'background' | 'logo' | 'favicon';
+export type StorageUsageContext =
+	| 'cover'
+	| 'gallery'
+	| 'ogImage'
+	| 'background'
+	| 'logo'
+	| 'favicon';
 
 export interface StorageFileUsage {
 	module: StorageUsageModule;
@@ -30,9 +36,14 @@ type LocalizedValue = Record<string, string> | null | undefined;
 // always does `name[lang] || name.en` with the viewer's own language). This
 // admin-only usage list has no "viewer language" to key off, so it falls back
 // to es -> en -> first non-empty value, matching this app's primary language.
-function resolveLocalizedLabel(value: LocalizedValue, fallback: string): string {
+function resolveLocalizedLabel(
+	value: LocalizedValue,
+	fallback: string,
+): string {
 	if (!value) return fallback;
-	return value.es || value.en || Object.values(value).find((v) => v) || fallback;
+	return (
+		value.es || value.en || Object.values(value).find((v) => v) || fallback
+	);
 }
 
 /**
@@ -45,10 +56,22 @@ function resolveLocalizedLabel(value: LocalizedValue, fallback: string): string 
  * detected (that content is an unstructured Mixed blob, not a queryable URL
  * field) — surfaced to the admin as a caveat in the UI, not solved here.
  */
-export async function findStorageFileUsages(url: string): Promise<StorageFileUsage[]> {
-	const [clients, users, collaborators, portfolioItems, services, pages, appSettings] = await Promise.all([
+export async function findStorageFileUsages(
+	url: string,
+): Promise<StorageFileUsage[]> {
+	const [
+		clients,
+		users,
+		collaborators,
+		portfolioItems,
+		services,
+		pages,
+		appSettings,
+	] = await Promise.all([
 		ClientModel.find({ logoUrl: url }).select('id businessName').lean(),
-		UserModel.find({ profilePictureUrl: url }).select('id firstName lastName email').lean(),
+		UserModel.find({ profilePictureUrl: url })
+			.select('id firstName lastName email')
+			.lean(),
 		CollaboratorModel.find({ photoUrl: url }).select('id name').lean(),
 		PortfolioModel.find({ $or: [{ coverImageUrl: url }, { gallery: url }] })
 			.select('id name coverImageUrl')
@@ -73,14 +96,16 @@ export async function findStorageFileUsages(url: string): Promise<StorageFileUsa
 
 	const usages: StorageFileUsage[] = [];
 
-	for (const c of clients) usages.push({ module: 'clients', id: c.id, label: c.businessName });
+	for (const c of clients)
+		usages.push({ module: 'clients', id: c.id, label: c.businessName });
 
 	for (const u of users) {
 		const name = `${u.firstName} ${u.lastName}`.trim();
 		usages.push({ module: 'users', id: u.id, label: name || u.email });
 	}
 
-	for (const c of collaborators) usages.push({ module: 'collaborators', id: c.id, label: c.name });
+	for (const c of collaborators)
+		usages.push({ module: 'collaborators', id: c.id, label: c.name });
 
 	for (const p of portfolioItems) {
 		usages.push({
@@ -91,20 +116,40 @@ export async function findStorageFileUsages(url: string): Promise<StorageFileUsa
 		});
 	}
 
-	for (const s of services) usages.push({ module: 'services', id: s.id, label: resolveLocalizedLabel(s.name, s.id) });
+	for (const s of services)
+		usages.push({
+			module: 'services',
+			id: s.id,
+			label: resolveLocalizedLabel(s.name, s.id),
+		});
 
 	for (const p of pages) {
 		let context: StorageUsageContext = 'background';
 		if (p.coverImageUrl === url) context = 'cover';
 		else if (p.seo?.ogImage === url) context = 'ogImage';
-		usages.push({ module: 'pages', id: p.id, label: resolveLocalizedLabel(p.title, p.id), context });
+		usages.push({
+			module: 'pages',
+			id: p.id,
+			label: resolveLocalizedLabel(p.title, p.id),
+			context,
+		});
 	}
 
 	if (appSettings?.appearance?.logoUrl === url) {
-		usages.push({ module: 'app-settings', id: 'singleton', label: '', context: 'logo' });
+		usages.push({
+			module: 'app-settings',
+			id: 'singleton',
+			label: '',
+			context: 'logo',
+		});
 	}
 	if (appSettings?.appearance?.faviconUrl === url) {
-		usages.push({ module: 'app-settings', id: 'singleton', label: '', context: 'favicon' });
+		usages.push({
+			module: 'app-settings',
+			id: 'singleton',
+			label: '',
+			context: 'favicon',
+		});
 	}
 
 	return usages;

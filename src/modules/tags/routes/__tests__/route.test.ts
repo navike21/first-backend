@@ -13,15 +13,27 @@ vi.mock('@Shared/infrastructure/JwtService', () => ({
 }));
 vi.mock('@Modules/tags/application/createTag', () => ({ createTag: vi.fn() }));
 vi.mock('@Modules/tags/application/updateTag', () => ({ updateTag: vi.fn() }));
-vi.mock('@Modules/tags/application/getTagById', () => ({ getTagById: vi.fn() }));
+vi.mock('@Modules/tags/application/getTagById', () => ({
+	getTagById: vi.fn(),
+}));
 vi.mock('@Modules/tags/application/listTags', () => ({ listTags: vi.fn() }));
 vi.mock('@Modules/tags/application/deleteTag', () => ({ deleteTag: vi.fn() }));
 vi.mock('@Modules/tags/application/purgeTag', () => ({ purgeTag: vi.fn() }));
-vi.mock('@Modules/tags/application/restoreTag', () => ({ restoreTag: vi.fn() }));
-vi.mock('@Modules/tags/application/listDeletedTags', () => ({ listDeletedTags: vi.fn() }));
-vi.mock('@Modules/tags/application/deleteTagsBulk', () => ({ deleteTagsBulk: vi.fn() }));
-vi.mock('@Modules/tags/application/restoreTagsBulk', () => ({ restoreTagsBulk: vi.fn() }));
-vi.mock('@Modules/tags/application/purgeTagsBulk', () => ({ purgeTagsBulk: vi.fn() }));
+vi.mock('@Modules/tags/application/restoreTag', () => ({
+	restoreTag: vi.fn(),
+}));
+vi.mock('@Modules/tags/application/listDeletedTags', () => ({
+	listDeletedTags: vi.fn(),
+}));
+vi.mock('@Modules/tags/application/deleteTagsBulk', () => ({
+	deleteTagsBulk: vi.fn(),
+}));
+vi.mock('@Modules/tags/application/restoreTagsBulk', () => ({
+	restoreTagsBulk: vi.fn(),
+}));
+vi.mock('@Modules/tags/application/purgeTagsBulk', () => ({
+	purgeTagsBulk: vi.fn(),
+}));
 
 import { Router } from 'express';
 import { tagsApi } from '@Modules/tags/routes/route';

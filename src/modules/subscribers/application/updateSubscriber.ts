@@ -1,6 +1,10 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { AppError } from '@Shared/domain/AppError';
-import { uploadImageSafe, deleteEntityFiles, deleteStorageFilesByIds } from '@Modules/storage';
+import {
+	uploadImageSafe,
+	deleteEntityFiles,
+	deleteStorageFilesByIds,
+} from '@Modules/storage';
 import type { IncomingFile } from '@Types/incomingFile';
 import type { MutationResult } from '@Types/responseStructure';
 import SubscriberModel from '../infrastructure/SubscriberModel';
@@ -14,9 +18,11 @@ export async function updateSubscriber(
 	uploadedBy?: string,
 ): Promise<MutationResult<Record<string, unknown>>> {
 	const subscriber = await SubscriberModel.findOne({ id });
-	if (!subscriber) AppError.notFound('SUBSCRIBER_NOT_FOUND', 'Subscriber not found');
+	if (!subscriber)
+		AppError.notFound('SUBSCRIBER_NOT_FOUND', 'Subscriber not found');
 
-	const clearPhoto = !file && data.personalInformation?.profilePictureUrl === '';
+	const clearPhoto =
+		!file && data.personalInformation?.profilePictureUrl === '';
 	const warnings: MutationResult<unknown>['warnings'] = [];
 	const storageIds: string[] = [];
 	let updatedData = data;
@@ -72,7 +78,9 @@ export async function updateSubscriber(
 	}
 
 	return {
-		data: cleanMongoFields(subscriber.toObject({ versionKey: false, getters: true })),
+		data: cleanMongoFields(
+			subscriber.toObject({ versionKey: false, getters: true }),
+		),
 		warnings,
 	};
 }

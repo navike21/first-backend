@@ -2,7 +2,10 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 
 export async function deleteSubscribersBulk(ids: string[]) {
-	const subscribers = await SubscriberModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
+	const subscribers = await SubscriberModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	}).lean();
 
 	const foundIds = subscribers
 		.map((s) => s.id)

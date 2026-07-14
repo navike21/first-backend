@@ -61,13 +61,17 @@ export function captureAudit(options: CaptureAuditOptions) {
 			if (!isSuccess && !options.captureFailures) return;
 
 			const userId = res.locals.userId as string | undefined;
-			const user = res.locals.user as { firstName: string; lastName: string; email: string } | undefined;
+			const user = res.locals.user as
+				| { firstName: string; lastName: string; email: string }
+				| undefined;
 			const ipAddress =
 				(req.headers['x-forwarded-for'] as string | undefined) ??
 				req.socket?.remoteAddress;
 			const userAgent = req.headers['user-agent'];
-			const resourceId = options.getResourceId?.(req) ?? (typeof req.params?.id === 'string' ? req.params.id : undefined);
-			
+			const resourceId =
+				options.getResourceId?.(req) ??
+				(typeof req.params?.id === 'string' ? req.params.id : undefined);
+
 			const baseMetadata = options.getMetadata?.(req) ?? {};
 			const executionDetails: Record<string, unknown> = {};
 
@@ -90,7 +94,8 @@ export function captureAudit(options: CaptureAuditOptions) {
 			};
 
 			// Only write user details if they exist in locals (which comes from JWT)
-			const populatedUser = user?.firstName && user?.lastName && user?.email ? user : undefined;
+			const populatedUser =
+				user?.firstName && user?.lastName && user?.email ? user : undefined;
 
 			createAuditEntry({
 				userId,
@@ -102,10 +107,11 @@ export function captureAudit(options: CaptureAuditOptions) {
 				userAgent,
 				user: populatedUser,
 			}).catch((err) => {
-				logError(`[Audit Capture Error]: Failed to create audit log entry: ${String(err)}`);
+				logError(
+					`[Audit Capture Error]: Failed to create audit log entry: ${String(err)}`,
+				);
 			});
 		});
 		next();
 	};
 }
-

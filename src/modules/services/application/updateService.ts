@@ -25,11 +25,17 @@ interface AppliedUploads {
 	storageIds: string[];
 }
 
-async function checkSlugConflict(id: string, slug?: UpdateServiceInput['slug']): Promise<void> {
+async function checkSlugConflict(
+	id: string,
+	slug?: UpdateServiceInput['slug'],
+): Promise<void> {
 	const entries = Object.entries(slug ?? {}).filter(([, v]) => v?.trim());
 	if (!entries.length) return;
 	const orQuery = entries.map(([lang, value]) => ({ [`slug.${lang}`]: value }));
-	const conflict = await ServiceModel.findOne({ $or: orQuery, id: { $ne: id } });
+	const conflict = await ServiceModel.findOne({
+		$or: orQuery,
+		id: { $ne: id },
+	});
 	if (conflict) throw new ServiceSlugConflictError();
 }
 
@@ -91,7 +97,11 @@ export async function updateService(
 
 	await checkSlugConflict(id, input.slug);
 
-	const { input: updatedInput, warnings, storageIds } = await applyFileUploads(id, files, input, uploadedBy);
+	const {
+		input: updatedInput,
+		warnings,
+		storageIds,
+	} = await applyFileUploads(id, files, input, uploadedBy);
 
 	Object.assign(service, updatedInput);
 

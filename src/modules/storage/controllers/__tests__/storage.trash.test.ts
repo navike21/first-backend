@@ -62,7 +62,12 @@ describe('storageTrashController', () => {
 		await run(req);
 
 		expect(mockListDeletedStorageFiles).toHaveBeenCalledWith(
-			expect.objectContaining({ kind: 'video', search: 'clip', page: 2, limit: 10 }),
+			expect.objectContaining({
+				kind: 'video',
+				search: 'clip',
+				page: 2,
+				limit: 10,
+			}),
 		);
 	});
 

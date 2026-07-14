@@ -74,7 +74,10 @@ describe('page.schema', () => {
 	});
 
 	it('CreatePageSchema requires scheduledAt when status is scheduled', () => {
-		const result = CreatePageSchema.safeParse({ ...validPage, status: 'scheduled' });
+		const result = CreatePageSchema.safeParse({
+			...validPage,
+			status: 'scheduled',
+		});
 		expect(result.success).toBe(false);
 	});
 
@@ -152,9 +155,15 @@ describe('page.schema', () => {
 	});
 
 	it('ResolvePageQuerySchema requires path and a supported lang', () => {
-		expect(ResolvePageQuerySchema.safeParse({ path: 'home', lang: 'en' }).success).toBe(true);
-		expect(ResolvePageQuerySchema.safeParse({ path: '', lang: 'en' }).success).toBe(false);
-		expect(ResolvePageQuerySchema.safeParse({ path: 'home', lang: 'xx' }).success).toBe(false);
+		expect(
+			ResolvePageQuerySchema.safeParse({ path: 'home', lang: 'en' }).success,
+		).toBe(true);
+		expect(
+			ResolvePageQuerySchema.safeParse({ path: '', lang: 'en' }).success,
+		).toBe(false);
+		expect(
+			ResolvePageQuerySchema.safeParse({ path: 'home', lang: 'xx' }).success,
+		).toBe(false);
 	});
 
 	describe('settings.background', () => {
@@ -163,7 +172,13 @@ describe('page.schema', () => {
 				type: 'columns',
 				settings: {
 					background: {
-						desktop: { type: 'image', url: 'https://cdn/bg.jpg', position: 'top', fullScreen: true, parallax: true },
+						desktop: {
+							type: 'image',
+							url: 'https://cdn/bg.jpg',
+							position: 'top',
+							fullScreen: true,
+							parallax: true,
+						},
 					},
 				},
 			});
@@ -195,7 +210,12 @@ describe('page.schema', () => {
 				type: 'columns',
 				settings: {
 					background: {
-						mobile: { type: 'video', sourceKind: 'embed', embedUrl: 'https://youtube.com/watch?v=abc', parallax: false },
+						mobile: {
+							type: 'video',
+							sourceKind: 'embed',
+							embedUrl: 'https://youtube.com/watch?v=abc',
+							parallax: false,
+						},
 					},
 				},
 			});
@@ -209,7 +229,11 @@ describe('page.schema', () => {
 					background: {
 						desktop: { type: 'image', url: 'https://cdn/desktop.jpg' },
 						tablet: { type: 'none' },
-						mobile: { type: 'video', sourceKind: 'embed', embedUrl: 'https://vimeo.com/1' },
+						mobile: {
+							type: 'video',
+							sourceKind: 'embed',
+							embedUrl: 'https://vimeo.com/1',
+						},
 					},
 				},
 			});

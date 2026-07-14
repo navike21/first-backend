@@ -10,7 +10,10 @@ vi.mock('@Modules/storage/infrastructure/StorageFileModel', () => ({
 	default: { find: vi.fn(), deleteMany: vi.fn() },
 }));
 vi.mock('@Modules/storage/infrastructure/StorageService', () => ({
-	getStorageDriver: vi.fn(() => ({ delete: mockDelete, uploadBuffer: vi.fn() })),
+	getStorageDriver: vi.fn(() => ({
+		delete: mockDelete,
+		uploadBuffer: vi.fn(),
+	})),
 }));
 vi.mock('@Helpers/log', () => ({ logError: vi.fn() }));
 

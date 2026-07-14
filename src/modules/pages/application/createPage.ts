@@ -15,7 +15,10 @@ export interface PageFiles {
 	ogImage?: IncomingFile;
 }
 
-async function checkSlugConflict(slug: CreatePageInput['slug'], parentId?: string | null): Promise<void> {
+async function checkSlugConflict(
+	slug: CreatePageInput['slug'],
+	parentId?: string | null,
+): Promise<void> {
 	const entries = Object.entries(slug ?? {}).filter(([, v]) => v?.trim());
 	if (!entries.length) return;
 	const orQuery = entries.map(([lang, value]) => ({ [`slug.${lang}`]: value }));
@@ -58,21 +61,41 @@ export async function createPage(
 	const id = generateUUID();
 	let coverImageUrl = input.coverImageUrl;
 	// '' means "no image" on create — normalize so the document never stores ''.
-	let seo = input.seo?.ogImage === '' ? { ...input.seo, ogImage: undefined } : input.seo;
+	let seo =
+		input.seo?.ogImage === ''
+			? { ...input.seo, ogImage: undefined }
+			: input.seo;
 	const warnings: ResponseWarning[] = [];
 
 	if (files?.cover) {
-		const url = await uploadPageImage(id, 'cover', files.cover, createdBy, warnings);
+		const url = await uploadPageImage(
+			id,
+			'cover',
+			files.cover,
+			createdBy,
+			warnings,
+		);
 		if (url) coverImageUrl = url;
 	}
 	if (files?.ogImage) {
-		const url = await uploadPageImage(id, 'ogImage', files.ogImage, createdBy, warnings);
+		const url = await uploadPageImage(
+			id,
+			'ogImage',
+			files.ogImage,
+			createdBy,
+			warnings,
+		);
 		if (url) seo = { ...(seo ?? {}), ogImage: url };
 	}
 
 	let parentFullPath;
 	if (input.parentId) {
-		const parent = await PageModel.findOne({ id: input.parentId, deletedAt: null }).select('fullPath').lean();
+		const parent = await PageModel.findOne({
+			id: input.parentId,
+			deletedAt: null,
+		})
+			.select('fullPath')
+			.lean();
 		parentFullPath = parent?.fullPath;
 	}
 	const fullPath = computeFullPath(input.slug, parentFullPath);

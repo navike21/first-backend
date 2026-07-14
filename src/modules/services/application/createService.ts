@@ -13,11 +13,16 @@ interface ServiceFiles {
 	icon?: IncomingFile;
 }
 
-async function checkSlugConflict(slug?: CreateServiceInput['slug'], excludeId?: string): Promise<void> {
+async function checkSlugConflict(
+	slug?: CreateServiceInput['slug'],
+	excludeId?: string,
+): Promise<void> {
 	const entries = Object.entries(slug ?? {}).filter(([, v]) => v?.trim());
 	if (!entries.length) return;
 	const orQuery = entries.map(([lang, value]) => ({ [`slug.${lang}`]: value }));
-	const filter = excludeId ? { $or: orQuery, id: { $ne: excludeId } } : { $or: orQuery };
+	const filter = excludeId
+		? { $or: orQuery, id: { $ne: excludeId } }
+		: { $or: orQuery };
 	const existing = await ServiceModel.findOne(filter);
 	if (existing) throw new ServiceSlugConflictError();
 }

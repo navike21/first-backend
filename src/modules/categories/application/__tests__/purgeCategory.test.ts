@@ -17,9 +17,13 @@ describe('purgeCategory', () => {
 		vi.mocked(CategoryModel.findOne).mockReturnValue({
 			lean: vi.fn().mockResolvedValue({ id: 'cat-1', deletedAt: new Date() }),
 		} as never);
-		vi.mocked(CategoryModel.exists).mockResolvedValue({ _id: 'child-1' } as never);
+		vi.mocked(CategoryModel.exists).mockResolvedValue({
+			_id: 'child-1',
+		} as never);
 
-		await expect(purgeCategory('cat-1')).rejects.toThrow(CategoryHasChildrenError);
+		await expect(purgeCategory('cat-1')).rejects.toThrow(
+			CategoryHasChildrenError,
+		);
 		expect(CategoryModel.deleteOne).not.toHaveBeenCalled();
 	});
 

@@ -12,5 +12,11 @@ export const purgeCategoriesBulkController = asyncHandler(async (req, res) => {
 
 	const code = `CATEGORIES_BULK_PURGE_${bulkOutcome(data)}`;
 
-	successResponse(res, { statusCode: 200, code, message: code, ns: 'categories', data });
+	successResponse(res, {
+		statusCode: 200,
+		code,
+		message: code,
+		ns: 'categories',
+		data,
+	});
 });

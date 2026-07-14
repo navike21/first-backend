@@ -88,7 +88,10 @@ describe('createClient', () => {
 			}),
 		);
 		expect(ClientModel.create).toHaveBeenCalledWith(
-			expect.objectContaining({ id: 'new-id', logoUrl: 'https://cdn/full.webp' }),
+			expect.objectContaining({
+				id: 'new-id',
+				logoUrl: 'https://cdn/full.webp',
+			}),
 		);
 		expect(result.warnings).toEqual([]);
 	});

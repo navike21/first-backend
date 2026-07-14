@@ -1,5 +1,8 @@
 import CategoryModel from '../infrastructure/CategoryModel';
-import { CategoryInvalidParentError, CategoryParentNotFoundError } from '../domain/errors/CategoryErrors';
+import {
+	CategoryInvalidParentError,
+	CategoryParentNotFoundError,
+} from '../domain/errors/CategoryErrors';
 
 interface CategoryParentFields {
 	id: string;
@@ -27,7 +30,10 @@ export async function assertValidParent(
 		if (visited.has(currentId)) throw new CategoryInvalidParentError();
 		visited.add(currentId);
 
-		const parent: CategoryParentFields | null = await CategoryModel.findOne({ id: currentId, deletedAt: null })
+		const parent: CategoryParentFields | null = await CategoryModel.findOne({
+			id: currentId,
+			deletedAt: null,
+		})
 			.select('id parentId')
 			.lean();
 		if (!parent) {

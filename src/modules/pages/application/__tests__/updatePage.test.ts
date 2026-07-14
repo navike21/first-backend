@@ -38,7 +38,12 @@ describe('updatePage', () => {
 		};
 		vi.mocked(PageModel.findOne).mockResolvedValue(doc as never);
 
-		const result = await updatePage('1', { status: 'published' }, undefined, 'user-1');
+		const result = await updatePage(
+			'1',
+			{ status: 'published' },
+			undefined,
+			'user-1',
+		);
 
 		expect(saveFn).toHaveBeenCalled();
 		expect(result.data).not.toHaveProperty('_id');
@@ -47,11 +52,19 @@ describe('updatePage', () => {
 	it('throws PageNotFoundError when page does not exist', async () => {
 		vi.mocked(PageModel.findOne).mockResolvedValue(null as never);
 
-		await expect(updatePage('not-found', {}, undefined, 'user-1')).rejects.toThrow(PageNotFoundError);
+		await expect(
+			updatePage('not-found', {}, undefined, 'user-1'),
+		).rejects.toThrow(PageNotFoundError);
 	});
 
 	it('throws PageSlugConflictError on duplicate sibling slug', async () => {
-		const doc = { id: '1', slug: { en: 'home' }, parentId: null, set: vi.fn(), save: vi.fn() };
+		const doc = {
+			id: '1',
+			slug: { en: 'home' },
+			parentId: null,
+			set: vi.fn(),
+			save: vi.fn(),
+		};
 		const conflictDoc = { id: '2', slug: { en: 'about' } };
 		vi.mocked(PageModel.findOne)
 			.mockResolvedValueOnce(doc as never)

@@ -1,7 +1,10 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
 import { validate } from '@Helpers/validate';
-import { parseRequestData, getUploadedFileField } from '@Helpers/multipartRequest';
+import {
+	parseRequestData,
+	getUploadedFileField,
+} from '@Helpers/multipartRequest';
 import { createService } from '../application/createService';
 import { CreateServiceSchema } from '../schemas/service.schema';
 

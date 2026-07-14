@@ -19,7 +19,10 @@ const BackgroundConfigSchema = new Schema(
 		sourceKind: { type: String, enum: ['upload', 'embed'] },
 		files: {
 			type: [
-				new Schema({ url: { type: String }, mimeType: { type: String } }, { _id: false }),
+				new Schema(
+					{ url: { type: String }, mimeType: { type: String } },
+					{ _id: false },
+				),
 			],
 		},
 		embedUrl: { type: String },

@@ -25,7 +25,12 @@ const localizedName = {
 	zh: '新闻',
 };
 
-const validInput = { name: localizedName, slug: 'news', order: 0, isActive: true };
+const validInput = {
+	name: localizedName,
+	slug: 'news',
+	order: 0,
+	isActive: true,
+};
 
 describe('createCategory', () => {
 	it('creates a category and returns cleaned data', async () => {
@@ -33,7 +38,9 @@ describe('createCategory', () => {
 		vi.mocked(CategoryModel.create).mockResolvedValue({
 			...validInput,
 			id: '1',
-			toObject: vi.fn().mockReturnValue({ ...validInput, id: '1', _id: 'mongo1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ ...validInput, id: '1', _id: 'mongo1' }),
 		} as never);
 
 		const result = await createCategory(validInput);
@@ -43,8 +50,12 @@ describe('createCategory', () => {
 	});
 
 	it('throws CategorySlugConflictError when a category with the same slug already exists', async () => {
-		vi.mocked(CategoryModel.findOne).mockResolvedValue({ id: 'existing' } as never);
+		vi.mocked(CategoryModel.findOne).mockResolvedValue({
+			id: 'existing',
+		} as never);
 
-		await expect(createCategory(validInput)).rejects.toThrow(CategorySlugConflictError);
+		await expect(createCategory(validInput)).rejects.toThrow(
+			CategorySlugConflictError,
+		);
 	});
 });

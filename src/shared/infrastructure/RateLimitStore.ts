@@ -1,5 +1,9 @@
 import { model, Schema } from 'mongoose';
-import type { Options, Store as ExpressRateLimitStore, ClientRateLimitInfo } from 'express-rate-limit';
+import type {
+	Options,
+	Store as ExpressRateLimitStore,
+	ClientRateLimitInfo,
+} from 'express-rate-limit';
 
 interface RateLimitHitDocument {
 	key: string;
@@ -16,7 +20,10 @@ const rateLimitHitSchema = new Schema<RateLimitHitDocument>({
 // Auto-eliminar ventanas ya vencidas.
 rateLimitHitSchema.index({ resetTime: 1 }, { expireAfterSeconds: 0 });
 
-const RateLimitHitModel = model<RateLimitHitDocument>('RateLimitHit', rateLimitHitSchema);
+const RateLimitHitModel = model<RateLimitHitDocument>(
+	'RateLimitHit',
+	rateLimitHitSchema,
+);
 
 /**
  * `express-rate-limit` `Store` respaldado en Mongo (colección compartida con
@@ -67,7 +74,11 @@ export class MongoRateLimitStore implements ExpressRateLimitStore {
 							],
 						},
 						count: {
-							$cond: [{ $lte: ['$resetTime', now] }, 1, { $add: ['$count', 1] }],
+							$cond: [
+								{ $lte: ['$resetTime', now] },
+								1,
+								{ $add: ['$count', 1] },
+							],
 						},
 					},
 				},

@@ -31,7 +31,10 @@ export function userGroupsApi(router: Router) {
 		'/user-groups',
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_CREATE, PERMISSIONS.USER_GROUPS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_CREATED, resource: 'user-groups' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_CREATED,
+			resource: 'user-groups',
+		}),
 		createUserGroupController,
 	);
 	router.get(
@@ -148,14 +151,20 @@ export function userGroupsApi(router: Router) {
 		'/user-groups/:id',
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_UPDATE, PERMISSIONS.USER_GROUPS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_UPDATED, resource: 'user-groups' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_UPDATED,
+			resource: 'user-groups',
+		}),
 		updateUserGroupController,
 	);
 	router.patch(
 		'/user-groups/:id/restore',
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_UPDATE, PERMISSIONS.USER_GROUPS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_RESTORED, resource: 'user-groups' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_RESTORED,
+			resource: 'user-groups',
+		}),
 		userGroupRestoreController,
 	);
 
@@ -164,7 +173,10 @@ export function userGroupsApi(router: Router) {
 		'/user-groups/:id',
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_DELETE, PERMISSIONS.USER_GROUPS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_SOFT_DELETED, resource: 'user-groups' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_SOFT_DELETED,
+			resource: 'user-groups',
+		}),
 		deleteUserGroupLogicalController,
 	);
 
@@ -173,7 +185,10 @@ export function userGroupsApi(router: Router) {
 		'/user-groups/:id/permanent',
 		authenticate,
 		authorize(PERMISSIONS.USER_GROUPS_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.USER_GROUPS_DELETED, resource: 'user-groups' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.USER_GROUPS_DELETED,
+			resource: 'user-groups',
+		}),
 		deleteUserGroupController,
 	);
 }

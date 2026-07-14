@@ -25,14 +25,20 @@ const PageSeoSchema = z.object({
 	metaDescription: LocalizedStringSchema.optional(),
 	keywords: LocalizedStringSchema.optional(),
 	// Empty string clears a previously stored image (mirrors coverImageUrl '').
-	ogImage: z.url({ message: 'PAGE_SEO_OG_IMAGE_INVALID' }).optional().or(z.literal('')),
+	ogImage: z
+		.url({ message: 'PAGE_SEO_OG_IMAGE_INVALID' })
+		.optional()
+		.or(z.literal('')),
 });
 
 const BackgroundNoneSchema = z.object({ type: z.literal('none') });
 
 const BackgroundImageSchema = z.object({
 	type: z.literal('image'),
-	url: z.url({ message: 'SECTION_BACKGROUND_IMAGE_URL_INVALID' }).optional().or(z.literal('')),
+	url: z
+		.url({ message: 'SECTION_BACKGROUND_IMAGE_URL_INVALID' })
+		.optional()
+		.or(z.literal('')),
 	position: z.enum(['top', 'center', 'bottom']).default('center'),
 	fullScreen: z.boolean().default(false),
 	parallax: z.boolean().default(false),
@@ -47,7 +53,10 @@ const BackgroundVideoSchema = z.object({
 	type: z.literal('video'),
 	sourceKind: z.enum(['upload', 'embed']).default('upload'),
 	files: z.array(BackgroundVideoFileSchema).max(2).default([]),
-	embedUrl: z.url({ message: 'SECTION_BACKGROUND_EMBED_URL_INVALID' }).optional().or(z.literal('')),
+	embedUrl: z
+		.url({ message: 'SECTION_BACKGROUND_EMBED_URL_INVALID' })
+		.optional()
+		.or(z.literal('')),
 	parallax: z.boolean().default(false),
 });
 
@@ -112,12 +121,18 @@ export const CreatePageSchema = z
 		slug: LocalizedSlugSchema.optional(),
 		title: LocalizedStringSchema,
 		description: LocalizedStringSchema.optional(),
-		coverImageUrl: z.url({ message: 'PAGE_COVER_IMAGE_URL_INVALID' }).optional(),
+		coverImageUrl: z
+			.url({ message: 'PAGE_COVER_IMAGE_URL_INVALID' })
+			.optional(),
 		seo: PageSeoSchema.optional(),
 		parentId: z.uuid({ message: 'PAGE_PARENT_ID_INVALID' }).optional(),
 		status: z.enum(PAGE_STATUSES).default('draft'),
-		scheduledAt: z.iso.datetime({ message: 'PAGE_SCHEDULED_AT_INVALID' }).optional(),
-		categoryIds: z.array(z.uuid({ message: 'PAGE_CATEGORY_ID_INVALID' })).default([]),
+		scheduledAt: z.iso
+			.datetime({ message: 'PAGE_SCHEDULED_AT_INVALID' })
+			.optional(),
+		categoryIds: z
+			.array(z.uuid({ message: 'PAGE_CATEGORY_ID_INVALID' }))
+			.default([]),
 		tagIds: z.array(z.uuid({ message: 'PAGE_TAG_ID_INVALID' })).default([]),
 	})
 	.refine((data) => data.status !== 'scheduled' || !!data.scheduledAt, {
@@ -130,11 +145,18 @@ export const UpdatePageSchema = z
 		slug: LocalizedSlugSchema.optional(),
 		title: LocalizedStringSchema,
 		description: LocalizedStringSchema.optional(),
-		coverImageUrl: z.url({ message: 'PAGE_COVER_IMAGE_URL_INVALID' }).optional(),
+		coverImageUrl: z
+			.url({ message: 'PAGE_COVER_IMAGE_URL_INVALID' })
+			.optional(),
 		seo: PageSeoSchema.optional(),
-		parentId: z.uuid({ message: 'PAGE_PARENT_ID_INVALID' }).nullable().optional(),
+		parentId: z
+			.uuid({ message: 'PAGE_PARENT_ID_INVALID' })
+			.nullable()
+			.optional(),
 		status: z.enum(PAGE_STATUSES),
-		scheduledAt: z.iso.datetime({ message: 'PAGE_SCHEDULED_AT_INVALID' }).optional(),
+		scheduledAt: z.iso
+			.datetime({ message: 'PAGE_SCHEDULED_AT_INVALID' })
+			.optional(),
 		categoryIds: z.array(z.uuid({ message: 'PAGE_CATEGORY_ID_INVALID' })),
 		tagIds: z.array(z.uuid({ message: 'PAGE_TAG_ID_INVALID' })),
 	})

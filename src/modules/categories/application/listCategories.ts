@@ -19,11 +19,24 @@ export async function listCategories({
 	isActive,
 	parentId,
 }: ListCategoriesOptions) {
-	const filter: Record<string, unknown> = adminView ? { deletedAt: null } : { status: 'active', isActive: true, deletedAt: null };
+	const filter: Record<string, unknown> = adminView
+		? { deletedAt: null }
+		: { status: 'active', isActive: true, deletedAt: null };
 
 	if (search) {
 		const pattern = escapeRegex(search);
-		filter.$or = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map((lang) => ({
+		filter.$or = [
+			'en',
+			'es',
+			'de',
+			'fr',
+			'it',
+			'ja',
+			'ko',
+			'pt',
+			'ru',
+			'zh',
+		].map((lang) => ({
 			[`name.${lang}`]: { $regex: pattern, $options: 'i' },
 		}));
 	}

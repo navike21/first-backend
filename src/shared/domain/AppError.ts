@@ -34,11 +34,19 @@ export class AppError extends Error {
 		throw new AppError({ statusCode: 409, code, message, details });
 	}
 
-	static unsupportedMediaType(code: string, message: string, details?: unknown): never {
+	static unsupportedMediaType(
+		code: string,
+		message: string,
+		details?: unknown,
+	): never {
 		throw new AppError({ statusCode: 415, code, message, details });
 	}
 
-	static unprocessable(code: string, message: string, details?: unknown): never {
+	static unprocessable(
+		code: string,
+		message: string,
+		details?: unknown,
+	): never {
 		throw new AppError({ statusCode: 422, code, message, details });
 	}
 

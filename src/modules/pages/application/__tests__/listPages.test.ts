@@ -18,7 +18,12 @@ const mockQueryBuilder = (items: unknown[]) => ({
 	lean: vi.fn().mockResolvedValue(items),
 });
 
-const page = { id: '1', slug: { en: 'home' }, status: 'published', _id: 'mongo1' };
+const page = {
+	id: '1',
+	slug: { en: 'home' },
+	status: 'published',
+	_id: 'mongo1',
+};
 
 describe('listPages', () => {
 	it('returns paginated public pages', async () => {
@@ -59,7 +64,10 @@ describe('listPages', () => {
 			deletedAt: null,
 			$or: [
 				{ status: 'published' },
-				{ status: 'scheduled', scheduledAt: expect.objectContaining({ $lte: expect.any(Date) }) },
+				{
+					status: 'scheduled',
+					scheduledAt: expect.objectContaining({ $lte: expect.any(Date) }),
+				},
 			],
 		});
 	});

@@ -41,9 +41,7 @@ export function getUploadedFileField(
 	req: Request,
 	name: string,
 ): IncomingFile | undefined {
-	const files = req.files as
-		| Record<string, Express.Multer.File[]>
-		| undefined;
+	const files = req.files as Record<string, Express.Multer.File[]> | undefined;
 	const file = files?.[name]?.[0];
 	if (!file) return undefined;
 	return {
@@ -59,10 +57,11 @@ export function getUploadedFileField(
  * `acceptImageFields` with a `maxCount > 1`) into IncomingFiles, in the order
  * they were sent.
  */
-export function getUploadedFileArray(req: Request, name: string): IncomingFile[] {
-	const files = req.files as
-		| Record<string, Express.Multer.File[]>
-		| undefined;
+export function getUploadedFileArray(
+	req: Request,
+	name: string,
+): IncomingFile[] {
+	const files = req.files as Record<string, Express.Multer.File[]> | undefined;
 	const group = files?.[name] ?? [];
 	return group.map((file) => ({
 		buffer: file.buffer,

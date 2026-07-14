@@ -53,7 +53,10 @@ export function collaboratorsApi(router: Router) {
 	router.delete(
 		COLLABORATOR_PATH_BULK_DELETE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_DELETE, PERMISSIONS.COLLABORATORS_MANAGE),
+		authorize(
+			PERMISSIONS.COLLABORATORS_DELETE,
+			PERMISSIONS.COLLABORATORS_MANAGE,
+		),
 		captureAudit({
 			action: AUDIT_ACTIONS.COLLABORATORS_BULK_SOFT_DELETED,
 			resource: 'collaborators',
@@ -64,7 +67,10 @@ export function collaboratorsApi(router: Router) {
 	router.patch(
 		COLLABORATOR_PATH_BULK_RESTORE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_UPDATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		authorize(
+			PERMISSIONS.COLLABORATORS_UPDATE,
+			PERMISSIONS.COLLABORATORS_MANAGE,
+		),
 		captureAudit({
 			action: AUDIT_ACTIONS.COLLABORATORS_BULK_RESTORED,
 			resource: 'collaborators',
@@ -94,26 +100,44 @@ export function collaboratorsApi(router: Router) {
 	router.post(
 		COLLABORATOR_PATH_CREATE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_CREATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		authorize(
+			PERMISSIONS.COLLABORATORS_CREATE,
+			PERMISSIONS.COLLABORATORS_MANAGE,
+		),
 		...acceptImage('photo'),
-		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_CREATED, resource: 'collaborators' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATOR_CREATED,
+			resource: 'collaborators',
+		}),
 		collaboratorCreateController,
 	);
 
 	router.patch(
 		COLLABORATOR_PATH_RESTORE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_UPDATE, PERMISSIONS.COLLABORATORS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_RESTORED, resource: 'collaborators' }),
+		authorize(
+			PERMISSIONS.COLLABORATORS_UPDATE,
+			PERMISSIONS.COLLABORATORS_MANAGE,
+		),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATOR_RESTORED,
+			resource: 'collaborators',
+		}),
 		collaboratorRestoreController,
 	);
 
 	router.patch(
 		COLLABORATOR_PATH_UPDATE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_UPDATE, PERMISSIONS.COLLABORATORS_MANAGE),
+		authorize(
+			PERMISSIONS.COLLABORATORS_UPDATE,
+			PERMISSIONS.COLLABORATORS_MANAGE,
+		),
 		...acceptImage('photo'),
-		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_UPDATED, resource: 'collaborators' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATOR_UPDATED,
+			resource: 'collaborators',
+		}),
 		collaboratorUpdateController,
 	);
 
@@ -121,14 +145,23 @@ export function collaboratorsApi(router: Router) {
 		COLLABORATOR_PATH_PURGE,
 		authenticate,
 		authorize(PERMISSIONS.COLLABORATORS_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_PERMANENTLY_DELETED, resource: 'collaborators' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATOR_PERMANENTLY_DELETED,
+			resource: 'collaborators',
+		}),
 		collaboratorPurgeController,
 	);
 	router.delete(
 		COLLABORATOR_PATH_DELETE,
 		authenticate,
-		authorize(PERMISSIONS.COLLABORATORS_DELETE, PERMISSIONS.COLLABORATORS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.COLLABORATOR_SOFT_DELETED, resource: 'collaborators' }),
+		authorize(
+			PERMISSIONS.COLLABORATORS_DELETE,
+			PERMISSIONS.COLLABORATORS_MANAGE,
+		),
+		captureAudit({
+			action: AUDIT_ACTIONS.COLLABORATOR_SOFT_DELETED,
+			resource: 'collaborators',
+		}),
 		collaboratorDeleteController,
 	);
 }

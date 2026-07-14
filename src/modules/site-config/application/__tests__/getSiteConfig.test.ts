@@ -36,7 +36,10 @@ describe('getSiteConfig', () => {
 	});
 
 	it('merges a partial maps document with defaults', async () => {
-		await SiteConfigModel.create({ id: 'singleton', maps: { provider: 'osm' } });
+		await SiteConfigModel.create({
+			id: 'singleton',
+			maps: { provider: 'osm' },
+		});
 
 		const config = await getSiteConfig();
 
@@ -45,7 +48,10 @@ describe('getSiteConfig', () => {
 
 	it('serves from cache within the TTL', async () => {
 		await getSiteConfig();
-		await SiteConfigModel.create({ id: 'singleton', footer: { variant: 'centered' } });
+		await SiteConfigModel.create({
+			id: 'singleton',
+			footer: { variant: 'centered' },
+		});
 
 		const cached = await getSiteConfig();
 

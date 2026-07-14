@@ -30,6 +30,8 @@ describe('purgeCategoriesBulk', () => {
 
 		expect(result.processedIds).toEqual(['childless-1']);
 		expect(result.blockedIds).toEqual(['parent-1']);
-		expect(CategoryModel.deleteMany).toHaveBeenCalledWith({ id: { $in: ['childless-1'] } });
+		expect(CategoryModel.deleteMany).toHaveBeenCalledWith({
+			id: { $in: ['childless-1'] },
+		});
 	});
 });

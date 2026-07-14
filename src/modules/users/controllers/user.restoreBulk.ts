@@ -12,5 +12,11 @@ export const restoreUsersBulkController = asyncHandler(async (req, res) => {
 
 	const code = `USERS_BULK_RESTORE_${bulkOutcome(data)}`;
 
-	successResponse(res, { statusCode: 200, code, message: code, ns: 'users', data });
+	successResponse(res, {
+		statusCode: 200,
+		code,
+		message: code,
+		ns: 'users',
+		data,
+	});
 });

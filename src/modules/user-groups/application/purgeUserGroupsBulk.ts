@@ -3,9 +3,14 @@ import UserModel from '@Modules/users/infrastructure/UserModel';
 import UserGroupModel from '../infrastructure/UserGroupModel';
 
 export async function purgeUserGroupsBulk(ids: string[]) {
-	const groups = await UserGroupModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
+	const groups = await UserGroupModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	}).lean();
 
-	const processedIds = groups.map((g) => g.id).filter((id): id is string => Boolean(id));
+	const processedIds = groups
+		.map((g) => g.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = ids.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {

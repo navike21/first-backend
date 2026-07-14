@@ -67,9 +67,9 @@ describe('updateClient', () => {
 	it('throws ClientNotFoundError when the client does not exist', async () => {
 		vi.mocked(ClientModel.findOne).mockResolvedValueOnce(null as never);
 
-		await expect(
-			updateClient('x', { businessName: 'X' }),
-		).rejects.toThrow(ClientNotFoundError);
+		await expect(updateClient('x', { businessName: 'X' })).rejects.toThrow(
+			ClientNotFoundError,
+		);
 	});
 
 	it('throws ClientDuplicateDocumentError when the new document collides', async () => {

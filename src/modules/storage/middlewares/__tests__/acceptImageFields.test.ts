@@ -12,10 +12,13 @@ const { mockFields, multerFn } = vi.hoisted(() => {
 	const mockFields = vi.fn();
 	const mockMemoryStorage = vi.fn(() => ({}));
 	const multerInstance = { fields: mockFields };
-	const multerFn = Object.assign(vi.fn(() => multerInstance), {
-		memoryStorage: mockMemoryStorage,
-		MulterError: FakeMulterError,
-	});
+	const multerFn = Object.assign(
+		vi.fn(() => multerInstance),
+		{
+			memoryStorage: mockMemoryStorage,
+			MulterError: FakeMulterError,
+		},
+	);
 
 	return { mockFields, multerFn };
 });
@@ -32,9 +35,11 @@ import { acceptImageFields } from '@Modules/storage/middlewares/acceptImageField
 import { validateSingleFile } from '@Modules/storage/middlewares/validateFileType';
 
 function makeInner(cb: (next: (err?: unknown) => void) => void) {
-	return vi.fn((_req: Request, _res: Response, next: (err?: unknown) => void) => {
-		cb(next);
-	});
+	return vi.fn(
+		(_req: Request, _res: Response, next: (err?: unknown) => void) => {
+			cb(next);
+		},
+	);
 }
 
 function run(
@@ -42,7 +47,8 @@ function run(
 	req: Partial<Request> = {},
 ): Promise<void> {
 	return new Promise((resolve, reject) => {
-		const next: NextFunction = (err?: unknown) => (err ? reject(err) : resolve());
+		const next: NextFunction = (err?: unknown) =>
+			err ? reject(err) : resolve();
 		handler(req as Request, {} as Response, next);
 	});
 }
@@ -63,7 +69,10 @@ describe('acceptImageFields', () => {
 
 	it('honours a per-field maxCount for object entries (e.g. a gallery field)', async () => {
 		mockFields.mockReturnValue(makeInner((next) => next()));
-		const [parse] = acceptImageFields([{ name: 'cover' }, { name: 'gallery', maxCount: 10 }]);
+		const [parse] = acceptImageFields([
+			{ name: 'cover' },
+			{ name: 'gallery', maxCount: 10 },
+		]);
 		await run(parse as never);
 
 		expect(mockFields).toHaveBeenCalledWith([
@@ -71,7 +80,9 @@ describe('acceptImageFields', () => {
 			{ name: 'gallery', maxCount: 10 },
 		]);
 		expect(multerFn).toHaveBeenCalledWith(
-			expect.objectContaining({ limits: expect.objectContaining({ files: 11 }) }),
+			expect.objectContaining({
+				limits: expect.objectContaining({ files: 11 }),
+			}),
 		);
 	});
 

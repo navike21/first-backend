@@ -10,16 +10,26 @@ export interface ListDeletedStorageFilesQuery {
 	search?: string;
 }
 
-export async function listDeletedStorageFiles({ page, limit, kind, search }: ListDeletedStorageFilesQuery) {
+export async function listDeletedStorageFiles({
+	page,
+	limit,
+	kind,
+	search,
+}: ListDeletedStorageFilesQuery) {
 	const skip = (page - 1) * limit;
 
 	const filter: Record<string, unknown> = { deletedAt: { $ne: null } };
 	if (kind === 'image') filter.isImage = true;
 	if (kind === 'video') filter.mimeType = { $in: VIDEO_MIME_TYPES };
-	if (search) filter.originalName = { $regex: escapeRegex(search), $options: 'i' };
+	if (search)
+		filter.originalName = { $regex: escapeRegex(search), $options: 'i' };
 
 	const [items, total] = await Promise.all([
-		StorageFileModel.find(filter).sort({ deletedAt: -1 }).skip(skip).limit(limit).lean(),
+		StorageFileModel.find(filter)
+			.sort({ deletedAt: -1 })
+			.skip(skip)
+			.limit(limit)
+			.lean(),
 		StorageFileModel.countDocuments(filter),
 	]);
 	return {

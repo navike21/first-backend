@@ -36,7 +36,10 @@ export function clientsApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_CREATE, PERMISSIONS.CLIENTS_MANAGE),
 		...acceptImage('logo'),
-		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_CREATED, resource: 'clients' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_CREATED,
+			resource: 'clients',
+		}),
 		clientCreateController,
 	);
 
@@ -99,7 +102,10 @@ export function clientsApi(router: Router) {
 		CLIENT_PATH_RESTORE,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_UPDATE, PERMISSIONS.CLIENTS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_RESTORED, resource: 'clients' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_RESTORED,
+			resource: 'clients',
+		}),
 		clientRestoreController,
 	);
 	router.patch(
@@ -107,7 +113,10 @@ export function clientsApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_UPDATE, PERMISSIONS.CLIENTS_MANAGE),
 		...acceptImage('logo'),
-		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_UPDATED, resource: 'clients' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_UPDATED,
+			resource: 'clients',
+		}),
 		clientUpdateController,
 	);
 
@@ -115,14 +124,20 @@ export function clientsApi(router: Router) {
 		CLIENT_PATH_DELETE_PERMANENT,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_PERMANENTLY_DELETED, resource: 'clients' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_PERMANENTLY_DELETED,
+			resource: 'clients',
+		}),
 		clientDeletePermanentController,
 	);
 	router.delete(
 		CLIENT_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.CLIENTS_DELETE, PERMISSIONS.CLIENTS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.CLIENTS_SOFT_DELETED, resource: 'clients' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CLIENTS_SOFT_DELETED,
+			resource: 'clients',
+		}),
 		clientDeleteController,
 	);
 }

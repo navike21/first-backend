@@ -9,6 +9,7 @@
 		"vercel-build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
 		"lint": "eslint src/ --ext .ts",
 		"format": "prettier --write src/",
+		"format:check": "prettier --check src/",
 		"typecheck": "tsc -p tsconfig.build.json --noEmit",
 		"test": "vitest run --config vitest.config.ts --coverage"
 	},
@@ -36,14 +37,18 @@
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
-			"mongodb-memory-server"
+			"mongodb-memory-server",
+			"esbuild",
+			"sharp"
 		],
 		"overrides": {
 			"uuid": "^11.1.1",
 			"ws": ">=8.21.0",
 			"undici": ">=6.27.0",
 			"form-data": "^4.0.6",
-			"qs": "^6.15.3"
+			"qs": "^6.15.3",
+			"@babel/core": "^7.29.7",
+			"brace-expansion": "^5.0.7"
 		}
 	},
 	"devDependencies": {
@@ -58,10 +63,10 @@
 		"@types/nodemailer": "^8.0.0",
 		"@types/sanitize-html": "^2.16.1",
 		"@types/supertest": "^6.0.0",
-		"@typescript-eslint/eslint-plugin": "^8.59.1",
-		"@typescript-eslint/parser": "^8.59.1",
-		"@vitest/coverage-istanbul": "^4.1.5",
-		"@vitest/coverage-v8": "^4.1.5",
+		"@typescript-eslint/eslint-plugin": "^8.64.0",
+		"@typescript-eslint/parser": "^8.64.0",
+		"@vitest/coverage-istanbul": "^4.1.10",
+		"@vitest/coverage-v8": "^4.1.10",
 		"eslint": "^10.3.0",
 		"eslint-plugin-sonarjs": "^4.0.3",
 		"globals": "^17.6.0",
@@ -72,10 +77,11 @@
 		"ts-node": "^10.9.2",
 		"tsc-alias": "^1.8.17",
 		"tsconfig-paths": "^4.2.0",
-		"tsx": "^4.21.0",
+		"tsx": "^4.23.1",
 		"typescript": "^6.0.3",
 		"ubigeo-peru": "^2.0.2",
-		"vitest": "^4.1.5"
+		"vite": "^8.1.4",
+		"vitest": "^4.1.10"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.1045.0",

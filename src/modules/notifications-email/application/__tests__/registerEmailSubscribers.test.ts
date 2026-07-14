@@ -9,12 +9,17 @@ vi.mock('@Modules/notifications-email/templates/verifyEmail.template', () => ({
 vi.mock('@Modules/notifications-email/templates/welcomeEmail.template', () => ({
 	welcomeEmailTemplate: vi.fn(() => ({ subject: 'W', html: '<p/>' })),
 }));
-vi.mock('@Modules/notifications-email/templates/passwordReset.template', () => ({
-	passwordResetTemplate: vi.fn(() => ({ subject: 'R', html: '<p/>' })),
-}));
+vi.mock(
+	'@Modules/notifications-email/templates/passwordReset.template',
+	() => ({
+		passwordResetTemplate: vi.fn(() => ({ subject: 'R', html: '<p/>' })),
+	}),
+);
 vi.mock('@Helpers/log', () => ({ logError: vi.fn() }));
 vi.mock('@Modules/app-settings', () => ({
-	getAppSettings: vi.fn().mockResolvedValue({ general: { appName: 'Test App' } }),
+	getAppSettings: vi
+		.fn()
+		.mockResolvedValue({ general: { appName: 'Test App' } }),
 	APP_SETTINGS_DEFAULTS: { general: { appName: 'My Application' } },
 }));
 

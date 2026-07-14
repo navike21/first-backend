@@ -4,10 +4,16 @@ import { getStorageDriver } from '../infrastructure/StorageService';
 import { STORAGE_ERRORS } from '../domain/errors/StorageErrors';
 
 export async function deleteFilesPermanent(ids: string[]) {
-	const files = await StorageFileModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
+	const files = await StorageFileModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	}).lean();
 
 	if (files.length === 0) {
-		AppError.notFound(STORAGE_ERRORS.FILE_NOT_FOUND, 'No files found in trash with the provided IDs');
+		AppError.notFound(
+			STORAGE_ERRORS.FILE_NOT_FOUND,
+			'No files found in trash with the provided IDs',
+		);
 	}
 
 	const driver = getStorageDriver();

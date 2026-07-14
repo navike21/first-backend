@@ -66,8 +66,16 @@ describe('getUploadedFileField', () => {
 		const req = {
 			files: {
 				cover: [
-					{ buffer: Buffer.from('a'), originalname: 'a.png', mimetype: 'image/png' },
-					{ buffer: Buffer.from('b'), originalname: 'b.png', mimetype: 'image/png' },
+					{
+						buffer: Buffer.from('a'),
+						originalname: 'a.png',
+						mimetype: 'image/png',
+					},
+					{
+						buffer: Buffer.from('b'),
+						originalname: 'b.png',
+						mimetype: 'image/png',
+					},
 				],
 			},
 		} as unknown as Request;
@@ -90,15 +98,31 @@ describe('getUploadedFileArray', () => {
 		const req = {
 			files: {
 				gallery: [
-					{ buffer: Buffer.from('a'), originalname: 'a.png', mimetype: 'image/png' },
-					{ buffer: Buffer.from('b'), originalname: 'b.png', mimetype: 'image/png' },
+					{
+						buffer: Buffer.from('a'),
+						originalname: 'a.png',
+						mimetype: 'image/png',
+					},
+					{
+						buffer: Buffer.from('b'),
+						originalname: 'b.png',
+						mimetype: 'image/png',
+					},
 				],
 			},
 		} as unknown as Request;
 
 		expect(getUploadedFileArray(req, 'gallery')).toEqual([
-			{ buffer: Buffer.from('a'), originalName: 'a.png', mimeType: 'image/png' },
-			{ buffer: Buffer.from('b'), originalName: 'b.png', mimeType: 'image/png' },
+			{
+				buffer: Buffer.from('a'),
+				originalName: 'a.png',
+				mimeType: 'image/png',
+			},
+			{
+				buffer: Buffer.from('b'),
+				originalName: 'b.png',
+				mimeType: 'image/png',
+			},
 		]);
 	});
 });

@@ -20,4 +20,5 @@ export const PAGES_PATH_BULK_DELETE = '/pages/bulk';
 export const PAGES_PATH_BULK_RESTORE = '/pages/bulk/restore';
 export const PAGES_PATH_BULK_PURGE = '/pages/bulk/permanent';
 export const PAGES_PATH_REVISIONS_LIST = '/pages/:id/revisions';
-export const PAGES_PATH_REVISIONS_RESTORE = '/pages/:id/revisions/:revisionId/restore';
+export const PAGES_PATH_REVISIONS_RESTORE =
+	'/pages/:id/revisions/:revisionId/restore';

@@ -20,13 +20,19 @@ export async function validateSingleFile(
 	const declared = file.mimetype;
 
 	if (!allowedMimeTypes.includes(declared)) {
-		AppError.unsupportedMediaType(STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED, 'File type is not allowed');
+		AppError.unsupportedMediaType(
+			STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED,
+			'File type is not allowed',
+		);
 	}
 
 	if (declared === 'image/svg+xml') {
 		const snippet = file.buffer.toString('utf8', 0, 512);
 		if (!snippet.includes('<svg') && !snippet.includes('<?xml')) {
-			AppError.unsupportedMediaType(STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED, 'File content does not match the declared SVG type');
+			AppError.unsupportedMediaType(
+				STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED,
+				'File content does not match the declared SVG type',
+			);
 		}
 		return;
 	}
@@ -35,11 +41,17 @@ export async function validateSingleFile(
 	const detected = await fileTypeFromBuffer(file.buffer);
 
 	if (!detected) {
-		AppError.unsupportedMediaType(STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED, 'Could not determine file type from content');
+		AppError.unsupportedMediaType(
+			STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED,
+			'Could not determine file type from content',
+		);
 	}
 
 	if (detected.mime !== declared) {
-		AppError.unsupportedMediaType(STORAGE_ERRORS.MIME_TYPE_MISMATCH, 'Declared MIME type does not match file content');
+		AppError.unsupportedMediaType(
+			STORAGE_ERRORS.MIME_TYPE_MISMATCH,
+			'Declared MIME type does not match file content',
+		);
 	}
 }
 
@@ -60,7 +72,10 @@ export function validateFileType(
 
 			if (files.length === 0) {
 				if (!required) return next();
-				AppError.badRequest(STORAGE_ERRORS.FILE_REQUIRED, 'No file was provided');
+				AppError.badRequest(
+					STORAGE_ERRORS.FILE_REQUIRED,
+					'No file was provided',
+				);
 			}
 
 			for (const file of files) {

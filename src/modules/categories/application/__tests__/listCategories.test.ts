@@ -22,7 +22,9 @@ const category = { id: '1', slug: 'news', status: 'active', _id: 'mongo1' };
 
 describe('listCategories', () => {
 	it('uses the active+isActive+deletedAt filter for the public view', async () => {
-		vi.mocked(CategoryModel.find).mockReturnValue(mockQueryBuilder([category]) as never);
+		vi.mocked(CategoryModel.find).mockReturnValue(
+			mockQueryBuilder([category]) as never,
+		);
 		vi.mocked(CategoryModel.countDocuments).mockResolvedValue(1);
 
 		await listCategories({ page: 1, limit: 10, adminView: false });
@@ -35,20 +37,33 @@ describe('listCategories', () => {
 	});
 
 	it('uses the deletedAt null filter for adminView', async () => {
-		vi.mocked(CategoryModel.find).mockReturnValue(mockQueryBuilder([category]) as never);
+		vi.mocked(CategoryModel.find).mockReturnValue(
+			mockQueryBuilder([category]) as never,
+		);
 		vi.mocked(CategoryModel.countDocuments).mockResolvedValue(1);
 
-		const result = await listCategories({ page: 1, limit: 10, adminView: true });
+		const result = await listCategories({
+			page: 1,
+			limit: 10,
+			adminView: true,
+		});
 
 		expect(CategoryModel.find).toHaveBeenCalledWith({ deletedAt: null });
 		expect(result.data[0]).not.toHaveProperty('_id');
 	});
 
 	it('filters by parentId when provided', async () => {
-		vi.mocked(CategoryModel.find).mockReturnValue(mockQueryBuilder([category]) as never);
+		vi.mocked(CategoryModel.find).mockReturnValue(
+			mockQueryBuilder([category]) as never,
+		);
 		vi.mocked(CategoryModel.countDocuments).mockResolvedValue(1);
 
-		await listCategories({ page: 1, limit: 10, adminView: true, parentId: 'parent-1' });
+		await listCategories({
+			page: 1,
+			limit: 10,
+			adminView: true,
+			parentId: 'parent-1',
+		});
 
 		expect(CategoryModel.find).toHaveBeenCalledWith(
 			expect.objectContaining({ parentId: 'parent-1' }),

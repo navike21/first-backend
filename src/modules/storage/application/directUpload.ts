@@ -67,8 +67,10 @@ export async function requestDirectUpload(req: Request) {
 	// skipping the StorageFile record). Read the forwarded headers directly
 	// rather than req.protocol/req.hostname, which depend on Express's
 	// `trust proxy` setting (not configured here) to be accurate.
-	const proto = (req.headers['x-forwarded-proto'] as string | undefined) ?? 'https';
-	const host = (req.headers['x-forwarded-host'] as string | undefined) ?? req.headers.host;
+	const proto =
+		(req.headers['x-forwarded-proto'] as string | undefined) ?? 'https';
+	const host =
+		(req.headers['x-forwarded-host'] as string | undefined) ?? req.headers.host;
 	const callbackUrl = `${proto}://${host}${req.originalUrl}`;
 
 	return handleUpload({

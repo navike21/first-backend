@@ -18,14 +18,22 @@ export async function registerSubscriberBulk(data: SubscriberSchema[]) {
 		};
 
 		if (mongoError.code === 11000) {
-			AppError.conflict('ERROR_DUPLICATE_SUBSCRIBER', 'One or more subscribers already exist with duplicate unique fields', {
-				duplicateField: Object.keys(mongoError.keyPattern ?? {}),
-				duplicateValue: mongoError.keyValue,
-			});
+			AppError.conflict(
+				'ERROR_DUPLICATE_SUBSCRIBER',
+				'One or more subscribers already exist with duplicate unique fields',
+				{
+					duplicateField: Object.keys(mongoError.keyPattern ?? {}),
+					duplicateValue: mongoError.keyValue,
+				},
+			);
 		}
 
 		if (mongoError.errors) {
-			AppError.badRequest('ERROR_VALIDATION_FAILED', 'Validation error in one or more subscribers', mongoError.errors);
+			AppError.badRequest(
+				'ERROR_VALIDATION_FAILED',
+				'Validation error in one or more subscribers',
+				mongoError.errors,
+			);
 		}
 
 		throw error;

@@ -7,12 +7,17 @@ vi.mock('@vercel/blob/client', () => ({
 }));
 
 vi.mock('@Constants/environments', () => ({
-	ENV: { STORAGE_DRIVER: 'vercel-blob', STORAGE_MAX_VIDEO_SIZE_BYTES: 52428800 },
+	ENV: {
+		STORAGE_DRIVER: 'vercel-blob',
+		STORAGE_MAX_VIDEO_SIZE_BYTES: 52428800,
+	},
 }));
 
 const mockVerifyAccess = vi.fn();
 vi.mock('@Shared/infrastructure/JwtService', () => ({
-	JwtService: { verifyAccess: (...args: unknown[]) => mockVerifyAccess(...args) },
+	JwtService: {
+		verifyAccess: (...args: unknown[]) => mockVerifyAccess(...args),
+	},
 }));
 
 const mockSupportsDirectUpload = vi.fn();
@@ -45,13 +50,18 @@ describe('requestDirectUpload', () => {
 		vi.clearAllMocks();
 		mockSupportsDirectUpload.mockReturnValue(true);
 		mockVerifyAccess.mockReturnValue({ sub: 'user-1' });
-		mockHandleUpload.mockResolvedValue({ type: 'blob.generate-client-token', clientToken: 'token' });
+		mockHandleUpload.mockResolvedValue({
+			type: 'blob.generate-client-token',
+			clientToken: 'token',
+		});
 	});
 
 	it('rejects the token-generation phase without a Bearer token', async () => {
 		const req = makeReq({ type: 'blob.generate-client-token' });
 
-		await expect(requestDirectUpload(req)).rejects.toMatchObject({ statusCode: 401 });
+		await expect(requestDirectUpload(req)).rejects.toMatchObject({
+			statusCode: 401,
+		});
 		expect(mockHandleUpload).not.toHaveBeenCalled();
 	});
 
@@ -59,16 +69,23 @@ describe('requestDirectUpload', () => {
 		mockVerifyAccess.mockImplementation(() => {
 			throw new Error('bad token');
 		});
-		const req = makeReq({ type: 'blob.generate-client-token' }, 'Bearer garbage');
+		const req = makeReq(
+			{ type: 'blob.generate-client-token' },
+			'Bearer garbage',
+		);
 
-		await expect(requestDirectUpload(req)).rejects.toMatchObject({ statusCode: 401 });
+		await expect(requestDirectUpload(req)).rejects.toMatchObject({
+			statusCode: 401,
+		});
 	});
 
 	it('rejects when the active storage driver does not support direct upload', async () => {
 		mockSupportsDirectUpload.mockReturnValue(false);
 		const req = makeReq({ type: 'blob.generate-client-token' }, 'Bearer valid');
 
-		await expect(requestDirectUpload(req)).rejects.toMatchObject({ statusCode: 422 });
+		await expect(requestDirectUpload(req)).rejects.toMatchObject({
+			statusCode: 422,
+		});
 		expect(mockHandleUpload).not.toHaveBeenCalled();
 	});
 
@@ -79,9 +96,15 @@ describe('requestDirectUpload', () => {
 
 		expect(mockHandleUpload).toHaveBeenCalledTimes(1);
 		const options = mockHandleUpload.mock.calls[0][0];
-		const tokenConfig = await options.onBeforeGenerateToken('videos/x.mp4', JSON.stringify({ originalName: 'clip.mp4', size: 123 }));
+		const tokenConfig = await options.onBeforeGenerateToken(
+			'videos/x.mp4',
+			JSON.stringify({ originalName: 'clip.mp4', size: 123 }),
+		);
 
-		expect(tokenConfig.allowedContentTypes).toEqual(['video/mp4', 'video/webm']);
+		expect(tokenConfig.allowedContentTypes).toEqual([
+			'video/mp4',
+			'video/webm',
+		]);
 		expect(tokenConfig.maximumSizeInBytes).toBe(52428800);
 		expect(JSON.parse(tokenConfig.tokenPayload)).toEqual({
 			uploadedBy: 'user-1',
@@ -92,7 +115,9 @@ describe('requestDirectUpload', () => {
 		// Explicit callbackUrl (built from the forwarded headers, not
 		// req.protocol/hostname) — without it, onUploadCompleted silently never
 		// fires behind Vercel's proxy (confirmed via production runtime logs).
-		expect(tokenConfig.callbackUrl).toBe('https://first-backend-navike21.vercel.app/api/v1/storage/direct-upload');
+		expect(tokenConfig.callbackUrl).toBe(
+			'https://first-backend-navike21.vercel.app/api/v1/storage/direct-upload',
+		);
 	});
 
 	it('forwards a client-supplied id into the token payload', async () => {
@@ -103,7 +128,11 @@ describe('requestDirectUpload', () => {
 		const options = mockHandleUpload.mock.calls[0][0];
 		const tokenConfig = await options.onBeforeGenerateToken(
 			'videos/x.mp4',
-			JSON.stringify({ originalName: 'clip.mp4', size: 123, id: 'client-generated-id' }),
+			JSON.stringify({
+				originalName: 'clip.mp4',
+				size: 123,
+				id: 'client-generated-id',
+			}),
 		);
 
 		expect(JSON.parse(tokenConfig.tokenPayload).id).toBe('client-generated-id');
@@ -117,8 +146,16 @@ describe('requestDirectUpload', () => {
 		expect(mockVerifyAccess).not.toHaveBeenCalled();
 		const options = mockHandleUpload.mock.calls[0][0];
 		await options.onUploadCompleted({
-			blob: { url: 'https://blob/x.mp4', pathname: 'videos/x.mp4', contentType: 'video/mp4' },
-			tokenPayload: JSON.stringify({ uploadedBy: 'user-1', originalName: 'clip.mp4', size: 123 }),
+			blob: {
+				url: 'https://blob/x.mp4',
+				pathname: 'videos/x.mp4',
+				contentType: 'video/mp4',
+			},
+			tokenPayload: JSON.stringify({
+				uploadedBy: 'user-1',
+				originalName: 'clip.mp4',
+				size: 123,
+			}),
 		});
 
 		expect(mockCreate).toHaveBeenCalledWith(
@@ -142,7 +179,11 @@ describe('requestDirectUpload', () => {
 
 		const options = mockHandleUpload.mock.calls[0][0];
 		await options.onUploadCompleted({
-			blob: { url: 'https://blob/x.mp4', pathname: 'videos/x.mp4', contentType: 'video/mp4' },
+			blob: {
+				url: 'https://blob/x.mp4',
+				pathname: 'videos/x.mp4',
+				contentType: 'video/mp4',
+			},
 			tokenPayload: JSON.stringify({
 				uploadedBy: 'user-1',
 				originalName: 'clip.mp4',

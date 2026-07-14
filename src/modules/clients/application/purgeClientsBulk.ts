@@ -4,9 +4,14 @@ import ClientModel from '../infrastructure/ClientModel';
 import { CLIENT_ENTITY_TYPE } from '../constants/paths';
 
 export async function purgeClientsBulk(ids: string[]) {
-	const clients = await ClientModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
+	const clients = await ClientModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	}).lean();
 
-	const processedIds = clients.map((c) => c.id).filter((id): id is string => Boolean(id));
+	const processedIds = clients
+		.map((c) => c.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = ids.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {

@@ -7,7 +7,10 @@ import {
 } from '../domain/errors/UserErrors';
 
 /** A user can never delete their own account. Pure/sync — no race risk. */
-export function assertNotSelfDelete(targetId: string, requesterId?: string): void {
+export function assertNotSelfDelete(
+	targetId: string,
+	requesterId?: string,
+): void {
 	if (requesterId && targetId === requesterId) {
 		throw new CannotDeleteSelfError();
 	}

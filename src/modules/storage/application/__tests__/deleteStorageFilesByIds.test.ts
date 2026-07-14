@@ -10,7 +10,10 @@ vi.mock('@Modules/storage/infrastructure/StorageFileModel', () => ({
 	default: { find: vi.fn(), deleteMany: vi.fn() },
 }));
 vi.mock('@Modules/storage/infrastructure/StorageService', () => ({
-	getStorageDriver: vi.fn(() => ({ delete: mockDelete, uploadBuffer: vi.fn() })),
+	getStorageDriver: vi.fn(() => ({
+		delete: mockDelete,
+		uploadBuffer: vi.fn(),
+	})),
 }));
 vi.mock('@Helpers/log', () => ({ logError: vi.fn() }));
 
@@ -30,7 +33,11 @@ describe('deleteStorageFilesByIds', () => {
 	it('deletes the blobs and records for the given ids', async () => {
 		vi.mocked(StorageFileModel.find).mockReturnValue(
 			lean([
-				{ id: 's1', original: { url: 'https://cdn/o.jpg' }, full: { url: 'https://cdn/f.webp' } },
+				{
+					id: 's1',
+					original: { url: 'https://cdn/o.jpg' },
+					full: { url: 'https://cdn/f.webp' },
+				},
 			]) as never,
 		);
 		vi.mocked(StorageFileModel.deleteMany).mockResolvedValue({} as never);

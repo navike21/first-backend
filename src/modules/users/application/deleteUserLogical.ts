@@ -1,7 +1,13 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import UserModel from '../infrastructure/UserModel';
-import { UserNotFoundError, LastSuperAdminError } from '../domain/errors/UserErrors';
-import { assertNotSelfDelete, hasOtherActiveSuperAdmin } from './assertUserDeletable';
+import {
+	UserNotFoundError,
+	LastSuperAdminError,
+} from '../domain/errors/UserErrors';
+import {
+	assertNotSelfDelete,
+	hasOtherActiveSuperAdmin,
+} from './assertUserDeletable';
 
 /**
  * Soft-deletes atomically, then re-verifies the last-super-admin invariant

@@ -29,7 +29,13 @@ describe('PageModel', () => {
 						type: 'columns',
 						settings: {
 							background: {
-								desktop: { type: 'image', url: 'https://cdn/bg.jpg', position: 'top', fullScreen: true, parallax: true },
+								desktop: {
+									type: 'image',
+									url: 'https://cdn/bg.jpg',
+									position: 'top',
+									fullScreen: true,
+									parallax: true,
+								},
 							},
 						},
 					},
@@ -94,14 +100,19 @@ describe('PageModel', () => {
 							background: {
 								desktop: { type: 'image', url: 'https://cdn/desktop.jpg' },
 								tablet: { type: 'none' },
-								mobile: { type: 'video', sourceKind: 'embed', embedUrl: 'https://vimeo.com/1' },
+								mobile: {
+									type: 'video',
+									sourceKind: 'embed',
+									embedUrl: 'https://vimeo.com/1',
+								},
 							},
 						},
 					},
 				],
 			});
 
-			const { desktop, tablet, mobile } = doc.toObject().sections[0].settings.background;
+			const { desktop, tablet, mobile } =
+				doc.toObject().sections[0].settings.background;
 			expect(desktop.url).toBe('https://cdn/desktop.jpg');
 			expect(tablet.type).toBe('none');
 			expect(mobile.embedUrl).toBe('https://vimeo.com/1');

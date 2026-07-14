@@ -29,9 +29,7 @@ describe('purgeUserGroupsBulk', () => {
 
 		const result = await purgeUserGroupsBulk([g1.id, g2.id]);
 
-		expect(result.processedIds).toEqual(
-			expect.arrayContaining([g1.id, g2.id]),
-		);
+		expect(result.processedIds).toEqual(expect.arrayContaining([g1.id, g2.id]));
 		expect(result.notFoundIds).toEqual([]);
 		expect(await UserGroupModel.findOne({ id: g1.id })).toBeNull();
 		expect(await UserGroupModel.findOne({ id: g2.id })).toBeNull();

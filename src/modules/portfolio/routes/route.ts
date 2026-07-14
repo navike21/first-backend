@@ -24,7 +24,10 @@ import {
 } from '../constants/paths';
 
 const acceptPortfolioMedia = () =>
-	acceptImageFields([{ name: 'cover' }, { name: 'gallery', maxCount: PORTFOLIO_GALLERY_MAX_ITEMS }]);
+	acceptImageFields([
+		{ name: 'cover' },
+		{ name: 'gallery', maxCount: PORTFOLIO_GALLERY_MAX_ITEMS },
+	]);
 import { portfolioListPublicController } from '../controllers/portfolio.listPublic';
 import { portfolioListByServiceController } from '../controllers/portfolio.listByService';
 import { portfolioGetBySlugController } from '../controllers/portfolio.getBySlug';
@@ -104,7 +107,10 @@ export function portfolioApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_CREATE, PERMISSIONS.PORTFOLIO_MANAGE),
 		...acceptPortfolioMedia(),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_CREATED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_CREATED,
+			resource: 'portfolio',
+		}),
 		portfolioCreateController,
 	);
 
@@ -112,7 +118,10 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_RESTORE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_UPDATE, PERMISSIONS.PORTFOLIO_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_RESTORED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_RESTORED,
+			resource: 'portfolio',
+		}),
 		portfolioRestoreController,
 	);
 
@@ -121,7 +130,10 @@ export function portfolioApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_UPDATE, PERMISSIONS.PORTFOLIO_MANAGE),
 		...acceptPortfolioMedia(),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_UPDATED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_UPDATED,
+			resource: 'portfolio',
+		}),
 		portfolioUpdateController,
 	);
 
@@ -129,14 +141,20 @@ export function portfolioApi(router: Router) {
 		PORTFOLIO_PATH_DELETE_PERMANENT,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_PERMANENTLY_DELETED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_PERMANENTLY_DELETED,
+			resource: 'portfolio',
+		}),
 		portfolioDeletePermanentController,
 	);
 	router.delete(
 		PORTFOLIO_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.PORTFOLIO_DELETE, PERMISSIONS.PORTFOLIO_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PORTFOLIO_SOFT_DELETED, resource: 'portfolio' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PORTFOLIO_SOFT_DELETED,
+			resource: 'portfolio',
+		}),
 		portfolioDeleteController,
 	);
 }

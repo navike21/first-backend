@@ -130,7 +130,10 @@ describe('team.schema', () => {
 	});
 
 	it('ListCollaboratorQuerySchema coerces string to number', () => {
-		const result = ListCollaboratorQuerySchema.safeParse({ page: '2', limit: '20' });
+		const result = ListCollaboratorQuerySchema.safeParse({
+			page: '2',
+			limit: '20',
+		});
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.page).toBe(2);

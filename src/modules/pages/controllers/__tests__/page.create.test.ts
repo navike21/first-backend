@@ -42,7 +42,10 @@ const validBody = { title: localizedName, slug: { en: 'home' } };
 
 describe('pageCreateController', () => {
 	it('calls createPage and returns 201 on valid input', async () => {
-		vi.mocked(createPage).mockResolvedValue({ data: { id: '1' }, warnings: [] } as never);
+		vi.mocked(createPage).mockResolvedValue({
+			data: { id: '1' },
+			warnings: [],
+		} as never);
 		const req = { body: validBody } as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();

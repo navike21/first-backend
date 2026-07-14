@@ -25,7 +25,9 @@ describe('deletePagePhysical', () => {
 		} as never);
 		vi.mocked(PageModel.exists).mockResolvedValue({ _id: 'child-1' } as never);
 
-		await expect(deletePagePhysical('page-1')).rejects.toThrow(PageHasChildrenError);
+		await expect(deletePagePhysical('page-1')).rejects.toThrow(
+			PageHasChildrenError,
+		);
 		expect(PageModel.deleteOne).not.toHaveBeenCalled();
 	});
 

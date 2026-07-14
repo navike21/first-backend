@@ -10,25 +10,43 @@ import {
 
 const headerUpdateSchema = z
 	.object({
-		variant: z.enum(HEADER_VARIANTS, { error: 'SITE_CONFIG_HEADER_VARIANT_INVALID' }).optional(),
+		variant: z
+			.enum(HEADER_VARIANTS, { error: 'SITE_CONFIG_HEADER_VARIANT_INVALID' })
+			.optional(),
 		sticky: z.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' }).optional(),
 		transparent: z.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' }).optional(),
 		cta: z
 			.object({
 				enabled: z.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' }).optional(),
-				labelMode: z.enum(['page', 'custom'], { error: 'SITE_CONFIG_LABEL_MODE_INVALID' }).optional(),
-				label: LocalizedStringSchema.optional(),
-				linkType: z.enum(['page', 'url'], { error: 'SITE_CONFIG_LINK_TYPE_INVALID' }).optional(),
-				pageId: z
-					.union([z.uuid({ error: 'SITE_CONFIG_PAGE_ID_INVALID' }), z.literal(''), z.null()])
+				labelMode: z
+					.enum(['page', 'custom'], { error: 'SITE_CONFIG_LABEL_MODE_INVALID' })
 					.optional(),
-				url: z.string({ error: 'SITE_CONFIG_URL_INVALID' }).trim().max(500).optional(),
+				label: LocalizedStringSchema.optional(),
+				linkType: z
+					.enum(['page', 'url'], { error: 'SITE_CONFIG_LINK_TYPE_INVALID' })
+					.optional(),
+				pageId: z
+					.union([
+						z.uuid({ error: 'SITE_CONFIG_PAGE_ID_INVALID' }),
+						z.literal(''),
+						z.null(),
+					])
+					.optional(),
+				url: z
+					.string({ error: 'SITE_CONFIG_URL_INVALID' })
+					.trim()
+					.max(500)
+					.optional(),
 			})
 			.optional(),
 		mobile: z
 			.object({
-				logoPosition: z.enum(['left', 'center'], { error: 'SITE_CONFIG_POSITION_INVALID' }).optional(),
-				menuIconPosition: z.enum(['left', 'right'], { error: 'SITE_CONFIG_POSITION_INVALID' }).optional(),
+				logoPosition: z
+					.enum(['left', 'center'], { error: 'SITE_CONFIG_POSITION_INVALID' })
+					.optional(),
+				menuIconPosition: z
+					.enum(['left', 'right'], { error: 'SITE_CONFIG_POSITION_INVALID' })
+					.optional(),
 			})
 			.optional(),
 	})
@@ -36,19 +54,27 @@ const headerUpdateSchema = z
 
 const footerUpdateSchema = z
 	.object({
-		variant: z.enum(FOOTER_VARIANTS, { error: 'SITE_CONFIG_FOOTER_VARIANT_INVALID' }).optional(),
+		variant: z
+			.enum(FOOTER_VARIANTS, { error: 'SITE_CONFIG_FOOTER_VARIANT_INVALID' })
+			.optional(),
 		columns: z
-			.union([z.literal(3), z.literal(4)], { error: 'SITE_CONFIG_COLUMNS_INVALID' })
+			.union([z.literal(3), z.literal(4)], {
+				error: 'SITE_CONFIG_COLUMNS_INVALID',
+			})
 			.optional(),
 		showSocial: z.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' }).optional(),
-		showNewsletter: z.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' }).optional(),
+		showNewsletter: z
+			.boolean({ error: 'SITE_CONFIG_BOOLEAN_INVALID' })
+			.optional(),
 		copyright: LocalizedStringSchema.optional(),
 	})
 	.optional();
 
 const layoutUpdateSchema = z
 	.object({
-		contentWidth: z.enum(CONTENT_WIDTHS, { error: 'SITE_CONFIG_CONTENT_WIDTH_INVALID' }).optional(),
+		contentWidth: z
+			.enum(CONTENT_WIDTHS, { error: 'SITE_CONFIG_CONTENT_WIDTH_INVALID' })
+			.optional(),
 		boxedMaxWidth: z
 			.number({ error: 'SITE_CONFIG_MAX_WIDTH_INVALID' })
 			.int({ error: 'SITE_CONFIG_MAX_WIDTH_INVALID' })
@@ -63,7 +89,11 @@ const socialUpdateSchema = z
 		Object.fromEntries(
 			SOCIAL_NETWORKS.map((network) => [
 				network,
-				z.string({ error: 'SITE_CONFIG_URL_INVALID' }).trim().max(300).optional(),
+				z
+					.string({ error: 'SITE_CONFIG_URL_INVALID' })
+					.trim()
+					.max(300)
+					.optional(),
 			]),
 		),
 	)
@@ -71,7 +101,9 @@ const socialUpdateSchema = z
 
 const mapsUpdateSchema = z
 	.object({
-		provider: z.enum(MAP_PROVIDERS, { error: 'SITE_CONFIG_MAP_PROVIDER_INVALID' }).optional(),
+		provider: z
+			.enum(MAP_PROVIDERS, { error: 'SITE_CONFIG_MAP_PROVIDER_INVALID' })
+			.optional(),
 	})
 	.optional();
 

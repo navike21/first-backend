@@ -28,13 +28,19 @@ function makeRes() {
 describe('pageRevisionsRestoreController', () => {
 	it('calls restorePageRevision and returns 200', async () => {
 		vi.mocked(restorePageRevision).mockResolvedValue({ id: 'page-1' } as never);
-		const req = { params: { id: 'page-1', revisionId: 'rev-1' } } as unknown as Request;
+		const req = {
+			params: { id: 'page-1', revisionId: 'rev-1' },
+		} as unknown as Request;
 		const res = makeRes();
 		const next = vi.fn();
 
 		await pageRevisionsRestoreController(req, res, next);
 
-		expect(restorePageRevision).toHaveBeenCalledWith('page-1', 'rev-1', 'user-1');
+		expect(restorePageRevision).toHaveBeenCalledWith(
+			'page-1',
+			'rev-1',
+			'user-1',
+		);
 		expect(successResponse).toHaveBeenCalled();
 	});
 });

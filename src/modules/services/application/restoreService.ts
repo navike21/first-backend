@@ -3,8 +3,12 @@ import { AppError } from '@Shared/domain/AppError';
 import ServiceModel from '../infrastructure/ServiceModel';
 
 export async function restoreService(id: string) {
-	const service = await ServiceModel.findOne({ id, deletedAt: { $ne: null } }).lean();
-	if (!service) AppError.notFound('SERVICE_NOT_FOUND', 'Service not found in trash');
+	const service = await ServiceModel.findOne({
+		id,
+		deletedAt: { $ne: null },
+	}).lean();
+	if (!service)
+		AppError.notFound('SERVICE_NOT_FOUND', 'Service not found in trash');
 
 	await ServiceModel.findOneAndUpdate(
 		{ id, deletedAt: { $ne: null } },

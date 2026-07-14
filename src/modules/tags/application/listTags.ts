@@ -10,12 +10,31 @@ interface ListTagsOptions {
 	isActive?: boolean;
 }
 
-export async function listTags({ page, limit, adminView = false, search, isActive }: ListTagsOptions) {
-	const filter: Record<string, unknown> = adminView ? { deletedAt: null } : { status: 'active', isActive: true, deletedAt: null };
+export async function listTags({
+	page,
+	limit,
+	adminView = false,
+	search,
+	isActive,
+}: ListTagsOptions) {
+	const filter: Record<string, unknown> = adminView
+		? { deletedAt: null }
+		: { status: 'active', isActive: true, deletedAt: null };
 
 	if (search) {
 		const pattern = escapeRegex(search);
-		filter.$or = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map((lang) => ({
+		filter.$or = [
+			'en',
+			'es',
+			'de',
+			'fr',
+			'it',
+			'ja',
+			'ko',
+			'pt',
+			'ru',
+			'zh',
+		].map((lang) => ({
 			[`name.${lang}`]: { $regex: pattern, $options: 'i' },
 		}));
 	}

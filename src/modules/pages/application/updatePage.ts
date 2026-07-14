@@ -1,12 +1,23 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
-import { uploadImageSafe, deleteEntityFiles, deleteStorageFilesByIds } from '@Modules/storage';
+import {
+	uploadImageSafe,
+	deleteEntityFiles,
+	deleteStorageFilesByIds,
+} from '@Modules/storage';
 import type { MutationResult, ResponseWarning } from '@Types/responseStructure';
-import { PageNotFoundError, PageSlugConflictError } from '../domain/errors/PageErrors';
+import {
+	PageNotFoundError,
+	PageSlugConflictError,
+} from '../domain/errors/PageErrors';
 import PageModel from '../infrastructure/PageModel';
 import { PAGE_ENTITY_TYPE } from '../constants/paths';
 import type { UpdatePageInput } from '../schemas/page.schema';
 import type { PageFiles } from './createPage';
-import { assertValidParent, cascadeRecomputeFullPath, computeFullPath } from './pageHierarchy';
+import {
+	assertValidParent,
+	cascadeRecomputeFullPath,
+	computeFullPath,
+} from './pageHierarchy';
 import { recordPageRevision } from './pageRevisions';
 
 interface UploadedImage {
@@ -20,7 +31,11 @@ interface UploadsOutcome {
 	uploads: UploadedImage[];
 }
 
-async function checkSlugConflict(id: string, slug: UpdatePageInput['slug'], parentId: string | null): Promise<void> {
+async function checkSlugConflict(
+	id: string,
+	slug: UpdatePageInput['slug'],
+	parentId: string | null,
+): Promise<void> {
 	const entries = Object.entries(slug ?? {}).filter(([, v]) => v?.trim());
 	if (!entries.length) return;
 	const orQuery = entries.map(([lang, value]) => ({ [`slug.${lang}`]: value }));
@@ -77,21 +92,33 @@ function applyUploadsToDoc(
 
 // Replacements are scoped per field so swapping the cover never wipes the
 // og image blobs (and vice versa).
-async function cleanupReplacedFiles(id: string, uploads: UploadedImage[], clearingOgImage: boolean): Promise<void> {
+async function cleanupReplacedFiles(
+	id: string,
+	uploads: UploadedImage[],
+	clearingOgImage: boolean,
+): Promise<void> {
 	for (const upload of uploads) {
-		await deleteEntityFiles(PAGE_ENTITY_TYPE, id, { field: upload.field, exceptStorageIds: [upload.storageId] }).catch(
+		await deleteEntityFiles(PAGE_ENTITY_TYPE, id, {
+			field: upload.field,
+			exceptStorageIds: [upload.storageId],
+		}).catch(() => {});
+	}
+	if (clearingOgImage) {
+		await deleteEntityFiles(PAGE_ENTITY_TYPE, id, { field: 'ogImage' }).catch(
 			() => {},
 		);
 	}
-	if (clearingOgImage) {
-		await deleteEntityFiles(PAGE_ENTITY_TYPE, id, { field: 'ogImage' }).catch(() => {});
-	}
 }
 
-async function recomputeOwnFullPath(doc: { slug?: unknown; set: (field: string, value: unknown) => void }, parentId: string | null): Promise<void> {
+async function recomputeOwnFullPath(
+	doc: { slug?: unknown; set: (field: string, value: unknown) => void },
+	parentId: string | null,
+): Promise<void> {
 	let parentFullPath;
 	if (parentId) {
-		const parent = await PageModel.findOne({ id: parentId, deletedAt: null }).select('fullPath').lean();
+		const parent = await PageModel.findOne({ id: parentId, deletedAt: null })
+			.select('fullPath')
+			.lean();
 		parentFullPath = parent?.fullPath;
 	}
 	doc.set('fullPath', computeFullPath(doc.slug as never, parentFullPath));
@@ -108,7 +135,9 @@ export async function updatePage(
 
 	const parentIdChanging = input.parentId !== undefined;
 	const slugChanging = input.slug !== undefined;
-	const effectiveParentId = parentIdChanging ? (input.parentId ?? null) : (doc.parentId ?? null);
+	const effectiveParentId = parentIdChanging
+		? (input.parentId ?? null)
+		: (doc.parentId ?? null);
 
 	if (parentIdChanging) await assertValidParent(id, effectiveParentId);
 	if (input.slug) await checkSlugConflict(id, input.slug, effectiveParentId);
@@ -128,7 +157,8 @@ export async function updatePage(
 		await doc.save();
 	} catch (error) {
 		const storageIds = uploads.map((u) => u.storageId);
-		if (storageIds.length > 0) await deleteStorageFilesByIds(storageIds).catch(() => {});
+		if (storageIds.length > 0)
+			await deleteStorageFilesByIds(storageIds).catch(() => {});
 		throw error;
 	}
 

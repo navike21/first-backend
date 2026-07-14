@@ -484,8 +484,66 @@ de este pase). `pnpm audit --prod`: limpio.
   de JSON/urlencoded parsing, CORS y compression — gastar menos CPU en
   tráfico que de todos modos se va a rechazar sería mover el limiter antes,
   pero es una optimización menor, no una brecha.
-- 5 vulnerabilidades de `pnpm audit` en devDependencies (vite/esbuild/babel) —
-  no llegan a producción, bump requeriría revisar breaking changes de vitest.
+- **Sin CI/CD** (`.github/workflows` no existe): nada bloquea automáticamente
+  un PR con gates rotos antes del merge a `main` → auto-deploy a Producción.
+  El usuario decidió posponerlo explícitamente (sesión 2026-07-14) a favor de
+  cerrar primero lint/sonar/formateo/audit (ver siguiente sub-sección).
+
+### 8.1 Cierre de lint/sonar/formateo/audit — ✅ COMPLETADA 2026-07-14
+
+Pedido de seguimiento del usuario tras §8: "que todo esté check — eslint,
+sonar, formateo — documentado en el README, y que ningún warning/error de
+audit quede sin atender."
+
+- **`pnpm lint` (incluye SonarJS, ya fusionado en el config principal)**:
+  ya estaba en 0 antes de este sub-pase; se mantuvo así.
+- **Formateo — causa raíz encontrada, no era deuda de estilo real**:
+  `prettier --check src/` marcaba 674 archivos. Investigación (comparando
+  hashes de blobs de git vs bytes crudos en disco) confirmó que **no era un
+  problema de código**: 553 de 1022 archivos tenían fin de línea CRLF en el
+  working tree de Windows (`core.autocrlf=true` deja archivos en CRLF pese a
+  que `.gitattributes` declara `eol=lf`; git no siempre re-escribe un archivo
+  en checkout si su contenido NORMALIZADO ya coincide con el blob indexado,
+  así que el drift persiste silenciosamente). `git add --renormalize .` no
+  encontró nada que cambiar (el índice YA estaba en LF) — el fix real fue
+  forzar un re-checkout completo: `git rm --cached -r . && git reset --hard`
+  (con los cambios reales ya en `git stash`). Bajó a 0 archivos CRLF.
+  Con el CRLF resuelto, quedaron **249 violaciones reales** de `printWidth:80`
+  (confirmado: ensanchar el límite a 100/120 empeoraba el conteo, o sea 80 sí
+  es el estilo real del repo) — corregidas con `prettier --write src/`.
+  Esto expuso un `sonarjs/no-identical-functions` preexistente (dos helpers
+  de test, `mockLeanFindOne`/`mockLeanFind`, eran byte-idénticos una vez
+  formateados consistentemente) — consolidados en un solo `mockLeanQuery`.
+  Nuevo script `format:check` (`prettier --check src/`) para que el gate sea
+  ejecutable, no solo `format` (que ya escribe).
+- **Cobertura**: el README afirmaba "100% coverage required, enforced via
+  thresholds" — **falso**, no había `thresholds` configurados y la cobertura
+  real es ~58-74% según la métrica (muchos endpoints bulk/trash son wrappers
+  delgados sin lógica propia que cubrir). Se añadió un **piso real** en
+  `vitest.config.ts` (`statements:70 branches:65 functions:55 lines:70`,
+  unos puntos por debajo de lo actual) — verificado que SÍ falla si se sube
+  el piso por encima de lo real (probado con 99/99/99/99 → 4 errores, exit 1)
+  y que pasa con los valores reales (exit 0). El README ya no afirma 100%.
+- **`pnpm audit` completo (no solo `--prod`) — 5 vulnerabilidades → 0**:
+  `vitest`/`@vitest/coverage-istanbul`/`@vitest/coverage-v8` ^4.1.5→^4.1.10
+  (trae `brace-expansion` parcheado indirectamente vía `@typescript-eslint`
+  ^8.59.1→^8.64.0), `tsx` ^4.21.0→^4.23.1 (trae `esbuild` parcheado),
+  overrides nuevos `@babel/core` ^7.29.7 y `brace-expansion` ^5.0.7. El
+  override de `vite` (transitivo de `vitest`) **no funcionó** — pnpm no
+  aplica `overrides` a un paquete resuelto solo como dependencia-opcional-de-
+  un-peer; el fix fue añadir `vite` como **devDependency directa** (^8.1.4),
+  lo que sí fuerza la resolución. `onlyBuiltDependencies` ganó `esbuild` y
+  `sharp` (sus scripts de instalación dejaron de correr automáticamente tras
+  un `pnpm install --force`, sin ellos el binario nativo no se descarga).
+- **README**: nueva sección "Quality Gates" documentando los 5 comandos
+  (typecheck/lint/format:check/test/audit --prod) + notas sobre SonarJS
+  fusionado, el piso de cobertura, `pnpm audit` sin `--prod` para dev deps,
+  y el gotcha de CRLF en Windows (con el fix de una línea). Sección "Known
+  Gaps" nueva: sin CI/CD, decisión explícita de posponerlo.
+
+Verificación: `pnpm typecheck && pnpm lint && pnpm format:check` limpios.
+Suite completa: **318 archivos / 1148 tests**, sin regresiones (~253 archivos
+tocados, casi todos solo reformateo). `pnpm audit` (completo): limpio.
 
 ## Apéndice — mapa rápido de archivos clave
 - Permisos: `src/constants/permissions.ts`

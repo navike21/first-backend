@@ -73,7 +73,12 @@ describe('listCollaborators', () => {
 		);
 		vi.mocked(CollaboratorModel.countDocuments).mockResolvedValue(1);
 
-		await listCollaborators({ page: 1, limit: 10, adminView: true, search: 'Jane' });
+		await listCollaborators({
+			page: 1,
+			limit: 10,
+			adminView: true,
+			search: 'Jane',
+		});
 
 		expect(CollaboratorModel.find).toHaveBeenCalledWith({
 			deletedAt: null,
@@ -87,7 +92,12 @@ describe('listCollaborators', () => {
 		);
 		vi.mocked(CollaboratorModel.countDocuments).mockResolvedValue(1);
 
-		await listCollaborators({ page: 1, limit: 10, adminView: true, isActive: false });
+		await listCollaborators({
+			page: 1,
+			limit: 10,
+			adminView: true,
+			isActive: false,
+		});
 
 		expect(CollaboratorModel.find).toHaveBeenCalledWith({
 			deletedAt: null,
@@ -101,7 +111,12 @@ describe('listCollaborators', () => {
 		);
 		vi.mocked(CollaboratorModel.countDocuments).mockResolvedValue(1);
 
-		await listCollaborators({ page: 1, limit: 10, adminView: false, isActive: false });
+		await listCollaborators({
+			page: 1,
+			limit: 10,
+			adminView: false,
+			isActive: false,
+		});
 
 		expect(CollaboratorModel.find).toHaveBeenCalledWith({
 			status: 'active',

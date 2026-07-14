@@ -16,7 +16,10 @@ export async function listGroupMembers(
 	const group = await UserGroupModel.findOne({ id: groupId, deletedAt: null });
 	if (!group) throw new UserGroupNotFoundError();
 
-	const filter: Record<string, unknown> = { groupIds: groupId, deletedAt: null };
+	const filter: Record<string, unknown> = {
+		groupIds: groupId,
+		deletedAt: null,
+	};
 	if (status) filter.status = status;
 	if (search) {
 		const pattern = escapeRegex(search);

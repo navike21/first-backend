@@ -26,7 +26,8 @@ export async function listStorageFiles(query: ListStorageFilesQuery) {
 	if (query.uploadedBy) filter.uploadedBy = query.uploadedBy;
 	if (query.kind === 'image') filter.isImage = true;
 	if (query.kind === 'video') filter.mimeType = { $in: VIDEO_MIME_TYPES };
-	if (query.search) filter.originalName = { $regex: escapeRegex(query.search), $options: 'i' };
+	if (query.search)
+		filter.originalName = { $regex: escapeRegex(query.search), $options: 'i' };
 
 	const [items, total] = await Promise.all([
 		StorageFileModel.find(filter)

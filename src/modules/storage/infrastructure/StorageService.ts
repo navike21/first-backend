@@ -18,6 +18,9 @@ export function getStorageDriver(): StorageDriver {
 		case 'azure-blob':
 			return new AzureBlobDriver();
 		default:
-			AppError.internal(STORAGE_ERRORS.DRIVER_NOT_CONFIGURED, `Unknown storage driver: ${ENV.STORAGE_DRIVER}`);
+			AppError.internal(
+				STORAGE_ERRORS.DRIVER_NOT_CONFIGURED,
+				`Unknown storage driver: ${ENV.STORAGE_DRIVER}`,
+			);
 	}
 }

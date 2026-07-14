@@ -11,5 +11,9 @@ export async function restoreUser(id: string) {
 		{ $unset: { deletedAt: '' } },
 	);
 
-	return cleanMongoFields({ ...user, password: undefined, deletedAt: undefined });
+	return cleanMongoFields({
+		...user,
+		password: undefined,
+		deletedAt: undefined,
+	});
 }

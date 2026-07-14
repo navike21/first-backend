@@ -1,12 +1,26 @@
 import sanitize from 'sanitize-html';
 
 const ALLOWED_TAGS = [
-	'p', 'br',
-	'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-	'strong', 'em', 'u', 's',
-	'ul', 'ol', 'li',
-	'a', 'img',
-	'blockquote', 'pre', 'code',
+	'p',
+	'br',
+	'h1',
+	'h2',
+	'h3',
+	'h4',
+	'h5',
+	'h6',
+	'strong',
+	'em',
+	'u',
+	's',
+	'ul',
+	'ol',
+	'li',
+	'a',
+	'img',
+	'blockquote',
+	'pre',
+	'code',
 ];
 
 const ALLOWED_ATTRS: sanitize.IOptions['allowedAttributes'] = {

@@ -9,4 +9,15 @@ import pt from './pt/messages.json';
 import ru from './ru/messages.json';
 import zh from './zh/messages.json';
 
-export const categoriesLocales = { en, es, de, fr, it, ja, ko, pt, ru, zh } as const;
+export const categoriesLocales = {
+	en,
+	es,
+	de,
+	fr,
+	it,
+	ja,
+	ko,
+	pt,
+	ru,
+	zh,
+} as const;
