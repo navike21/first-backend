@@ -11,6 +11,11 @@ const EnvSchema = z.object({
 	WHITELISTED_DOMAINS: z.string().default(''),
 	CLIENT_URL: z.string().default('http://localhost:3000'),
 
+	// API docs (Swagger UI) — unset by default (docs stay public). Set both to
+	// gate /api/v1/docs behind HTTP Basic Auth, no code change required.
+	API_DOCS_USER: z.string().optional(),
+	API_DOCS_PASSWORD: z.string().optional(),
+
 	// JWT — usar secrets distintos por tipo de token
 	JWT_ACCESS_SECRET: z
 		.string()

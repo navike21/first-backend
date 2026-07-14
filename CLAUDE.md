@@ -44,6 +44,26 @@ i18n: errores globales en `src/locales/<lang>/errors.json`; mensajes por módulo
   `safeParse` inline. Coacciones (p. ej. ISO→Date) van **en el schema** (`z.preprocess`), no
   en middlewares. No crees middlewares de validación ni vuelvas al `safeParse` manual.
 
+## Documentación OpenAPI/Swagger (`/api/v1/docs`)
+Generada desde los **schemas Zod reales** vía `@asteasolutions/zod-to-openapi` (no YAML/JSDoc
+a mano) — request bodies 100% fieles, response bodies verificados una vez contra el modelo
+Mongoose real de cada módulo (no por-endpoint). Cada módulo con rutas HTTP tiene su propio
+`<módulo>/<módulo>.openapi.ts` (mismo patrón que `routes/route.ts`); `src/config/openapi/document.ts`
+importa cada uno solo por su efecto secundario (`registry.registerPath`/`registry.register`).
+Helpers reusables en `src/config/openapi/responses.ts` (`successResponse`, `commonErrorResponses`,
+`bulkResultSchema`, `multipartWithFile`, etc.) — revisar antes de escribir un `.openapi.ts` nuevo.
+- **Gotcha de orden de imports (ya resuelto, no reintroducir):** `extendZodWithOpenApi(z)`
+  (en `registry.ts`) parchea las factories de Zod (`z.object`, etc.) — solo los schemas
+  **construidos después** de ese parche obtienen `.openapi()`. Por eso `mainServer.ts`
+  importa `./openapi/mount` **antes** que `@Routes/routes` (que construye todos los schemas
+  de negocio vía `.schema.ts`). Typecheck no detecta una regresión de esto (falla solo en
+  runtime, dentro de `buildOpenApiDocument()`) — si se reordenan esos imports, probarlo
+  arrancando el server y pegándole a `/api/v1/docs.json`, no solo con `tsc`.
+- Público por defecto; se gatea con Basic Auth seteando `API_DOCS_USER`+`API_DOCS_PASSWORD`
+  (ambos, en Vercel) — sin cambio de código, requiere redeploy.
+- `*.openapi.ts` está excluido de coverage (`vitest.config.ts`) — es config declarativa sin
+  lógica que testear, nunca se ejecuta fuera de `/docs`.
+
 ## Patrón de subida de imágenes (backend-driven) — establecido en este repo
 El front manda **un solo request**; el backend sube. Detalle en `docs/API-UPLOADS.md`.
 - Endpoints create/update aceptan `multipart/form-data`: part `data` (JSON del body) +
