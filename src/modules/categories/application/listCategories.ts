@@ -1,5 +1,6 @@
 import CategoryModel from '../infrastructure/CategoryModel';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { escapeRegex } from '@Helpers/escapeRegex';
 
 interface ListCategoriesOptions {
 	page: number;
@@ -21,8 +22,9 @@ export async function listCategories({
 	const filter: Record<string, unknown> = adminView ? { deletedAt: null } : { status: 'active', isActive: true, deletedAt: null };
 
 	if (search) {
+		const pattern = escapeRegex(search);
 		filter.$or = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map((lang) => ({
-			[`name.${lang}`]: { $regex: search, $options: 'i' },
+			[`name.${lang}`]: { $regex: pattern, $options: 'i' },
 		}));
 	}
 	if (adminView && isActive !== undefined) filter.isActive = isActive;

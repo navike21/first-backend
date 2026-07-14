@@ -92,3 +92,10 @@ export const SubscriberRegisterSchema = z.object({
 
 	status: z.enum(['active', 'inactive'] as const).optional(),
 }) satisfies z.ZodType<SubscriberSchema>;
+
+export const ListSubscribersQuerySchema = z.object({
+	page: z.coerce.number().int().min(1).default(1),
+	limit: z.coerce.number().int().min(1).max(100).default(10),
+	status: z.string().optional(),
+	search: z.string().trim().max(200).optional(),
+});

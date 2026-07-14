@@ -31,8 +31,8 @@ export async function validateSingleFile(
 		return;
 	}
 
-	const { fromBuffer } = await import('file-type');
-	const detected = await fromBuffer(file.buffer);
+	const { fileTypeFromBuffer } = await import('file-type');
+	const detected = await fileTypeFromBuffer(file.buffer);
 
 	if (!detected) {
 		AppError.unsupportedMediaType(STORAGE_ERRORS.FILE_TYPE_NOT_ALLOWED, 'Could not determine file type from content');

@@ -405,6 +405,88 @@ puede incluir `warnings[]`. El front debe dejar de subir a `/storage` por separa
 > Nota: este patrón es **independiente** del Sprint 0 de seguridad (§5); pueden ir en
 > paralelo. La Fase 0 no toca lógica de negocio, así que es de bajo riesgo.
 
+## 8. Auditoría de seguridad + concurrencia/alta-demanda — ✅ COMPLETADA 2026-07-14
+
+Pedido explícito del usuario: brechas de seguridad + soporte de múltiples
+usuarios concurrentes bajo alta demanda + buenas prácticas de lint/test. No
+re-escanear lo de abajo salvo que cambie el código referenciado.
+
+### Hallazgos y fixes
+- **CORS fail-open** (`config/cors.ts`): si `WHITELISTED_DOMAINS` está vacío,
+  el código reflejaba cualquier origin con `credentials:true` (cualquier
+  sitio podía hacer requests autenticadas con cookies). **Fix:** fail-closed
+  — sin whitelist configurada, se deniega cualquier origin (con `origin`;
+  requests sin `origin` —server-to-server/Postman— siguen permitidas). Test
+  en `config/cors.test.ts`.
+- **ReDoS + `$regex` sin escapar** en 9 módulos (clients/categories/
+  collaborators/pages/tags/storage/subscribers/user-groups/users): el
+  parámetro `search` se interpolaba directo en `$regex`/`new RegExp()` sin
+  escapar metacaracteres — un patrón tipo `(a+)+` podía colgar de CPU al
+  `mongod` compartido, afectando a **todos** los usuarios concurrentes.
+  **Fix:** helper `helpers/escapeRegex.ts` aplicado en los 9 sitios +
+  `.max(200)` en los schemas de `search` que no lo tenían (solo `storage`
+  ya lo tenía). `subscriber.listAll` además pasó a validar con Zod
+  (`ListSubscribersQuerySchema`) en vez de parsear `req.query` a mano.
+- **Race condition (TOCTOU) en el guard de "último super-admin"**
+  (`users/application/assertUserDeletable.ts`): el chequeo "¿queda otro
+  super activo?" era check-then-act sin lock — dos borrados individuales
+  concurrentes de los últimos 2 supers podían pasar ambos y dejar el sistema
+  sin super-admin. **Fix:** `deleteUserLogical.ts` ahora escribe primero
+  (soft-delete atómico vía `findOneAndUpdate`) y **revalida después**,
+  compensando (restaura) si el borrado violó el invariante — cierra la
+  mayoría de la ventana de carrera (queda una ventana residual muy angosta,
+  documentada en el código, si ambas revalidaciones corren antes de que
+  cualquiera de las dos escrituras se propague — operacionalmente
+  improbable contra el mismo primary de Mongo). `assertUserDeletable` se
+  partió en `assertNotSelfDelete` (sync) + `hasOtherActiveSuperAdmin`
+  (reusable) + el combinado original (que sigue usando `deleteUser`, el
+  purge físico, donde el invariante es distinto — no perder el último
+  registro histórico, no el conteo de activos en tiempo real). Tests en
+  `assertUserDeletable.test.ts` + nuevo `deleteUserLogical.test.ts`.
+- **`pnpm audit --prod`: 17 vulnerabilidades → 0.** Bumps: `i18next-fs-backend`
+  ^2.6.6 (crítico, prototype pollution), `multer` ^2.2.0, `nodemailer` ^9.0.3
+  (major; único breaking change de v9 es TLS estricto en fetch de contenido
+  remoto — no aplica, no usamos `attachments` con URL/OAuth2/proxy),
+  `file-type` ^21.3.4 (major; `fromBuffer` → renombrado `fileTypeFromBuffer`,
+  mismo shape `{ext,mime}` — actualizado en `validateFileType.ts` + su test),
+  `express-rate-limit` ^8.5.2 (trae `ip-address` parcheado). `pnpm.overrides`
+  nuevos: `ws >=8.21.0` (mismo fix que ya tenía el frontend, nunca replicado
+  acá), `undici >=6.27.0` (transitivo de `@vercel/blob`, también bumpeado a
+  ^2.6.1), `form-data ^4.0.6` (transitivo de `@google-cloud/storage>
+  retry-request>@types/request` — nunca importado directo, pero se fuerza
+  igual), `qs ^6.15.3` (transitivo de `express`). Quedan 5 vulnerabilidades
+  **solo en devDependencies** (vite/esbuild/babel vía vitest/tsx/eslint,
+  vectores de "dev server en Windows") — no tocado, no llega a producción.
+- **`express-rate-limit` usaba `MemoryStore`** (no distribuido): en Vercel
+  serverless cada instancia concurrente tiene su propio contador, así que
+  `authLimiter` (5/min) era mucho más débil de lo pensado bajo carga
+  concurrente real (un atacante repartiendo requests entre instancias
+  toca contadores distintos). **Fix:** `shared/infrastructure/RateLimitStore.ts`
+  — `MongoRateLimitStore` (implementa el `Store` de `express-rate-limit`)
+  respaldado en una colección Mongo nueva (`RateLimitHit`, TTL index en
+  `resetTime`), con `increment()` atómico vía pipeline de agregación en
+  `findOneAndUpdate` (decide en una sola operación de documento si reinicia
+  la ventana o incrementa — sin carrera entre instancias). `globalLimiter`/
+  `authLimiter` cada uno con su propio prefijo de key. Tests en
+  `RateLimitStore.test.ts`.
+
+### Verificación
+`pnpm typecheck && pnpm lint` limpios. Suite completa: **318 archivos /
+1148 tests**, todos en verde (sin regresiones; +6 archivos/+~30 tests nuevos
+de este pase). `pnpm audit --prod`: limpio.
+
+### No tocado (fuera de alcance de este pase, mencionado por si se retoma)
+- Paginación sin límite superior en algunos endpoints de papelera que
+  parsean `req.query` a mano en vez de vía Zod (ej. `client.trash.ts`:
+  `Number(req.query.limit) || 20` sin `.max()`) — mismo patrón que se
+  arregló en `subscriber.listAll`, pero no auditado en el resto de módulos.
+- Orden de middlewares en `config/app.ts`: `globalLimiter` corre *después*
+  de JSON/urlencoded parsing, CORS y compression — gastar menos CPU en
+  tráfico que de todos modos se va a rechazar sería mover el limiter antes,
+  pero es una optimización menor, no una brecha.
+- 5 vulnerabilidades de `pnpm audit` en devDependencies (vite/esbuild/babel) —
+  no llegan a producción, bump requeriría revisar breaking changes de vitest.
+
 ## Apéndice — mapa rápido de archivos clave
 - Permisos: `src/constants/permissions.ts`
 - Auth (casos de uso): `src/modules/auth/application/*`

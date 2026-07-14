@@ -1,5 +1,6 @@
 import PageModel from '../infrastructure/PageModel';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { escapeRegex } from '@Helpers/escapeRegex';
 import { publicVisibilityFilter, withEffectiveStatus } from './pageStatus';
 
 interface ListPagesOptions {
@@ -15,8 +16,9 @@ export async function listPages({ page, limit, adminView = false, search, status
 	const filter: Record<string, unknown> = adminView ? { deletedAt: null } : publicVisibilityFilter();
 
 	if (search) {
+		const pattern = escapeRegex(search);
 		filter.$or = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map((lang) => ({
-			[`title.${lang}`]: { $regex: search, $options: 'i' },
+			[`title.${lang}`]: { $regex: pattern, $options: 'i' },
 		}));
 	}
 	if (adminView && status) filter.status = status;

@@ -1,6 +1,7 @@
 import { QueryFilter } from 'mongoose';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
+import { escapeRegex } from '@Helpers/escapeRegex';
 import ClientModel from '../infrastructure/ClientModel';
 import type { ClientDocument } from '../infrastructure/ClientModel';
 
@@ -28,7 +29,7 @@ export async function listClients({
 	}
 
 	if (search) {
-		query.businessName = { $regex: search, $options: 'i' };
+		query.businessName = { $regex: escapeRegex(search), $options: 'i' };
 	}
 
 	const [data, total] = await Promise.all([

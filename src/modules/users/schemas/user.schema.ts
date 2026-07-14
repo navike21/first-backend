@@ -73,7 +73,7 @@ export const ListUsersQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).default(1),
 	limit: z.coerce.number().int().min(1).max(100).default(20),
 	status: z.enum(['active', 'inactive']).optional(),
-	search: z.string().optional(),
+	search: z.string().trim().max(200).optional(),
 	groupId: z.string().optional(),
 });
 

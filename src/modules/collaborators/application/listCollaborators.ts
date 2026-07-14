@@ -1,5 +1,6 @@
 import CollaboratorModel from '../infrastructure/CollaboratorModel';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { escapeRegex } from '@Helpers/escapeRegex';
 
 interface ListCollaboratorsOptions {
 	page: number;
@@ -21,7 +22,7 @@ export async function listCollaborators({
 		: { status: 'active', isActive: true, deletedAt: null };
 
 	if (search) {
-		filter.name = { $regex: search, $options: 'i' };
+		filter.name = { $regex: escapeRegex(search), $options: 'i' };
 	}
 
 	// The public view always forces isActive:true above; admins may filter by

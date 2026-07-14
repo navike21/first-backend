@@ -1,4 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { escapeRegex } from '@Helpers/escapeRegex';
 import { VIDEO_MIME_TYPES } from '../constants/allowedMimeTypes';
 import StorageFileModel from '../infrastructure/StorageFileModel';
 
@@ -15,7 +16,7 @@ export async function listDeletedStorageFiles({ page, limit, kind, search }: Lis
 	const filter: Record<string, unknown> = { deletedAt: { $ne: null } };
 	if (kind === 'image') filter.isImage = true;
 	if (kind === 'video') filter.mimeType = { $in: VIDEO_MIME_TYPES };
-	if (search) filter.originalName = { $regex: search, $options: 'i' };
+	if (search) filter.originalName = { $regex: escapeRegex(search), $options: 'i' };
 
 	const [items, total] = await Promise.all([
 		StorageFileModel.find(filter).sort({ deletedAt: -1 }).skip(skip).limit(limit).lean(),

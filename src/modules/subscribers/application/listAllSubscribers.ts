@@ -1,6 +1,7 @@
 import { QueryFilter } from 'mongoose';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { metaInformation } from '@Helpers/metaInformation';
+import { escapeRegex } from '@Helpers/escapeRegex';
 import SubscriberModel from '../infrastructure/SubscriberModel';
 import { SubscriberSchema } from '../types/subscriber.schema';
 
@@ -27,7 +28,7 @@ export async function listAllSubscribers({
 	}
 
 	if (search) {
-		const regex = new RegExp(search, 'i');
+		const regex = new RegExp(escapeRegex(search), 'i');
 		query.$or = [
 			{ firstName: regex },
 			{ lastName: regex },
