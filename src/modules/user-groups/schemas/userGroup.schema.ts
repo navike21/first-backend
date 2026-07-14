@@ -23,7 +23,7 @@ export const ListUserGroupsQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).default(1),
 	limit: z.coerce.number().int().min(1).max(100).default(20),
 	status: z.enum(['active', 'inactive']).optional(),
-	search: z.string().optional(),
+	search: z.string().trim().max(200).optional(),
 });
 
 /** Query for listing the users that belong to a group. */
@@ -31,7 +31,7 @@ export const ListGroupMembersQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).default(1),
 	limit: z.coerce.number().int().min(1).max(100).default(20),
 	status: z.enum(['active', 'inactive']).optional(),
-	search: z.string().optional(),
+	search: z.string().trim().max(200).optional(),
 });
 
 /** Body for adding one or more users to a group. */

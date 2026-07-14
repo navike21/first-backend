@@ -1,14 +1,12 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
 import { successResponse } from '@Helpers/responseStructure';
 import { listAllSubscribers } from '../application/listAllSubscribers';
+import { ListSubscribersQuerySchema } from '../schemas/subscriber.schema';
 
 export const subscriberListAll = asyncHandler(async (req, res) => {
-	const limit = Number(req.query.limit) || 10;
-	const page = Number(req.query.page) || 1;
-	const status = req.query.status as string | undefined;
-	const search = req.query.search as string | undefined;
+	const query = ListSubscribersQuerySchema.parse(req.query);
 
-	const { data, meta } = await listAllSubscribers({ limit, page, status, search });
+	const { data, meta } = await listAllSubscribers(query);
 	successResponse(res, {
 		statusCode: 200,
 		message: 'SUCCESS_SUBSCRIBER_LIST',

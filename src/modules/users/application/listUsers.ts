@@ -1,4 +1,5 @@
 import { ListUsersQuery } from '../schemas/user.schema';
+import { escapeRegex } from '@Helpers/escapeRegex';
 import UserModel from '../infrastructure/UserModel';
 
 export async function listUsers({
@@ -14,10 +15,11 @@ export async function listUsers({
 	// `groupId` filters users that belong to that group (membership in the array).
 	if (groupId) filter.groupIds = groupId;
 	if (search) {
+		const pattern = escapeRegex(search);
 		filter.$or = [
-			{ firstName: { $regex: search, $options: 'i' } },
-			{ lastName: { $regex: search, $options: 'i' } },
-			{ email: { $regex: search, $options: 'i' } },
+			{ firstName: { $regex: pattern, $options: 'i' } },
+			{ lastName: { $regex: pattern, $options: 'i' } },
+			{ email: { $regex: pattern, $options: 'i' } },
 		];
 	}
 

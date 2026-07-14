@@ -1,4 +1,5 @@
 import UserModel from '@Modules/users/infrastructure/UserModel';
+import { escapeRegex } from '@Helpers/escapeRegex';
 import UserGroupModel from '../infrastructure/UserGroupModel';
 import { UserGroupNotFoundError } from '../domain/errors/UserGroupErrors';
 import { ListGroupMembersQuery } from '../schemas/userGroup.schema';
@@ -18,10 +19,11 @@ export async function listGroupMembers(
 	const filter: Record<string, unknown> = { groupIds: groupId, deletedAt: null };
 	if (status) filter.status = status;
 	if (search) {
+		const pattern = escapeRegex(search);
 		filter.$or = [
-			{ firstName: { $regex: search, $options: 'i' } },
-			{ lastName: { $regex: search, $options: 'i' } },
-			{ email: { $regex: search, $options: 'i' } },
+			{ firstName: { $regex: pattern, $options: 'i' } },
+			{ lastName: { $regex: pattern, $options: 'i' } },
+			{ email: { $regex: pattern, $options: 'i' } },
 		];
 	}
 

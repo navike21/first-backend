@@ -1,4 +1,5 @@
 import { ListUserGroupsQuery } from '../schemas/userGroup.schema';
+import { escapeRegex } from '@Helpers/escapeRegex';
 import UserGroupModel from '../infrastructure/UserGroupModel';
 
 export async function listUserGroups({
@@ -10,7 +11,7 @@ export async function listUserGroups({
 	const filter: Record<string, unknown> = { deletedAt: null };
 
 	if (status) filter.status = status;
-	if (search) filter.name = { $regex: search, $options: 'i' };
+	if (search) filter.name = { $regex: escapeRegex(search), $options: 'i' };
 
 	const skip = (page - 1) * limit;
 	const [items, total] = await Promise.all([

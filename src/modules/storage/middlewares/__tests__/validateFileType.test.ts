@@ -5,10 +5,10 @@ import { STORAGE_ERRORS } from '../../domain/errors/StorageErrors';
 import { IMAGE_MIME_TYPES } from '../../constants/allowedMimeTypes';
 
 vi.mock('file-type', () => ({
-	fromBuffer: vi.fn(),
+	fileTypeFromBuffer: vi.fn(),
 }));
 
-import { fromBuffer } from 'file-type';
+import { fileTypeFromBuffer } from 'file-type';
 import { validateFileType } from '../validateFileType';
 
 function buildFile(
@@ -116,7 +116,7 @@ describe('validateFileType', () => {
 	});
 
 	it('throws FILE_TYPE_NOT_ALLOWED when file-type cannot detect the binary format', async () => {
-		vi.mocked(fromBuffer).mockResolvedValue(undefined);
+		vi.mocked(fileTypeFromBuffer).mockResolvedValue(undefined);
 		const req = buildReq(buildFile({ mimetype: 'image/jpeg' }));
 		await expect(
 			runMiddleware(req, { allowedMimeTypes: IMAGE_MIME_TYPES }),
@@ -124,7 +124,7 @@ describe('validateFileType', () => {
 	});
 
 	it('throws MIME_TYPE_MISMATCH when detected type differs from declared', async () => {
-		vi.mocked(fromBuffer).mockResolvedValue({
+		vi.mocked(fileTypeFromBuffer).mockResolvedValue({
 			mime: 'image/png',
 			ext: 'png',
 		});
@@ -135,7 +135,7 @@ describe('validateFileType', () => {
 	});
 
 	it('passes through when detected type matches declared type', async () => {
-		vi.mocked(fromBuffer).mockResolvedValue({
+		vi.mocked(fileTypeFromBuffer).mockResolvedValue({
 			mime: 'image/jpeg',
 			ext: 'jpg',
 		});
@@ -167,7 +167,7 @@ describe('validateFileType', () => {
 		});
 
 		it('validates all files in the array', async () => {
-			vi.mocked(fromBuffer).mockResolvedValue({
+			vi.mocked(fileTypeFromBuffer).mockResolvedValue({
 				mime: 'image/jpeg',
 				ext: 'jpg',
 			});
@@ -185,7 +185,7 @@ describe('validateFileType', () => {
 		});
 
 		it('throws on the first invalid file in the array', async () => {
-			vi.mocked(fromBuffer).mockResolvedValue({
+			vi.mocked(fileTypeFromBuffer).mockResolvedValue({
 				mime: 'image/jpeg',
 				ext: 'jpg',
 			});
