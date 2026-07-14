@@ -1,6 +1,44 @@
 # First Backend
 
-REST API built with **Node.js + TypeScript + Express + MongoDB**, deployed on Vercel as a serverless function.
+<div align="center">
+
+![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933?logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-via%20Mongoose%209-47A248?logo=mongodb&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-4-3E67B1)
+![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-1159%20passing-brightgreen)
+![License](https://img.shields.io/badge/license-Apache--2.0-blue)
+
+</div>
+
+REST API for **First** — a multi-purpose CRM + CMS platform (client/project
+management, a visual page builder, e-commerce-adjacent content, and public
+website delivery) — built with **Node.js + TypeScript + Express + MongoDB**,
+deployed on Vercel as a serverless function.
+
+> **New to this repo?** Read [`CLAUDE.md`](./CLAUDE.md) first — it documents
+> the conventions (RBAC, soft/hard delete, file uploads, i18n, bulk ops) that
+> every module follows. This README covers *what exists*; `CLAUDE.md` covers
+> *how to build more of it consistently*.
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Environment Variables](#environment-variables)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Modules](#modules)
+- [RBAC — Permissions](#rbac--permissions)
+- [Security](#security)
+- [File Uploads](#file-uploads)
+- [Internationalization](#internationalization)
+- [Quality Gates](#quality-gates)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [API Documentation](#api-documentation)
+- [License](#license)
 
 ## Quick Start
 
@@ -8,97 +46,54 @@ REST API built with **Node.js + TypeScript + Express + MongoDB**, deployed on Ve
 # Install dependencies
 pnpm install
 
-# Development (with hot reload)
+# Development (nodemon, hot reload)
 pnpm dev
 
-# Build
-pnpm run build
+# Build (tsc + tsc-alias)
+pnpm build
+
+# Build and run the compiled output locally — closest to what Vercel runs
+pnpm build && node --env-file=.env dist/server.js
 ```
-
-## Quality Gates
-
-Run all of these — and have them pass — before opening a PR. There is no
-CI pipeline yet (see "Known Gaps" below), so this is enforced by convention,
-not by a bot.
-
-```bash
-pnpm typecheck     # tsc --noEmit
-pnpm lint          # ESLint + TypeScript-ESLint + SonarJS (merged into one config, one command)
-pnpm format:check  # Prettier — fails if any file isn't formatted (pnpm format to fix)
-pnpm test          # Vitest + coverage; fails if coverage drops below the floor below
-pnpm audit --prod  # Dependency vulnerabilities in production deps (see caveat below)
-```
-
-- **Lint already includes SonarJS** (`eslint-plugin-sonarjs`) — unlike some
-  sibling projects, there's no separate `lint:sonar` command here; `pnpm lint`
-  is the single source of truth and must report 0 problems.
-- **Coverage floor, not a target.** `vitest.config.ts` sets
-  `coverage.thresholds` a few points below the actual current numbers
-  (statements 70 / branches 65 / functions 55 / lines 70) so `pnpm test`
-  fails on a real regression. The repo is **not** at 100% coverage today —
-  many bulk/trash endpoints are thin delegation wrappers with little
-  branching logic and aren't individually covered. Aim for full coverage of
-  new business logic (schemas, use-cases, anything with branches), not of
-  every thin wrapper.
-- **`pnpm audit`** (no `--prod`) also checks devDependencies. Keep both at 0
-  known vulnerabilities — devDependency findings still matter (supply-chain
-  risk in the toolchain), just lower urgency than a production dependency.
-- **Line endings are LF** (`.gitattributes` → `eol=lf`). On Windows, if
-  `core.autocrlf=true` leaves working-tree files with CRLF despite that
-  (git won't always re-checkout files it considers "unchanged" after
-  normalization), `pnpm format:check` will report spurious failures. Fix:
-  `git rm --cached -r . && git reset --hard` (safe only with a clean working
-  tree — stash any real changes first).
-
-### Known Gaps
-
-- **No CI/CD.** Nothing automatically blocks a PR with failing gates, or a
-  newly-vulnerable dependency, before merge to `main` (which auto-deploys to
-  Production on Vercel). Today this is caught manually / by whoever reviews.
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and fill in the values:
+Copy `.env.example` to `.env` and fill in the values. `MONGO_URI` and
+`MONGO_DATABASE` are the only two required at boot — everything else has a
+safe default for local development, and the app **refuses to boot** if a JWT
+secret is left at its insecure default while `NODE_ENV=production`.
 
-```env
-# Server
-NODE_ENV=development
-PORT=3200
+<details>
+<summary><strong>Full variable reference</strong></summary>
 
-# MongoDB
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/
-MONGO_DATABASE=first-backend
-MONGO_APP_NAME=first-backend
+| Variable | Default | Notes |
+|---|---|---|
+| `NODE_ENV` | `development` | `development` \| `production` \| `test` |
+| `PORT` | `3200` | Local dev server port |
+| `MONGO_URI` | — | **Required** |
+| `MONGO_DATABASE` | — | **Required** |
+| `MONGO_APP_NAME` | `''` | Shown in Atlas connection metrics |
+| `WHITELISTED_DOMAINS` | `''` (deny-all) | Comma-separated CORS allowlist — **fails closed** if empty |
+| `CLIENT_URL` | `http://localhost:3000` | Used in email links |
+| `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` / `JWT_EMAIL_SECRET` | dev placeholders | Must be changed in production (boot-time check) |
+| `JWT_ACCESS_EXPIRES` | `8h` | |
+| `JWT_REFRESH_EXPIRES` | `30d` | |
+| `JWT_EMAIL_EXPIRES` | `24h` | |
+| `JWT_RESET_EXPIRES` | `1h` | |
+| `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_USER` / `EMAIL_PASS` | — | Optional — an [Ethereal](https://ethereal.email) test account is auto-created in dev when unset |
+| `EMAIL_FROM` | `noreply@first-backend.com` | |
+| `DNS_SERVERS` | `8.8.8.8,1.1.1.1` | Fallback resolvers for Atlas SRV lookups on some networks |
+| `STORAGE_DRIVER` | `vercel-blob` | `vercel-blob` \| `s3` \| `gcs` \| `azure-blob` |
+| `STORAGE_MAX_FILE_SIZE_BYTES` | `10485760` (10 MB) | Generic upload cap |
+| `STORAGE_MAX_IMAGE_SIZE_BYTES` | `4194304` (4 MB) | Lower cap — images are proxied through the serverless function body |
+| `STORAGE_MAX_VIDEO_SIZE_BYTES` | `52428800` (50 MB) | Not proxied — direct browser-to-storage upload |
+| `STORAGE_MAX_FILES_BULK` | `10` | 1–20 |
+| `BLOB_READ_WRITE_TOKEN` | — | Required for the `vercel-blob` driver |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_REGION` / `AWS_S3_BUCKET` | — | Required for the `s3` driver |
+| `GCS_BUCKET` / `GCS_CREDENTIALS` | — | Required for the `gcs` driver (base64-encoded service-account JSON) |
+| `AZURE_STORAGE_CONNECTION_STRING` / `AZURE_STORAGE_CONTAINER` | — | Required for the `azure-blob` driver |
 
-# JWT secrets (change all in production)
-JWT_ACCESS_SECRET=dev_access_secret_change_in_production
-JWT_REFRESH_SECRET=dev_refresh_secret_change_in_production
-JWT_EMAIL_SECRET=dev_email_secret_change_in_production
-JWT_ACCESS_EXPIRES=15m
-JWT_REFRESH_EXPIRES=7d
-JWT_EMAIL_EXPIRES=24h
-JWT_RESET_EXPIRES=1h
-
-# CORS
-WHITELISTED_DOMAINS=http://localhost:3000
-CLIENT_URL=http://localhost:3000
-
-# Email — optional, uses Ethereal auto-account in development
-EMAIL_HOST=
-EMAIL_PORT=587
-EMAIL_USER=
-EMAIL_PASS=
-EMAIL_FROM=noreply@first-backend.com
-
-# Storage
-STORAGE_DRIVER=vercel-blob          # vercel-blob | s3 | gcs | azure-blob
-BLOB_READ_WRITE_TOKEN=              # required for vercel-blob driver
-STORAGE_MAX_FILE_SIZE_BYTES=10485760
-STORAGE_MAX_FILES_BULK=10
-
-# DNS (public resolvers as fallback for MongoDB Atlas SRV)
-DNS_SERVERS=8.8.8.8,1.1.1.1
-```
+</details>
 
 ## Tech Stack
 
@@ -107,138 +102,209 @@ DNS_SERVERS=8.8.8.8,1.1.1.1
 | Runtime | Node.js ≥ 24 |
 | Framework | Express 5 |
 | Language | TypeScript 6 |
-| Database | MongoDB via Mongoose 9 |
+| Database | MongoDB via Mongoose 9 (Stable API v1, `strict: true`) |
 | Validation | Zod 4 |
-| Auth | JWT (access + refresh + email tokens) |
-| Email | Nodemailer (Ethereal in dev, SMTP in prod) |
-| Storage | Vercel Blob / S3 / GCS / Azure Blob |
-| Realtime | Socket.io 4 |
-| Testing | Vitest + Istanbul (coverage floor enforced, see Quality Gates) |
-| Lint | ESLint 10 + TypeScript ESLint + SonarJS |
-| Deployment | Vercel (serverless) |
+| Auth | JWT — separate access/refresh/email secrets, refresh-token rotation with reuse detection |
+| Rate limiting | `express-rate-limit`, backed by a custom **MongoDB store** (not in-memory — stays correct across concurrent serverless instances) |
+| Email | Nodemailer (Ethereal in dev, SMTP in prod), dispatched asynchronously via an in-process `EventBus` |
+| Storage | Vercel Blob / S3 / GCS / Azure Blob — one driver interface, swappable via `STORAGE_DRIVER` |
+| Image processing | `sharp` — generates `full` (≤2000px) + `thumb` (700px) WebP variants |
+| Realtime | Socket.io — presence |
+| Sanitization | `sanitize-html` on every stored rich-text field |
+| Testing | Vitest + Istanbul coverage, `mongodb-memory-server` for integration tests |
+| Lint | ESLint 10 + `typescript-eslint` + SonarJS (one merged config) |
+| Deployment | Vercel (serverless function) |
 
-## Project Structure
+## Architecture
+
+DDD-flavored modular monolith. Each module is self-contained and exports a
+single Express sub-router; nothing outside `src/modules/<name>/index.ts` is
+imported by other modules.
 
 ```text
 src/
-├── config/               # Express app setup, i18n, DB connection
-├── constants/            # Environment variables (Zod-validated), permissions catalog
-├── helpers/              # Shared utilities (JWT, logging, UUID, response helpers)
-├── locales/              # Global i18n error keys (10 languages)
-├── middlewares/          # Auth guard, RBAC permission check, rate limiter
-├── modules/
-│   ├── auth/             # Login, refresh, logout, verify-email, forgot/reset password
-│   ├── users/            # User CRUD + profile endpoints
-│   ├── user-groups/      # RBAC groups management
-│   ├── subscribers/      # Newsletter subscriber list
-│   ├── storage/          # File upload (single/bulk) and delete via cloud drivers
-│   ├── audit-log/        # Immutable audit trail, filterable by user/action/resource/date
-│   ├── app-settings/     # Global app configuration with in-memory cache (5 min TTL)
-│   ├── clients/          # CRM — client management (private, admin-only)
-│   ├── services/         # navike21 service catalog with multilingual content
-│   ├── portfolio/        # Project showcase linking clients and services
-│   ├── notifications-email/  # Transactional email templates
-│   ├── health/           # Health check endpoint
-│   └── welcomeApi/       # Root welcome endpoint
-├── routes/               # Central router (mounts all module routes)
-├── shared/               # Socket.io server setup
-├── index.ts              # Vercel entry point (app + DB exported separately)
-└── server.ts             # Local dev entry point (binds port, Socket.io)
+├── config/          Express app setup (helmet/CORS/compression/i18n), Mongo connection options
+├── connection/       connectToDatabase() — idempotent, serverless-safe (readyState guard, small pool)
+├── constants/        environments (Zod-validated), permissions catalog, system enums
+├── helpers/          Pure utilities: validate(), responseStructure, escapeHtml, escapeRegex,
+│                     sanitizeHtml, JWT-adjacent helpers, log, uuid, bulkOutcome
+├── middlewares/       asyncHandler, errorMiddleware (maps AppError + Mongo E11000 → HTTP), i18nMiddleware
+├── modules/           20 business modules (see below)
+├── shared/
+│   ├── domain/           AppError (typed, i18n-keyed errors)
+│   ├── events/           Domain events (email side-effects)
+│   ├── infrastructure/   EventBus, JwtService, SocketServer, RateLimitStore (Mongo-backed)
+│   ├── schemas/          Cross-module Zod schemas (LocalizedString / LocalizedHtmlString, bulkIds)
+│   └── types/            Shared TS types
+├── routes/           Central router — mounts every module under /api/v1
+└── server.ts         Local dev entrypoint (binds a port, boots Socket.io)
 
 api/
-└── index.js              # Vercel serverless handler
+└── index.js          Vercel serverless handler — separates app setup from DB connection so a
+                       cold start with a slow DB still returns a proper HTTP response, not a timeout
+```
 
-dist/                     # Compiled output (generated by build)
-docs/
-└── insomnia.collection.json  # Importable Insomnia collection
+Inside a module:
+
+```text
+modules/<name>/
+├── application/      Use-cases — pure business logic, no HTTP/Express types
+├── controllers/      Thin HTTP handlers — parse, call a use-case, respond
+├── domain/errors/     Typed errors specific to this module
+├── infrastructure/    Mongoose model(s)
+├── routes/           Express router for this module
+├── schemas/          Zod input/output validation
+├── constants/        Module-local enums, paths
+├── locales/          messages.json × 10 languages (module-specific i18n keys)
+└── index.ts          Public API — the ONLY file other modules may import from
 ```
 
 ## Modules
 
-### Auth
-JWT authentication with triple-secret model. Refresh token rotation with reuse detection (all sessions revoked on replay attack).
-
-Routes: `POST /auth/login`, `/auth/refresh`, `/auth/logout`, `/auth/verify-email/:token`, `/auth/forgot-password`, `/auth/reset-password/:token`, `/auth/change-password`, `GET /auth/sessions`
-
-### Users
-Full CRUD for admin routes (`/users`) plus self-service profile endpoints (`/users/me`).
-
-### User Groups (RBAC)
-Groups define the permission set for each user. System groups are protected from modification. Includes a permissions catalog endpoint at `GET /permissions/catalog`.
-
-### Subscribers
-Newsletter subscriber list with soft and hard delete, bulk operations, and public registration form.
-
-### Storage
-Cloud file storage with a driver abstraction layer. Supports single upload, bulk upload (up to 10 files), and delete by URL. MIME type validation and optional image compression via `sharp`.
-
-Permissions: `storage:upload`, `storage:delete`, `storage:manage`
-
-### Audit Log
-Append-only audit trail automatically populated by the `captureAudit` middleware. Supports filtering by `userId`, `action`, `resource`, and date range.
-
-Permissions: `audit-logs:read`, `audit-logs:manage`
-
-### App Settings
-Global application configuration stored in MongoDB, served from an in-memory cache with a 5-minute TTL. Three categories: `general`, `notifications`, `appearance`. Falls back to hardcoded defaults when no document exists.
-
-Permissions: `app-settings:read`, `app-settings:update`, `app-settings:manage`
-
-### Clients
-CRM-style client management. All routes require authentication — client data is private. Only `businessName`, `logoUrl`, and `website` are exposed in public portfolio context. Supports international document types (DNI, RUC, NIF, CNPJ, EIN, VAT, etc.) and ISO alpha-2 country codes. Soft delete preserves history.
-
-Routes: `POST /clients`, `GET /clients`, `GET /clients/:id`, `PATCH /clients/:id`, `DELETE /clients/:id`
-
-Permissions: `clients:read`, `clients:create`, `clients:update`, `clients:delete`, `clients:manage`
-
-### Services
-Manages navike21's 8 official services (Desarrollo web, Ecommerce, Software a medida, Mobile, Marketing Digital, SEO, Diseño UX/UI, Email marketing) with full multilingual content in 10 languages. Public GET endpoints; write endpoints require auth. Slugs are auto-generated from `name.en` using Unicode transliteration (CJK → romaji/pinyin, Cyrillic → Latin, accents stripped).
-
-Public routes: `GET /services`, `GET /services/:slug`
-
-Admin routes: `GET /services/admin`, `POST /services`, `PATCH /services/:slug`, `DELETE /services/:slug`
-
-Permissions: `services:read`, `services:create`, `services:update`, `services:delete`, `services:manage`
-
-### Portfolio
-Project showcase with multilingual content. Links clients and services via application-level UUID joins. Public detail responses embed client name + logo and service metadata. Supports testimonials, metrics, and gallery. Featured projects are sorted first.
-
-Public routes: `GET /portfolio`, `GET /portfolio/by-service/:serviceSlug`, `GET /portfolio/:slug`
-
-Admin routes: `GET /portfolio/admin`, `POST /portfolio`, `PATCH /portfolio/:id`, `DELETE /portfolio/:id`
-
-Permissions: `portfolio:read`, `portfolio:create`, `portfolio:update`, `portfolio:delete`, `portfolio:manage`
-
-## RBAC Permissions
-
-| Module | Permissions |
+| Module | Purpose |
 |---|---|
-| Profile | `profile:read`, `profile:update` |
-| Users | `users:read`, `users:create`, `users:update`, `users:delete`, `users:manage` |
-| User Groups | `user-groups:read`, `user-groups:create`, `user-groups:update`, `user-groups:delete`, `user-groups:manage` |
-| Subscribers | `subscribers:read`, `subscribers:create`, `subscribers:update`, `subscribers:delete`, `subscribers:manage` |
-| Storage | `storage:upload`, `storage:delete`, `storage:manage` |
-| Audit Logs | `audit-logs:read`, `audit-logs:manage` |
-| App Settings | `app-settings:read`, `app-settings:update`, `app-settings:manage` |
-| Clients | `clients:read`, `clients:create`, `clients:update`, `clients:delete`, `clients:manage` |
-| Services | `services:read`, `services:create`, `services:update`, `services:delete`, `services:manage` |
-| Portfolio | `portfolio:read`, `portfolio:create`, `portfolio:update`, `portfolio:delete`, `portfolio:manage` |
-| Superadmin | `*:*` |
+| `auth` | Login, refresh (httpOnly-cookie rotation with reuse detection), logout, email verification, forgot/reset/change password, active sessions |
+| `users` | Admin user CRUD + self-service profile (`/users/me`), presence |
+| `user-groups` | RBAC groups — the permission set a user inherits; group membership is many-to-many |
+| `clients` | CRM — private client records (international document types, ISO country codes) |
+| `services` | Public service catalog, full multilingual content, slug auto-generated via transliteration |
+| `portfolio` | Project showcase linking clients + services, testimonials, gallery, metrics |
+| `pages` | Generic CMS pages with a **visual, section → column → widget builder** (10 widget types), revisions, hierarchical parent/child |
+| `collaborators` | Public-facing team profiles (distinct from `users` — see note below) |
+| `subscribers` | Newsletter list, public registration |
+| `categories` / `tags` | Shared taxonomy for content (portfolio, services, pages) |
+| `storage` | Cloud file storage abstraction (4 drivers), single/bulk upload, MIME validation by magic bytes, image variants |
+| `site-config` | Global site-wide presentation settings (header/footer/social/maps provider) — distinct from `app-settings` |
+| `app-settings` | Organization-level config singleton (branding, notifications, appearance) |
+| `audit-log` | Append-only trail, auto-populated by middleware, filterable by user/action/resource/date; also records every 403 |
+| `notifications-email` | Transactional templates, dispatched asynchronously via the `EventBus` |
+| `config` | Read-only reference data: currencies, document types, languages, industries, client types, genders, collaborator roles/levels, technologies |
+| `geo` | Read-only reference data: countries + Peru ubigeo, cascading region → province → district |
+| `health` | `GET /health` — 200 + `db:connected`, or 503 |
+| `welcomeApi` | Root welcome endpoint |
 
-`*:manage` is a wildcard that covers all non-`manage` actions for the same module.
+> **`users` vs `collaborators`**: not the same thing, on purpose. A `user` is
+> an identity with backend access (login, group membership, permissions). A
+> `collaborator` is a public CMS entity (a team member shown on the website).
+> A collaborator can optionally link to a user via `userId` without merging
+> the two concepts.
 
-## API Documentation
+## RBAC — Permissions
 
-Import `docs/insomnia.collection.json` into [Insomnia](https://insomnia.rest) to get a ready-to-use collection with:
-- Three pre-configured environments (Base, Development, Production)
-- Environment variables: `access_token`, `user_id`, `group_id`, `subscriber_id`, `audit_log_id`, `client_id`, `service_slug`, `portfolio_slug`, `portfolio_id`
-- Documented request bodies and response examples for all endpoints
+`resource:action` strings, plus the `resource:manage` wildcard (grants full
+CRUD but never `:purge`) and the super-root `*:*` (grants everything,
+including physical destruction). A "super-admin" group can hold every
+permission except `:purge` — an all-powerful admin that still cannot
+permanently destroy records.
+
+<details>
+<summary><strong>Full permission catalog</strong></summary>
+
+| Resource | Actions |
+|---|---|
+| `users` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `user-groups` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `subscribers` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `profile` | `read`, `update` |
+| `storage` | `read`, `upload`, `update`, `delete`, `purge`, `manage` |
+| `audit-logs` | `read`, `manage` |
+| `app-settings` | `read`, `update`, `manage` |
+| `site-config` | `read`, `update`, `manage` |
+| `clients` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `services` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `portfolio` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `pages` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `collaborators` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `categories` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| `tags` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
+| Super-root | `*:*` |
+
+`config` and `geo` are public, read-only reference endpoints — no permission
+required.
+
+</details>
+
+## Security
+
+- **JWT with a triple-secret model** (access/refresh/email are signed
+  independently) + refresh-token rotation with **reuse detection** (a replayed
+  refresh token revokes every session).
+- **CORS fails closed**: an unset/misconfigured `WHITELISTED_DOMAINS` denies
+  all cross-origin requests rather than reflecting any origin.
+- **Rate limiting backed by MongoDB**, not in-memory — correct under Vercel's
+  concurrent serverless instances (an in-memory store would let an attacker
+  bypass the login rate limit by spreading requests across instances).
+- **Stored-content sanitization**: every rich-text field (service/portfolio
+  descriptions, collaborator bios, page-builder text/accordion widgets) is
+  passed through `sanitize-html` server-side before it's persisted — the
+  admin-panel's rich-text editor is not trusted as the only line of defense.
+- **Helmet** (CSP, HSTS, frameguard, referrer policy) + `compression` +
+  request body caps.
+- **Purge (physical deletion) always requires an explicit `:purge`
+  permission** — `:manage` deliberately does not grant it.
+- **`assertUserDeletable`** blocks self-deletion and deleting the last active
+  super-admin (with a write-then-verify-and-compensate pattern that closes
+  the race window between two concurrent deletes).
+- **Audit log** captures every non-2xx response (not just successful
+  actions), plus every 403 specifically.
+- File uploads are validated by **magic bytes** (`file-type`), not just the
+  declared MIME type.
+- `pnpm audit` — **0 known vulnerabilities** (production and dev dependencies).
+
+## File Uploads
+
+A single request, backend-driven. The frontend never talks to storage
+directly for standard uploads (large video is the one exception — below).
+
+1. `multipart/form-data`: one part named `data` (JSON body) + one file part
+   (`logo`, `avatar`, `photo`, `cover`, …, depending on the module).
+2. The controller parses `data`, validates it with the module's Zod schema,
+   and validates the file's real content type via magic bytes.
+3. The use-case uploads the file (never throws — a failed upload degrades to
+   a `warnings[]` entry in the response, not a failed request) and persists
+   the record.
+4. On **update**, the old file is deleted after the new one is confirmed
+   stored; on **purge**, every variant (original/full/thumb) is deleted.
+
+Large video (page-builder slider/gallery, testimonial avatars) bypasses the
+~4.5 MB serverless body limit via a **direct browser-to-storage upload**: the
+backend issues a short-lived token, the browser uploads straight to the
+storage driver, and a lightweight `POST /storage/:id/cover` call attaches a
+client-captured video frame as the cover image (no `ffmpeg` on the server).
+
+Full contract: [`docs/API-UPLOADS.md`](./docs/API-UPLOADS.md).
 
 ## Internationalization
 
-All routes accept `Accept-Language` for localized responses and emails.
+10 languages: `es` `en` `de` `fr` `it` `ja` `ko` `pt` `ru` `zh`. Every request
+honors `Accept-Language` for both API error messages and transactional
+emails. Global error keys live in `src/locales/<lang>/errors.json`; each
+module has its own `modules/<name>/locales/<lang>/messages.json`.
 
-Supported languages: `es` `en` `de` `fr` `it` `ja` `ko` `pt` `ru` `zh`
+## Quality Gates
+
+Run all of these — and have them pass — before opening a PR. There is no
+CI pipeline yet (tracked as a known gap, not silently ignored), so this is
+enforced by convention.
+
+```bash
+pnpm typecheck     # tsc --noEmit
+pnpm lint          # ESLint + TypeScript-ESLint + SonarJS — one command, 0 problems
+pnpm format:check  # Prettier — pnpm format to fix
+pnpm test          # Vitest + coverage; fails if coverage drops below the floor
+pnpm audit --prod  # Production-dependency vulnerabilities
+```
+
+- **Coverage floor, not a target.** `vitest.config.ts` sets a threshold a few
+  points below the current actuals (statements 70 / branches 65 / functions 55
+  / lines 70) so `pnpm test` fails on a real regression, without pretending
+  the repo is at 100% today — many bulk/trash endpoints are thin delegation
+  wrappers with little branching logic.
+- **`pnpm audit`** (no `--prod`) also checks devDependencies — keep both at 0.
+- Line endings are LF (`.gitattributes`). On Windows, if `core.autocrlf=true`
+  leaves working-tree files with CRLF, `pnpm format:check` reports spurious
+  failures — fix with `git rm --cached -r . && git reset --hard` (stash any
+  real changes first).
 
 ## Testing
 
@@ -246,17 +312,35 @@ Supported languages: `es` `en` `de` `fr` `it` `ja` `ko` `pt` `ru` `zh`
 pnpm test
 ```
 
-See [Quality Gates](#quality-gates) for the coverage floor and what's actually enforced.
+**1159 tests** across 320 files. Unit tests mock the model/dependencies;
+integration tests use `mongodb-memory-server` (a real, in-memory MongoDB) via
+the `withMongo()` helper.
 
 ## Deployment
 
-The project deploys to Vercel using a serverless function at `api/index.js`. The app setup (`initApp`) is separated from the database connection (`ensureConnected`) so the function returns a proper HTTP response even during cold starts with a slow DB connection.
+Vercel, serverless. `main` → Production; `feature/*` → Preview. The
+serverless handler (`api/index.js`) separates **app setup** (`initApp` — sync,
+never touches the DB) from **DB connection** (`ensureConnected` — idempotent,
+retried per-request), so a cold start with a slow/failing DB connection still
+returns a proper `503` instead of a function timeout.
 
 ```bash
 # Build and verify locally before deploying
-pnpm run build && node --env-file=.env dist/server.js
+pnpm build && node --env-file=.env dist/server.js
 ```
+
+Health check: `GET /api/v1/health` → `200` + `db:connected`, or `503`.
+
+## API Documentation
+
+Import [`docs/insomnia.collection.json`](./docs/insomnia.collection.json)
+into [Insomnia](https://insomnia.rest):
+
+- Three pre-configured environments (Base, Development, Production)
+- Environment variables for every entity id used across requests
+- Documented request bodies and response examples for every endpoint,
+  including the multipart upload contract
 
 ## License
 
-Apache-2.0
+[Apache-2.0](./LICENSE)
