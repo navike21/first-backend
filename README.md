@@ -6,7 +6,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-via%20Mongoose%209-47A248?logo=mongodb&logoColor=white)
-![Zod](https://img.shields.io/badge/Zod-4-3E67B1)
+![Zod](https://img.shields.io/badge/Zod-4-3E67B1?logo=zod&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-1159%20passing-brightgreen)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
@@ -14,9 +14,15 @@
 </div>
 
 REST API for **First** — a multi-purpose CRM + CMS platform (client/project
-management, a visual page builder, e-commerce-adjacent content, and public
-website delivery) — built with **Node.js + TypeScript + Express + MongoDB**,
-deployed on Vercel as a serverless function.
+management, a visual page builder, service/portfolio catalog, and public
+website delivery). Built with **Node.js + TypeScript + Express + MongoDB**,
+deployed on Vercel as a serverless function; powers
+[`first-frontend`](../first-frontend).
+
+**20** business modules · **138** documented endpoints ([Swagger UI](#api-documentation))
+· **10** languages · RBAC (`resource:action` permissions) · backend-driven
+file uploads (4 swappable storage drivers) · MongoDB-backed rate limiting
+(correct under concurrent serverless instances).
 
 > **New to this repo?** Read [`CLAUDE.md`](./CLAUDE.md) first — it documents
 > the conventions (RBAC, soft/hard delete, file uploads, i18n, bulk ops) that
@@ -33,6 +39,7 @@ deployed on Vercel as a serverless function.
 - [RBAC — Permissions](#rbac--permissions)
 - [Security](#security)
 - [File Uploads](#file-uploads)
+- [Performance](#performance)
 - [Internationalization](#internationalization)
 - [Quality Gates](#quality-gates)
 - [Testing](#testing)
@@ -190,6 +197,29 @@ modules/<name>/
 > A collaborator can optionally link to a user via `userId` without merging
 > the two concepts.
 
+<details>
+<summary><strong><code>pages</code> — the 10 widget types the builder validates</strong></summary>
+
+Each section holds columns of widgets; `content` is a loosely-typed JSON blob
+per widget (interpreted by the frontend), but the two rich-text fields are
+still sanitized server-side before persisting — the admin editor is not
+trusted as the only line of defense.
+
+| Widget | Backend-relevant contract |
+|---|---|
+| Text | `html` (localized) — sanitized via `sanitize-html` |
+| Image | Storage reference + width/height/alignment |
+| Slider | Ordered list of image/video storage references |
+| Button | Localized label + link (page id or URL) + variant |
+| Gallery | Grid of storage references + localized alt text per image |
+| Accordion | Question/answer pairs — `answer` (localized) sanitized via `sanitize-html` |
+| Testimonials | Name, role, quote, photo reference, rating (1–5) |
+| Stats | Value ("500+", "98%") + label — plain text, not HTML |
+| Video | Embed URL + caption |
+| Map | Address + lat/lng (validated as numbers) + CTA link |
+
+</details>
+
 ## RBAC — Permissions
 
 `resource:action` strings, plus the `resource:manage` wildcard (grants full
@@ -274,6 +304,25 @@ storage driver, and a lightweight `POST /storage/:id/cover` call attaches a
 client-captured video frame as the cover image (no `ffmpeg` on the server).
 
 Full contract: [`docs/API-UPLOADS.md`](./docs/API-UPLOADS.md).
+
+## Performance
+
+- **Cold-start-safe serverless handler**: `api/index.js` separates app setup
+  (`initApp` — sync, no DB) from `ensureConnected` (idempotent, retried
+  per-request) — a slow/failing DB never turns into a function timeout, and
+  warm invocations skip setup entirely.
+- **Connection reuse**: `connectToDatabase()` guards on Mongoose's
+  `readyState` and keeps a small pool, so warm serverless instances reuse the
+  existing connection instead of reconnecting per request.
+- **Response compression** (`compression`, threshold 1 KB) on every response.
+- **Image variants**: `sharp` generates a `thumb` (700px) and `full` (≤2000px)
+  WebP alongside the original — list views and public pages fetch the small
+  variant instead of the original upload.
+- **Large video bypasses the function body entirely** (direct
+  browser-to-storage upload, see [File Uploads](#file-uploads) above) —
+  the ~4.5 MB serverless body limit never applies to it.
+- Known gap: no response caching / CDN cache-control tuning yet for public,
+  cacheable GETs (services/portfolio/pages) — tracked, not silently ignored.
 
 ## Internationalization
 
