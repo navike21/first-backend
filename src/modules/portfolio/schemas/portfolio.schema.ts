@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
+import {
+	LocalizedStringSchema,
+	LocalizedHtmlStringSchema,
+} from '@Shared/schemas/localizedString.schema';
 import { PORTFOLIO_STATUSES_ARRAY } from '../constants/portfolioStatus';
 import { PORTFOLIO_GALLERY_MAX_ITEMS } from '../constants/paths';
 
@@ -39,7 +42,7 @@ export const CreatePortfolioSchema = z.object({
 
 	name: LocalizedStringSchema,
 	shortDescription: LocalizedStringSchema,
-	description: LocalizedStringSchema,
+	description: LocalizedHtmlStringSchema,
 
 	// Optional at the schema level so a multipart create can supply it via an
 	// uploaded `cover` file. createPortfolio enforces that a cover (file or URL)

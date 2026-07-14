@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
+import { LocalizedHtmlStringSchema } from '@Shared/schemas/localizedString.schema';
 
 const SocialLinksSchema = z.object({
 	linkedin: z.url({ message: 'COLLABORATOR_SOCIAL_URL_INVALID' }).optional(),
@@ -18,7 +18,7 @@ export const CreateCollaboratorSchema = z.object({
 	// the config data list to change in lockstep.
 	role: z.string().trim().min(1).max(50),
 	level: z.string().trim().max(50).optional(),
-	bio: LocalizedStringSchema,
+	bio: LocalizedHtmlStringSchema,
 	photoUrl: z.url({ message: 'COLLABORATOR_PHOTO_URL_INVALID' }).optional(),
 	socialLinks: SocialLinksSchema.optional(),
 	// Optional link to a system user, so an employee shown publicly is not a

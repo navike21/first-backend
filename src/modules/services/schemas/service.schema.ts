@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
+import {
+	LocalizedStringSchema,
+	LocalizedHtmlStringSchema,
+} from '@Shared/schemas/localizedString.schema';
 import { PILLARS_ARRAY } from '../constants/pillars';
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -27,7 +30,7 @@ export const CreateServiceSchema = z.object({
 
 	name: LocalizedStringSchema,
 	shortDescription: LocalizedStringSchema,
-	description: LocalizedStringSchema,
+	description: LocalizedHtmlStringSchema,
 
 	icon: z.string().max(2000).trim().optional(),
 	coverImageUrl: z
