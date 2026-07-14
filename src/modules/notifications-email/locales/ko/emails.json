@@ -19,5 +19,10 @@
 		"body": "계정이 인증되었으며 이제 완전히 활성화되었습니다. 시작할 준비가 되었습니다.",
 		"thanks": "함께해 주셔서 감사합니다."
 	},
+	"formSubmissionReceived": {
+		"subject": "새 응답: {{formTitle}}",
+		"heading": "\"{{formTitle}}\"에 대한 새 응답",
+		"body": "새로운 양식 응답을 받았습니다. 아래에서 세부 정보를 확인하세요:"
+	},
 	"footer": "© {{year}} {{appName}}. 모든 권리 보유."
 }

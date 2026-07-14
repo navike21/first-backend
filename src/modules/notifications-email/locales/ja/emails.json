@@ -19,5 +19,10 @@
 		"body": "アカウントが確認され、完全に有効になりました。準備が整いました。",
 		"thanks": "ご参加ありがとうございます。"
 	},
+	"formSubmissionReceived": {
+		"subject": "新しい送信: {{formTitle}}",
+		"heading": "「{{formTitle}}」への新しい送信",
+		"body": "新しいフォームの送信を受信しました。詳細は以下の通りです："
+	},
 	"footer": "© {{year}} {{appName}}. 無断転載を禁じます。"
 }

@@ -19,5 +19,10 @@
 		"body": "您的账户已验证并完全激活。一切准备就绪，您可以开始使用了。",
 		"thanks": "感谢您的加入。"
 	},
+	"formSubmissionReceived": {
+		"subject": "新提交：{{formTitle}}",
+		"heading": "「{{formTitle}}」的新提交",
+		"body": "您收到了一份新的表单提交。详情如下："
+	},
 	"footer": "© {{year}} {{appName}}. 保留所有权利。"
 }

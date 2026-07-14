@@ -19,6 +19,7 @@ import { tagsApi } from '@Modules/tags';
 import { siteConfigApi } from '@Modules/site-config';
 import { geoApi } from '@Modules/geo';
 import { configApi } from '@Modules/config';
+import { formsApi } from '@Modules/forms';
 
 const router: Router = Router();
 
@@ -44,6 +45,7 @@ const mainRouter = () => {
 	siteConfigApi(v1Router);
 	geoApi(v1Router);
 	configApi(v1Router);
+	formsApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 

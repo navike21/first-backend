@@ -19,5 +19,10 @@
 		"body": "Ihr Konto wurde verifiziert und ist jetzt vollständig aktiv. Alles ist bereit für den Start.",
 		"thanks": "Danke, dass Sie bei uns sind."
 	},
+	"formSubmissionReceived": {
+		"subject": "Neue Einsendung: {{formTitle}}",
+		"heading": "Neue Einsendung für \"{{formTitle}}\"",
+		"body": "Sie haben eine neue Formulareinsendung erhalten. Details unten:"
+	},
 	"footer": "© {{year}} {{appName}}. Alle Rechte vorbehalten."
 }

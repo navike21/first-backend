@@ -19,5 +19,10 @@
 		"body": "Your account has been verified and is now fully active. You're all set to get started.",
 		"thanks": "Thanks for joining us."
 	},
+	"formSubmissionReceived": {
+		"subject": "New submission: {{formTitle}}",
+		"heading": "New submission for \"{{formTitle}}\"",
+		"body": "You've received a new form submission. Details below:"
+	},
 	"footer": "© {{year}} {{appName}}. All rights reserved."
 }
