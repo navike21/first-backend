@@ -16,7 +16,10 @@ export default defineConfig({
 			// without pretending the repo is at 100% coverage today.
 			thresholds: { statements: 70, branches: 65, functions: 55, lines: 70 },
 			include: ['src/modules/**/*.ts'],
-			exclude: ['src/modules/**/__tests__/**', 'src/modules/**/*.test.ts'],
+			// *.openapi.ts files are declarative OpenAPI registrations (no branching
+			// logic to unit test) — only exercised by the live /docs endpoint, never
+			// by the test suite, so they'd otherwise drag the threshold down for free.
+			exclude: ['src/modules/**/__tests__/**', 'src/modules/**/*.test.ts', 'src/modules/**/*.openapi.ts'],
 		},
 	},
 	resolve: {

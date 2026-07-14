@@ -16,7 +16,10 @@ describe('sanitizePageSectionContent', () => {
 						{
 							id: 'el-1',
 							type: 'text',
-							html: { en: '<p>hi</p><script>alert(1)</script>', es: '<p>hola</p>' },
+							html: {
+								en: '<p>hi</p><script>alert(1)</script>',
+								es: '<p>hola</p>',
+							},
 						},
 					],
 				},
@@ -56,7 +59,10 @@ describe('sanitizePageSectionContent', () => {
 		const result = sanitizePageSectionContent(content) as {
 			columns: {
 				elements: {
-					items: { question: Record<string, string>; answer: Record<string, string> }[];
+					items: {
+						question: Record<string, string>;
+						answer: Record<string, string>;
+					}[];
 				}[];
 			}[];
 		};
@@ -73,7 +79,14 @@ describe('sanitizePageSectionContent', () => {
 			columns: [
 				{
 					id: 'col-1',
-					elements: [{ id: 'el-1', type: 'button', label: { en: 'Click <b>me</b>' }, url: 'https://x.com' }],
+					elements: [
+						{
+							id: 'el-1',
+							type: 'button',
+							label: { en: 'Click <b>me</b>' },
+							url: 'https://x.com',
+						},
+					],
 				},
 			],
 		};
@@ -82,7 +95,9 @@ describe('sanitizePageSectionContent', () => {
 	});
 
 	it('does not throw on a malformed/unexpected column or element shape', () => {
-		const content = { columns: [null, { id: 'col-1' }, { id: 'col-2', elements: [null, 42] }] };
+		const content = {
+			columns: [null, { id: 'col-1' }, { id: 'col-2', elements: [null, 42] }],
+		};
 		expect(() => sanitizePageSectionContent(content)).not.toThrow();
 	});
 });

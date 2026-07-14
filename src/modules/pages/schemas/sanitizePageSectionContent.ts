@@ -8,7 +8,9 @@ interface RawElement {
 
 function sanitizeLocalizedHtml(value: unknown): unknown {
 	if (typeof value !== 'object' || value === null) return value;
-	const result: Record<string, unknown> = { ...(value as Record<string, unknown>) };
+	const result: Record<string, unknown> = {
+		...(value as Record<string, unknown>),
+	};
 	for (const [lang, text] of Object.entries(result)) {
 		if (typeof text === 'string') result[lang] = sanitizeHtml(text);
 	}
@@ -32,7 +34,9 @@ function sanitizeElement(element: unknown): unknown {
 			items: el.items.map((item) => {
 				if (typeof item !== 'object' || item === null) return item;
 				const it = item as Record<string, unknown>;
-				return 'answer' in it ? { ...it, answer: sanitizeLocalizedHtml(it.answer) } : it;
+				return 'answer' in it
+					? { ...it, answer: sanitizeLocalizedHtml(it.answer) }
+					: it;
 			}),
 		};
 	}

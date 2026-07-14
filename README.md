@@ -92,6 +92,7 @@ secret is left at its insecure default while `NODE_ENV=production`.
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_REGION` / `AWS_S3_BUCKET` | — | Required for the `s3` driver |
 | `GCS_BUCKET` / `GCS_CREDENTIALS` | — | Required for the `gcs` driver (base64-encoded service-account JSON) |
 | `AZURE_STORAGE_CONNECTION_STRING` / `AZURE_STORAGE_CONTAINER` | — | Required for the `azure-blob` driver |
+| `API_DOCS_USER` / `API_DOCS_PASSWORD` | — | Optional — set **both** to gate `/api/v1/docs` behind HTTP Basic Auth; unset (default) keeps the docs public |
 
 </details>
 
@@ -332,6 +333,24 @@ pnpm build && node --env-file=.env dist/server.js
 Health check: `GET /api/v1/health` → `200` + `db:connected`, or `503`.
 
 ## API Documentation
+
+### Swagger UI (interactive, generated from source)
+
+Visit **`/api/v1/docs`** on any running instance (local or deployed) for an
+interactive Swagger UI generated straight from the app's own Zod schemas via
+[`@asteasolutions/zod-to-openapi`](https://github.com/asteasolutions/zod-to-openapi) —
+request bodies are the exact schemas each endpoint validates against, so the
+docs can't drift out of sync with real validation. The raw OpenAPI 3.0
+document is also served at `/api/v1/docs.json`.
+
+The docs are **public by default**. To gate them behind HTTP Basic Auth
+instead, set both `API_DOCS_USER` and `API_DOCS_PASSWORD` (see
+[Environment Variables](#environment-variables)) and redeploy — no code
+change needed. Once set, visiting `/api/v1/docs` prompts for the browser's
+native username/password dialog (cached per browser session), checked with a
+timing-safe comparison. Unsetting either variable makes the docs public again.
+
+### Insomnia collection (hand-curated, request/response examples)
 
 Import [`docs/insomnia.collection.json`](./docs/insomnia.collection.json)
 into [Insomnia](https://insomnia.rest):
