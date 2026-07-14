@@ -12,7 +12,10 @@ export interface AcceptImageFieldsOptions {
 
 export type ImageFieldSpec = string | { name: string; maxCount?: number };
 
-function normalizeField(spec: ImageFieldSpec): { name: string; maxCount: number } {
+function normalizeField(spec: ImageFieldSpec): {
+	name: string;
+	maxCount: number;
+} {
 	if (typeof spec === 'string') return { name: spec, maxCount: 1 };
 	return { name: spec.name, maxCount: spec.maxCount ?? 1 };
 }

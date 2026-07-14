@@ -39,7 +39,12 @@ describe('listDeletedStorageFiles', () => {
 		);
 		expect(result.items).toHaveLength(1);
 		expect(result.items[0]).not.toHaveProperty('_id');
-		expect(result.meta).toEqual({ total: 1, page: 1, limit: 20, totalPages: 1 });
+		expect(result.meta).toEqual({
+			total: 1,
+			page: 1,
+			limit: 20,
+			totalPages: 1,
+		});
 	});
 
 	it('filters by kind=image via isImage', async () => {
@@ -64,7 +69,9 @@ describe('listDeletedStorageFiles', () => {
 		await listDeletedStorageFiles({ page: 1, limit: 20, kind: 'video' });
 
 		expect(StorageFileModel.find).toHaveBeenCalledWith(
-			expect.objectContaining({ mimeType: { $in: ['video/mp4', 'video/webm'] } }),
+			expect.objectContaining({
+				mimeType: { $in: ['video/mp4', 'video/webm'] },
+			}),
 		);
 	});
 
@@ -77,7 +84,9 @@ describe('listDeletedStorageFiles', () => {
 		await listDeletedStorageFiles({ page: 1, limit: 20, search: 'logo' });
 
 		expect(StorageFileModel.find).toHaveBeenCalledWith(
-			expect.objectContaining({ originalName: { $regex: 'logo', $options: 'i' } }),
+			expect.objectContaining({
+				originalName: { $regex: 'logo', $options: 'i' },
+			}),
 		);
 	});
 });

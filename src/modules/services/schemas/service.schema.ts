@@ -9,10 +9,18 @@ export const CreateServiceSchema = z.object({
 	slug: z
 		.object(
 			Object.fromEntries(
-				['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map((l) => [
-					l,
-					z.string().trim().regex(slugRegex, { message: 'SERVICE_SLUG_INVALID' }).max(100).or(z.literal('')).optional(),
-				]),
+				['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map(
+					(l) => [
+						l,
+						z
+							.string()
+							.trim()
+							.regex(slugRegex, { message: 'SERVICE_SLUG_INVALID' })
+							.max(100)
+							.or(z.literal(''))
+							.optional(),
+					],
+				),
 			),
 		)
 		.optional(),

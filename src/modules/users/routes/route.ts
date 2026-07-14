@@ -129,7 +129,10 @@ export function usersApi(router: Router) {
 		'/users/:id',
 		authenticate,
 		authorize(PERMISSIONS.USERS_DELETE, PERMISSIONS.USERS_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.USERS_SOFT_DELETED, resource: 'users' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.USERS_SOFT_DELETED,
+			resource: 'users',
+		}),
 		deleteUserLogicalController,
 	);
 

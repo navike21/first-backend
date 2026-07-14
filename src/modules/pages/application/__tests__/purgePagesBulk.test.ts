@@ -36,13 +36,18 @@ describe('purgePagesBulk', () => {
 
 		expect(result.processedIds).toEqual(['childless-1']);
 		expect(result.blockedIds).toEqual(['parent-1']);
-		expect(PageModel.deleteMany).toHaveBeenCalledWith({ id: { $in: ['childless-1'] } });
+		expect(PageModel.deleteMany).toHaveBeenCalledWith({
+			id: { $in: ['childless-1'] },
+		});
 	});
 
 	it('reports ids not found in the trash as not found', async () => {
 		vi.mocked(PageModel.find)
 			.mockReturnValueOnce({ lean: vi.fn().mockResolvedValue([]) } as never)
-			.mockReturnValueOnce({ select: vi.fn().mockReturnThis(), lean: vi.fn().mockResolvedValue([]) } as never);
+			.mockReturnValueOnce({
+				select: vi.fn().mockReturnThis(),
+				lean: vi.fn().mockResolvedValue([]),
+			} as never);
 
 		const result = await purgePagesBulk(['missing-1']);
 

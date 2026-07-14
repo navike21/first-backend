@@ -5,8 +5,12 @@ import ClientModel from '../infrastructure/ClientModel';
 import { CLIENT_ENTITY_TYPE } from '../constants/paths';
 
 export async function deleteClientPhysical(id: string) {
-	const client = await ClientModel.findOne({ id, deletedAt: { $ne: null } }).lean();
-	if (!client) AppError.notFound('CLIENT_NOT_FOUND', 'Client not found in trash');
+	const client = await ClientModel.findOne({
+		id,
+		deletedAt: { $ne: null },
+	}).lean();
+	if (!client)
+		AppError.notFound('CLIENT_NOT_FOUND', 'Client not found in trash');
 
 	await ClientModel.deleteOne({ id });
 	// Remove the client's stored files (logo) so no blobs are orphaned.

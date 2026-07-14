@@ -11,17 +11,39 @@ vi.mock('@Helpers/responseStructure', () => ({
 vi.mock('@Shared/infrastructure/JwtService', () => ({
 	JwtService: { verifyAccess: vi.fn() },
 }));
-vi.mock('@Modules/categories/application/createCategory', () => ({ createCategory: vi.fn() }));
-vi.mock('@Modules/categories/application/updateCategory', () => ({ updateCategory: vi.fn() }));
-vi.mock('@Modules/categories/application/getCategoryById', () => ({ getCategoryById: vi.fn() }));
-vi.mock('@Modules/categories/application/listCategories', () => ({ listCategories: vi.fn() }));
-vi.mock('@Modules/categories/application/deleteCategory', () => ({ deleteCategory: vi.fn() }));
-vi.mock('@Modules/categories/application/purgeCategory', () => ({ purgeCategory: vi.fn() }));
-vi.mock('@Modules/categories/application/restoreCategory', () => ({ restoreCategory: vi.fn() }));
-vi.mock('@Modules/categories/application/listDeletedCategories', () => ({ listDeletedCategories: vi.fn() }));
-vi.mock('@Modules/categories/application/deleteCategoriesBulk', () => ({ deleteCategoriesBulk: vi.fn() }));
-vi.mock('@Modules/categories/application/restoreCategoriesBulk', () => ({ restoreCategoriesBulk: vi.fn() }));
-vi.mock('@Modules/categories/application/purgeCategoriesBulk', () => ({ purgeCategoriesBulk: vi.fn() }));
+vi.mock('@Modules/categories/application/createCategory', () => ({
+	createCategory: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/updateCategory', () => ({
+	updateCategory: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/getCategoryById', () => ({
+	getCategoryById: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/listCategories', () => ({
+	listCategories: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/deleteCategory', () => ({
+	deleteCategory: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/purgeCategory', () => ({
+	purgeCategory: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/restoreCategory', () => ({
+	restoreCategory: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/listDeletedCategories', () => ({
+	listDeletedCategories: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/deleteCategoriesBulk', () => ({
+	deleteCategoriesBulk: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/restoreCategoriesBulk', () => ({
+	restoreCategoriesBulk: vi.fn(),
+}));
+vi.mock('@Modules/categories/application/purgeCategoriesBulk', () => ({
+	purgeCategoriesBulk: vi.fn(),
+}));
 
 import { Router } from 'express';
 import { categoriesApi } from '@Modules/categories/routes/route';

@@ -1,6 +1,9 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import SiteConfigModel from '../infrastructure/SiteConfigModel';
-import { SITE_CONFIG_DEFAULTS, type SiteConfigData } from '../constants/siteConfigDefaults';
+import {
+	SITE_CONFIG_DEFAULTS,
+	type SiteConfigData,
+} from '../constants/siteConfigDefaults';
 
 const CACHE_TTL_MS = 60_000;
 
@@ -31,7 +34,9 @@ export async function getSiteConfig(): Promise<SiteConfigData> {
 	}
 
 	const doc = await SiteConfigModel.findOne({ id: 'singleton' }).lean();
-	const data = doc ? mergeWithDefaults(cleanMongoFields(doc) as SiteConfigData) : SITE_CONFIG_DEFAULTS;
+	const data = doc
+		? mergeWithDefaults(cleanMongoFields(doc) as SiteConfigData)
+		: SITE_CONFIG_DEFAULTS;
 
 	cache = { data, expiresAt: Date.now() + CACHE_TTL_MS };
 	return data;

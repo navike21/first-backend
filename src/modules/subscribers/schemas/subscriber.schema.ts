@@ -58,16 +58,22 @@ export const SubscriberRegisterSchema = z.object({
 		},
 	),
 
-	location: z.object({
-		countryCode: z.string().max(2).transform((c) => c.toUpperCase()).optional(),
-		ubigeoCode: z.string().max(10).optional(),
-		region: z.string().max(100).optional(),
-		province: z.string().max(100).optional(),
-		district: z.string().max(100).optional(),
-		address: z.string().max(300).optional(),
-		addressNumber: z.string().max(50).optional(),
-		addressInterior: z.string().max(100).optional(),
-	}).optional(),
+	location: z
+		.object({
+			countryCode: z
+				.string()
+				.max(2)
+				.transform((c) => c.toUpperCase())
+				.optional(),
+			ubigeoCode: z.string().max(10).optional(),
+			region: z.string().max(100).optional(),
+			province: z.string().max(100).optional(),
+			district: z.string().max(100).optional(),
+			address: z.string().max(300).optional(),
+			addressNumber: z.string().max(50).optional(),
+			addressInterior: z.string().max(100).optional(),
+		})
+		.optional(),
 
 	personalInformation: z.object(
 		{

@@ -5,12 +5,20 @@ import { bulkOutcome } from '@Helpers/bulkOutcome';
 import { BulkIdsSchema } from '@Shared/schemas/bulkIds.schema';
 import { restoreUserGroupsBulk } from '../application/restoreUserGroupsBulk';
 
-export const restoreUserGroupsBulkController = asyncHandler(async (req, res) => {
-	const validated = validate(BulkIdsSchema, req.body);
+export const restoreUserGroupsBulkController = asyncHandler(
+	async (req, res) => {
+		const validated = validate(BulkIdsSchema, req.body);
 
-	const data = await restoreUserGroupsBulk(validated.ids);
+		const data = await restoreUserGroupsBulk(validated.ids);
 
-	const code = `USER_GROUPS_BULK_RESTORE_${bulkOutcome(data)}`;
+		const code = `USER_GROUPS_BULK_RESTORE_${bulkOutcome(data)}`;
 
-	successResponse(res, { statusCode: 200, code, message: code, ns: 'user-groups', data });
-});
+		successResponse(res, {
+			statusCode: 200,
+			code,
+			message: code,
+			ns: 'user-groups',
+			data,
+		});
+	},
+);

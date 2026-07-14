@@ -22,10 +22,7 @@ export async function removeGroupMember(
 	const user = await UserModel.findOne({ id: userId, deletedAt: null });
 	if (!user) throw new UserNotFoundError();
 
-	await UserModel.updateOne(
-		{ id: userId },
-		{ $pull: { groupIds: groupId } },
-	);
+	await UserModel.updateOne({ id: userId }, { $pull: { groupIds: groupId } });
 
 	return { groupId, userId };
 }

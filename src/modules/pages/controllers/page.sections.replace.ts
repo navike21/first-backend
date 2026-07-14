@@ -8,7 +8,11 @@ export const pageSectionsReplaceController = asyncHandler(async (req, res) => {
 	const id = String(req.params.id);
 	const validated = validate(ReplaceSectionsSchema, req.body);
 
-	const data = await replaceSections(id, validated, res.locals.userId as string | undefined);
+	const data = await replaceSections(
+		id,
+		validated,
+		res.locals.userId as string | undefined,
+	);
 	successResponse(res, {
 		statusCode: 200,
 		code: 'SUCCESS_PAGE_SECTIONS_REPLACED',

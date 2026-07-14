@@ -28,7 +28,10 @@ function resolve(label: LocalizedLabel, lang: string): string {
 	return (label as unknown as Record<string, string>)[lang] ?? label.en;
 }
 
-function makeDisplayNames(type: 'language' | 'region', lang: string): Intl.DisplayNames | null {
+function makeDisplayNames(
+	type: 'language' | 'region',
+	lang: string,
+): Intl.DisplayNames | null {
 	try {
 		return new Intl.DisplayNames([lang], { type });
 	} catch {

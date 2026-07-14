@@ -59,7 +59,11 @@ describe('listPortfolioByService', () => {
 		vi.mocked(PortfolioModel.find).mockReturnValue(mockQB([]) as never);
 		vi.mocked(PortfolioModel.countDocuments).mockResolvedValue(0);
 
-		const result = await listPortfolioByService({ serviceSlug: 'web', page: 1, limit: 10 });
+		const result = await listPortfolioByService({
+			serviceSlug: 'web',
+			page: 1,
+			limit: 10,
+		});
 		expect(result.data).toHaveLength(0);
 		expect(result.meta.total).toBe(0);
 	});

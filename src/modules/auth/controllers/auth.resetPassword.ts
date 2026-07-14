@@ -7,8 +7,7 @@ import { resetPassword } from '../application/resetPassword';
 
 export const authResetPassword = asyncHandler(async (req, res) => {
 	const token = req.params.token as string;
-	if (!token)
-		AppError.badRequest('MISSING_TOKEN', 'Reset token is required');
+	if (!token) AppError.badRequest('MISSING_TOKEN', 'Reset token is required');
 
 	const validated = validate(ResetPasswordSchema, req.body);
 

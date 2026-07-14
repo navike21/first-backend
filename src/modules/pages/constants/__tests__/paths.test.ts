@@ -29,6 +29,8 @@ describe('pages paths constants', () => {
 		expect(PAGES_PATH_SECTION_DELETE).toBe('/pages/:id/sections/:sectionId');
 		expect(PAGES_PATH_SECTIONS_REORDER).toBe('/pages/:id/sections/reorder');
 		expect(PAGES_PATH_REVISIONS_LIST).toBe('/pages/:id/revisions');
-		expect(PAGES_PATH_REVISIONS_RESTORE).toBe('/pages/:id/revisions/:revisionId/restore');
+		expect(PAGES_PATH_REVISIONS_RESTORE).toBe(
+			'/pages/:id/revisions/:revisionId/restore',
+		);
 	});
 });

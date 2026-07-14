@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Request, Response, NextFunction } from 'express';
 
-const { mockFindStorageFileUsages, mockSuccessResponse, mockFindOne } = vi.hoisted(() => ({
-	mockFindStorageFileUsages: vi.fn(),
-	mockSuccessResponse: vi.fn(),
-	mockFindOne: vi.fn(),
-}));
+const { mockFindStorageFileUsages, mockSuccessResponse, mockFindOne } =
+	vi.hoisted(() => ({
+		mockFindStorageFileUsages: vi.fn(),
+		mockSuccessResponse: vi.fn(),
+		mockFindOne: vi.fn(),
+	}));
 
 vi.mock('@Modules/storage/application/findStorageFileUsages', () => ({
 	findStorageFileUsages: mockFindStorageFileUsages,
@@ -44,15 +45,22 @@ describe('storageUsagesController', () => {
 				full: { url: 'https://cdn/full.webp' },
 			}),
 		});
-		mockFindStorageFileUsages.mockResolvedValue([{ module: 'clients', id: 'c1', label: 'Acme' }]);
+		mockFindStorageFileUsages.mockResolvedValue([
+			{ module: 'clients', id: 'c1', label: 'Acme' },
+		]);
 		const req = { params: { id: 'file-1' } } as unknown as Request;
 
 		await run(req);
 
-		expect(mockFindStorageFileUsages).toHaveBeenCalledWith('https://cdn/full.webp');
+		expect(mockFindStorageFileUsages).toHaveBeenCalledWith(
+			'https://cdn/full.webp',
+		);
 		expect(mockSuccessResponse).toHaveBeenCalledWith(
 			expect.any(Object),
-			expect.objectContaining({ statusCode: 200, data: [{ module: 'clients', id: 'c1', label: 'Acme' }] }),
+			expect.objectContaining({
+				statusCode: 200,
+				data: [{ module: 'clients', id: 'c1', label: 'Acme' }],
+			}),
 		);
 	});
 
@@ -68,7 +76,9 @@ describe('storageUsagesController', () => {
 
 		await run(req);
 
-		expect(mockFindStorageFileUsages).toHaveBeenCalledWith('https://cdn/video.mp4');
+		expect(mockFindStorageFileUsages).toHaveBeenCalledWith(
+			'https://cdn/video.mp4',
+		);
 	});
 
 	it('rejects with a 404 when the file does not exist', async () => {

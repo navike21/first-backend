@@ -55,32 +55,36 @@ describe('hasPermission', () => {
 	});
 
 	it('manage does NOT grant purge (physical destruction needs explicit :purge)', () => {
-		expect(hasPermission([PERMISSIONS.USERS_MANAGE], PERMISSIONS.USERS_PURGE)).toBe(
-			false,
-		);
+		expect(
+			hasPermission([PERMISSIONS.USERS_MANAGE], PERMISSIONS.USERS_PURGE),
+		).toBe(false);
 	});
 
 	it('explicit :purge grants purge', () => {
-		expect(hasPermission([PERMISSIONS.USERS_PURGE], PERMISSIONS.USERS_PURGE)).toBe(
-			true,
-		);
+		expect(
+			hasPermission([PERMISSIONS.USERS_PURGE], PERMISSIONS.USERS_PURGE),
+		).toBe(true);
 	});
 
 	it('the *:* super-root permission grants purge', () => {
-		expect(hasPermission([PERMISSIONS.ALL], PERMISSIONS.USERS_PURGE)).toBe(true);
+		expect(hasPermission([PERMISSIONS.ALL], PERMISSIONS.USERS_PURGE)).toBe(
+			true,
+		);
 	});
 });
 
 describe('SUPER_ADMIN_PERMISSIONS', () => {
 	it('grants full access except physical destruction (no :purge, no *:*)', () => {
 		expect(SUPER_ADMIN_PERMISSIONS).not.toContain(PERMISSIONS.ALL);
-		expect(SUPER_ADMIN_PERMISSIONS.some((p) => p.endsWith(':purge'))).toBe(false);
-		// can manage users (full CRUD) but cannot purge them
-		expect(hasPermission(SUPER_ADMIN_PERMISSIONS, PERMISSIONS.USERS_DELETE)).toBe(
-			true,
-		);
-		expect(hasPermission(SUPER_ADMIN_PERMISSIONS, PERMISSIONS.USERS_PURGE)).toBe(
+		expect(SUPER_ADMIN_PERMISSIONS.some((p) => p.endsWith(':purge'))).toBe(
 			false,
 		);
+		// can manage users (full CRUD) but cannot purge them
+		expect(
+			hasPermission(SUPER_ADMIN_PERMISSIONS, PERMISSIONS.USERS_DELETE),
+		).toBe(true);
+		expect(
+			hasPermission(SUPER_ADMIN_PERMISSIONS, PERMISSIONS.USERS_PURGE),
+		).toBe(false);
 	});
 });

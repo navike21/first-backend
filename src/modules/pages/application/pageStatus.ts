@@ -12,13 +12,19 @@ export interface PageStatusFields {
 }
 
 export function resolveEffectiveStatus(page: PageStatusFields): string {
-	if (page.status === 'scheduled' && page.scheduledAt && new Date(page.scheduledAt).getTime() <= Date.now()) {
+	if (
+		page.status === 'scheduled' &&
+		page.scheduledAt &&
+		new Date(page.scheduledAt).getTime() <= Date.now()
+	) {
 		return 'published';
 	}
 	return page.status;
 }
 
-export function withEffectiveStatus<T extends PageStatusFields>(page: T): T & { effectiveStatus: string } {
+export function withEffectiveStatus<T extends PageStatusFields>(
+	page: T,
+): T & { effectiveStatus: string } {
 	return { ...page, effectiveStatus: resolveEffectiveStatus(page) };
 }
 
@@ -26,6 +32,9 @@ export function withEffectiveStatus<T extends PageStatusFields>(page: T): T & { 
 export function publicVisibilityFilter(): Record<string, unknown> {
 	return {
 		deletedAt: null,
-		$or: [{ status: 'published' }, { status: 'scheduled', scheduledAt: { $lte: new Date() } }],
+		$or: [
+			{ status: 'published' },
+			{ status: 'scheduled', scheduledAt: { $lte: new Date() } },
+		],
 	};
 }

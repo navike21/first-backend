@@ -27,7 +27,10 @@ describe('getPortfolioById', () => {
 
 		const result = await getPortfolioById('1');
 
-		expect(PortfolioModel.findOne).toHaveBeenCalledWith({ id: '1', deletedAt: null });
+		expect(PortfolioModel.findOne).toHaveBeenCalledWith({
+			id: '1',
+			deletedAt: null,
+		});
 		expect(result.id).toBe('1');
 		expect(result.status).toBe('draft');
 	});
@@ -37,6 +40,8 @@ describe('getPortfolioById', () => {
 			lean: vi.fn().mockResolvedValue(null),
 		} as never);
 
-		await expect(getPortfolioById('missing')).rejects.toThrow(PortfolioNotFoundError);
+		await expect(getPortfolioById('missing')).rejects.toThrow(
+			PortfolioNotFoundError,
+		);
 	});
 });

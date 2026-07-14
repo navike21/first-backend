@@ -22,7 +22,9 @@ describe('updateCategory', () => {
 			id: '1',
 			slug: 'news',
 			save: saveFn,
-			toObject: vi.fn().mockReturnValue({ id: '1', slug: 'news', _id: 'mongo1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ id: '1', slug: 'news', _id: 'mongo1' }),
 		};
 		vi.mocked(CategoryModel.findOne).mockResolvedValue(doc as never);
 
@@ -35,7 +37,9 @@ describe('updateCategory', () => {
 	it('throws CategoryNotFoundError when the category does not exist', async () => {
 		vi.mocked(CategoryModel.findOne).mockResolvedValue(null as never);
 
-		await expect(updateCategory('missing', {})).rejects.toThrow(CategoryNotFoundError);
+		await expect(updateCategory('missing', {})).rejects.toThrow(
+			CategoryNotFoundError,
+		);
 	});
 
 	it('throws CategorySlugConflictError on duplicate slug', async () => {
@@ -45,6 +49,8 @@ describe('updateCategory', () => {
 			.mockResolvedValueOnce(doc as never)
 			.mockResolvedValueOnce(conflictDoc as never);
 
-		await expect(updateCategory('1', { slug: 'events' })).rejects.toThrow(CategorySlugConflictError);
+		await expect(updateCategory('1', { slug: 'events' })).rejects.toThrow(
+			CategorySlugConflictError,
+		);
 	});
 });

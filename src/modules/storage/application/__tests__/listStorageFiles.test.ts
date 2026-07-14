@@ -101,7 +101,9 @@ describe('listStorageFiles', () => {
 		await listStorageFiles({ kind: 'video' });
 
 		expect(StorageFileModel.find).toHaveBeenCalledWith(
-			expect.objectContaining({ mimeType: { $in: ['video/mp4', 'video/webm'] } }),
+			expect.objectContaining({
+				mimeType: { $in: ['video/mp4', 'video/webm'] },
+			}),
 		);
 	});
 
@@ -114,7 +116,9 @@ describe('listStorageFiles', () => {
 		await listStorageFiles({ search: 'logo' });
 
 		expect(StorageFileModel.find).toHaveBeenCalledWith(
-			expect.objectContaining({ originalName: { $regex: 'logo', $options: 'i' } }),
+			expect.objectContaining({
+				originalName: { $regex: 'logo', $options: 'i' },
+			}),
 		);
 	});
 

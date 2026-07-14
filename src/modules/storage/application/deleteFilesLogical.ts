@@ -10,7 +10,10 @@ export async function deleteFilesLogical(ids: string[]) {
 	}).lean();
 
 	if (files.length === 0) {
-		AppError.notFound(STORAGE_ERRORS.FILE_NOT_FOUND, 'No active files found with the provided IDs');
+		AppError.notFound(
+			STORAGE_ERRORS.FILE_NOT_FOUND,
+			'No active files found with the provided IDs',
+		);
 	}
 
 	await StorageFileModel.updateMany(

@@ -116,7 +116,11 @@ describe('Subscribers listAllSubscribers', () => {
 		);
 
 		// Act
-		const result = await listAllSubscribers({ limit: 10, page: 1, search: 'diana' });
+		const result = await listAllSubscribers({
+			limit: 10,
+			page: 1,
+			search: 'diana',
+		});
 
 		// Assert
 		expect(SubscriberModel.find).toHaveBeenCalledWith(

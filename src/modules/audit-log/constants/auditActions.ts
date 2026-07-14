@@ -68,7 +68,8 @@ export const AUDIT_ACTIONS = {
 
 	COLLABORATORS_BULK_SOFT_DELETED: 'collaborators:bulk_soft_deleted',
 	COLLABORATORS_BULK_RESTORED: 'collaborators:bulk_restored',
-	COLLABORATORS_BULK_PERMANENTLY_DELETED: 'collaborators:bulk_permanently_deleted',
+	COLLABORATORS_BULK_PERMANENTLY_DELETED:
+		'collaborators:bulk_permanently_deleted',
 
 	SERVICES_BULK_SOFT_DELETED: 'services:bulk_soft_deleted',
 	SERVICES_BULK_RESTORED: 'services:bulk_restored',

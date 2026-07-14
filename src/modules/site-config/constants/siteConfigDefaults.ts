@@ -9,7 +9,12 @@ export const HEADER_VARIANTS = [
 ] as const;
 export type HeaderVariant = (typeof HEADER_VARIANTS)[number];
 
-export const FOOTER_VARIANTS = ['columns', 'centered', 'minimal', 'cta-columns'] as const;
+export const FOOTER_VARIANTS = [
+	'columns',
+	'centered',
+	'minimal',
+	'cta-columns',
+] as const;
 export type FooterVariant = (typeof FOOTER_VARIANTS)[number];
 
 export const CONTENT_WIDTHS = ['boxed', 'full'] as const;
@@ -83,11 +88,15 @@ export interface SiteConfigData {
 }
 
 export function emptySocial(): SocialConfig {
-	return Object.fromEntries(SOCIAL_NETWORKS.map((network) => [network, ''])) as SocialConfig;
+	return Object.fromEntries(
+		SOCIAL_NETWORKS.map((network) => [network, '']),
+	) as SocialConfig;
 }
 
 export function emptyLocalized(): LocalizedString {
-	return Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, ''])) as LocalizedString;
+	return Object.fromEntries(
+		SUPPORTED_LANGUAGES.map((lang) => [lang, '']),
+	) as LocalizedString;
 }
 
 export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
@@ -95,7 +104,14 @@ export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
 		variant: 'logo-left-menu-right',
 		sticky: true,
 		transparent: false,
-		cta: { enabled: false, labelMode: 'page', label: emptyLocalized(), linkType: 'page', pageId: null, url: '' },
+		cta: {
+			enabled: false,
+			labelMode: 'page',
+			label: emptyLocalized(),
+			linkType: 'page',
+			pageId: null,
+			url: '',
+		},
 		mobile: { logoPosition: 'left', menuIconPosition: 'right' },
 	},
 	footer: {

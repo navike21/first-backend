@@ -112,7 +112,10 @@ export function pagesApi(router: Router) {
 		PAGES_PATH_REVISIONS_RESTORE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PAGE_REVISION_RESTORED, resource: 'pages' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGE_REVISION_RESTORED,
+			resource: 'pages',
+		}),
 		pageRevisionsRestoreController,
 	);
 
@@ -153,14 +156,20 @@ export function pagesApi(router: Router) {
 		PAGES_PATH_DELETE_PERMANENT,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.PAGES_PERMANENTLY_DELETED, resource: 'pages' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGES_PERMANENTLY_DELETED,
+			resource: 'pages',
+		}),
 		pageDeletePermanentController,
 	);
 	router.delete(
 		PAGES_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_DELETE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PAGES_SOFT_DELETED, resource: 'pages' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGES_SOFT_DELETED,
+			resource: 'pages',
+		}),
 		pageDeleteController,
 	);
 
@@ -180,7 +189,10 @@ export function pagesApi(router: Router) {
 		PAGES_PATH_SECTIONS_REPLACE,
 		authenticate,
 		authorize(PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.PAGE_SECTIONS_REPLACED, resource: 'pages' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.PAGE_SECTIONS_REPLACED,
+			resource: 'pages',
+		}),
 		pageSectionsReplaceController,
 	);
 	router.patch(

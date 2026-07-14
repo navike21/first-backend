@@ -1,1 +1,9 @@
-{"SUCCESS_COLLABORATOR_CREATE":"Colaborador criado com sucesso","SUCCESS_COLLABORATOR_LIST":"Lista de colaboradores obtida com sucesso","SUCCESS_COLLABORATOR_FOUND":"Colaborador encontrado com sucesso","SUCCESS_COLLABORATOR_UPDATE":"Colaborador atualizado com sucesso","SUCCESS_COLLABORATOR_DELETED":"Colaborador excluído com sucesso","SUCCESS_COLLABORATOR_PURGED":"Colaborador excluído permanentemente","COLLABORATOR_NOT_FOUND":"Colaborador não encontrado"}
+{
+	"SUCCESS_COLLABORATOR_CREATE": "Colaborador criado com sucesso",
+	"SUCCESS_COLLABORATOR_LIST": "Lista de colaboradores obtida com sucesso",
+	"SUCCESS_COLLABORATOR_FOUND": "Colaborador encontrado com sucesso",
+	"SUCCESS_COLLABORATOR_UPDATE": "Colaborador atualizado com sucesso",
+	"SUCCESS_COLLABORATOR_DELETED": "Colaborador excluído com sucesso",
+	"SUCCESS_COLLABORATOR_PURGED": "Colaborador excluído permanentemente",
+	"COLLABORATOR_NOT_FOUND": "Colaborador não encontrado"
+}

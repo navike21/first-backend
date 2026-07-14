@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { TagNotFoundError, TagSlugConflictError } from '@Modules/tags/domain/errors/TagErrors';
+import {
+	TagNotFoundError,
+	TagSlugConflictError,
+} from '@Modules/tags/domain/errors/TagErrors';
 import { AppError } from '@Shared/domain/AppError';
 
 describe('Tag domain errors', () => {

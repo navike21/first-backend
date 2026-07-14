@@ -11,6 +11,10 @@ export default defineConfig({
 			provider: 'istanbul',
 			reporter: ['text', 'lcov', 'json-summary'],
 			all: true,
+			// Regression floor, not a target (see README "Quality Gates") — a few
+			// points below the current actuals so `pnpm test` fails on a real drop,
+			// without pretending the repo is at 100% coverage today.
+			thresholds: { statements: 70, branches: 65, functions: 55, lines: 70 },
 			include: ['src/modules/**/*.ts'],
 			exclude: ['src/modules/**/__tests__/**', 'src/modules/**/*.test.ts'],
 		},
@@ -26,7 +30,7 @@ export default defineConfig({
 			'@Shared': resolve(__dirname, 'src/shared'),
 			'@Types': resolve(__dirname, 'src/types'),
 			'@Routes': resolve(__dirname, 'src/routes'),
-		'@test': resolve(__dirname, 'src/test'),
+			'@test': resolve(__dirname, 'src/test'),
 		},
 	},
 });

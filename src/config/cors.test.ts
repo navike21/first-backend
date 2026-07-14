@@ -57,10 +57,12 @@ describe('corsOptions.origin', () => {
 		const { corsOptions } = await import('./cors');
 
 		const callback = vi.fn();
-		(corsOptions.origin as (origin: string | undefined, cb: typeof callback) => void)(
-			undefined,
-			callback,
-		);
+		(
+			corsOptions.origin as (
+				origin: string | undefined,
+				cb: typeof callback,
+			) => void
+		)(undefined, callback);
 
 		expect(callback).toHaveBeenCalledWith(null, true);
 	});

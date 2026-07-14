@@ -2,9 +2,14 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import CollaboratorModel from '../infrastructure/CollaboratorModel';
 
 export async function restoreCollaboratorsBulk(ids: string[]) {
-	const docs = await CollaboratorModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
+	const docs = await CollaboratorModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	}).lean();
 
-	const processedIds = docs.map((d) => d.id).filter((id): id is string => Boolean(id));
+	const processedIds = docs
+		.map((d) => d.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = ids.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {
@@ -17,7 +22,9 @@ export async function restoreCollaboratorsBulk(ids: string[]) {
 	);
 
 	return {
-		processed: docs.map((d) => cleanMongoFields({ ...d, deletedAt: undefined })),
+		processed: docs.map((d) =>
+			cleanMongoFields({ ...d, deletedAt: undefined }),
+		),
 		processedIds,
 		notFoundIds,
 	};

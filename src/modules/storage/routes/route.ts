@@ -128,7 +128,10 @@ export function storageApi(router: Router) {
 		STORAGE_PATH_RESTORE,
 		authenticate,
 		authorize(PERMISSIONS.STORAGE_UPDATE, PERMISSIONS.STORAGE_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.STORAGE_RESTORED, resource: 'storage' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.STORAGE_RESTORED,
+			resource: 'storage',
+		}),
 		storageRestoreController,
 	);
 

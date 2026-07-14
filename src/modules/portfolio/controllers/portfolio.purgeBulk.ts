@@ -12,5 +12,11 @@ export const purgePortfolioBulkController = asyncHandler(async (req, res) => {
 
 	const code = `PORTFOLIO_BULK_PURGE_${bulkOutcome(data)}`;
 
-	successResponse(res, { statusCode: 200, code, message: code, ns: 'portfolio', data });
+	successResponse(res, {
+		statusCode: 200,
+		code,
+		message: code,
+		ns: 'portfolio',
+		data,
+	});
 });

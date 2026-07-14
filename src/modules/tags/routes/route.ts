@@ -18,7 +18,10 @@ import {
 	TAG_PATH_BULK_RESTORE,
 	TAG_PATH_BULK_PURGE,
 } from '../constants/paths';
-import { tagListPublicController, tagListAdminController } from '../controllers/tag.list';
+import {
+	tagListPublicController,
+	tagListAdminController,
+} from '../controllers/tag.list';
 import { tagGetByIdController } from '../controllers/tag.getById';
 import { tagCreateController } from '../controllers/tag.create';
 import { tagUpdateController } from '../controllers/tag.update';
@@ -115,7 +118,10 @@ export function tagsApi(router: Router) {
 		TAG_PATH_PURGE,
 		authenticate,
 		authorize(PERMISSIONS.TAGS_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.TAGS_PERMANENTLY_DELETED, resource: 'tags' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.TAGS_PERMANENTLY_DELETED,
+			resource: 'tags',
+		}),
 		tagPurgeController,
 	);
 	router.delete(

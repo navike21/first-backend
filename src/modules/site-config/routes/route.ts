@@ -22,7 +22,10 @@ export function siteConfigApi(router: Router) {
 		'/site-config',
 		authenticate,
 		authorize(PERMISSIONS.SITE_CONFIG_UPDATE, PERMISSIONS.SITE_CONFIG_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SITE_CONFIG_UPDATED, resource: 'site-config' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SITE_CONFIG_UPDATED,
+			resource: 'site-config',
+		}),
 		siteConfigUpdateController,
 	);
 }

@@ -2,9 +2,14 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
 export async function restorePortfolioBulk(ids: string[]) {
-	const items = await PortfolioModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
+	const items = await PortfolioModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	}).lean();
 
-	const processedIds = items.map((i) => i.id).filter((id): id is string => Boolean(id));
+	const processedIds = items
+		.map((i) => i.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = ids.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {
@@ -17,7 +22,9 @@ export async function restorePortfolioBulk(ids: string[]) {
 	);
 
 	return {
-		processed: items.map((i) => cleanMongoFields({ ...i, deletedAt: undefined })),
+		processed: items.map((i) =>
+			cleanMongoFields({ ...i, deletedAt: undefined }),
+		),
 		processedIds,
 		notFoundIds,
 	};

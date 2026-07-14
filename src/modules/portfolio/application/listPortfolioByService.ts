@@ -4,7 +4,18 @@ import { AppError } from '@Shared/domain/AppError';
 import ServiceModel from '@Modules/services/infrastructure/ServiceModel';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 
-const SLUG_LANGS = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'] as const;
+const SLUG_LANGS = [
+	'en',
+	'es',
+	'de',
+	'fr',
+	'it',
+	'ja',
+	'ko',
+	'pt',
+	'ru',
+	'zh',
+] as const;
 
 interface ListPortfolioByServiceParams {
 	serviceSlug: string;

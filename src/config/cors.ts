@@ -16,7 +16,9 @@ export const corsOptions: CorsOptions = {
 		// Si hay origin, validar contra whitelist. Fail-closed: sin whitelist
 		// configurada, no se refleja el origin (evita CORS abierto + credentials:true).
 		if (whitelistedDomains.length === 0) {
-			logError('CORS: WHITELISTED_DOMAINS not configured — denying all cross-origin requests');
+			logError(
+				'CORS: WHITELISTED_DOMAINS not configured — denying all cross-origin requests',
+			);
 			return callback(new Error('CORS policy: Not allowed by origin'));
 		}
 

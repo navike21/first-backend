@@ -1,6 +1,9 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import CategoryModel from '../infrastructure/CategoryModel';
-import { CategoryNotFoundError, CategorySlugConflictError } from '../domain/errors/CategoryErrors';
+import {
+	CategoryNotFoundError,
+	CategorySlugConflictError,
+} from '../domain/errors/CategoryErrors';
 import { assertValidParent } from './categoryHierarchy';
 import type { UpdateCategoryInput } from '../schemas/category.schema';
 
@@ -11,7 +14,11 @@ export async function updateCategory(id: string, input: UpdateCategoryInput) {
 	if (input.parentId !== undefined) await assertValidParent(id, input.parentId);
 
 	if (input.slug && input.slug !== doc.slug) {
-		const conflict = await CategoryModel.findOne({ slug: input.slug, id: { $ne: id }, deletedAt: null });
+		const conflict = await CategoryModel.findOne({
+			slug: input.slug,
+			id: { $ne: id },
+			deletedAt: null,
+		});
 		if (conflict) throw new CategorySlugConflictError();
 	}
 

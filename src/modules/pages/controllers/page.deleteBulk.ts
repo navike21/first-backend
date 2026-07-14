@@ -12,5 +12,11 @@ export const deletePagesBulkController = asyncHandler(async (req, res) => {
 
 	const code = `PAGES_BULK_SOFT_DELETE_${bulkOutcome(data)}`;
 
-	successResponse(res, { statusCode: 200, code, message: code, ns: 'pages', data });
+	successResponse(res, {
+		statusCode: 200,
+		code,
+		message: code,
+		ns: 'pages',
+		data,
+	});
 });

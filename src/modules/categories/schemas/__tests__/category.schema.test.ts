@@ -35,7 +35,10 @@ describe('category.schema', () => {
 	});
 
 	it('CreateCategorySchema rejects slug with uppercase letters', () => {
-		const result = CreateCategorySchema.safeParse({ ...validCategory, slug: 'News' });
+		const result = CreateCategorySchema.safeParse({
+			...validCategory,
+			slug: 'News',
+		});
 		expect(result.success).toBe(false);
 	});
 

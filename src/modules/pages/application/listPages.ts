@@ -12,12 +12,32 @@ interface ListPagesOptions {
 	parentId?: string;
 }
 
-export async function listPages({ page, limit, adminView = false, search, status, parentId }: ListPagesOptions) {
-	const filter: Record<string, unknown> = adminView ? { deletedAt: null } : publicVisibilityFilter();
+export async function listPages({
+	page,
+	limit,
+	adminView = false,
+	search,
+	status,
+	parentId,
+}: ListPagesOptions) {
+	const filter: Record<string, unknown> = adminView
+		? { deletedAt: null }
+		: publicVisibilityFilter();
 
 	if (search) {
 		const pattern = escapeRegex(search);
-		filter.$or = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map((lang) => ({
+		filter.$or = [
+			'en',
+			'es',
+			'de',
+			'fr',
+			'it',
+			'ja',
+			'ko',
+			'pt',
+			'ru',
+			'zh',
+		].map((lang) => ({
 			[`title.${lang}`]: { $regex: pattern, $options: 'i' },
 		}));
 	}

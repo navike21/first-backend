@@ -12,7 +12,9 @@ describe('updateSiteConfig', () => {
 	});
 
 	it('creates the singleton via upsert when it does not exist', async () => {
-		const data = await updateSiteConfig({ header: { variant: 'logo-center-stacked' } });
+		const data = await updateSiteConfig({
+			header: { variant: 'logo-center-stacked' },
+		});
 
 		expect(data.header.variant).toBe('logo-center-stacked');
 		const doc = await SiteConfigModel.findOne({ id: 'singleton' });
@@ -35,7 +37,10 @@ describe('updateSiteConfig', () => {
 
 	it('flattens nested cta/mobile updates so sibling fields survive', async () => {
 		await updateSiteConfig({
-			header: { cta: { enabled: true, url: '/contact' }, mobile: { logoPosition: 'center' } },
+			header: {
+				cta: { enabled: true, url: '/contact' },
+				mobile: { logoPosition: 'center' },
+			},
 		});
 
 		await updateSiteConfig({ header: { cta: { url: '/pricing' } } });

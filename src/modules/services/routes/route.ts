@@ -97,7 +97,10 @@ export function servicesApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_CREATE, PERMISSIONS.SERVICES_MANAGE),
 		...acceptImageFields(['cover', 'icon']),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_CREATED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_CREATED,
+			resource: 'services',
+		}),
 		serviceCreateController,
 	);
 
@@ -105,7 +108,10 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_RESTORE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_RESTORED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_RESTORED,
+			resource: 'services',
+		}),
 		serviceRestoreController,
 	);
 
@@ -114,7 +120,10 @@ export function servicesApi(router: Router) {
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_UPDATE, PERMISSIONS.SERVICES_MANAGE),
 		...acceptImageFields(['cover', 'icon']),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_UPDATED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_UPDATED,
+			resource: 'services',
+		}),
 		serviceUpdateController,
 	);
 
@@ -122,14 +131,20 @@ export function servicesApi(router: Router) {
 		SERVICE_PATH_DELETE_PERMANENT,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_PERMANENTLY_DELETED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_PERMANENTLY_DELETED,
+			resource: 'services',
+		}),
 		serviceDeletePermanentController,
 	);
 	router.delete(
 		SERVICE_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.SERVICES_DELETE, PERMISSIONS.SERVICES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.SERVICES_SOFT_DELETED, resource: 'services' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.SERVICES_SOFT_DELETED,
+			resource: 'services',
+		}),
 		serviceDeleteController,
 	);
 }

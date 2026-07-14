@@ -2,11 +2,16 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import UserModel from '../infrastructure/UserModel';
 
 export async function restoreUsersBulk(ids: string[]) {
-	const users = await UserModel.find({ id: { $in: ids }, deletedAt: { $ne: null } })
+	const users = await UserModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	})
 		.select('-password')
 		.lean();
 
-	const processedIds = users.map((u) => u.id).filter((id): id is string => Boolean(id));
+	const processedIds = users
+		.map((u) => u.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = ids.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {
@@ -19,7 +24,9 @@ export async function restoreUsersBulk(ids: string[]) {
 	);
 
 	return {
-		processed: users.map((u) => cleanMongoFields({ ...u, deletedAt: undefined })),
+		processed: users.map((u) =>
+			cleanMongoFields({ ...u, deletedAt: undefined }),
+		),
 		processedIds,
 		notFoundIds,
 	};

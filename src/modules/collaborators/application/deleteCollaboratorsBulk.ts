@@ -2,9 +2,14 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import CollaboratorModel from '../infrastructure/CollaboratorModel';
 
 export async function deleteCollaboratorsBulk(ids: string[]) {
-	const docs = await CollaboratorModel.find({ id: { $in: ids }, deletedAt: null }).lean();
+	const docs = await CollaboratorModel.find({
+		id: { $in: ids },
+		deletedAt: null,
+	}).lean();
 
-	const processedIds = docs.map((d) => d.id).filter((id): id is string => Boolean(id));
+	const processedIds = docs
+		.map((d) => d.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = ids.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {

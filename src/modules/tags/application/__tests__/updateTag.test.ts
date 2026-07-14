@@ -10,7 +10,10 @@ vi.mock('@Modules/tags/infrastructure/TagModel', () => ({
 
 import { updateTag } from '@Modules/tags/application/updateTag';
 import TagModel from '@Modules/tags/infrastructure/TagModel';
-import { TagNotFoundError, TagSlugConflictError } from '@Modules/tags/domain/errors/TagErrors';
+import {
+	TagNotFoundError,
+	TagSlugConflictError,
+} from '@Modules/tags/domain/errors/TagErrors';
 
 describe('updateTag', () => {
 	it('updates and returns the tag', async () => {
@@ -19,7 +22,9 @@ describe('updateTag', () => {
 			id: '1',
 			slug: 'featured',
 			save: saveFn,
-			toObject: vi.fn().mockReturnValue({ id: '1', slug: 'featured', _id: 'mongo1' }),
+			toObject: vi
+				.fn()
+				.mockReturnValue({ id: '1', slug: 'featured', _id: 'mongo1' }),
 		};
 		vi.mocked(TagModel.findOne).mockResolvedValue(doc as never);
 
@@ -42,6 +47,8 @@ describe('updateTag', () => {
 			.mockResolvedValueOnce(doc as never)
 			.mockResolvedValueOnce(conflictDoc as never);
 
-		await expect(updateTag('1', { slug: 'popular' })).rejects.toThrow(TagSlugConflictError);
+		await expect(updateTag('1', { slug: 'popular' })).rejects.toThrow(
+			TagSlugConflictError,
+		);
 	});
 });

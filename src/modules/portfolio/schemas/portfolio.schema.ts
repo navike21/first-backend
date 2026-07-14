@@ -76,7 +76,10 @@ export const CreatePortfolioSchema = z.object({
 export const UpdatePortfolioSchema = CreatePortfolioSchema.partial().extend({
 	// Input-only: reconciles the gallery when present. Omitting it entirely
 	// leaves the existing gallery untouched (same semantics as omitting `cover`).
-	galleryOrder: z.array(GalleryOrderTokenSchema).max(PORTFOLIO_GALLERY_MAX_ITEMS).optional(),
+	galleryOrder: z
+		.array(GalleryOrderTokenSchema)
+		.max(PORTFOLIO_GALLERY_MAX_ITEMS)
+		.optional(),
 });
 
 export const ListPortfolioQuerySchema = z.object({

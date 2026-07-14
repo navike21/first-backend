@@ -6,7 +6,10 @@ import { uploadEditorImage } from '../application/uploadEditorImage';
 
 export const storageEditorImageController = asyncHandler(async (req, res) => {
 	const file = getUploadedFile(req);
-	const result = await uploadEditorImage(file, res.locals.userId as string | undefined);
+	const result = await uploadEditorImage(
+		file,
+		res.locals.userId as string | undefined,
+	);
 	successResponse(res, {
 		statusCode: 201,
 		code: 'SUCCESS_EDITOR_IMAGE_UPLOADED',

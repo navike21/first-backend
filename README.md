@@ -11,18 +11,50 @@ pnpm install
 # Development (with hot reload)
 pnpm dev
 
-# Type check
-pnpm typecheck
-
-# Lint
-pnpm lint
-
-# Tests with coverage
-pnpm test
-
 # Build
 pnpm run build
 ```
+
+## Quality Gates
+
+Run all of these — and have them pass — before opening a PR. There is no
+CI pipeline yet (see "Known Gaps" below), so this is enforced by convention,
+not by a bot.
+
+```bash
+pnpm typecheck     # tsc --noEmit
+pnpm lint          # ESLint + TypeScript-ESLint + SonarJS (merged into one config, one command)
+pnpm format:check  # Prettier — fails if any file isn't formatted (pnpm format to fix)
+pnpm test          # Vitest + coverage; fails if coverage drops below the floor below
+pnpm audit --prod  # Dependency vulnerabilities in production deps (see caveat below)
+```
+
+- **Lint already includes SonarJS** (`eslint-plugin-sonarjs`) — unlike some
+  sibling projects, there's no separate `lint:sonar` command here; `pnpm lint`
+  is the single source of truth and must report 0 problems.
+- **Coverage floor, not a target.** `vitest.config.ts` sets
+  `coverage.thresholds` a few points below the actual current numbers
+  (statements 70 / branches 65 / functions 55 / lines 70) so `pnpm test`
+  fails on a real regression. The repo is **not** at 100% coverage today —
+  many bulk/trash endpoints are thin delegation wrappers with little
+  branching logic and aren't individually covered. Aim for full coverage of
+  new business logic (schemas, use-cases, anything with branches), not of
+  every thin wrapper.
+- **`pnpm audit`** (no `--prod`) also checks devDependencies. Keep both at 0
+  known vulnerabilities — devDependency findings still matter (supply-chain
+  risk in the toolchain), just lower urgency than a production dependency.
+- **Line endings are LF** (`.gitattributes` → `eol=lf`). On Windows, if
+  `core.autocrlf=true` leaves working-tree files with CRLF despite that
+  (git won't always re-checkout files it considers "unchanged" after
+  normalization), `pnpm format:check` will report spurious failures. Fix:
+  `git rm --cached -r . && git reset --hard` (safe only with a clean working
+  tree — stash any real changes first).
+
+### Known Gaps
+
+- **No CI/CD.** Nothing automatically blocks a PR with failing gates, or a
+  newly-vulnerable dependency, before merge to `main` (which auto-deploys to
+  Production on Vercel). Today this is caught manually / by whoever reviews.
 
 ## Environment Variables
 
@@ -81,7 +113,7 @@ DNS_SERVERS=8.8.8.8,1.1.1.1
 | Email | Nodemailer (Ethereal in dev, SMTP in prod) |
 | Storage | Vercel Blob / S3 / GCS / Azure Blob |
 | Realtime | Socket.io 4 |
-| Testing | Vitest + Istanbul (100% coverage required) |
+| Testing | Vitest + Istanbul (coverage floor enforced, see Quality Gates) |
 | Lint | ESLint 10 + TypeScript ESLint + SonarJS |
 | Deployment | Vercel (serverless) |
 
@@ -214,7 +246,7 @@ Supported languages: `es` `en` `de` `fr` `it` `ja` `ko` `pt` `ru` `zh`
 pnpm test
 ```
 
-All modules require **100% coverage** across statements, branches, functions, and lines. Coverage is enforced via `@vitest/coverage-istanbul` thresholds.
+See [Quality Gates](#quality-gates) for the coverage floor and what's actually enforced.
 
 ## Deployment
 

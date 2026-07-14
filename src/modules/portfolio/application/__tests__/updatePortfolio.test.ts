@@ -96,7 +96,12 @@ describe('updatePortfolio', () => {
 
 	it('reconciles galleryOrder: keeps existing urls, uploads new files, interleaved', async () => {
 		const saveFn = vi.fn().mockResolvedValue(undefined);
-		const portfolioDoc: { id: string; gallery: string[]; save: typeof saveFn; toObject: () => unknown } = {
+		const portfolioDoc: {
+			id: string;
+			gallery: string[];
+			save: typeof saveFn;
+			toObject: () => unknown;
+		} = {
 			id: '1',
 			gallery: ['https://cdn/a.jpg', 'https://cdn/b.jpg'],
 			save: saveFn,
@@ -174,7 +179,11 @@ describe('updatePortfolio', () => {
 		await updatePortfolio(
 			'1',
 			{},
-			{ buffer: Buffer.from('c'), originalName: 'c.jpg', mimeType: 'image/jpeg' },
+			{
+				buffer: Buffer.from('c'),
+				originalName: 'c.jpg',
+				mimeType: 'image/jpeg',
+			},
 			'user-1',
 		);
 

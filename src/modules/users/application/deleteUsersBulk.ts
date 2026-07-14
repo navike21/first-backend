@@ -16,7 +16,9 @@ export async function deleteUsersBulk(ids: string[], requesterId?: string) {
 		.select('-password')
 		.lean();
 
-	const processedIds = users.map((u) => u.id).filter((id): id is string => Boolean(id));
+	const processedIds = users
+		.map((u) => u.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = targetIds.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {

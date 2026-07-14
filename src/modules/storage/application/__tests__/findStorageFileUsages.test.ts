@@ -36,7 +36,10 @@ import PageModel from '@Modules/pages/infrastructure/PageModel';
 import AppSettingsModel from '@Modules/app-settings/infrastructure/AppSettingsModel';
 
 function selectLean(result: unknown) {
-	return { select: vi.fn().mockReturnThis(), lean: vi.fn().mockResolvedValue(result) } as never;
+	return {
+		select: vi.fn().mockReturnThis(),
+		lean: vi.fn().mockResolvedValue(result),
+	} as never;
 }
 
 const URL = 'https://cdn.example.com/f.webp';
@@ -59,7 +62,9 @@ describe('findStorageFileUsages', () => {
 	});
 
 	it('reports a client match', async () => {
-		vi.mocked(ClientModel.find).mockReturnValue(selectLean([{ id: 'c1', businessName: 'Acme' }]));
+		vi.mocked(ClientModel.find).mockReturnValue(
+			selectLean([{ id: 'c1', businessName: 'Acme' }]),
+		);
 		const result = await findStorageFileUsages(URL);
 		expect(result).toEqual([{ module: 'clients', id: 'c1', label: 'Acme' }]);
 	});
@@ -73,9 +78,13 @@ describe('findStorageFileUsages', () => {
 	});
 
 	it('reports a collaborator match', async () => {
-		vi.mocked(CollaboratorModel.find).mockReturnValue(selectLean([{ id: 'co1', name: 'Jane' }]));
+		vi.mocked(CollaboratorModel.find).mockReturnValue(
+			selectLean([{ id: 'co1', name: 'Jane' }]),
+		);
 		const result = await findStorageFileUsages(URL);
-		expect(result).toEqual([{ module: 'collaborators', id: 'co1', label: 'Jane' }]);
+		expect(result).toEqual([
+			{ module: 'collaborators', id: 'co1', label: 'Jane' },
+		]);
 	});
 
 	it('reports a portfolio match, distinguishing cover from gallery', async () => {
@@ -97,14 +106,21 @@ describe('findStorageFileUsages', () => {
 			selectLean([{ id: 's1', name: { es: '', en: 'Consulting' } }]),
 		);
 		const result = await findStorageFileUsages(URL);
-		expect(result).toEqual([{ module: 'services', id: 's1', label: 'Consulting' }]);
+		expect(result).toEqual([
+			{ module: 'services', id: 's1', label: 'Consulting' },
+		]);
 	});
 
 	it('reports a page match and infers cover/ogImage/background context', async () => {
 		vi.mocked(PageModel.find).mockReturnValue(
 			selectLean([
 				{ id: 'pg1', title: { es: 'Inicio' }, coverImageUrl: URL, seo: {} },
-				{ id: 'pg2', title: { es: 'SEO' }, coverImageUrl: 'x', seo: { ogImage: URL } },
+				{
+					id: 'pg2',
+					title: { es: 'SEO' },
+					coverImageUrl: 'x',
+					seo: { ogImage: URL },
+				},
 				{ id: 'pg3', title: { es: 'Fondo' }, coverImageUrl: 'x', seo: {} },
 			]),
 		);
@@ -123,7 +139,12 @@ describe('findStorageFileUsages', () => {
 		const result = await findStorageFileUsages(URL);
 		expect(result).toEqual([
 			{ module: 'app-settings', id: 'singleton', label: '', context: 'logo' },
-			{ module: 'app-settings', id: 'singleton', label: '', context: 'favicon' },
+			{
+				module: 'app-settings',
+				id: 'singleton',
+				label: '',
+				context: 'favicon',
+			},
 		]);
 	});
 });

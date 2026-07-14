@@ -12,5 +12,11 @@ export const deleteTagsBulkController = asyncHandler(async (req, res) => {
 
 	const code = `TAGS_BULK_SOFT_DELETE_${bulkOutcome(data)}`;
 
-	successResponse(res, { statusCode: 200, code, message: code, ns: 'tags', data });
+	successResponse(res, {
+		statusCode: 200,
+		code,
+		message: code,
+		ns: 'tags',
+		data,
+	});
 });

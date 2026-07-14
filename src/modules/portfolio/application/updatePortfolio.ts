@@ -13,7 +13,10 @@ import {
 } from '../domain/errors/PortfolioErrors';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 import { PORTFOLIO_ENTITY_TYPE } from '../constants/paths';
-import type { GalleryOrderToken, UpdatePortfolioInput } from '../schemas/portfolio.schema';
+import type {
+	GalleryOrderToken,
+	UpdatePortfolioInput,
+} from '../schemas/portfolio.schema';
 
 /** Persists the document, compensating (deleting) any freshly uploaded files if the save fails. */
 async function saveOrCompensate(
@@ -111,16 +114,22 @@ async function uploadCoverIfProvided(
 }
 
 /** Deletes stored gallery files that are no longer part of the final gallery. */
-async function removeDroppedGalleryFiles(id: string, finalGallery: string[]): Promise<void> {
+async function removeDroppedGalleryFiles(
+	id: string,
+	finalGallery: string[],
+): Promise<void> {
 	const keptUrls = new Set(finalGallery);
 	const currentGalleryFiles = await listEntityFiles(PORTFOLIO_ENTITY_TYPE, id, {
 		field: 'gallery',
 	});
 	const toRemove = currentGalleryFiles.filter(
-		(storageFile) => !keptUrls.has(storageFile.full?.url ?? storageFile.original.url),
+		(storageFile) =>
+			!keptUrls.has(storageFile.full?.url ?? storageFile.original.url),
 	);
 	if (toRemove.length) {
-		await deleteStorageFilesByIds(toRemove.map((storageFile) => storageFile.id)).catch(() => {});
+		await deleteStorageFilesByIds(
+			toRemove.map((storageFile) => storageFile.id),
+		).catch(() => {});
 	}
 }
 
@@ -146,11 +155,11 @@ export async function updatePortfolio(
 	}
 
 	const warnings: ResponseWarning[] = [];
-	const { uploadedUrl, newStorageId, warning: coverWarning } = await uploadCoverIfProvided(
-		id,
-		uploadedBy,
-		file,
-	);
+	const {
+		uploadedUrl,
+		newStorageId,
+		warning: coverWarning,
+	} = await uploadCoverIfProvided(id, uploadedBy, file);
 	if (coverWarning) warnings.push(coverWarning);
 
 	// Gallery is only reconciled when the client explicitly sent `galleryOrder`

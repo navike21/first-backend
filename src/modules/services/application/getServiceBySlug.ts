@@ -2,7 +2,18 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { ServiceNotFoundError } from '../domain/errors/ServiceErrors';
 import ServiceModel from '../infrastructure/ServiceModel';
 
-const SLUG_LANGS = ['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'] as const;
+const SLUG_LANGS = [
+	'en',
+	'es',
+	'de',
+	'fr',
+	'it',
+	'ja',
+	'ko',
+	'pt',
+	'ru',
+	'zh',
+] as const;
 
 export async function getServiceBySlug(slug: string) {
 	const service = await ServiceModel.findOne({

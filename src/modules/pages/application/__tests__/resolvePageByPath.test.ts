@@ -49,6 +49,8 @@ describe('resolvePageByPath', () => {
 			mockQueryBuilder(null) as never,
 		);
 
-		await expect(resolvePageByPath('not-found', 'en')).rejects.toThrow(PageNotFoundError);
+		await expect(resolvePageByPath('not-found', 'en')).rejects.toThrow(
+			PageNotFoundError,
+		);
 	});
 });

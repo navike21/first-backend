@@ -18,12 +18,30 @@ describe('getConfig', () => {
 	});
 
 	it('resolves labels to the requested language, falling back to en for unknown langs', () => {
-		const es = getConfig(['currencies'], 'es').currencies as { value: string; label: string }[];
-		const en = getConfig(['currencies'], 'en').currencies as { value: string; label: string }[];
-		const de = getConfig(['currencies'], 'de').currencies as { value: string; label: string }[];
-		const ja = getConfig(['currencies'], 'ja').currencies as { value: string; label: string }[];
-		const ko = getConfig(['currencies'], 'ko').currencies as { value: string; label: string }[];
-		const xx = getConfig(['currencies'], 'xx').currencies as { value: string; label: string }[];
+		const es = getConfig(['currencies'], 'es').currencies as {
+			value: string;
+			label: string;
+		}[];
+		const en = getConfig(['currencies'], 'en').currencies as {
+			value: string;
+			label: string;
+		}[];
+		const de = getConfig(['currencies'], 'de').currencies as {
+			value: string;
+			label: string;
+		}[];
+		const ja = getConfig(['currencies'], 'ja').currencies as {
+			value: string;
+			label: string;
+		}[];
+		const ko = getConfig(['currencies'], 'ko').currencies as {
+			value: string;
+			label: string;
+		}[];
+		const xx = getConfig(['currencies'], 'xx').currencies as {
+			value: string;
+			label: string;
+		}[];
 		expect(es.find((c) => c.value === 'PEN')?.label).toBe('Soles');
 		expect(en.find((c) => c.value === 'PEN')?.label).toBe('Peruvian Sol');
 		expect(de.find((c) => c.value === 'PEN')?.label).toBe('Peruanischer Sol');
@@ -42,13 +60,28 @@ describe('getConfig', () => {
 	});
 
 	it('returns language names localized to the requested language (not endonyms)', () => {
-		const es = getConfig(['languages'], 'es').languages as { value: string; label: string }[];
-		const en = getConfig(['languages'], 'en').languages as { value: string; label: string }[];
-		const ja = getConfig(['languages'], 'ja').languages as { value: string; label: string }[];
+		const es = getConfig(['languages'], 'es').languages as {
+			value: string;
+			label: string;
+		}[];
+		const en = getConfig(['languages'], 'en').languages as {
+			value: string;
+			label: string;
+		}[];
+		const ja = getConfig(['languages'], 'ja').languages as {
+			value: string;
+			label: string;
+		}[];
 		// In Spanish UI: "inglés", "español", "chino"
-		expect(es.find((l) => l.value === 'en')?.label?.toLowerCase()).toContain('ingl');
-		expect(es.find((l) => l.value === 'es')?.label?.toLowerCase()).toContain('español');
-		expect(es.find((l) => l.value === 'zh')?.label?.toLowerCase()).toContain('chin');
+		expect(es.find((l) => l.value === 'en')?.label?.toLowerCase()).toContain(
+			'ingl',
+		);
+		expect(es.find((l) => l.value === 'es')?.label?.toLowerCase()).toContain(
+			'español',
+		);
+		expect(es.find((l) => l.value === 'zh')?.label?.toLowerCase()).toContain(
+			'chin',
+		);
 		// In English UI: "English", "Spanish"
 		expect(en.find((l) => l.value === 'en')?.label).toBe('English');
 		expect(en.find((l) => l.value === 'es')?.label).toBe('Spanish');
@@ -58,9 +91,18 @@ describe('getConfig', () => {
 	});
 
 	it('returns clientTypes with localized labels', () => {
-		const es = getConfig(['clientTypes'], 'es').clientTypes as { value: string; label: string }[];
-		const en = getConfig(['clientTypes'], 'en').clientTypes as { value: string; label: string }[];
-		const ja = getConfig(['clientTypes'], 'ja').clientTypes as { value: string; label: string }[];
+		const es = getConfig(['clientTypes'], 'es').clientTypes as {
+			value: string;
+			label: string;
+		}[];
+		const en = getConfig(['clientTypes'], 'en').clientTypes as {
+			value: string;
+			label: string;
+		}[];
+		const ja = getConfig(['clientTypes'], 'ja').clientTypes as {
+			value: string;
+			label: string;
+		}[];
 		expect(es.find((c) => c.value === 'person')?.label).toBe('Persona');
 		expect(es.find((c) => c.value === 'company')?.label).toBe('Empresa');
 		expect(en.find((c) => c.value === 'person')?.label).toBe('Person');
@@ -70,11 +112,22 @@ describe('getConfig', () => {
 	});
 
 	it('returns genders with localized labels', () => {
-		const es = getConfig(['genders'], 'es').genders as { value: string; label: string }[];
-		const en = getConfig(['genders'], 'en').genders as { value: string; label: string }[];
-		const ko = getConfig(['genders'], 'ko').genders as { value: string; label: string }[];
+		const es = getConfig(['genders'], 'es').genders as {
+			value: string;
+			label: string;
+		}[];
+		const en = getConfig(['genders'], 'en').genders as {
+			value: string;
+			label: string;
+		}[];
+		const ko = getConfig(['genders'], 'ko').genders as {
+			value: string;
+			label: string;
+		}[];
 		expect(es.find((g) => g.value === 'female')?.label).toBe('Femenino');
-		expect(es.find((g) => g.value === 'prefer_not_to_say')?.label).toBe('Prefiero no decir');
+		expect(es.find((g) => g.value === 'prefer_not_to_say')?.label).toBe(
+			'Prefiero no decir',
+		);
 		expect(en.find((g) => g.value === 'male')?.label).toBe('Male');
 		expect(ko.find((g) => g.value === 'other')?.label).toBe('기타');
 	});
@@ -88,24 +141,44 @@ describe('getConfig', () => {
 	});
 
 	it('returns technologies with language-agnostic labels', () => {
-		const en = getConfig(['technologies'], 'en').technologies as { value: string; label: string }[];
-		const es = getConfig(['technologies'], 'es').technologies as { value: string; label: string }[];
+		const en = getConfig(['technologies'], 'en').technologies as {
+			value: string;
+			label: string;
+		}[];
+		const es = getConfig(['technologies'], 'es').technologies as {
+			value: string;
+			label: string;
+		}[];
 		expect(en.find((t) => t.value === 'react')?.label).toBe('React');
 		expect(en.find((t) => t.value === 'nodejs')?.label).toBe('Node.js');
 		expect(es.find((t) => t.value === 'react')?.label).toBe('React');
 	});
 
 	it('returns collaboratorRoles with localized labels', () => {
-		const es = getConfig(['collaboratorRoles'], 'es').collaboratorRoles as { value: string; label: string }[];
-		const en = getConfig(['collaboratorRoles'], 'en').collaboratorRoles as { value: string; label: string }[];
-		expect(es.find((r) => r.value === 'developer')?.label).toBe('Desarrollador/a');
+		const es = getConfig(['collaboratorRoles'], 'es').collaboratorRoles as {
+			value: string;
+			label: string;
+		}[];
+		const en = getConfig(['collaboratorRoles'], 'en').collaboratorRoles as {
+			value: string;
+			label: string;
+		}[];
+		expect(es.find((r) => r.value === 'developer')?.label).toBe(
+			'Desarrollador/a',
+		);
 		expect(en.find((r) => r.value === 'developer')?.label).toBe('Developer');
 		expect(en.find((r) => r.value === 'other')?.label).toBe('Other');
 	});
 
 	it('returns collaboratorLevels with localized labels', () => {
-		const es = getConfig(['collaboratorLevels'], 'es').collaboratorLevels as { value: string; label: string }[];
-		const en = getConfig(['collaboratorLevels'], 'en').collaboratorLevels as { value: string; label: string }[];
+		const es = getConfig(['collaboratorLevels'], 'es').collaboratorLevels as {
+			value: string;
+			label: string;
+		}[];
+		const en = getConfig(['collaboratorLevels'], 'en').collaboratorLevels as {
+			value: string;
+			label: string;
+		}[];
 		expect(es.find((l) => l.value === 'senior')?.label).toBe('Senior');
 		expect(es.find((l) => l.value === 'intern')?.label).toBe('Practicante');
 		expect(en.find((l) => l.value === 'lead')?.label).toBe('Lead');

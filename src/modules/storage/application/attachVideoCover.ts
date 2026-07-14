@@ -14,8 +14,12 @@ const DEFAULT_QUALITY = 80;
  * webp variants a normal image gets, just reusing the video's own record
  * instead of creating a new one.
  */
-export async function attachVideoCover(id: string, file: IncomingFile | undefined) {
-	if (!file) AppError.badRequest('FILE_REQUIRED', 'No cover image was provided');
+export async function attachVideoCover(
+	id: string,
+	file: IncomingFile | undefined,
+) {
+	if (!file)
+		AppError.badRequest('FILE_REQUIRED', 'No cover image was provided');
 
 	const existing = await StorageFileModel.findOne({ id }).lean();
 	if (!existing) AppError.notFound('STORAGE_FILE_NOT_FOUND', 'File not found');

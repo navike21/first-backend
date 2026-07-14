@@ -12,5 +12,11 @@ export const purgeUserGroupsBulkController = asyncHandler(async (req, res) => {
 
 	const code = `USER_GROUPS_BULK_PURGE_${bulkOutcome(data)}`;
 
-	successResponse(res, { statusCode: 200, code, message: code, ns: 'user-groups', data });
+	successResponse(res, {
+		statusCode: 200,
+		code,
+		message: code,
+		ns: 'user-groups',
+		data,
+	});
 });

@@ -41,12 +41,15 @@ export async function registerSubscriber(
 			},
 		});
 	} catch (error) {
-		if (file) await deleteEntityFiles(SUBSCRIBER_ENTITY_TYPE, id).catch(() => {});
+		if (file)
+			await deleteEntityFiles(SUBSCRIBER_ENTITY_TYPE, id).catch(() => {});
 		throw error;
 	}
 
 	return {
-		data: cleanMongoFields(created.toObject({ versionKey: false, getters: true })),
+		data: cleanMongoFields(
+			created.toObject({ versionKey: false, getters: true }),
+		),
 		warnings,
 	};
 }

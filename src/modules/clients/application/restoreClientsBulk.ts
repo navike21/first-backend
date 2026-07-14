@@ -2,9 +2,14 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import ClientModel from '../infrastructure/ClientModel';
 
 export async function restoreClientsBulk(ids: string[]) {
-	const clients = await ClientModel.find({ id: { $in: ids }, deletedAt: { $ne: null } }).lean();
+	const clients = await ClientModel.find({
+		id: { $in: ids },
+		deletedAt: { $ne: null },
+	}).lean();
 
-	const processedIds = clients.map((c) => c.id).filter((id): id is string => Boolean(id));
+	const processedIds = clients
+		.map((c) => c.id)
+		.filter((id): id is string => Boolean(id));
 	const notFoundIds = ids.filter((id) => !processedIds.includes(id));
 
 	if (processedIds.length === 0) {
@@ -17,7 +22,9 @@ export async function restoreClientsBulk(ids: string[]) {
 	);
 
 	return {
-		processed: clients.map((c) => cleanMongoFields({ ...c, deletedAt: undefined })),
+		processed: clients.map((c) =>
+			cleanMongoFields({ ...c, deletedAt: undefined }),
+		),
 		processedIds,
 		notFoundIds,
 	};

@@ -94,7 +94,10 @@ export function categoriesApi(router: Router) {
 		CATEGORY_PATH_CREATE,
 		authenticate,
 		authorize(PERMISSIONS.CATEGORIES_CREATE, PERMISSIONS.CATEGORIES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.CATEGORIES_CREATED, resource: 'categories' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CATEGORIES_CREATED,
+			resource: 'categories',
+		}),
 		categoryCreateController,
 	);
 
@@ -102,7 +105,10 @@ export function categoriesApi(router: Router) {
 		CATEGORY_PATH_RESTORE,
 		authenticate,
 		authorize(PERMISSIONS.CATEGORIES_UPDATE, PERMISSIONS.CATEGORIES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.CATEGORIES_RESTORED, resource: 'categories' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CATEGORIES_RESTORED,
+			resource: 'categories',
+		}),
 		categoryRestoreController,
 	);
 
@@ -110,7 +116,10 @@ export function categoriesApi(router: Router) {
 		CATEGORY_PATH_UPDATE,
 		authenticate,
 		authorize(PERMISSIONS.CATEGORIES_UPDATE, PERMISSIONS.CATEGORIES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.CATEGORIES_UPDATED, resource: 'categories' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CATEGORIES_UPDATED,
+			resource: 'categories',
+		}),
 		categoryUpdateController,
 	);
 
@@ -118,14 +127,20 @@ export function categoriesApi(router: Router) {
 		CATEGORY_PATH_PURGE,
 		authenticate,
 		authorize(PERMISSIONS.CATEGORIES_PURGE),
-		captureAudit({ action: AUDIT_ACTIONS.CATEGORIES_PERMANENTLY_DELETED, resource: 'categories' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CATEGORIES_PERMANENTLY_DELETED,
+			resource: 'categories',
+		}),
 		categoryPurgeController,
 	);
 	router.delete(
 		CATEGORY_PATH_DELETE,
 		authenticate,
 		authorize(PERMISSIONS.CATEGORIES_DELETE, PERMISSIONS.CATEGORIES_MANAGE),
-		captureAudit({ action: AUDIT_ACTIONS.CATEGORIES_SOFT_DELETED, resource: 'categories' }),
+		captureAudit({
+			action: AUDIT_ACTIONS.CATEGORIES_SOFT_DELETED,
+			resource: 'categories',
+		}),
 		categoryDeleteController,
 	);
 }

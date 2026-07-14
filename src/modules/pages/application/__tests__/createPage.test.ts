@@ -62,6 +62,8 @@ describe('createPage', () => {
 	it('throws PageSlugConflictError when a sibling with the same slug already exists', async () => {
 		vi.mocked(PageModel.findOne).mockResolvedValue({ id: 'existing' } as never);
 
-		await expect(createPage(validInput, undefined, 'user-1')).rejects.toThrow(PageSlugConflictError);
+		await expect(createPage(validInput, undefined, 'user-1')).rejects.toThrow(
+			PageSlugConflictError,
+		);
 	});
 });

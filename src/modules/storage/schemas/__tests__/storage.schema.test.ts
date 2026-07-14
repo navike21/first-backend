@@ -149,12 +149,18 @@ describe('StorageListQuerySchema', () => {
 	});
 
 	it('accepts kind=image and kind=video', () => {
-		expect(StorageListQuerySchema.safeParse({ kind: 'image' }).success).toBe(true);
-		expect(StorageListQuerySchema.safeParse({ kind: 'video' }).success).toBe(true);
+		expect(StorageListQuerySchema.safeParse({ kind: 'image' }).success).toBe(
+			true,
+		);
+		expect(StorageListQuerySchema.safeParse({ kind: 'video' }).success).toBe(
+			true,
+		);
 	});
 
 	it('rejects an unknown kind', () => {
-		expect(StorageListQuerySchema.safeParse({ kind: 'document' }).success).toBe(false);
+		expect(StorageListQuerySchema.safeParse({ kind: 'document' }).success).toBe(
+			false,
+		);
 	});
 
 	it('trims search and rejects an overly long one', () => {
@@ -162,7 +168,9 @@ describe('StorageListQuerySchema', () => {
 		expect(trimmed.success).toBe(true);
 		if (trimmed.success) expect(trimmed.data.search).toBe('logo');
 
-		const tooLong = StorageListQuerySchema.safeParse({ search: 'a'.repeat(201) });
+		const tooLong = StorageListQuerySchema.safeParse({
+			search: 'a'.repeat(201),
+		});
 		expect(tooLong.success).toBe(false);
 	});
 });

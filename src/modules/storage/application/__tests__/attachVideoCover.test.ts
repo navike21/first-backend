@@ -49,9 +49,15 @@ const baseFile = {
 describe('attachVideoCover', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		mockFindOne.mockReturnValue({ lean: vi.fn().mockResolvedValue(existingVideoRecord) });
+		mockFindOne.mockReturnValue({
+			lean: vi.fn().mockResolvedValue(existingVideoRecord),
+		});
 		mockFindOneAndUpdate.mockReturnValue({
-			lean: vi.fn().mockResolvedValue({ ...existingVideoRecord, full: makeStorageFile('full.webp'), thumb: makeStorageFile('thumb.webp') }),
+			lean: vi.fn().mockResolvedValue({
+				...existingVideoRecord,
+				full: makeStorageFile('full.webp'),
+				thumb: makeStorageFile('thumb.webp'),
+			}),
 		});
 		vi.mocked(processRasterImage).mockResolvedValue({
 			full: Buffer.from('full'),
@@ -63,14 +69,18 @@ describe('attachVideoCover', () => {
 	});
 
 	it('rejects when no file is provided', async () => {
-		await expect(attachVideoCover('video-1', undefined)).rejects.toBeInstanceOf(AppError);
+		await expect(attachVideoCover('video-1', undefined)).rejects.toBeInstanceOf(
+			AppError,
+		);
 		expect(mockFindOne).not.toHaveBeenCalled();
 	});
 
 	it('rejects with 404 when the video record does not exist', async () => {
 		mockFindOne.mockReturnValue({ lean: vi.fn().mockResolvedValue(null) });
 
-		await expect(attachVideoCover('missing-id', baseFile)).rejects.toBeInstanceOf(AppError);
+		await expect(
+			attachVideoCover('missing-id', baseFile),
+		).rejects.toBeInstanceOf(AppError);
 		expect(processRasterImage).not.toHaveBeenCalled();
 	});
 

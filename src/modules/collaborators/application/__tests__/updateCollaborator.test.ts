@@ -34,8 +34,8 @@ describe('updateCollaborator', () => {
 	it('throws CollaboratorNotFoundError when member does not exist', async () => {
 		vi.mocked(CollaboratorModel.findOne).mockResolvedValue(null as never);
 
-		await expect(updateCollaborator('not-found', { name: 'X' })).rejects.toThrow(
-			CollaboratorNotFoundError,
-		);
+		await expect(
+			updateCollaborator('not-found', { name: 'X' }),
+		).rejects.toThrow(CollaboratorNotFoundError);
 	});
 });

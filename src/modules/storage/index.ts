@@ -12,7 +12,10 @@ export { getStorageDriver } from './infrastructure/StorageService';
 export { acceptImage } from './middlewares/acceptImage';
 export type { AcceptImageOptions } from './middlewares/acceptImage';
 export { acceptImageFields } from './middlewares/acceptImageFields';
-export type { AcceptImageFieldsOptions, ImageFieldSpec } from './middlewares/acceptImageFields';
+export type {
+	AcceptImageFieldsOptions,
+	ImageFieldSpec,
+} from './middlewares/acceptImageFields';
 export type { StorageFile, StorageDriver } from './domain/StorageDriver';
 export type { UploadInput } from './application/uploadFile';
 export type {

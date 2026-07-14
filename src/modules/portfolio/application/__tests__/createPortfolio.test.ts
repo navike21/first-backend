@@ -14,7 +14,9 @@ vi.mock('@Modules/storage', () => ({
 	uploadImageSafe: vi.fn(),
 	deleteEntityFiles: vi.fn(),
 }));
-vi.mock('@Helpers/uuid', () => ({ default: vi.fn().mockReturnValue('uuid-1') }));
+vi.mock('@Helpers/uuid', () => ({
+	default: vi.fn().mockReturnValue('uuid-1'),
+}));
 
 import { createPortfolio } from '@Modules/portfolio/application/createPortfolio';
 import PortfolioModel from '@Modules/portfolio/infrastructure/PortfolioModel';
@@ -102,12 +104,10 @@ describe('createPortfolio', () => {
 			toObject: vi.fn().mockReturnValue({ id: 'uuid-1', _id: 'mongo-1' }),
 		} as never);
 
-		await createPortfolio(
-			validInput,
-			undefined,
-			'user-1',
-			[galleryFile('a'), galleryFile('b')],
-		);
+		await createPortfolio(validInput, undefined, 'user-1', [
+			galleryFile('a'),
+			galleryFile('b'),
+		]);
 
 		expect(uploadImageSafe).toHaveBeenCalledTimes(2);
 		expect(uploadImageSafe).toHaveBeenCalledWith(
@@ -123,7 +123,11 @@ describe('createPortfolio', () => {
 	it('collects a warning and skips the url for a gallery file that fails to upload', async () => {
 		vi.mocked(PortfolioModel.findOne).mockResolvedValue(null);
 		vi.mocked(uploadImageSafe).mockResolvedValueOnce({
-			warning: { field: 'gallery', code: 'IMAGE_UPLOAD_FAILED', message: 'failed' },
+			warning: {
+				field: 'gallery',
+				code: 'IMAGE_UPLOAD_FAILED',
+				message: 'failed',
+			},
 		});
 		vi.mocked(PortfolioModel.create).mockResolvedValue({
 			toObject: vi.fn().mockReturnValue({ id: 'uuid-1', _id: 'mongo-1' }),

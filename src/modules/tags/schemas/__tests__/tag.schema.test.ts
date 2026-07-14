@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { CreateTagSchema, UpdateTagSchema, ListTagsQuerySchema } from '@Modules/tags/schemas/tag.schema';
+import {
+	CreateTagSchema,
+	UpdateTagSchema,
+	ListTagsQuerySchema,
+} from '@Modules/tags/schemas/tag.schema';
 
 const localizedName = {
 	en: 'Featured',
@@ -22,11 +26,15 @@ describe('tag.schema', () => {
 	});
 
 	it('CreateTagSchema rejects missing slug', () => {
-		expect(CreateTagSchema.safeParse({ name: localizedName }).success).toBe(false);
+		expect(CreateTagSchema.safeParse({ name: localizedName }).success).toBe(
+			false,
+		);
 	});
 
 	it('CreateTagSchema rejects slug with uppercase letters', () => {
-		expect(CreateTagSchema.safeParse({ ...validTag, slug: 'Featured' }).success).toBe(false);
+		expect(
+			CreateTagSchema.safeParse({ ...validTag, slug: 'Featured' }).success,
+		).toBe(false);
 	});
 
 	it('CreateTagSchema rejects missing name', () => {

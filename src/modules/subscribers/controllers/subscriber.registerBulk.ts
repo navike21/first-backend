@@ -7,7 +7,10 @@ import { SubscriberRegisterSchema } from '../schemas/subscriber.schema';
 
 export const subscriberRegisterBulk = asyncHandler(async (req, res) => {
 	if (!Array.isArray(req.body) || req.body.length === 0) {
-		AppError.badRequest('ERROR_NO_SUBSCRIBERS_PROVIDED', 'No subscribers provided for bulk registration');
+		AppError.badRequest(
+			'ERROR_NO_SUBSCRIBERS_PROVIDED',
+			'No subscribers provided for bulk registration',
+		);
 	}
 
 	const input = validateArray(SubscriberRegisterSchema, req.body);
