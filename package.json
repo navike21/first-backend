@@ -2,11 +2,9 @@
 	"name": "first-backend",
 	"version": "1.0.0",
 	"description": "Backend APIs for managing navike21 web ecosystem and services",
-	"main": "dist/index.js",
 	"scripts": {
 		"dev": "nodemon",
 		"build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-		"vercel-build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
 		"lint": "eslint src/ --ext .ts",
 		"format": "prettier --write src/",
 		"format:check": "prettier --check src/",
