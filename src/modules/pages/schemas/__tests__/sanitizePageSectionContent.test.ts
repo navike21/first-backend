@@ -94,6 +94,27 @@ describe('sanitizePageSectionContent', () => {
 		expect(sanitizePageSectionContent(content)).toEqual(content);
 	});
 
+	it('preserves rich formatting (color, table, task list) in a text widget body', () => {
+		const html =
+			'<p>Plan: <span style="color: #EF4444">urgent</span></p>' +
+			'<table style="width:300px"><colgroup><col style="width:300px"></colgroup><tbody><tr><td>a</td></tr></tbody></table>' +
+			'<ul data-type="taskList"><li data-type="taskItem" data-checked="true">' +
+			'<label><input type="checkbox" checked><span></span></label><div><p>done</p></div></li></ul>';
+		const content = {
+			columns: [
+				{ id: 'col-1', elements: [{ id: 'el-1', type: 'text', html: { en: html } }] },
+			],
+		};
+
+		const result = sanitizePageSectionContent(content) as {
+			columns: { elements: { html: Record<string, string> }[] }[];
+		};
+
+		expect(result.columns[0].elements[0].html.en).toContain('color:#EF4444');
+		expect(result.columns[0].elements[0].html.en).toContain('<table');
+		expect(result.columns[0].elements[0].html.en).toContain('data-checked="true"');
+	});
+
 	it('does not throw on a malformed/unexpected column or element shape', () => {
 		const content = {
 			columns: [null, { id: 'col-1' }, { id: 'col-2', elements: [null, 42] }],
