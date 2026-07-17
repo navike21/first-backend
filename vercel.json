@@ -1,7 +1,7 @@
 {
 	"version": 2,
-	"installCommand": "pnpm install --frozen-lockfile",
-	"buildCommand": "pnpm run build",
+	"installCommand": "npx pnpm@10.33.0 install --frozen-lockfile",
+	"buildCommand": "npx pnpm@10.33.0 run build",
 	"outputDirectory": "public",
 	"rewrites": [
 		{
