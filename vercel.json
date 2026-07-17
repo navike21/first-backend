@@ -1,7 +1,6 @@
 {
 	"version": 2,
-	"installCommand": "npx pnpm@10.33.0 install",
-	"buildCommand": "npx pnpm@10.33.0 run build",
+	"buildCommand": "pnpm run build",
 	"outputDirectory": "public",
 	"rewrites": [
 		{
