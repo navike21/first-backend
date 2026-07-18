@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@Modules/notifications-email/application/sendEmail', () => ({
-	sendEmail: vi.fn().mockResolvedValue(undefined),
+vi.mock('@Modules/notifications-email/application/enqueueEmail', () => ({
+	enqueueEmail: vi.fn().mockResolvedValue({ id: 'outbox-1' }),
 }));
 vi.mock('@Modules/notifications-email/templates/verifyEmail.template', () => ({
 	verifyEmailTemplate: vi.fn(() => ({ subject: 'V', html: '<p/>' })),
@@ -24,7 +24,7 @@ vi.mock('@Modules/app-settings', () => ({
 }));
 
 import { registerEmailSubscribers } from '@Modules/notifications-email/application/registerEmailSubscribers';
-import { sendEmail } from '@Modules/notifications-email/application/sendEmail';
+import { enqueueEmail } from '@Modules/notifications-email/application/enqueueEmail';
 import { eventBus } from '@Shared/infrastructure/EventBus';
 import {
 	UserRegisteredEvent,
@@ -38,40 +38,33 @@ describe('registerEmailSubscribers', () => {
 		registerEmailSubscribers(); // idempotent (guarded), subscribes once
 	});
 
-	// Sending is async (the brand is fetched from app-settings first), so wait.
-	it('sends a verification email on UserRegisteredEvent', async () => {
+	it('enqueues a verification email on UserRegisteredEvent', async () => {
 		await eventBus.publish(
 			new UserRegisteredEvent('a@b.com', 'Al', 'http://verify', 'es'),
 		);
-		await vi.waitFor(() =>
-			expect(sendEmail).toHaveBeenCalledWith(
-				expect.objectContaining({ to: 'a@b.com' }),
-			),
+		expect(enqueueEmail).toHaveBeenCalledWith(
+			expect.objectContaining({ to: 'a@b.com' }),
 		);
 	});
 
-	it('sends a reset email on PasswordResetRequestedEvent', async () => {
+	it('enqueues a reset email on PasswordResetRequestedEvent', async () => {
 		await eventBus.publish(
 			new PasswordResetRequestedEvent('c@d.com', 'Bo', 'http://reset', 'en'),
 		);
-		await vi.waitFor(() =>
-			expect(sendEmail).toHaveBeenCalledWith(
-				expect.objectContaining({ to: 'c@d.com' }),
-			),
+		expect(enqueueEmail).toHaveBeenCalledWith(
+			expect.objectContaining({ to: 'c@d.com' }),
 		);
 	});
 
-	it('sends a welcome email on EmailVerifiedEvent', async () => {
+	it('enqueues a welcome email on EmailVerifiedEvent', async () => {
 		await eventBus.publish(new EmailVerifiedEvent('e@f.com', 'Cy', 'fr'));
-		await vi.waitFor(() =>
-			expect(sendEmail).toHaveBeenCalledWith(
-				expect.objectContaining({ to: 'e@f.com' }),
-			),
+		expect(enqueueEmail).toHaveBeenCalledWith(
+			expect.objectContaining({ to: 'e@f.com' }),
 		);
 	});
 
-	it('does not let an email failure reject publish (fire-and-forget)', async () => {
-		vi.mocked(sendEmail).mockRejectedValueOnce(new Error('smtp down'));
+	it('does not let an enqueue failure reject publish (swallowed + logged)', async () => {
+		vi.mocked(enqueueEmail).mockRejectedValueOnce(new Error('mongo down'));
 		await expect(
 			eventBus.publish(
 				new UserRegisteredEvent('g@h.com', 'Dy', 'http://v', 'en'),

@@ -148,14 +148,41 @@ text/textarea/email/phone/select/radio/checkbox/date) que arma un `z.object(shap
 - Preferencias por-usuario: `User.preferences {language,primaryColor,theme}` +
   `PATCH /users/me/preferences`; expuestas en login y `GET /users/me`.
 
-## Emails = event-driven (no bloquean el request)
-Los emails se envían vía **EventBus** (`@Shared/infrastructure/EventBus`), no en línea.
-Productores (`createUser`, `forgotPassword`, `verifyEmail`) **publican** un evento de
-`@Shared/events/emailEvents`; el suscriptor `notifications-email/registerEmailSubscribers`
-(registrado en `initApp`) envía **fire-and-forget** (un fallo de SMTP se loguea y no rompe
-el request). Para añadir un email nuevo: define el evento en `@Shared/events`, publícalo
-en el productor, y suscríbelo en `registerEmailSubscribers`. No vuelvas a `await sendEmail`
-dentro de un caso de uso de negocio.
+## Emails = outbox durable + worker (módulo `notifications-email`)
+El envío es una **capacidad agnóstica centralizada dentro de first** (no un servicio
+externo): una sola función `enqueueEmail({ to, subject, html })` que cualquier módulo
+invoca (`import { enqueueEmail } from '@Modules/notifications-email'`). Arquitectura
+outbox + worker, robusta en serverless:
+
+- **`enqueueEmail`** persiste el correo en la colección **`email_outbox`** (status
+  `pending`) y retorna de inmediato. **NO envía en línea** — así la latencia/fallos del
+  proveedor nunca bloquean ni tumban el request. El request **sí espera** ese insert
+  (es rápido y durable), a diferencia del viejo fire-and-forget que se perdía en
+  serverless cuando la función se congelaba tras responder.
+- **Worker `dispatchPendingEmails`** (`POST /api/v1/emails/dispatch`, protegido por
+  `verifyDispatchRequest` = bearer `EMAIL_DISPATCH_SECRET`): reclama filas atómicamente
+  (`pending` → `sending` con lease `lockedAt`, así dos invocaciones concurrentes no
+  duplican, y recupera filas atascadas de una función muerta), envía por el transporte,
+  y marca `sent` / reintenta / dead-letter (`failed`) tras `maxAttempts`. **A lo más un
+  intento por fila por pasada** (reintentos en drenados separados, con backoff natural).
+- **Trigger = QStash** (Upstash): un schedule llama a `/emails/dispatch` cada ~1 min con
+  el header `Authorization: Bearer <EMAIL_DISPATCH_SECRET>`. Es config de infra (dashboard
+  Upstash), no código. En `NODE_ENV=development` `enqueueEmail` además dispara un drenado
+  in-process best-effort para probar local sin QStash.
+- **Transporte agnóstico** (`infrastructure/transport/`): interfaz `EmailTransport` →
+  `ResendTransport` (prod, `RESEND_API_KEY`) o `SmtpTransport` (dev/Ethereal, fallback).
+  `getEmailTransport()` elige por env (`EMAIL_PROVIDER` / presencia de key). Cambiar de
+  proveedor = env, sin tocar callers.
+- Los 4 correos existentes siguen saliendo por **EventBus** (`@Shared/events/emailEvents`,
+  productores `createUser`/`forgotPassword`/`verifyEmail`/`submitForm`); sus subscribers
+  en `registerEmailSubscribers` ahora llaman `enqueueEmail` (path durable) en vez de
+  enviar inline.
+
+**Para un correo nuevo:** si nace de un evento de dominio, define el evento en
+`@Shared/events`, publícalo en el productor, y en `registerEmailSubscribers` renderiza el
+template y llama `enqueueEmail`. Si un módulo solo quiere "manda este correo" sin evento,
+llama `enqueueEmail` directo. **Nunca** envíes inline con el transporte dentro de un caso
+de uso de negocio.
 
 ## Tests
 - Unit: mockear el modelo/dependencias. Integración: `withMongo()` (real, en memoria).
@@ -184,6 +211,19 @@ Auto-deploy por rama vía GitHub: `feature/*`→Preview, `main`→**Production**
   `auth.json` que está **muerto (403)** — no los uses para mutar; el CLI v51 usa otro auth. `add`/`rm`
   aceptan rama (`vercel env add NAME preview <branch> --value X --yes`); el genérico **sin rama** se
   traba en el guard no-interactivo del plugin (workaround: borrarlo para caer al default, o dashboard).
+
+## Email en producción (outbox + QStash + Resend) — acciones manuales
+El código quedó listo; para que entregue en prod hace falta setear env + infra (nada de
+esto lo hace el código):
+- **Resend:** crear cuenta, verificar el dominio de envío (SPF/DKIM), y setear
+  `RESEND_API_KEY` + `EMAIL_FROM` (dirección del dominio verificado). Con la key,
+  `EMAIL_PROVIDER=auto` ya elige Resend.
+- **QStash (Upstash):** crear un schedule que haga `POST https://<backend>/api/v1/emails/dispatch`
+  cada ~1 min, con el header `Authorization: Bearer <EMAIL_DISPATCH_SECRET>`.
+- **Env vars Vercel:** `EMAIL_DISPATCH_SECRET` (random fuerte; sin él en prod el endpoint
+  responde 503 fail-closed), `RESEND_API_KEY`, `EMAIL_FROM`. Opcionales con default:
+  `EMAIL_OUTBOX_MAX_ATTEMPTS` (5), `EMAIL_OUTBOX_LEASE_MS` (60000), `EMAIL_OUTBOX_BATCH_SIZE` (25).
+- Sin nada de esto, dev sigue funcionando con Ethereal + drenado in-process.
 
 ## Pendientes (no perder de vista)
 - ⚠️ **Acción MANUAL del usuario** (no la hace el código): rotar la credencial de Atlas
