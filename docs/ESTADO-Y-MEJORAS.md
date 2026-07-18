@@ -125,10 +125,14 @@ y la limpieza en update/purge al backend. El frontend (módulo `users`) ya se mi
 - **Hecho:** Se añadió `userId?` (uuid) a `collaborators` para vincular un perfil público a un usuario interno.
 - El **rename del módulo** `collaborators → team-members` se difirió por ser un cambio breaking cross-repo.
 
-### 3.5 ✅ RESUELTO — notifications-email — correcto pero acoplado y síncrono
-- **Hecho:** Desacoplado vía `EventBus` (`UserRegisteredEvent`, `PasswordResetRequestedEvent`, `EmailVerifiedEvent`).
-- Los correos se envían de forma asíncrona (*fire-and-forget*), evitando latencia en el request path.
-- La marca "First Backend" fue removida de las plantillas e inyectada dinámicamente desde `appSettings`.
+### 3.5 ✅ RESUELTO — notifications-email — de fire-and-forget frágil a outbox durable
+- **Hecho (fase 1):** Desacoplado vía `EventBus` (`UserRegisteredEvent`, `PasswordResetRequestedEvent`, `EmailVerifiedEvent`, `FormSubmissionReceivedEvent`). Marca inyectada desde `appSettings`, no hardcodeada.
+- **Hecho (fase 2, 2026-07-17):** El envío ahora es una **capacidad agnóstica durable** dentro de first, no un fire-and-forget que se perdía en serverless.
+  - **Problema que resolvía:** los subscribers hacían `dispatch(promise)` (promesa flotante NO await-eada); en Vercel, tras responder el HTTP la función se congela y esa promesa podía no completarse → correos perdidos en silencio.
+  - **Arquitectura:** `enqueueEmail({to,subject,html})` (API pública, cualquier módulo la invoca) persiste en la colección **`email_outbox`** (`pending`) y retorna; el request **sí espera** ese insert rápido. Un **worker** `dispatchPendingEmails` (`POST /api/v1/emails/dispatch`, guard bearer `EMAIL_DISPATCH_SECRET`) reclama filas atómicamente (lease `lockedAt`, sin doble envío ni filas huérfanas), envía por el **transporte agnóstico** (`ResendTransport` prod / `SmtpTransport` dev, elegido por env), y marca `sent`/reintento/dead-letter tras `maxAttempts` (a lo más 1 intento por fila por pasada).
+  - **Trigger = QStash** (schedule → `/emails/dispatch` cada ~1 min); en dev, `enqueueEmail` drena in-process best-effort.
+  - Los 4 correos existentes adoptaron el path durable (subscribers llaman `enqueueEmail`), sin tocar productores ni EventBus.
+  - **Pendiente de infra (usuario):** cuenta Resend + dominio verificado, cuenta/schedule QStash, y env vars (`RESEND_API_KEY`, `EMAIL_DISPATCH_SECRET`, `EMAIL_FROM`) en Vercel. Ver `CLAUDE.md` §"Email en producción".
 
 ### 3.6 ✅ RESUELTO — user-groups (RBAC) — falta distinción super y enforcement de purge
 - **Hecho:** Se restringió el purge físico a nivel arquitectura. La destrucción requiere permiso `:purge` explícito o `*:*` (el rol `*:*` = super-root, mientras que `super-admin` tiene todo excepto `:purge`).

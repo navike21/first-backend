@@ -87,8 +87,12 @@ secret is left at its insecure default while `NODE_ENV=production`.
 | `JWT_REFRESH_EXPIRES` | `30d` | |
 | `JWT_EMAIL_EXPIRES` | `24h` | |
 | `JWT_RESET_EXPIRES` | `1h` | |
-| `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_USER` / `EMAIL_PASS` | — | Optional — an [Ethereal](https://ethereal.email) test account is auto-created in dev when unset |
+| `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_USER` / `EMAIL_PASS` | — | Optional SMTP — an [Ethereal](https://ethereal.email) test account is auto-created in dev when unset |
 | `EMAIL_FROM` | `noreply@first-backend.com` | |
+| `EMAIL_PROVIDER` | `auto` | `auto` \| `resend` \| `smtp` — `auto` picks Resend when `RESEND_API_KEY` is set, else SMTP |
+| `RESEND_API_KEY` | — | Enables the Resend transport (managed provider) |
+| `EMAIL_DISPATCH_SECRET` | — | Bearer that guards `POST /emails/dispatch`; **fails closed (503) in prod when unset** |
+| `EMAIL_OUTBOX_MAX_ATTEMPTS` / `EMAIL_OUTBOX_LEASE_MS` / `EMAIL_OUTBOX_BATCH_SIZE` | `5` / `60000` / `25` | Outbox worker tuning |
 | `DNS_SERVERS` | `8.8.8.8,1.1.1.1` | Fallback resolvers for Atlas SRV lookups on some networks |
 | `STORAGE_DRIVER` | `vercel-blob` | `vercel-blob` \| `s3` \| `gcs` \| `azure-blob` |
 | `STORAGE_MAX_FILE_SIZE_BYTES` | `10485760` (10 MB) | Generic upload cap |
@@ -114,7 +118,7 @@ secret is left at its insecure default while `NODE_ENV=production`.
 | Validation | Zod 4 |
 | Auth | JWT — separate access/refresh/email secrets, refresh-token rotation with reuse detection |
 | Rate limiting | `express-rate-limit`, backed by a custom **MongoDB store** (not in-memory — stays correct across concurrent serverless instances) |
-| Email | Nodemailer (Ethereal in dev, SMTP in prod), dispatched asynchronously via an in-process `EventBus` |
+| Email | Durable **outbox** (Mongo) + worker drained by QStash; **Resend** or SMTP/Ethereal behind a transport interface. One agnostic `enqueueEmail()` any module calls |
 | Storage | Vercel Blob / S3 / GCS / Azure Blob — one driver interface, swappable via `STORAGE_DRIVER` |
 | Image processing | `sharp` — generates `full` (≤2000px) + `thumb` (700px) WebP variants |
 | Realtime | Socket.io — presence |
@@ -186,7 +190,7 @@ modules/<name>/
 | `site-config` | Global site-wide presentation settings (header/footer/social/maps provider) — distinct from `app-settings` |
 | `app-settings` | Organization-level config singleton (branding, notifications, appearance) |
 | `audit-log` | Append-only trail, auto-populated by middleware, filterable by user/action/resource/date; also records every 403 |
-| `notifications-email` | Transactional templates, dispatched asynchronously via the `EventBus` |
+| `notifications-email` | Agnostic `enqueueEmail()` + durable outbox + QStash-driven worker + Resend/SMTP transport. Any module sends mail through one function |
 | `config` | Read-only reference data: currencies, document types, languages, industries, client types, genders, collaborator roles/levels, technologies |
 | `geo` | Read-only reference data: countries + Peru ubigeo, cascading region → province → district |
 | `health` | `GET /health` — 200 + `db:connected`, or 503 |

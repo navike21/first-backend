@@ -36,6 +36,23 @@ const EnvSchema = z.object({
 	EMAIL_PASS: z.string().optional(),
 	EMAIL_FROM: z.string().default('noreply@first-backend.com'),
 
+	// Email — outbox durable + worker. Opcionales: sin config, dev sigue
+	// usando el transporte SMTP/Ethereal y un drenado in-process (ver
+	// enqueueEmail). `EMAIL_PROVIDER` fuerza el transporte; 'auto' elige Resend
+	// si hay RESEND_API_KEY, si no SMTP.
+	EMAIL_PROVIDER: z.enum(['auto', 'resend', 'smtp']).default('auto'),
+	RESEND_API_KEY: z.string().optional(),
+	// Reintentos y lease del reclamo de filas del outbox.
+	EMAIL_OUTBOX_MAX_ATTEMPTS: z.coerce.number().int().positive().default(5),
+	EMAIL_OUTBOX_LEASE_MS: z.coerce.number().int().positive().default(60_000),
+	// Cuántas filas drena cada invocación del worker.
+	EMAIL_OUTBOX_BATCH_SIZE: z.coerce.number().int().positive().default(25),
+	// Auth del endpoint /emails/dispatch. En prod se verifica la firma de QStash
+	// con estas dos signing keys; si no están, se cae al bearer secret.
+	QSTASH_CURRENT_SIGNING_KEY: z.string().optional(),
+	QSTASH_NEXT_SIGNING_KEY: z.string().optional(),
+	EMAIL_DISPATCH_SECRET: z.string().optional(),
+
 	// DNS — public resolvers as fallback for MongoDB Atlas SRV in some environments
 	DNS_SERVERS: z.string().default('8.8.8.8,1.1.1.1'),
 

@@ -8,18 +8,27 @@ import {
 	type EmailVerifiedEvent,
 	type FormSubmissionReceivedEvent,
 } from '@Shared/events/emailEvents';
-import { sendEmail } from './sendEmail';
+import { enqueueEmail } from './enqueueEmail';
 import { verifyEmailTemplate } from '../templates/verifyEmail.template';
 import { welcomeEmailTemplate } from '../templates/welcomeEmail.template';
 import { passwordResetTemplate } from '../templates/passwordReset.template';
 import { formSubmissionReceivedTemplate } from '../templates/formSubmissionReceived.template';
 
 /**
- * Fire-and-forget delivery: a failed email must never break the request that
- * produced the event, so errors are logged and swallowed (not awaited upstream).
+ * Encola de forma durable, esperando el insert al outbox pero sin dejar que un
+ * fallo rompa el request que produjo el evento. A diferencia del envío antiguo
+ * (fire-and-forget de una promesa flotante que en serverless se perdía), acá el
+ * enqueue SÍ se espera —es un insert rápido— así el correo queda persistido
+ * antes de responder; el envío real lo hace el worker aparte. Los errores se
+ * loguean y se tragan (crear el usuario no debe fallar porque el correo no se
+ * pudo encolar).
  */
-function dispatch(promise: Promise<void>): void {
-	promise.catch((error) => logError(`[email] delivery failed: ${error}`));
+async function safeEnqueue(fn: () => Promise<unknown>): Promise<void> {
+	try {
+		await fn();
+	} catch (error) {
+		logError(`[email] enqueue failed: ${error}`);
+	}
 }
 
 /** Brand name for emails, from app-settings (cached); never throws. */
@@ -45,77 +54,67 @@ export function registerEmailSubscribers(): void {
 
 	eventBus.subscribe<UserRegisteredEvent>(
 		EMAIL_EVENTS.USER_REGISTERED,
-		(event) => {
-			dispatch(
-				resolveAppName().then((appName) =>
-					sendEmail({
-						to: event.email,
-						...verifyEmailTemplate({
-							firstName: event.firstName,
-							verificationUrl: event.verificationUrl,
-							lang: event.lang,
-							appName,
-						}),
+		(event) =>
+			safeEnqueue(async () => {
+				const appName = await resolveAppName();
+				await enqueueEmail({
+					to: event.email,
+					...verifyEmailTemplate({
+						firstName: event.firstName,
+						verificationUrl: event.verificationUrl,
+						lang: event.lang,
+						appName,
 					}),
-				),
-			);
-		},
+				});
+			}),
 	);
 
 	eventBus.subscribe<PasswordResetRequestedEvent>(
 		EMAIL_EVENTS.PASSWORD_RESET_REQUESTED,
-		(event) => {
-			dispatch(
-				resolveAppName().then((appName) =>
-					sendEmail({
-						to: event.email,
-						...passwordResetTemplate({
-							firstName: event.firstName,
-							resetUrl: event.resetUrl,
-							lang: event.lang,
-							appName,
-						}),
+		(event) =>
+			safeEnqueue(async () => {
+				const appName = await resolveAppName();
+				await enqueueEmail({
+					to: event.email,
+					...passwordResetTemplate({
+						firstName: event.firstName,
+						resetUrl: event.resetUrl,
+						lang: event.lang,
+						appName,
 					}),
-				),
-			);
-		},
+				});
+			}),
 	);
 
-	eventBus.subscribe<EmailVerifiedEvent>(
-		EMAIL_EVENTS.EMAIL_VERIFIED,
-		(event) => {
-			dispatch(
-				resolveAppName().then((appName) =>
-					sendEmail({
-						to: event.email,
-						...welcomeEmailTemplate({
-							firstName: event.firstName,
-							lang: event.lang,
-							appName,
-						}),
-					}),
-				),
-			);
-		},
+	eventBus.subscribe<EmailVerifiedEvent>(EMAIL_EVENTS.EMAIL_VERIFIED, (event) =>
+		safeEnqueue(async () => {
+			const appName = await resolveAppName();
+			await enqueueEmail({
+				to: event.email,
+				...welcomeEmailTemplate({
+					firstName: event.firstName,
+					lang: event.lang,
+					appName,
+				}),
+			});
+		}),
 	);
 
 	eventBus.subscribe<FormSubmissionReceivedEvent>(
 		EMAIL_EVENTS.FORM_SUBMISSION_RECEIVED,
-		(event) => {
-			dispatch(
-				resolveAppName().then(async (appName) => {
-					const email = formSubmissionReceivedTemplate({
-						formTitle: event.formTitle,
-						submissionData: event.submissionData,
-						lang: event.lang,
-						appName,
-					});
-					// One recipient failing to send must not block the others.
-					await Promise.allSettled(
-						event.recipients.map((to) => sendEmail({ to, ...email })),
-					);
-				}),
-			);
-		},
+		(event) =>
+			safeEnqueue(async () => {
+				const appName = await resolveAppName();
+				const email = formSubmissionReceivedTemplate({
+					formTitle: event.formTitle,
+					submissionData: event.submissionData,
+					lang: event.lang,
+					appName,
+				});
+				// Una dirección que falle al encolar no debe bloquear a las demás.
+				await Promise.allSettled(
+					event.recipients.map((to) => enqueueEmail({ to, ...email })),
+				);
+			}),
 	);
 }
