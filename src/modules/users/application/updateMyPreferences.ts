@@ -4,8 +4,8 @@ import { UserNotFoundError } from '../domain/errors/UserErrors';
 import type { UpdatePreferencesInput } from '../schemas/user.schema';
 
 /**
- * Partially updates the authenticated user's UI preferences (language, primary
- * color, theme). Returns the merged preferences so the frontend can apply them.
+ * Partially updates the authenticated user's UI preferences (language, theme).
+ * Returns the merged preferences so the frontend can apply them.
  */
 export async function updateMyPreferences(
 	userId: string,

@@ -43,7 +43,6 @@ const userResponseSchema = registry.register(
 		address: addressSchema.optional(),
 		preferences: z.object({
 			language: z.string().optional(),
-			primaryColor: z.string().optional(),
 			theme: z.enum(['light', 'dark', 'system']),
 		}),
 		groupIds: z.array(z.string()),
