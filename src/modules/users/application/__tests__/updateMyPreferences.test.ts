@@ -21,18 +21,16 @@ describe('updateMyPreferences', () => {
 		expect(inDb!.preferences.theme).toBe('system');
 	});
 
-	it('updates theme, language and primaryColor', async () => {
+	it('updates theme and language', async () => {
 		const user = await seedUser();
 
 		const prefs = await updateMyPreferences(user.id, {
 			theme: 'dark',
 			language: 'es',
-			primaryColor: '#3366FF',
 		});
 
 		expect(prefs.theme).toBe('dark');
 		expect(prefs.language).toBe('es');
-		expect(prefs.primaryColor).toBe('#3366FF');
 	});
 
 	it('merges partial updates, leaving other preferences intact', async () => {

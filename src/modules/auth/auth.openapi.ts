@@ -13,7 +13,6 @@ import {
 
 const userPreferencesSchema = z.object({
 	language: z.string().optional(),
-	primaryColor: z.string().optional(),
 	theme: z.enum(['light', 'dark', 'system']),
 });
 

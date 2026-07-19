@@ -145,8 +145,10 @@ text/textarea/email/phone/select/radio/checkbox/date) que arma un `z.object(shap
 - Reset de password **un-solo-uso** vía `User.passwordChangedAt` (rechaza token con `iat`
   anterior al último cambio). Emails escapan HTML (`helpers/escapeHtml`).
 - `captureAudit({ captureFailures:true })` audita no-2xx (hoy aplicado a login).
-- Preferencias por-usuario: `User.preferences {language,primaryColor,theme}` +
+- Preferencias por-usuario: `User.preferences {language,theme}` +
   `PATCH /users/me/preferences`; expuestas en login y `GET /users/me`.
+  (`primaryColor` se quitó: el color del admin quedó bloqueado al Manual de
+  Marca en el frontend, sin selección por usuario.)
 
 ## Emails = outbox durable + worker (módulo `notifications-email`)
 El envío es una **capacidad agnóstica centralizada dentro de first** (no un servicio

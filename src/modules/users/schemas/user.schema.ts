@@ -59,10 +59,6 @@ export const UpdateMyProfileSchema = z.object({
 export const UpdatePreferencesSchema = z
 	.object({
 		language: z.string().min(2).max(10).optional(),
-		primaryColor: z
-			.string()
-			.regex(/^#[0-9a-fA-F]{6}$/, 'PREFERENCES_COLOR_INVALID')
-			.optional(),
 		theme: z.enum(['light', 'dark', 'system']).optional(),
 	})
 	.refine((data) => Object.keys(data).length > 0, {

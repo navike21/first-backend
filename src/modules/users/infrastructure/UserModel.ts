@@ -35,8 +35,6 @@ export const THEME_PREFERENCE_ARRAY: ThemePreference[] = [
 export interface UserPreferences {
 	/** Preferred language (ISO code); falls back to app-settings.defaultLanguage. */
 	language?: string;
-	/** Hex primary color (#RRGGBB); falls back to app-settings.primaryColor. */
-	primaryColor?: string;
 	theme: ThemePreference;
 }
 
@@ -82,7 +80,6 @@ const addressSchema = new Schema<AddressDocument>(
 const preferencesSchema = new Schema<UserPreferences>(
 	{
 		language: { type: String, maxlength: 10 },
-		primaryColor: { type: String, match: /^#[0-9A-Fa-f]{6}$/ },
 		theme: {
 			type: String,
 			enum: THEME_PREFERENCE_ARRAY,
