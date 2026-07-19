@@ -201,6 +201,17 @@ Auto-deploy por rama vía GitHub: `feature/*`→Preview, `main`→**Production**
 `prj_rnqv2qn0dktQNctPZFPOfobo0JTL`, team `team_HlO61rBCXDgQTkK5byfxEoEk`). Health:
 `GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta). Dominios prod:
 `first-backend-navike21.vercel.app`, `first-backend-alpha.vercel.app`.
+- ⚠️ **El alias de producción NO se mueve solo tras cada merge a `main`** (recurrente,
+  no resuelto de raíz — visto de nuevo en el merge de PR #53). El deploy nuevo SÍ se
+  construye y GitHub lo marca `environment: Production` con "Deployment has completed",
+  pero `first-backend-navike21.vercel.app` puede seguir apuntando al deployment anterior.
+  **Tras cada merge a main, verificar** con
+  `curl https://first-backend-navike21.vercel.app/api/v1/health` o comparando el
+  `githubCommitSha` de `get_deployment(idOrUrl: "first-backend-navike21.vercel.app")`
+  contra `git ls-remote origin main` — si no coinciden, `vercel alias set
+  <url-del-deploy-nuevo> first-backend-navike21.vercel.app` (requiere `vercel switch
+  navike21` primero: el CLI a veces queda logueado en el scope personal
+  `jos-ivn-chapon-casianos-projects`, no en el team `navike21` donde vive el proyecto).
 - **Env vars (Vercel).** `MONGO_URI`+`MONGO_DATABASE` son las **únicas requeridas**
   (`environments.ts` hace `process.exit(1)` si faltan → `FUNCTION_INVOCATION_FAILED`). `NODE_ENV`
   sólo acepta `development|production|test` (un valor inválido **crashea** igual que si faltara).
