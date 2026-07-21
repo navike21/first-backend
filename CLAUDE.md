@@ -144,6 +144,10 @@ text/textarea/email/phone/select/radio/checkbox/date) que arma un `z.object(shap
 - `authLimiter` (5/min) en `/auth/login|forgot-password|reset-password`.
 - Reset de password **un-solo-uso** vía `User.passwordChangedAt` (rechaza token con `iat`
   anterior al último cambio). Emails escapan HTML (`helpers/escapeHtml`).
+- El link de `forgotPassword` embebe el idioma: `${CLIENT_URL}/${lang}/reset-password?token=...`
+  — el frontend es 100% locale-prefixed (`/:lang/...`), así que el link sin `/{lang}/`
+  no matcheaba ninguna ruta real (bug ya corregido). El slug `reset-password` en sí
+  queda fijo (no traducido) en las 10 rutas del frontend — solo el prefijo de idioma cambia.
 - `captureAudit({ captureFailures:true })` audita no-2xx (hoy aplicado a login).
 - Preferencias por-usuario: `User.preferences {language,theme}` +
   `PATCH /users/me/preferences`; expuestas en login y `GET /users/me`.

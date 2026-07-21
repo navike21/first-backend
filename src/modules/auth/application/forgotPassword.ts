@@ -16,7 +16,7 @@ export async function forgotPassword(email: string, lang = 'en') {
 	}
 
 	const token = JwtService.signEmail({ sub: user.id, type: 'password_reset' });
-	const resetUrl = `${ENV.CLIENT_URL}/reset-password?token=${token}`;
+	const resetUrl = `${ENV.CLIENT_URL}/${lang}/reset-password?token=${token}`;
 
 	await eventBus.publish(
 		new PasswordResetRequestedEvent(user.email, user.firstName, resetUrl, lang),
