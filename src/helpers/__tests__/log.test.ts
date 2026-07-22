@@ -76,7 +76,9 @@ describe('logError', () => {
 		expect(spy).toHaveBeenCalledWith('ERROR: something went wrong');
 	});
 
-	it('does not call console.error when not in development', async () => {
+	// Unlike logInfo, errors must stay visible outside development — a
+	// production crash with no log trail is undebuggable.
+	it('still calls console.error when not in development', async () => {
 		// Arrange
 		vi.doMock('@Helpers/systemEnvironment', () => ({
 			isDevelopmentEnvironment: () => ({ isDevelopment: false }),
@@ -88,6 +90,21 @@ describe('logError', () => {
 		logError('something went wrong');
 
 		// Assert
-		expect(spy).not.toHaveBeenCalled();
+		expect(spy).toHaveBeenCalledWith('ERROR: something went wrong');
+	});
+
+	it('serializes objects to JSON', async () => {
+		// Arrange
+		vi.doMock('@Helpers/systemEnvironment', () => ({
+			isDevelopmentEnvironment: () => ({ isDevelopment: false }),
+		}));
+		const { logError } = await import('@Helpers/log');
+		const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+		// Act
+		logError({ key: 'value' });
+
+		// Assert
+		expect(spy).toHaveBeenCalledWith(expect.stringContaining('"key": "value"'));
 	});
 });
