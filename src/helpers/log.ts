@@ -18,8 +18,9 @@ export function logInfo(message: Log): void {
 }
 
 export function logError(message: Log): void {
-	if (isDevelopment) {
-		// eslint-disable-next-line no-console
-		console.error(`ERROR: ${formatMessage(message)}`);
-	}
+	// Unlike logInfo, this must never be gated behind isDevelopment — an
+	// unhandled error is exactly the thing production needs visibility into,
+	// and silencing it here left every real crash invisible in prod logs.
+	// eslint-disable-next-line no-console
+	console.error(`ERROR: ${formatMessage(message)}`);
 }
