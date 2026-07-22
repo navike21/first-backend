@@ -28,7 +28,7 @@ vi.mock('multer', () => {
 	return { default: fn };
 });
 
-vi.mock('file-type', () => ({ fileTypeFromBuffer: vi.fn() }));
+vi.mock('file-type', () => ({ fromBuffer: vi.fn() }));
 
 import { storageApi } from '../route';
 

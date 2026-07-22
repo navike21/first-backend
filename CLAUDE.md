@@ -105,6 +105,36 @@ El front manda **un solo request**; el backend sube. Detalle en `docs/API-UPLOAD
 Storage es **agnóstico** (vercel-blob/s3/gcs/azure vía `STORAGE_DRIVER`). Imágenes ≤4 MB
 (`STORAGE_MAX_IMAGE_SIZE_BYTES`), validadas por magic-bytes; genera variantes full/thumb webp.
 
+### Gotcha real (ya resuelto, no reintroducir): `file-type` ESM-only rompía **toda** subida de imagen en prod
+`validateFileType.ts` (magic-bytes check, usado por absolutamente todo upload de imagen —
+Users/Clients/Collaborators/Portfolio/Services/Pages/Media library) hacía
+`const { fileTypeFromBuffer } = await import('file-type')`. `file-type@21` es puro ESM
+(`"type":"module"`, sin condición `require` en su `exports`) — TypeScript compilando a
+`module:"commonjs"` (este proyecto) **downlevela ese `await import()` a un `require()` real**
+(`Promise.resolve().then(() => require('file-type'))`, confirmado leyendo `dist/`), así que en
+producción **todo** upload de imagen tiraba `Error [ERR_PACKAGE_PATH_NOT_EXPORTED]` — mismo
+patrón exacto que el bug ya conocido de `sanitize-html@2.17.6`/`htmlparser2` (ESM-only rompiendo
+un `require()` bajo Vercel). Invisible en tests porque `validateFileType.test.ts`/
+`route.test.ts` **mockean el módulo `file-type` entero** (`vi.mock('file-type', ...)`), así que
+la resolución real del paquete nunca se ejercita. Arreglado fijando `file-type` a **16.5.4**
+exacta (último major con build CJS real — confirmado: sin `"type":"module"`, `main` implícito a
+`index.js`) y usando su nombre de export de esa versión, `fromBuffer` (no `fileTypeFromBuffer`,
+que es el nombre nuevo de la reescritura ESM de v17+) — aliasado en el destructuring para no
+tocar el resto de la función. Si se actualiza `file-type` de nuevo, verificar primero con
+`node -e "require('file-type')"` (no solo `pnpm test`, que lo mockea) que el paquete siga siendo
+`require()`-able bajo Node puro.
+
+### Gotcha real (ya resuelto, no reintroducir): `logError` silenciado en producción — ningún crash dejaba rastro
+`helpers/log.ts::logError` estaba gateado detrás del mismo flag `isDevelopment` que `logInfo`
+(pensado para no ensuciar logs de prod con info verbosa) — pero eso también apagaba
+`console.error` para errores **no manejados** reales. `errorMiddleware` sí devuelve una
+respuesta 500 correcta al cliente en cualquier caso, pero el stack trace real nunca llegaba a
+los logs de Vercel — confirmado en vivo: el bug de `file-type` de arriba se reprodujo varias
+veces con 500 en logs sin ninguna entrada de error, hasta corregir esto. `logInfo` se mantiene
+dev-only (no crítico); `logError` ahora siempre emite — ese es justo el caso donde la
+visibilidad en producción importa más. Si un 500 real no deja rastro en los logs de Vercel,
+sospechar primero de un gate como este antes de asumir que el error no se registró.
+
 ## users vs collaborators
 NO son lo mismo: `users` = identidad con acceso (login, grupo, permisos); `collaborators` =
 entidad CMS pública (equipo). Separación intencional.

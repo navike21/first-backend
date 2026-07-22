@@ -37,7 +37,11 @@ export async function validateSingleFile(
 		return;
 	}
 
-	const { fileTypeFromBuffer } = await import('file-type');
+	// file-type is pinned to 16.5.4 (the last version with a real CJS build —
+	// see package.json) and exports `fromBuffer`, not `fileTypeFromBuffer`
+	// (renamed in the v17 ESM-only rewrite). Aliased here so the rest of this
+	// function reads the same regardless of which name upstream uses.
+	const { fromBuffer: fileTypeFromBuffer } = await import('file-type');
 	const detected = await fileTypeFromBuffer(file.buffer);
 
 	if (!detected) {

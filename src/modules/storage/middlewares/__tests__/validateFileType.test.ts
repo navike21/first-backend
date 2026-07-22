@@ -5,10 +5,10 @@ import { STORAGE_ERRORS } from '../../domain/errors/StorageErrors';
 import { IMAGE_MIME_TYPES } from '../../constants/allowedMimeTypes';
 
 vi.mock('file-type', () => ({
-	fileTypeFromBuffer: vi.fn(),
+	fromBuffer: vi.fn(),
 }));
 
-import { fileTypeFromBuffer } from 'file-type';
+import { fromBuffer as fileTypeFromBuffer } from 'file-type';
 import { validateFileType } from '../validateFileType';
 
 function buildFile(
