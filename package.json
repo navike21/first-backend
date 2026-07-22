@@ -96,7 +96,7 @@
 		"date-fns": "^4.1.0",
 		"express": "^5.2.1",
 		"express-rate-limit": "^8.5.2",
-		"file-type": "^21.3.4",
+		"file-type": "16.5.4",
 		"helmet": "^8.1.0",
 		"i18next": "^26.0.8",
 		"i18next-fs-backend": "^2.6.6",
