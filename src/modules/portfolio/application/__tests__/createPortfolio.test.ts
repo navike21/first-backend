@@ -95,6 +95,31 @@ describe('createPortfolio', () => {
 		expect(PortfolioModel.create).not.toHaveBeenCalled();
 	});
 
+	it('throws PORTFOLIO_COVER_UPLOAD_FAILED (not the generic "required" error) when a cover file was provided but failed to upload', async () => {
+		vi.mocked(PortfolioModel.findOne).mockResolvedValue(null);
+		vi.mocked(uploadImageSafe).mockResolvedValueOnce({
+			warning: {
+				field: 'cover',
+				code: 'IMAGE_UPLOAD_FAILED',
+				message: 'The cover image is corrupted or in an unsupported format',
+			},
+		});
+		const { coverImageUrl: _cover, ...withoutCover } = validInput;
+		const coverFile = galleryFile('cover');
+
+		await expect(
+			createPortfolio(
+				withoutCover as typeof validInput,
+				coverFile,
+				'user-1',
+			),
+		).rejects.toMatchObject({
+			code: 'PORTFOLIO_COVER_UPLOAD_FAILED',
+			message: 'The cover image is corrupted or in an unsupported format',
+		});
+		expect(PortfolioModel.create).not.toHaveBeenCalled();
+	});
+
 	it('uploads gallery files and stores their urls in arrival order', async () => {
 		vi.mocked(PortfolioModel.findOne).mockResolvedValue(null);
 		vi.mocked(uploadImageSafe)

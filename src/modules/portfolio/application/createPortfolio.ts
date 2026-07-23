@@ -10,6 +10,57 @@ import PortfolioModel from '../infrastructure/PortfolioModel';
 import { PORTFOLIO_ENTITY_TYPE } from '../constants/paths';
 import type { CreatePortfolioInput } from '../schemas/portfolio.schema';
 
+interface CoverResolution {
+	coverImageUrl: string;
+	warning?: ResponseWarning;
+}
+
+/**
+ * Resolves the cover for a new portfolio: uploads `file` if provided, else
+ * falls back to `inputUrl`. The cover is required, so this throws when
+ * neither yields one — with a distinct code when a file WAS provided but
+ * `uploadImageSafe` (which never throws, only warns) couldn't process it,
+ * so the real reason surfaces instead of a generic "missing cover" message
+ * for something the user did send.
+ */
+async function resolveCoverOrThrow(
+	id: string,
+	inputUrl: string | undefined,
+	file: IncomingFile | undefined,
+	uploadedBy: string | undefined,
+): Promise<CoverResolution> {
+	if (!file) {
+		if (inputUrl) return { coverImageUrl: inputUrl };
+		AppError.unprocessable(
+			'PORTFOLIO_COVER_REQUIRED',
+			'A cover image is required',
+		);
+	}
+
+	const uploaded = await uploadImageSafe({
+		buffer: file.buffer,
+		originalName: file.originalName,
+		mimeType: file.mimeType,
+		entityType: PORTFOLIO_ENTITY_TYPE,
+		entityId: id,
+		field: 'cover',
+		uploadedBy,
+	});
+	if (uploaded.url) return { coverImageUrl: uploaded.url, warning: uploaded.warning };
+
+	if (uploaded.warning) {
+		AppError.unprocessable(
+			'PORTFOLIO_COVER_UPLOAD_FAILED',
+			uploaded.warning.message,
+			uploaded.warning,
+		);
+	}
+	AppError.unprocessable(
+		'PORTFOLIO_COVER_REQUIRED',
+		'A cover image is required',
+	);
+}
+
 export async function createPortfolio(
 	input: CreatePortfolioInput,
 	file?: IncomingFile,
@@ -22,30 +73,16 @@ export async function createPortfolio(
 	if (existing) throw new PortfolioSlugConflictError();
 
 	const id = generateUUID();
-	let coverImageUrl = input.coverImageUrl;
 	const warnings: ResponseWarning[] = [];
 
-	if (file) {
-		const uploaded = await uploadImageSafe({
-			buffer: file.buffer,
-			originalName: file.originalName,
-			mimeType: file.mimeType,
-			entityType: PORTFOLIO_ENTITY_TYPE,
-			entityId: id,
-			field: 'cover',
-			uploadedBy,
-		});
-		if (uploaded.url) coverImageUrl = uploaded.url;
-		if (uploaded.warning) warnings.push(uploaded.warning);
-	}
-
-	// The cover is required: it must come from a successful upload or a URL.
-	if (!coverImageUrl) {
-		AppError.unprocessable(
-			'PORTFOLIO_COVER_REQUIRED',
-			'A cover image is required',
-		);
-	}
+	const cover = await resolveCoverOrThrow(
+		id,
+		input.coverImageUrl,
+		file,
+		uploadedBy,
+	);
+	const coverImageUrl = cover.coverImageUrl;
+	if (cover.warning) warnings.push(cover.warning);
 
 	// Nothing pre-exists on create, so the gallery is entirely whatever was
 	// just uploaded, in the order the files arrived.
