@@ -222,38 +222,79 @@ de uso de negocio.
   `deleteStorageFilesByIds`) devolviendo **promesas resueltas** (el código hace `.catch`).
 - Tras cambios, deja **lint + typecheck + suite** en verde antes de cerrar.
 
-## Deploy (Vercel) y flujo de ramas
-**Flujo (desde 2026-06-14): SOLO existe `main`. Todo sale por `feature/*` desde `main`** → PR →
-merge a `main`. No hay `develop` ni `release` (se eliminaron, junto con ramas y worktrees viejos).
-Como la feature nace de `main`, **el merge de vuelta es limpio** (comparten ancestro) — se acabó el
-dolor de las historias disjuntas/cherry-pick que había entre develop↔main.
-Auto-deploy por rama vía GitHub: `feature/*`→Preview, `main`→**Production** (proyecto
+## Ambientes (development / test / production)
+
+Tres ambientes con datos completamente separados (mismo cluster Atlas, una
+base de datos por ambiente) — desarrollo local **nunca** toca datos reales:
+
+| Ambiente | Vercel scope | URL | Mongo DB | Cuándo |
+|---|---|---|---|---|
+| **Development** | Development | `http://localhost:3200` (opcional — solo si corres el backend local) | `first-db__development` | Poco común — el frontend local normalmente habla con Test, no con un backend local (ver `first-frontend/CLAUDE.md`) |
+| **Test** | Preview (rama `test`) | `https://first-backend-git-test-navike21.vercel.app` | `first-db__release` | Staging persistente — probar una feature completa (front+back) antes de mergear, sin arriesgar producción |
+| **Production** | Production | `https://first-backend-alpha.vercel.app` / `https://first-backend-navike21.vercel.app` | `first-db__production` | Usuarios reales |
+
+**La rama `test` es infraestructura, no una rama de feature** (ver
+`TEST_BRANCH.md`) — existe solo para que Vercel tenga un branch estable
+donde desplegar el ambiente de Test. Tiene un PR permanentemente abierto
+contra `main` (PR #57 — **nunca mergear ni cerrar**) porque el proyecto
+**solo auto-despliega ramas con un PR asociado** (confirmado en vivo: un
+`git push` de la rama `test` sola, sin PR, no generó ningún deployment;
+abrir el PR sí lo disparó de inmediato). Para traer los cambios de `main`
+al ambiente de test: `git checkout test && git merge main && git push`.
+Si `first-db__release` no tiene un super-admin sembrado todavía, correr el
+script de seed (ver "Comandos" arriba) apuntando `MONGO_URI`/`MONGO_DATABASE`
+a ese ambiente antes de intentar loguearse contra Test.
+
+**Flujo de ramas de feature (desde 2026-06-14): SOLO existe `main`. Todo
+sale por `feature/*` desde `main`** → PR → merge a `main`. No hay `develop`
+ni `release` como ramas (se eliminaron) — pero sus **nombres de base de
+datos sobreviven** como los del scope Preview genérico (`first-db__release`
+para Test, ver tabla arriba) y Development (`first-db__development`), un
+resabio histórico, no un bug.
+Auto-deploy por rama vía GitHub: `feature/*`→Preview efímero, `test`→ambiente
+de Test persistente (ver arriba), `main`→**Production** (proyecto
 `prj_rnqv2qn0dktQNctPZFPOfobo0JTL`, team `team_HlO61rBCXDgQTkK5byfxEoEk`). Health:
-`GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta). Dominios prod:
-`first-backend-navike21.vercel.app`, `first-backend-alpha.vercel.app`.
+`GET /api/v1/health` (200 + `db:connected`, o 503 si Mongo no conecta).
 - ⚠️ **El alias de producción NO se mueve solo tras cada merge a `main`** (recurrente,
-  no resuelto de raíz — visto de nuevo en el merge de PR #53). El deploy nuevo SÍ se
-  construye y GitHub lo marca `environment: Production` con "Deployment has completed",
-  pero `first-backend-navike21.vercel.app` puede seguir apuntando al deployment anterior.
-  **Tras cada merge a main, verificar** con
+  no resuelto de raíz — visto de nuevo en el merge de PR #53 y de nuevo en el de PR #56).
+  El deploy nuevo SÍ se construye y GitHub lo marca `environment: Production` con
+  "Deployment has completed", pero `first-backend-navike21.vercel.app` puede seguir
+  apuntando al deployment anterior. **Tras cada merge a main, verificar** con
   `curl https://first-backend-navike21.vercel.app/api/v1/health` o comparando el
   `githubCommitSha` de `get_deployment(idOrUrl: "first-backend-navike21.vercel.app")`
   contra `git ls-remote origin main` — si no coinciden, `vercel alias set
   <url-del-deploy-nuevo> first-backend-navike21.vercel.app` (requiere `vercel switch
   navike21` primero: el CLI a veces queda logueado en el scope personal
   `jos-ivn-chapon-casianos-projects`, no en el team `navike21` donde vive el proyecto).
+  El mismo `vercel alias set` aplica igual para re-apuntar
+  `first-backend-git-test-navike21.vercel.app` tras un deploy manual a Test.
 - **Env vars (Vercel).** `MONGO_URI`+`MONGO_DATABASE` son las **únicas requeridas**
   (`environments.ts` hace `process.exit(1)` si faltan → `FUNCTION_INVOCATION_FAILED`). `NODE_ENV`
   sólo acepta `development|production|test` (un valor inválido **crashea** igual que si faltara).
-  Hoy **ni Preview ni Production tienen `NODE_ENV`** → default `development`. Feature previews usan el
-  scope **Preview genérico** (`MONGO_URI`, `MONGO_DATABASE=first-db__release`, JWT, email). *(Prod
+  Hoy **ni Preview ni Production tienen `NODE_ENV`** → default `development`. *(Prod
   corre en modo dev: Ethereal en vez de SMTP real; si se quiere SMTP real + chequeo de JWT seguros,
   setear `NODE_ENV=production` en Production.)*
+- **Gotcha real (ya resuelto, no reintroducir) — CORS/`CLIENT_URL` desalineados con el
+  puerto real del frontend local**: el `.env` local traía `WHITELISTED_DOMAINS`/`CLIENT_URL`
+  apuntando a `http://localhost:3000`, pero el frontend (Vite) corre en el puerto **5176**
+  (`vite.config.ts: server.port`) — un resabio de una época anterior del proyecto. Además,
+  el scope **Preview** de Vercel no tenía **ningún** `WHITELISTED_DOMAINS` seteado — con el
+  diseño fail-closed de `cors.ts` (deniega todo si está vacío), **ningún** frontend (ni local,
+  ni desplegado) podía llamar exitosamente a un backend de Preview/Test. Causa raíz real
+  detrás de un "Failed to fetch" reportado por el usuario en desarrollo local — confirmado
+  pidiendo el valor real de `WHITELISTED_DOMAINS` de Production (`vercel env pull`) y viendo
+  que solo lista los dominios de Vercel desplegados, nunca `localhost`. Arreglado: `.env`
+  local corregido a `5176`, y `WHITELISTED_DOMAINS`/`CLIENT_URL` seteados para
+  Preview **scopeados a la rama `test`** (`vercel env add WHITELISTED_DOMAINS preview test
+  --value "..." --yes`) incluyendo `http://localhost:5176` — el frontend local ahora
+  habla directo (CORS, no proxy) con el backend de Test.
 - **Para cambiar env vars usa el Vercel CLI** (`vercel env ls|add|rm`, logueado como `jose-chaponan`,
   proyecto linkeado en `.vercel/project.json`). Los scripts `scripts/setup-env*.mjs` leen el token de
   `auth.json` que está **muerto (403)** — no los uses para mutar; el CLI v51 usa otro auth. `add`/`rm`
   aceptan rama (`vercel env add NAME preview <branch> --value X --yes`); el genérico **sin rama** se
   traba en el guard no-interactivo del plugin (workaround: borrarlo para caer al default, o dashboard).
+  Un `add`/cambio de env var **no aplica a deployments ya existentes** — hace falta un redeploy
+  (`vercel deploy` desde la rama, o un push nuevo) para que el nuevo valor se use.
 
 ## Email en producción (outbox + QStash + Resend) — acciones manuales
 El código quedó listo; para que entregue en prod hace falta setear env + infra (nada de
