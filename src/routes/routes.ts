@@ -21,6 +21,7 @@ import { geoApi } from '@Modules/geo';
 import { configApi } from '@Modules/config';
 import { formsApi } from '@Modules/forms';
 import { notificationsEmailApi } from '@Modules/notifications-email';
+import { translationAssistApi } from '@Modules/translation-assist';
 
 const router: Router = Router();
 
@@ -48,6 +49,7 @@ const mainRouter = () => {
 	configApi(v1Router);
 	formsApi(v1Router);
 	notificationsEmailApi(v1Router);
+	translationAssistApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 
