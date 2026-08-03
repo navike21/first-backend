@@ -47,6 +47,22 @@ describe('forgotPassword', () => {
 		expect(publishSpy).not.toHaveBeenCalled();
 	});
 
+	it('embeds the requested language in the reset URL', async () => {
+		const user = await UserModel.create({
+			email: `u-${crypto.randomUUID().slice(0, 8)}@test.com`,
+			password: 'hashed',
+			firstName: 'Jane',
+			lastName: 'Doe',
+		});
+
+		await forgotPassword(user.email, 'fr');
+
+		const event = publishSpy.mock.calls[0][0];
+		expect(event.resetUrl).toBe(
+			'http://localhost:3000/fr/reset-password?token=RESET_TOKEN',
+		);
+	});
+
 	it('is case-insensitive for the email lookup', async () => {
 		const email = `UPPER-${crypto.randomUUID().slice(0, 8)}@test.com`;
 		await UserModel.create({

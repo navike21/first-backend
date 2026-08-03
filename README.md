@@ -81,7 +81,7 @@ secret is left at its insecure default while `NODE_ENV=production`.
 | `MONGO_DATABASE` | — | **Required** |
 | `MONGO_APP_NAME` | `''` | Shown in Atlas connection metrics |
 | `WHITELISTED_DOMAINS` | `''` (deny-all) | Comma-separated CORS allowlist — **fails closed** if empty |
-| `CLIENT_URL` | `http://localhost:3000` | Used in email links |
+| `CLIENT_URL` | `http://localhost:5176` | Used in email links. Must match the frontend's actual dev port (Vite, `vite.config.ts`) |
 | `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` / `JWT_EMAIL_SECRET` | dev placeholders | Must be changed in production (boot-time check) |
 | `JWT_ACCESS_EXPIRES` | `8h` | |
 | `JWT_REFRESH_EXPIRES` | `30d` | |
@@ -392,11 +392,26 @@ the `withMongo()` helper.
 
 ## Deployment
 
-Vercel, serverless. `main` → Production; `feature/*` → Preview. The
-serverless handler (`api/index.js`) separates **app setup** (`initApp` — sync,
-never touches the DB) from **DB connection** (`ensureConnected` — idempotent,
-retried per-request), so a cold start with a slow/failing DB connection still
-returns a proper `503` instead of a function timeout.
+Vercel, serverless. Three environments, each with its own MongoDB database
+(same Atlas cluster) — local development never touches production data:
+
+| Environment | URL | Mongo database | When |
+|---|---|---|---|
+| **Development** | `http://localhost:3200` (optional — only if you run the backend locally) | `first-db__development` | Rare — the frontend's local dev normally talks to Test instead, not a local backend |
+| **Test** | `https://first-backend-git-test-navike21.vercel.app` | `first-db__release` | Persistent staging — verify a full feature (front + back) before merging |
+| **Production** | `https://first-backend-alpha.vercel.app` | `first-db__production` | Real users |
+
+The `test` branch is infrastructure, not a feature branch (see
+`TEST_BRANCH.md`) — it exists purely so Vercel has a stable branch to deploy
+Test from. It has a permanently-open PR against `main` (never merged, never
+closed) because this project only auto-deploys branches that have an
+associated PR. To bring `main`'s latest changes into Test:
+`git checkout test && git merge main && git push`.
+
+The serverless handler (`api/index.js`) separates **app setup** (`initApp` —
+sync, never touches the DB) from **DB connection** (`ensureConnected` —
+idempotent, retried per-request), so a cold start with a slow/failing DB
+connection still returns a proper `503` instead of a function timeout.
 
 ```bash
 # Build and verify locally before deploying
