@@ -53,6 +53,13 @@ const EnvSchema = z.object({
 	QSTASH_NEXT_SIGNING_KEY: z.string().optional(),
 	EMAIL_DISPATCH_SECRET: z.string().optional(),
 
+	// AI translation suggestions (translation-assist module). Opcional a
+	// propósito — sin ANTHROPIC_API_KEY el endpoint responde 503
+	// TRANSLATION_NOT_CONFIGURED en vez de romper el arranque del server (a
+	// diferencia de MONGO_URI).
+	ANTHROPIC_API_KEY: z.string().optional(),
+	ANTHROPIC_MODEL: z.string().default('claude-haiku-4-5-20251001'),
+
 	// DNS — public resolvers as fallback for MongoDB Atlas SRV in some environments
 	DNS_SERVERS: z.string().default('8.8.8.8,1.1.1.1'),
 
