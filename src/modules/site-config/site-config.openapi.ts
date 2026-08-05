@@ -12,6 +12,7 @@ import {
 	SOCIAL_NETWORKS,
 	MAP_PROVIDERS,
 } from './constants/siteConfigDefaults';
+import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 
 const bearerAuth = [{ bearerAuth: [] }];
 const localizedString = z.record(z.string(), z.string());
@@ -51,6 +52,7 @@ const siteConfigResponseSchema = registry.register(
 			Object.fromEntries(SOCIAL_NETWORKS.map((n) => [n, z.string()])),
 		),
 		maps: z.object({ provider: z.enum(MAP_PROVIDERS) }),
+		contentLanguages: z.array(z.enum(SUPPORTED_LANGUAGES)),
 	}),
 );
 
@@ -83,7 +85,10 @@ registry.registerPath({
 	path: '/site-config',
 	summary: 'Update the site config',
 	description:
-		'Requires `site-config:update` or `:manage`. Partial update — send only the sections you want to change.',
+		'Requires `site-config:update` or `:manage` — EXCEPT when the request body ' +
+		'contains only `contentLanguages`, in which case the narrower, delegatable ' +
+		'`site-config:languages` permission also suffices. Partial update — send ' +
+		'only the sections you want to change.',
 	tags: ['Site Config'],
 	security: bearerAuth,
 	request: {
