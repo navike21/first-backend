@@ -3,10 +3,9 @@ import {
 	LocalizedStringSchema,
 	LocalizedHtmlStringSchema,
 } from '@Shared/schemas/localizedString.schema';
+import { localizedSlugSchema } from '@Shared/schemas/localizedSlug.schema';
 import { PORTFOLIO_STATUSES_ARRAY } from '../constants/portfolioStatus';
 import { PORTFOLIO_GALLERY_MAX_ITEMS } from '../constants/paths';
-
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 // Reconciles the gallery on update: existing photos to keep (by URL) and
 // newly uploaded files (by their position among the `gallery` multipart
@@ -34,11 +33,8 @@ const TestimonialSchema = z.object({
 });
 
 export const CreatePortfolioSchema = z.object({
-	slug: z
-		.string()
-		.regex(slugRegex, { message: 'PORTFOLIO_SLUG_INVALID' })
-		.max(150)
-		.optional(),
+	// Per-language slug — each language can have its own URL-friendly identifier
+	slug: localizedSlugSchema('PORTFOLIO_SLUG_INVALID', 150).optional(),
 
 	name: LocalizedStringSchema,
 	shortDescription: LocalizedStringSchema,

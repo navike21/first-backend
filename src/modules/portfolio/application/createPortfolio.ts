@@ -3,12 +3,35 @@ import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { generateSlug } from '@Helpers/generateSlug';
 import { AppError } from '@Shared/domain/AppError';
 import { uploadImageSafe, deleteEntityFiles } from '@Modules/storage';
+import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
+import type { LocalizedString } from '@Shared/types/localizedString';
 import type { IncomingFile } from '@Types/incomingFile';
 import type { MutationResult, ResponseWarning } from '@Types/responseStructure';
 import { PortfolioSlugConflictError } from '../domain/errors/PortfolioErrors';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 import { PORTFOLIO_ENTITY_TYPE } from '../constants/paths';
 import type { CreatePortfolioInput } from '../schemas/portfolio.schema';
+
+/** Per-language slug: whatever the client sent, defaulting each empty
+ * language to a slugified version of that language's own name — mirrors the
+ * previous single-slug behavior (`slug ?? generateSlug(name.en)`), just
+ * extended to every language instead of only `en`. */
+function resolveSlug(input: CreatePortfolioInput): LocalizedString {
+	return Object.fromEntries(
+		SUPPORTED_LANGUAGES.map((l) => [
+			l,
+			input.slug?.[l]?.trim() || generateSlug(input.name[l] ?? ''),
+		]),
+	) as LocalizedString;
+}
+
+async function checkSlugConflict(slug: LocalizedString): Promise<void> {
+	const entries = Object.entries(slug).filter(([, v]) => v?.trim());
+	if (!entries.length) return;
+	const orQuery = entries.map(([lang, value]) => ({ [`slug.${lang}`]: value }));
+	const existing = await PortfolioModel.findOne({ $or: orQuery });
+	if (existing) throw new PortfolioSlugConflictError();
+}
 
 interface CoverResolution {
 	coverImageUrl: string;
@@ -67,10 +90,8 @@ export async function createPortfolio(
 	uploadedBy?: string,
 	galleryFiles: IncomingFile[] = [],
 ): Promise<MutationResult<Record<string, unknown>>> {
-	const slug = input.slug ?? generateSlug(input.name.en);
-
-	const existing = await PortfolioModel.findOne({ slug });
-	if (existing) throw new PortfolioSlugConflictError();
+	const slug = resolveSlug(input);
+	await checkSlugConflict(slug);
 
 	const id = generateUUID();
 	const warnings: ResponseWarning[] = [];

@@ -27,7 +27,7 @@ const localizedName = {
 
 const validInput = {
 	name: localizedName,
-	slug: 'featured',
+	slug: { en: 'featured', es: 'destacado' },
 	order: 0,
 	isActive: true,
 };

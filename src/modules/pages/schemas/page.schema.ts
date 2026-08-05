@@ -1,25 +1,9 @@
 import { z } from 'zod';
 import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
+import { localizedSlugSchema } from '@Shared/schemas/localizedSlug.schema';
 import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import { SECTION_TYPES } from '../constants/sectionTypes';
 import { sanitizePageSectionContent } from './sanitizePageSectionContent';
-
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-const LocalizedSlugSchema = z.object(
-	Object.fromEntries(
-		SUPPORTED_LANGUAGES.map((l) => [
-			l,
-			z
-				.string()
-				.trim()
-				.max(200)
-				.regex(slugRegex, { message: 'PAGE_SLUG_INVALID' })
-				.or(z.literal(''))
-				.optional(),
-		]),
-	),
-);
 
 const PageSeoSchema = z.object({
 	metaTitle: LocalizedStringSchema.optional(),
@@ -122,7 +106,7 @@ export const PAGE_STATUSES = ['draft', 'scheduled', 'published'] as const;
 
 export const CreatePageSchema = z
 	.object({
-		slug: LocalizedSlugSchema.optional(),
+		slug: localizedSlugSchema('PAGE_SLUG_INVALID', 200).optional(),
 		title: LocalizedStringSchema,
 		description: LocalizedStringSchema.optional(),
 		coverImageUrl: z
@@ -146,7 +130,7 @@ export const CreatePageSchema = z
 
 export const UpdatePageSchema = z
 	.object({
-		slug: LocalizedSlugSchema.optional(),
+		slug: localizedSlugSchema('PAGE_SLUG_INVALID', 200).optional(),
 		title: LocalizedStringSchema,
 		description: LocalizedStringSchema.optional(),
 		coverImageUrl: z

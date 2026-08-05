@@ -20,11 +20,11 @@ describe('updateTag', () => {
 		const saveFn = vi.fn().mockResolvedValue(undefined);
 		const doc = {
 			id: '1',
-			slug: 'featured',
+			slug: { en: 'featured' },
 			save: saveFn,
 			toObject: vi
 				.fn()
-				.mockReturnValue({ id: '1', slug: 'featured', _id: 'mongo1' }),
+				.mockReturnValue({ id: '1', slug: { en: 'featured' }, _id: 'mongo1' }),
 		};
 		vi.mocked(TagModel.findOne).mockResolvedValue(doc as never);
 
@@ -41,14 +41,14 @@ describe('updateTag', () => {
 	});
 
 	it('throws TagSlugConflictError on duplicate slug', async () => {
-		const doc = { id: '1', slug: 'featured', save: vi.fn() };
-		const conflictDoc = { id: '2', slug: 'popular' };
+		const doc = { id: '1', slug: { en: 'featured' }, save: vi.fn() };
+		const conflictDoc = { id: '2', slug: { en: 'popular' } };
 		vi.mocked(TagModel.findOne)
 			.mockResolvedValueOnce(doc as never)
 			.mockResolvedValueOnce(conflictDoc as never);
 
-		await expect(updateTag('1', { slug: 'popular' })).rejects.toThrow(
-			TagSlugConflictError,
-		);
+		await expect(
+			updateTag('1', { slug: { en: 'popular' } }),
+		).rejects.toThrow(TagSlugConflictError);
 	});
 });

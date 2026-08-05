@@ -67,14 +67,14 @@ describe('updatePortfolio', () => {
 
 	it('throws PortfolioSlugConflictError on duplicate slug', async () => {
 		const portfolioDoc = { id: '1', save: vi.fn() };
-		const conflict = { id: '2', slug: 'taken' };
+		const conflict = { id: '2', slug: { en: 'taken' } };
 		vi.mocked(PortfolioModel.findOne)
 			.mockResolvedValueOnce(portfolioDoc as never)
 			.mockResolvedValueOnce(conflict as never);
 
-		await expect(updatePortfolio('1', { slug: 'taken' })).rejects.toThrow(
-			PortfolioSlugConflictError,
-		);
+		await expect(
+			updatePortfolio('1', { slug: { en: 'taken' } }),
+		).rejects.toThrow(PortfolioSlugConflictError);
 	});
 
 	it('leaves the gallery untouched when galleryOrder is omitted', async () => {
