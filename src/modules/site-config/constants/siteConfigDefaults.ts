@@ -1,4 +1,5 @@
 import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
+import type { SupportedLanguage } from '@Shared/types/localizedString';
 import type { LocalizedString } from '@Shared/schemas/localizedString.schema';
 
 export const HEADER_VARIANTS = [
@@ -85,6 +86,12 @@ export interface SiteConfigData {
 	layout: LayoutConfig;
 	social: SocialConfig;
 	maps: MapsConfig;
+	/** Subset of SUPPORTED_LANGUAGES this business actually uses for its public
+	 * CONTENT (Pages/Services/Portfolio/Categories/Tags/Collaborators/Forms) —
+	 * fully independent of which language an admin uses for First's own UI.
+	 * Defaults to every supported language so existing behavior is unchanged
+	 * until a business narrows it explicitly. */
+	contentLanguages: SupportedLanguage[];
 }
 
 export function emptySocial(): SocialConfig {
@@ -124,4 +131,5 @@ export const SITE_CONFIG_DEFAULTS: SiteConfigData = {
 	layout: { contentWidth: 'boxed', boxedMaxWidth: 1200 },
 	social: emptySocial(),
 	maps: { provider: 'google' },
+	contentLanguages: [...SUPPORTED_LANGUAGES],
 };

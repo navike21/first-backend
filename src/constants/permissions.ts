@@ -40,6 +40,11 @@ export const PERMISSIONS = {
 	SITE_CONFIG_READ: 'site-config:read',
 	SITE_CONFIG_UPDATE: 'site-config:update',
 	SITE_CONFIG_MANAGE: 'site-config:manage',
+	// Narrow, delegatable slice of site-config: lets a role manage ONLY the
+	// content-language scope (which SUPPORTED_LANGUAGES this business actually
+	// uses for its content) without granting update access to header/footer/
+	// social/maps — see authorizeSiteConfigUpdate.
+	SITE_CONFIG_LANGUAGES: 'site-config:languages',
 
 	CLIENTS_READ: 'clients:read',
 	CLIENTS_CREATE: 'clients:create',

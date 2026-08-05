@@ -25,6 +25,8 @@ function mergeWithDefaults(doc: Partial<SiteConfigData>): SiteConfigData {
 		layout: { ...SITE_CONFIG_DEFAULTS.layout, ...doc.layout },
 		social: { ...SITE_CONFIG_DEFAULTS.social, ...doc.social },
 		maps: { ...SITE_CONFIG_DEFAULTS.maps, ...doc.maps },
+		contentLanguages:
+			doc.contentLanguages ?? SITE_CONFIG_DEFAULTS.contentLanguages,
 	};
 }
 
