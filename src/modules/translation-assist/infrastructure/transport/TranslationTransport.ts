@@ -1,11 +1,15 @@
+import type { z } from 'zod';
 import type { TranslatableFields } from '../../constants/prompt';
-import type { ServicesTranslationResult } from '../../schemas/suggestTranslation.schema';
 
 export interface SuggestTranslationInput {
 	domainLabel: string;
 	sourceLanguageName: string;
 	targetLanguageName: string;
 	fields: TranslatableFields;
+	// The domain's own result schema (from RESULT_SCHEMA_BY_DOMAIN) — the
+	// transport validates the model's structured output against this, so it
+	// never needs to know which domain (or field shape) is calling it.
+	resultSchema: z.ZodTypeAny;
 }
 
 /**
@@ -17,5 +21,5 @@ export interface SuggestTranslationInput {
  */
 export interface TranslationTransport {
 	readonly name: string;
-	suggest(input: SuggestTranslationInput): Promise<ServicesTranslationResult>;
+	suggest(input: SuggestTranslationInput): Promise<TranslatableFields>;
 }

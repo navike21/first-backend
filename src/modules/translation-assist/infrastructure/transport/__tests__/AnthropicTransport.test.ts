@@ -26,6 +26,11 @@ const { anthropicTransport } = await import('../AnthropicTransport');
 const { TranslationProviderError } = await import(
 	'../../../domain/errors/TranslationErrors'
 );
+const { RESULT_SCHEMA_BY_DOMAIN } = await import(
+	'../../../schemas/suggestTranslation.schema'
+);
+
+const resultSchema = RESULT_SCHEMA_BY_DOMAIN.services;
 
 const fields = {
 	name: 'Digital Transformation Consulting',
@@ -52,6 +57,7 @@ describe('anthropicTransport', () => {
 			sourceLanguageName: 'English',
 			targetLanguageName: 'Spanish',
 			fields,
+			resultSchema,
 		});
 
 		expect(result).toEqual({
@@ -94,6 +100,7 @@ describe('anthropicTransport', () => {
 				shortDescription: 'x'.repeat(20_000),
 				description: 'x'.repeat(20_000),
 			},
+			resultSchema,
 		});
 		expect(mockParse.mock.calls[0][0].max_tokens).toBe(4096);
 
@@ -103,6 +110,7 @@ describe('anthropicTransport', () => {
 			sourceLanguageName: 'English',
 			targetLanguageName: 'German',
 			fields: { name: 'Hi', shortDescription: 'Hi', description: 'Hi' },
+			resultSchema,
 		});
 		expect(mockParse.mock.calls[0][0].max_tokens).toBe(512);
 	});
@@ -116,6 +124,7 @@ describe('anthropicTransport', () => {
 				sourceLanguageName: 'English',
 				targetLanguageName: 'Spanish',
 				fields,
+				resultSchema,
 			}),
 		).rejects.toBeInstanceOf(TranslationProviderError);
 	});
@@ -129,6 +138,7 @@ describe('anthropicTransport', () => {
 				sourceLanguageName: 'English',
 				targetLanguageName: 'Spanish',
 				fields,
+				resultSchema,
 			}),
 		).rejects.toBeInstanceOf(TranslationProviderError);
 	});

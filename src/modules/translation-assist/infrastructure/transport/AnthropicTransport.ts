@@ -2,7 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { ENV } from '@Constants/environments';
 import { SYSTEM_PROMPT, buildUserPrompt } from '../../constants/prompt';
-import { ServicesTranslationResultSchema } from '../../schemas/suggestTranslation.schema';
+import type { TranslatableFields } from '../../constants/prompt';
 import { TranslationProviderError } from '../../domain/errors/TranslationErrors';
 import type {
 	SuggestTranslationInput,
@@ -41,11 +41,12 @@ export const anthropicTransport: TranslationTransport = {
 		sourceLanguageName,
 		targetLanguageName,
 		fields,
+		resultSchema,
 	}: SuggestTranslationInput) {
-		const sourceChars =
-			fields.name.length +
-			fields.shortDescription.length +
-			fields.description.length;
+		const sourceChars = Object.values(fields).reduce(
+			(total, value) => total + value.length,
+			0,
+		);
 		try {
 			const response = await getClient().messages.parse(
 				{
@@ -76,7 +77,7 @@ export const anthropicTransport: TranslationTransport = {
 						},
 					],
 					output_config: {
-						format: zodOutputFormat(ServicesTranslationResultSchema),
+						format: zodOutputFormat(resultSchema),
 					},
 				},
 				// Bounded so a slow/hung call doesn't outlive the serverless
@@ -87,7 +88,10 @@ export const anthropicTransport: TranslationTransport = {
 			if (!response.parsed_output) {
 				throw new Error('Anthropic response had no parsed_output');
 			}
-			return response.parsed_output;
+			// `resultSchema` is generic (`z.ZodTypeAny`) so the SDK can't narrow
+			// `parsed_output`'s type from it — the schema itself is what actually
+			// guarantees this is a flat string record at runtime.
+			return response.parsed_output as TranslatableFields;
 		} catch (error) {
 			throw new TranslationProviderError(
 				error instanceof Error ? error.message : undefined,

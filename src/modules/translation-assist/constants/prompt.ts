@@ -19,24 +19,27 @@ Rules:
 4. Some fields may contain HTML markup (e.g. <p>, <strong>, <ul>, <li>). Preserve the HTML tag structure EXACTLY — same tags, same nesting, same attributes — and only translate the human-readable text between the tags. Never translate tag names, attribute names, or attribute values.
 5. Do not translate proper nouns, brand names, or the company name "First".`;
 
-export interface TranslatableFields {
-	name: string;
-	shortDescription: string;
-	description: string;
-}
+// A plain field-name -> value bag, shape varies by domain (see
+// FIELDS_SCHEMA_BY_DOMAIN in schemas/suggestTranslation.schema.ts) — this
+// module itself never needs to know a domain's specific field names.
+export type TranslatableFields = Record<string, string>;
 
 /** The per-call user message — the only part that varies between calls.
  * `domainLabel` is a human-readable domain name (e.g. "Services") so the
- * same function serves every domain this module supports, today and later. */
+ * same function serves every domain this module supports. Field values are
+ * listed in whatever order the domain's own schema defines them (object key
+ * order), one per line, so the model sees every field regardless of domain. */
 export function buildUserPrompt(
 	domainLabel: string,
 	sourceLanguageName: string,
 	targetLanguageName: string,
 	fields: TranslatableFields,
 ): string {
-	return `Translate the following ${sourceLanguageName} "${domainLabel}" content into ${targetLanguageName}.
+	const fieldLines = Object.entries(fields)
+		.map(([key, value]) => `${key}: ${value}`)
+		.join('\n');
 
-name: ${fields.name}
-shortDescription: ${fields.shortDescription}
-description (HTML): ${fields.description}`;
+	return `Translate the following ${sourceLanguageName} "${domainLabel}" content into ${targetLanguageName}. Some field values may contain HTML markup — follow rule 4 above for those.
+
+${fieldLines}`;
 }
