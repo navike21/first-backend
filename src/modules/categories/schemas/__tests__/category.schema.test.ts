@@ -18,9 +18,11 @@ const localizedName = {
 	zh: '新闻',
 };
 
+const localizedSlug = { en: 'news', es: 'noticias' };
+
 const validCategory = {
 	name: localizedName,
-	slug: 'news',
+	slug: localizedSlug,
 };
 
 describe('category.schema', () => {
@@ -29,21 +31,21 @@ describe('category.schema', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('CreateCategorySchema rejects missing slug', () => {
+	it('CreateCategorySchema allows an entirely missing slug (per-language, optional)', () => {
 		const result = CreateCategorySchema.safeParse({ name: localizedName });
-		expect(result.success).toBe(false);
+		expect(result.success).toBe(true);
 	});
 
-	it('CreateCategorySchema rejects slug with uppercase letters', () => {
+	it('CreateCategorySchema rejects a slug with uppercase letters in any language', () => {
 		const result = CreateCategorySchema.safeParse({
 			...validCategory,
-			slug: 'News',
+			slug: { ...localizedSlug, en: 'News' },
 		});
 		expect(result.success).toBe(false);
 	});
 
 	it('CreateCategorySchema rejects missing name', () => {
-		const result = CreateCategorySchema.safeParse({ slug: 'news' });
+		const result = CreateCategorySchema.safeParse({ slug: localizedSlug });
 		expect(result.success).toBe(false);
 	});
 

@@ -21,7 +21,7 @@ const tagResponseSchema = registry.register(
 	z.object({
 		id: z.uuid(),
 		name: localizedString,
-		slug: z.string(),
+		slug: localizedString,
 		order: z.number(),
 		isActive: z.boolean(),
 		deletedAt: z.iso.datetime().nullable().optional(),

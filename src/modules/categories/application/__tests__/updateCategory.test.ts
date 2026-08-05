@@ -20,11 +20,11 @@ describe('updateCategory', () => {
 		const saveFn = vi.fn().mockResolvedValue(undefined);
 		const doc = {
 			id: '1',
-			slug: 'news',
+			slug: { en: 'news' },
 			save: saveFn,
 			toObject: vi
 				.fn()
-				.mockReturnValue({ id: '1', slug: 'news', _id: 'mongo1' }),
+				.mockReturnValue({ id: '1', slug: { en: 'news' }, _id: 'mongo1' }),
 		};
 		vi.mocked(CategoryModel.findOne).mockResolvedValue(doc as never);
 
@@ -43,14 +43,14 @@ describe('updateCategory', () => {
 	});
 
 	it('throws CategorySlugConflictError on duplicate slug', async () => {
-		const doc = { id: '1', slug: 'news', save: vi.fn() };
-		const conflictDoc = { id: '2', slug: 'events' };
+		const doc = { id: '1', slug: { en: 'news' }, save: vi.fn() };
+		const conflictDoc = { id: '2', slug: { en: 'events' } };
 		vi.mocked(CategoryModel.findOne)
 			.mockResolvedValueOnce(doc as never)
 			.mockResolvedValueOnce(conflictDoc as never);
 
-		await expect(updateCategory('1', { slug: 'events' })).rejects.toThrow(
-			CategorySlugConflictError,
-		);
+		await expect(
+			updateCategory('1', { slug: { en: 'events' } }),
+		).rejects.toThrow(CategorySlugConflictError);
 	});
 });

@@ -3,30 +3,12 @@ import {
 	LocalizedStringSchema,
 	LocalizedHtmlStringSchema,
 } from '@Shared/schemas/localizedString.schema';
+import { localizedSlugSchema } from '@Shared/schemas/localizedSlug.schema';
 import { PILLARS_ARRAY } from '../constants/pillars';
-
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export const CreateServiceSchema = z.object({
 	// Per-language slug — each language can have its own URL-friendly identifier
-	slug: z
-		.object(
-			Object.fromEntries(
-				['en', 'es', 'de', 'fr', 'it', 'ja', 'ko', 'pt', 'ru', 'zh'].map(
-					(l) => [
-						l,
-						z
-							.string()
-							.trim()
-							.regex(slugRegex, { message: 'SERVICE_SLUG_INVALID' })
-							.max(100)
-							.or(z.literal(''))
-							.optional(),
-					],
-				),
-			),
-		)
-		.optional(),
+	slug: localizedSlugSchema('SERVICE_SLUG_INVALID', 100).optional(),
 
 	name: LocalizedStringSchema,
 	shortDescription: LocalizedStringSchema,

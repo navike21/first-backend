@@ -1,4 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
+import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import { PortfolioNotFoundError } from '../domain/errors/PortfolioErrors';
 import PortfolioModel from '../infrastructure/PortfolioModel';
 import ClientModel from '@Modules/clients/infrastructure/ClientModel';
@@ -6,7 +7,7 @@ import ServiceModel from '@Modules/services/infrastructure/ServiceModel';
 
 export async function getPortfolioBySlug(slug: string) {
 	const portfolio = await PortfolioModel.findOne({
-		slug,
+		$or: SUPPORTED_LANGUAGES.map((l) => ({ [`slug.${l}`]: slug })),
 		status: 'published',
 	}).lean();
 	if (!portfolio) throw new PortfolioNotFoundError();

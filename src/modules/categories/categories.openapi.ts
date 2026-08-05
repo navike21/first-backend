@@ -21,7 +21,7 @@ const categoryResponseSchema = registry.register(
 	z.object({
 		id: z.uuid(),
 		name: localizedString,
-		slug: z.string(),
+		slug: localizedString,
 		parentId: z.uuid().optional(),
 		order: z.number(),
 		isActive: z.boolean(),
