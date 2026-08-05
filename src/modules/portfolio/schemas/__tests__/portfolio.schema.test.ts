@@ -53,9 +53,17 @@ describe('portfolio.schema', () => {
 	it('CreatePortfolioSchema rejects invalid slug format', () => {
 		const result = CreatePortfolioSchema.safeParse({
 			...validPortfolio,
-			slug: 'Invalid Slug!',
+			slug: { en: 'Invalid Slug!' },
 		});
 		expect(result.success).toBe(false);
+	});
+
+	it('CreatePortfolioSchema accepts a valid per-language slug', () => {
+		const result = CreatePortfolioSchema.safeParse({
+			...validPortfolio,
+			slug: { en: 'project-name', es: 'nombre-proyecto' },
+		});
+		expect(result.success).toBe(true);
 	});
 
 	it('CreatePortfolioSchema accepts valid testimonial', () => {

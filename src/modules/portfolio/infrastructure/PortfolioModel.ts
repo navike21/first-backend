@@ -1,6 +1,7 @@
 import { model, Schema } from 'mongoose';
 import generateUUID from '@Helpers/uuid';
 import { localizedStringType } from '@Shared/infrastructure/localizedStringType';
+import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import { PORTFOLIO_STATUSES_ARRAY } from '../constants/portfolioStatus';
 import type { LocalizedString } from '@Shared/types/localizedString';
 
@@ -17,7 +18,7 @@ export interface PortfolioMetric {
 
 export interface PortfolioDocument {
 	id: string;
-	slug: string;
+	slug: LocalizedString;
 	name: LocalizedString;
 	shortDescription: LocalizedString;
 	description: LocalizedString;
@@ -42,7 +43,7 @@ export interface PortfolioDocument {
 const portfolioSchema = new Schema<PortfolioDocument>(
 	{
 		id: { type: String, required: true, unique: true, default: generateUUID },
-		slug: { type: String, required: true, unique: true, lowercase: true },
+		slug: { type: localizedStringType },
 		name: { type: localizedStringType, required: true },
 		shortDescription: { type: localizedStringType, required: true },
 		description: { type: localizedStringType, required: true },
@@ -81,7 +82,22 @@ const portfolioSchema = new Schema<PortfolioDocument>(
 	{ timestamps: true },
 );
 
-portfolioSchema.index({ slug: 1 }, { unique: true });
+// Slugs are unique per language, not globally — a partial unique index per
+// language (mirroring PageModel's pattern) keeps the DB as the source of
+// truth for the constraint. Scoped to non-deleted records: a trashed
+// portfolio item frees its slug for reuse, same as Categories/Tags/Pages.
+for (const lang of SUPPORTED_LANGUAGES) {
+	portfolioSchema.index(
+		{ [`slug.${lang}`]: 1 },
+		{
+			unique: true,
+			partialFilterExpression: {
+				[`slug.${lang}`]: { $type: 'string', $ne: '' },
+				deletedAt: null,
+			},
+		},
+	);
+}
 portfolioSchema.index({ status: 1, featured: -1, order: 1 });
 portfolioSchema.index({ serviceIds: 1, status: 1 });
 portfolioSchema.index({ clientId: 1 });

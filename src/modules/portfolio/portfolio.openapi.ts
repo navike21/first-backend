@@ -21,7 +21,7 @@ const portfolioResponseSchema = registry.register(
 	'Portfolio',
 	z.object({
 		id: z.uuid(),
-		slug: z.string(),
+		slug: localizedString,
 		name: localizedString,
 		shortDescription: localizedString,
 		description: localizedString,

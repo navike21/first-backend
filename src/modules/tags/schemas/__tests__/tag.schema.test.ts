@@ -18,27 +18,34 @@ const localizedName = {
 	zh: '精选',
 };
 
-const validTag = { name: localizedName, slug: 'featured' };
+const localizedSlug = { en: 'featured', es: 'destacado' };
+
+const validTag = { name: localizedName, slug: localizedSlug };
 
 describe('tag.schema', () => {
 	it('CreateTagSchema parses valid minimal data', () => {
 		expect(CreateTagSchema.safeParse(validTag).success).toBe(true);
 	});
 
-	it('CreateTagSchema rejects missing slug', () => {
+	it('CreateTagSchema allows an entirely missing slug (per-language, optional)', () => {
 		expect(CreateTagSchema.safeParse({ name: localizedName }).success).toBe(
-			false,
+			true,
 		);
 	});
 
-	it('CreateTagSchema rejects slug with uppercase letters', () => {
+	it('CreateTagSchema rejects a slug with uppercase letters in any language', () => {
 		expect(
-			CreateTagSchema.safeParse({ ...validTag, slug: 'Featured' }).success,
+			CreateTagSchema.safeParse({
+				...validTag,
+				slug: { ...localizedSlug, en: 'Featured' },
+			}).success,
 		).toBe(false);
 	});
 
 	it('CreateTagSchema rejects missing name', () => {
-		expect(CreateTagSchema.safeParse({ slug: 'featured' }).success).toBe(false);
+		expect(CreateTagSchema.safeParse({ slug: localizedSlug }).success).toBe(
+			false,
+		);
 	});
 
 	it('CreateTagSchema defaults order to 0 and isActive to true', () => {

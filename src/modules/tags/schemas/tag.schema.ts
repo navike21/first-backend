@@ -1,16 +1,11 @@
 import { z } from 'zod';
 import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
-
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+import { localizedSlugSchema } from '@Shared/schemas/localizedSlug.schema';
 
 export const CreateTagSchema = z.object({
 	name: LocalizedStringSchema,
-	slug: z
-		.string()
-		.trim()
-		.min(1)
-		.max(150)
-		.regex(slugRegex, { message: 'TAG_SLUG_INVALID' }),
+	// Per-language slug — each language can have its own URL-friendly identifier
+	slug: localizedSlugSchema('TAG_SLUG_INVALID', 150).optional(),
 	order: z.coerce.number().int().default(0),
 	isActive: z.boolean().default(true),
 });

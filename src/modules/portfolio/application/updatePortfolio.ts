@@ -18,6 +18,20 @@ import type {
 	UpdatePortfolioInput,
 } from '../schemas/portfolio.schema';
 
+async function checkSlugConflict(
+	id: string,
+	slug?: UpdatePortfolioInput['slug'],
+): Promise<void> {
+	const entries = Object.entries(slug ?? {}).filter(([, v]) => v?.trim());
+	if (!entries.length) return;
+	const orQuery = entries.map(([lang, value]) => ({ [`slug.${lang}`]: value }));
+	const conflict = await PortfolioModel.findOne({
+		$or: orQuery,
+		id: { $ne: id },
+	});
+	if (conflict) throw new PortfolioSlugConflictError();
+}
+
 /** Persists the document, compensating (deleting) any freshly uploaded files if the save fails. */
 async function saveOrCompensate(
 	portfolio: { save: () => Promise<unknown> },
@@ -146,13 +160,7 @@ export async function updatePortfolio(
 	});
 	if (!portfolio) throw new PortfolioNotFoundError();
 
-	if (input.slug) {
-		const conflict = await PortfolioModel.findOne({
-			slug: input.slug,
-			id: { $ne: id },
-		});
-		if (conflict) throw new PortfolioSlugConflictError();
-	}
+	await checkSlugConflict(id, input.slug);
 
 	const warnings: ResponseWarning[] = [];
 	const {
