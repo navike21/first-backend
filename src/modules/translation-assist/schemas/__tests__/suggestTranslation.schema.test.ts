@@ -57,9 +57,9 @@ describe('SuggestTranslationSchema', () => {
 		expect(result.success).toBe(false);
 	});
 
-	it('rejects an unsupported domain', () => {
+	it('rejects a domain this module does not support (categories has no translation-assist wiring)', () => {
 		const result = SuggestTranslationSchema.safeParse({
-			domain: 'pages',
+			domain: 'categories',
 			sourceLanguage: 'en',
 			targetLanguage: 'de',
 			fields: validFields,
@@ -72,6 +72,77 @@ describe('SuggestTranslationSchema', () => {
 			domain: 'services',
 			sourceLanguage: 'en',
 			targetLanguage: 'xx',
+			fields: validFields,
+		});
+		expect(result.success).toBe(false);
+	});
+
+	it('accepts a valid Portfolio payload (same 3-field shape as Services)', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'portfolio',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: validFields,
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it('accepts a valid Pages payload, with optional SEO fields blank', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'pages',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: {
+				title: 'About us',
+				description: '',
+				metaTitle: '',
+				metaDescription: '',
+			},
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it('rejects a Pages payload missing the required title field', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'pages',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: { title: '', description: '', metaTitle: '', metaDescription: '' },
+		});
+		expect(result.success).toBe(false);
+	});
+
+	it('accepts a valid Collaborators payload (bio only)', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'collaborators',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: { bio: 'Leads product teams since 2015...' },
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it('accepts a valid Forms payload, with optional successMessage blank', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'forms',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: {
+				title: 'Contact us',
+				description: '',
+				successMessage: '',
+			},
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it('rejects fields from a different domain than the one declared', () => {
+		// domain: 'pages' but fields shaped like Services (name/shortDescription)
+		// instead of Pages (title/description/metaTitle/metaDescription).
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'pages',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
 			fields: validFields,
 		});
 		expect(result.success).toBe(false);
