@@ -35,11 +35,10 @@ const suggestTranslationResponseSchema = registry.register(
 	'TranslationSuggestion',
 	z.object({
 		targetLanguage: z.enum(SUPPORTED_LANGUAGES),
-		fields: z.object({
-			name: z.string(),
-			shortDescription: z.string(),
-			description: z.string(),
-		}),
+		// Shape varies by domain (see FIELDS_SCHEMA_BY_DOMAIN /
+		// RESULT_SCHEMA_BY_DOMAIN in suggestTranslation.schema.ts) — documented
+		// generically here rather than modeling a oneOf per domain.
+		fields: z.record(z.string(), z.string()),
 	}),
 );
 
@@ -48,9 +47,11 @@ registry.registerPath({
 	path: '/translation-assist/suggest',
 	summary: 'Suggest an AI translation for one language, for one CMS record',
 	description:
-		'Requires `services:update` or `:manage`. Translates the given fields ' +
-		'(all in `sourceLanguage`, the editor\'s own current UI language — ' +
-		'never a fixed language) into `targetLanguage` in a single call. Rate ' +
+		'Requires `<domain>:update` or `:manage` for the given `domain` ' +
+		'(services/pages/portfolio/collaborators/forms). Translates the given ' +
+		"fields (all in `sourceLanguage`, the editor's own current UI language " +
+		'— never a fixed language) into `targetLanguage` in a single call. The ' +
+		'`fields` shape depends on `domain` (see the module schema). Rate ' +
 		'limited per authenticated user (not per IP).',
 	tags: ['Translation Assist'],
 	security: bearerAuth,
@@ -62,11 +63,7 @@ registry.registerPath({
 						domain: z.enum(TRANSLATION_DOMAINS),
 						sourceLanguage: z.enum(SUPPORTED_LANGUAGES),
 						targetLanguage: z.enum(SUPPORTED_LANGUAGES),
-						fields: z.object({
-							name: z.string(),
-							shortDescription: z.string(),
-							description: z.string(),
-						}),
+						fields: z.record(z.string(), z.string()),
 					}),
 				},
 			},

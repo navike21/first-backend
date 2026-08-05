@@ -18,6 +18,9 @@ const { suggestTranslation } = await import('../suggestTranslation');
 const { TranslationNotConfiguredError } = await import(
 	'../../domain/errors/TranslationErrors'
 );
+const { RESULT_SCHEMA_BY_DOMAIN } = await import(
+	'../../schemas/suggestTranslation.schema'
+);
 
 const input = {
 	domain: 'services' as const,
@@ -61,6 +64,7 @@ describe('suggestTranslation', () => {
 			sourceLanguageName: 'English',
 			targetLanguageName: 'German',
 			fields: input.fields,
+			resultSchema: RESULT_SCHEMA_BY_DOMAIN.services,
 		});
 		expect(result).toEqual({
 			targetLanguage: 'de',
@@ -70,5 +74,23 @@ describe('suggestTranslation', () => {
 				description: '<p>Wir helfen Organisationen...</p>',
 			},
 		});
+	});
+
+	it('resolves the correct domainLabel and resultSchema for a non-services domain', async () => {
+		mockSuggest.mockResolvedValue({ bio: 'Führt Produktteams seit 2015...' });
+
+		await suggestTranslation({
+			domain: 'collaborators',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: { bio: 'Leads product teams since 2015...' },
+		});
+
+		expect(mockSuggest).toHaveBeenCalledWith(
+			expect.objectContaining({
+				domainLabel: 'Collaborators',
+				resultSchema: RESULT_SCHEMA_BY_DOMAIN.collaborators,
+			}),
+		);
 	});
 });
