@@ -23,8 +23,11 @@ function getClient(): Anthropic {
 
 // Rough chars→tokens headroom (÷3, generous) + a fixed buffer for the
 // structured-output scaffolding, capped so one call can never balloon in
-// cost regardless of how much text is passed in.
-const MAX_TOKENS_CEILING = 4096;
+// cost regardless of how much text is passed in. Applies uniformly to every
+// domain (not branched per-domain) — 8192 leaves enough headroom for
+// `page-builder`'s aggregated whole-page payload (several rich-text/FAQ/
+// testimonial fields in one call) while staying a hard, bounded ceiling.
+const MAX_TOKENS_CEILING = 8192;
 const MAX_TOKENS_FLOOR = 512;
 
 function estimateMaxTokens(sourceChars: number): number {

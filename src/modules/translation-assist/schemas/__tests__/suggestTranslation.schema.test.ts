@@ -57,9 +57,9 @@ describe('SuggestTranslationSchema', () => {
 		expect(result.success).toBe(false);
 	});
 
-	it('rejects a domain this module does not support (categories has no translation-assist wiring)', () => {
+	it('rejects a domain this module does not support', () => {
 		const result = SuggestTranslationSchema.safeParse({
-			domain: 'categories',
+			domain: 'unsupported-domain',
 			sourceLanguage: 'en',
 			targetLanguage: 'de',
 			fields: validFields,
@@ -146,5 +146,76 @@ describe('SuggestTranslationSchema', () => {
 			fields: validFields,
 		});
 		expect(result.success).toBe(false);
+	});
+
+	it('accepts a valid Categories payload (name only)', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'categories',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: { name: 'Web Development' },
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it('accepts a valid Tags payload (name only)', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'tags',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: { name: 'Featured' },
+		});
+		expect(result.success).toBe(true);
+	});
+
+	describe('page-builder domain (dynamic field bag)', () => {
+		it('accepts an arbitrary set of elementId-keyed fields', () => {
+			const result = SuggestTranslationSchema.safeParse({
+				domain: 'page-builder',
+				sourceLanguage: 'en',
+				targetLanguage: 'de',
+				fields: {
+					el1: '<p>Welcome to First</p>',
+					'el2:it1:question': 'What is First?',
+					'el2:it1:answer': '<p>A CRM+CMS platform.</p>',
+					'el3:0:alt': 'Team photo',
+				},
+			});
+			expect(result.success).toBe(true);
+		});
+
+		it('rejects an empty fields object', () => {
+			const result = SuggestTranslationSchema.safeParse({
+				domain: 'page-builder',
+				sourceLanguage: 'en',
+				targetLanguage: 'de',
+				fields: {},
+			});
+			expect(result.success).toBe(false);
+		});
+
+		it('rejects more than 150 entries in a single request', () => {
+			const fields = Object.fromEntries(
+				Array.from({ length: 151 }, (_, i) => [`el${i}`, 'text']),
+			);
+			const result = SuggestTranslationSchema.safeParse({
+				domain: 'page-builder',
+				sourceLanguage: 'en',
+				targetLanguage: 'de',
+				fields,
+			});
+			expect(result.success).toBe(false);
+		});
+
+		it('rejects a payload whose combined field content exceeds the total size cap', () => {
+			const longValue = 'a'.repeat(20_000);
+			const result = SuggestTranslationSchema.safeParse({
+				domain: 'page-builder',
+				sourceLanguage: 'en',
+				targetLanguage: 'de',
+				fields: { el1: longValue, el2: longValue, el3: longValue, el4: longValue },
+			});
+			expect(result.success).toBe(false);
+		});
 	});
 });

@@ -70,7 +70,7 @@ describe('anthropicTransport', () => {
 		const [params, options] = mockParse.mock.calls[0];
 		expect(params.model).toBe('claude-haiku-4-5-20251001');
 		expect(params.max_tokens).toBeGreaterThanOrEqual(512);
-		expect(params.max_tokens).toBeLessThanOrEqual(4096);
+		expect(params.max_tokens).toBeLessThanOrEqual(8192);
 		expect(params.system).toEqual([
 			expect.objectContaining({
 				type: 'text',
@@ -102,7 +102,7 @@ describe('anthropicTransport', () => {
 			},
 			resultSchema,
 		});
-		expect(mockParse.mock.calls[0][0].max_tokens).toBe(4096);
+		expect(mockParse.mock.calls[0][0].max_tokens).toBe(8192);
 
 		mockParse.mockClear();
 		await anthropicTransport.suggest({
@@ -127,6 +127,27 @@ describe('anthropicTransport', () => {
 				resultSchema,
 			}),
 		).rejects.toBeInstanceOf(TranslationProviderError);
+	});
+
+	it('works with a dynamically-built result schema (page-builder style, keys not known ahead of time)', async () => {
+		const { z } = await import('zod');
+		const dynamicResultSchema = z.object({
+			el1: z.string(),
+			'el2:it1:question': z.string(),
+		});
+		mockParse.mockResolvedValue({
+			parsed_output: { el1: 'Willkommen', 'el2:it1:question': 'Was ist das?' },
+		});
+
+		const result = await anthropicTransport.suggest({
+			domainLabel: 'Page content',
+			sourceLanguageName: 'English',
+			targetLanguageName: 'German',
+			fields: { el1: 'Welcome', 'el2:it1:question': 'What is this?' },
+			resultSchema: dynamicResultSchema,
+		});
+
+		expect(result).toEqual({ el1: 'Willkommen', 'el2:it1:question': 'Was ist das?' });
 	});
 
 	it('throws TranslationProviderError when the response has no parsed_output', async () => {
