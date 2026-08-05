@@ -93,4 +93,33 @@ describe('suggestTranslation', () => {
 			}),
 		);
 	});
+
+	it('builds a per-request result schema for page-builder from the actual field keys, since there is no static shape for this domain', async () => {
+		mockSuggest.mockResolvedValue({
+			el1: '<p>Willkommen bei First</p>',
+			'el2:it1:question': 'Was ist First?',
+		});
+
+		await suggestTranslation({
+			domain: 'page-builder',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: {
+				el1: '<p>Welcome to First</p>',
+				'el2:it1:question': 'What is First?',
+			},
+		});
+
+		const call = mockSuggest.mock.calls[0][0];
+		expect(call.domainLabel).toBe('Page content');
+		// The dynamically-built schema must accept exactly the keys sent, and
+		// reject a payload missing one of them (proves it's not a loose record).
+		expect(
+			call.resultSchema.safeParse({
+				el1: 'x',
+				'el2:it1:question': 'y',
+			}).success,
+		).toBe(true);
+		expect(call.resultSchema.safeParse({ el1: 'x' }).success).toBe(false);
+	});
 });
