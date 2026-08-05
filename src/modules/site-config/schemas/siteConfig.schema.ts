@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { LocalizedStringSchema } from '@Shared/schemas/localizedString.schema';
+import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import {
 	HEADER_VARIANTS,
 	FOOTER_VARIANTS,
@@ -107,6 +108,14 @@ const mapsUpdateSchema = z
 	})
 	.optional();
 
+const contentLanguagesUpdateSchema = z
+	.array(z.enum(SUPPORTED_LANGUAGES, { error: 'SITE_CONFIG_LANGUAGE_INVALID' }))
+	.min(1, { error: 'SITE_CONFIG_CONTENT_LANGUAGES_EMPTY' })
+	.refine((langs) => new Set(langs).size === langs.length, {
+		error: 'SITE_CONFIG_CONTENT_LANGUAGES_DUPLICATE',
+	})
+	.optional();
+
 export const SiteConfigUpdateSchema = z
 	.object({
 		header: headerUpdateSchema,
@@ -114,6 +123,7 @@ export const SiteConfigUpdateSchema = z
 		layout: layoutUpdateSchema,
 		social: socialUpdateSchema,
 		maps: mapsUpdateSchema,
+		contentLanguages: contentLanguagesUpdateSchema,
 	})
 	.refine(
 		(data) =>
@@ -121,7 +131,8 @@ export const SiteConfigUpdateSchema = z
 			data.footer !== undefined ||
 			data.layout !== undefined ||
 			data.social !== undefined ||
-			data.maps !== undefined,
+			data.maps !== undefined ||
+			data.contentLanguages !== undefined,
 		{ message: 'SITE_CONFIG_EMPTY_UPDATE' },
 	);
 

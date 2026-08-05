@@ -46,6 +46,30 @@ describe('getSiteConfig', () => {
 		expect(config.maps.provider).toBe('osm');
 	});
 
+	it('defaults contentLanguages to every supported language for a document that predates this field', async () => {
+		await SiteConfigModel.create({
+			id: 'singleton',
+			maps: { provider: 'osm' },
+		});
+
+		const config = await getSiteConfig();
+
+		expect(config.contentLanguages).toEqual(
+			SITE_CONFIG_DEFAULTS.contentLanguages,
+		);
+	});
+
+	it('preserves a narrowed contentLanguages scope already saved on the document', async () => {
+		await SiteConfigModel.create({
+			id: 'singleton',
+			contentLanguages: ['es', 'en'],
+		});
+
+		const config = await getSiteConfig();
+
+		expect(config.contentLanguages).toEqual(['es', 'en']);
+	});
+
 	it('serves from cache within the TTL', async () => {
 		await getSiteConfig();
 		await SiteConfigModel.create({

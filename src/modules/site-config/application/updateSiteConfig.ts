@@ -35,6 +35,8 @@ function buildSetPayload(data: SiteConfigUpdate): Record<string, unknown> {
 	if (data.layout) flatten('layout', data.layout, set);
 	if (data.social) flatten('social', data.social, set);
 	if (data.maps) flatten('maps', data.maps, set);
+	// Array, not a nested object — stored/replaced whole, no flatten.
+	if (data.contentLanguages) set.contentLanguages = data.contentLanguages;
 	return set;
 }
 

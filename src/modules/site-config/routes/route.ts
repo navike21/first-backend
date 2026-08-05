@@ -6,6 +6,7 @@ import { AUDIT_ACTIONS } from '@Modules/audit-log/constants/auditActions';
 import { siteConfigGetController } from '../controllers/siteConfig.get';
 import { siteConfigGetPublicController } from '../controllers/siteConfig.getPublic';
 import { siteConfigUpdateController } from '../controllers/siteConfig.update';
+import { authorizeSiteConfigUpdate } from '../middlewares/authorizeSiteConfigUpdate';
 
 export function siteConfigApi(router: Router) {
 	// Public: layout contract consumed by the public website project.
@@ -14,14 +15,20 @@ export function siteConfigApi(router: Router) {
 	router.get(
 		'/site-config',
 		authenticate,
-		authorize(PERMISSIONS.SITE_CONFIG_READ, PERMISSIONS.SITE_CONFIG_MANAGE),
+		// SITE_CONFIG_LANGUAGES included so someone delegated ONLY the
+		// content-language scope can still open the settings page to view it.
+		authorize(
+			PERMISSIONS.SITE_CONFIG_READ,
+			PERMISSIONS.SITE_CONFIG_MANAGE,
+			PERMISSIONS.SITE_CONFIG_LANGUAGES,
+		),
 		siteConfigGetController,
 	);
 
 	router.patch(
 		'/site-config',
 		authenticate,
-		authorize(PERMISSIONS.SITE_CONFIG_UPDATE, PERMISSIONS.SITE_CONFIG_MANAGE),
+		authorizeSiteConfigUpdate,
 		captureAudit({
 			action: AUDIT_ACTIONS.SITE_CONFIG_UPDATED,
 			resource: 'site-config',

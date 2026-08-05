@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import type { SiteConfigData } from '../constants/siteConfigDefaults';
 import {
 	SITE_CONFIG_DEFAULTS,
@@ -82,6 +83,11 @@ const siteConfigSchema = new Schema<SiteConfigDocument>(
 				enum: MAP_PROVIDERS,
 				default: SITE_CONFIG_DEFAULTS.maps.provider,
 			},
+		},
+		contentLanguages: {
+			type: [String],
+			enum: SUPPORTED_LANGUAGES,
+			default: () => [...SUPPORTED_LANGUAGES],
 		},
 	},
 	{ timestamps: true },
