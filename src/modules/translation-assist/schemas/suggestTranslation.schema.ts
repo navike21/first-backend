@@ -7,9 +7,20 @@ export const TRANSLATION_DOMAINS = [
 	'portfolio',
 	'collaborators',
 	'forms',
+	'categories',
+	'tags',
+	'page-builder',
 ] as const;
 
 export type TranslationDomain = (typeof TRANSLATION_DOMAINS)[number];
+
+// Every domain except `page-builder` has a fixed, named set of request/
+// result fields (name/description/...). A page's translatable content is an
+// arbitrary number of section/column/element fields that varies per page —
+// its RESULT schema can't be a static constant like the other 7 (see
+// `application/suggestTranslation.ts`, which builds it per-request from the
+// real field keys instead of pulling from `RESULT_SCHEMA_BY_DOMAIN`).
+type FixedShapeDomain = Exclude<TranslationDomain, 'page-builder'>;
 
 // Per-domain request field shapes. Only the "primary" field of each domain
 // (the one that gates whether the translate button even shows up on the
@@ -50,12 +61,52 @@ const FormsFieldsSchema = z.object({
 	successMessage: z.string().trim().max(500),
 });
 
+// Categories/Tags: a single short field, same shape/reasoning as
+// Collaborators' `bio` above — kept as its own name per-domain rather than
+// shared, matching the "no cross-domain ripple" convention above.
+const CategoriesFieldsSchema = z.object({
+	name: z.string().trim().min(1).max(200),
+});
+
+const TagsFieldsSchema = z.object({
+	name: z.string().trim().min(1).max(200),
+});
+
+// Page Builder: an arbitrary bag of `elementId`-keyed (or
+// `elementId:itemId:field`-keyed) values — the frontend flattens a page's
+// entire translatable content into this shape (see
+// `page.builder.ts::extractTranslatableFields` on the frontend). Capped on
+// entry count and total content size so one page can't balloon a single
+// call's cost regardless of how large it grows.
+const PAGE_BUILDER_MAX_ENTRIES = 150;
+const PAGE_BUILDER_MAX_TOTAL_CHARS = 60_000;
+
+const PageBuilderFieldsSchema = z
+	.record(z.string().min(1).max(300), z.string().max(20_000))
+	.refine((entries) => Object.keys(entries).length > 0, {
+		message: 'At least one translatable field is required',
+	})
+	.refine((entries) => Object.keys(entries).length <= PAGE_BUILDER_MAX_ENTRIES, {
+		message: `A single request can translate at most ${PAGE_BUILDER_MAX_ENTRIES} fields`,
+	})
+	.refine(
+		(entries) =>
+			Object.values(entries).reduce((sum, value) => sum + value.length, 0) <=
+			PAGE_BUILDER_MAX_TOTAL_CHARS,
+		{
+			message: 'Total translatable content is too large for a single request',
+		},
+	);
+
 const FIELDS_SCHEMA_BY_DOMAIN = {
 	services: ServicesFieldsSchema,
 	pages: PagesFieldsSchema,
 	portfolio: PortfolioFieldsSchema,
 	collaborators: CollaboratorsFieldsSchema,
 	forms: FormsFieldsSchema,
+	categories: CategoriesFieldsSchema,
+	tags: TagsFieldsSchema,
+	'page-builder': PageBuilderFieldsSchema,
 } satisfies Record<TranslationDomain, z.ZodTypeAny>;
 
 // Both languages are always dynamic — the source is whatever language the
@@ -78,6 +129,9 @@ export const SuggestTranslationSchema = z
 		requestSchemaFor('portfolio'),
 		requestSchemaFor('collaborators'),
 		requestSchemaFor('forms'),
+		requestSchemaFor('categories'),
+		requestSchemaFor('tags'),
+		requestSchemaFor('page-builder'),
 	])
 	.refine((data) => data.sourceLanguage !== data.targetLanguage, {
 		message: 'TRANSLATION_SOURCE_EQUALS_TARGET',
@@ -119,13 +173,24 @@ const FormsTranslationResultSchema = z.object({
 	successMessage: z.string(),
 });
 
+const CategoriesTranslationResultSchema = z.object({
+	name: z.string(),
+});
+
+const TagsTranslationResultSchema = z.object({
+	name: z.string(),
+});
+
+// `page-builder` is deliberately absent here — see `FixedShapeDomain` above.
 export const RESULT_SCHEMA_BY_DOMAIN = {
 	services: ServicesTranslationResultSchema,
 	pages: PagesTranslationResultSchema,
 	portfolio: PortfolioTranslationResultSchema,
 	collaborators: CollaboratorsTranslationResultSchema,
 	forms: FormsTranslationResultSchema,
-} satisfies Record<TranslationDomain, z.ZodTypeAny>;
+	categories: CategoriesTranslationResultSchema,
+	tags: TagsTranslationResultSchema,
+} satisfies Record<FixedShapeDomain, z.ZodTypeAny>;
 
 export type ServicesTranslationResult = z.infer<
 	typeof ServicesTranslationResultSchema

@@ -48,11 +48,15 @@ registry.registerPath({
 	summary: 'Suggest an AI translation for one language, for one CMS record',
 	description:
 		'Requires `<domain>:update` or `:manage` for the given `domain` ' +
-		'(services/pages/portfolio/collaborators/forms). Translates the given ' +
-		"fields (all in `sourceLanguage`, the editor's own current UI language " +
-		'— never a fixed language) into `targetLanguage` in a single call. The ' +
-		'`fields` shape depends on `domain` (see the module schema). Rate ' +
-		'limited per authenticated user (not per IP).',
+		'(services/pages/portfolio/collaborators/forms/categories/tags/' +
+		'page-builder — page-builder authorizes against the `pages` ' +
+		'permission pair, since it translates a page\'s own content). ' +
+		"Translates the given fields (all in `sourceLanguage`, the editor's " +
+		'own current UI language — never a fixed language) into ' +
+		'`targetLanguage` in a single call. The `fields` shape depends on ' +
+		'`domain` (see the module schema) — for `page-builder` it is a ' +
+		'dynamic bag of section/element field keys rather than a fixed set. ' +
+		'Rate limited per authenticated user (not per IP).',
 	tags: ['Translation Assist'],
 	security: bearerAuth,
 	request: {

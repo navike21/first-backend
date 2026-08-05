@@ -19,6 +19,11 @@ const DOMAIN_PERMISSIONS: Record<TranslationDomain, [Permission, Permission]> =
 			PERMISSIONS.COLLABORATORS_MANAGE,
 		],
 		forms: [PERMISSIONS.FORMS_UPDATE, PERMISSIONS.FORMS_MANAGE],
+		categories: [PERMISSIONS.CATEGORIES_UPDATE, PERMISSIONS.CATEGORIES_MANAGE],
+		tags: [PERMISSIONS.TAGS_UPDATE, PERMISSIONS.TAGS_MANAGE],
+		// Page content lives under the Pages resource — same permission pair as
+		// the `pages` domain (metadata), not a new resource of its own.
+		'page-builder': [PERMISSIONS.PAGES_UPDATE, PERMISSIONS.PAGES_MANAGE],
 	};
 
 export const authorizeTranslationDomain = asyncHandler(

@@ -63,7 +63,39 @@ describe('authorizeTranslationDomain', () => {
 	});
 
 	it('rejects an unrecognized domain even with broad permissions', async () => {
+		const req = makeReq('unsupported-domain');
+		const res = makeRes(['unsupported-domain:manage']);
+		const next = vi.fn();
+		await authorizeTranslationDomain(req, res, next);
+		expect(next).toHaveBeenCalledWith(expect.any(Error));
+	});
+
+	it('calls next for categories with categories:update', async () => {
 		const req = makeReq('categories');
+		const res = makeRes(['categories:update']);
+		const next = vi.fn();
+		await authorizeTranslationDomain(req, res, next);
+		expect(next).toHaveBeenCalledWith();
+	});
+
+	it('calls next for tags with tags:manage', async () => {
+		const req = makeReq('tags');
+		const res = makeRes(['tags:manage']);
+		const next = vi.fn();
+		await authorizeTranslationDomain(req, res, next);
+		expect(next).toHaveBeenCalledWith();
+	});
+
+	it("authorizes page-builder against the pages permission pair, not a permission of its own", async () => {
+		const req = makeReq('page-builder');
+		const res = makeRes(['pages:update']);
+		const next = vi.fn();
+		await authorizeTranslationDomain(req, res, next);
+		expect(next).toHaveBeenCalledWith();
+	});
+
+	it('rejects page-builder when the user only has categories permissions', async () => {
+		const req = makeReq('page-builder');
 		const res = makeRes(['categories:manage']);
 		const next = vi.fn();
 		await authorizeTranslationDomain(req, res, next);
