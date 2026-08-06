@@ -15,6 +15,7 @@ const DOMAIN_LABELS: Record<SuggestTranslationInput['domain'], string> = {
 	categories: 'Categories',
 	tags: 'Tags',
 	'page-builder': 'Page content',
+	blog: 'Blog',
 };
 
 // `page-builder`'s fields are a dynamic bag (see FixedShapeDomain in the

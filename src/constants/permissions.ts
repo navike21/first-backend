@@ -110,6 +110,13 @@ export const PERMISSIONS = {
 	FORMS_SUBMISSIONS_PURGE: 'forms-submissions:purge',
 	FORMS_SUBMISSIONS_MANAGE: 'forms-submissions:manage',
 
+	BLOG_READ: 'blog:read',
+	BLOG_CREATE: 'blog:create',
+	BLOG_UPDATE: 'blog:update',
+	BLOG_DELETE: 'blog:delete',
+	BLOG_PURGE: 'blog:purge',
+	BLOG_MANAGE: 'blog:manage',
+
 	ALL: '*:*',
 } as const;
 

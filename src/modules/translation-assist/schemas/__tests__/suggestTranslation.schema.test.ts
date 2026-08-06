@@ -168,6 +168,30 @@ describe('SuggestTranslationSchema', () => {
 		expect(result.success).toBe(true);
 	});
 
+	it('accepts a valid Blog payload, with optional excerpt blank', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'blog',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: {
+				title: 'Our new product launch',
+				excerpt: '',
+				content: '<p>We are excited to announce...</p>',
+			},
+		});
+		expect(result.success).toBe(true);
+	});
+
+	it('rejects a Blog payload missing the required title field', () => {
+		const result = SuggestTranslationSchema.safeParse({
+			domain: 'blog',
+			sourceLanguage: 'en',
+			targetLanguage: 'de',
+			fields: { title: '', excerpt: '', content: '<p>Text</p>' },
+		});
+		expect(result.success).toBe(false);
+	});
+
 	describe('page-builder domain (dynamic field bag)', () => {
 		it('accepts an arbitrary set of elementId-keyed fields', () => {
 			const result = SuggestTranslationSchema.safeParse({
