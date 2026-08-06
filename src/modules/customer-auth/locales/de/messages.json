@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "Konto erfolgreich erstellt",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "Anmeldung erfolgreich",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "Erfolgreich abgemeldet",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "Token aktualisiert",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "Passwort erfolgreich zurückgesetzt. Bitte melde dich mit deinem neuen Passwort an.",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "Falls diese E-Mail registriert ist, erhältst du in Kürze einen Link zum Zurücksetzen."
+}

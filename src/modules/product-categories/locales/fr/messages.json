@@ -1,0 +1,15 @@
+{
+	"SUCCESS_PRODUCT_CATEGORY_CREATE": "Catégorie de produit créée avec succès",
+	"SUCCESS_PRODUCT_CATEGORY_LIST": "Catégories de produit récupérées avec succès",
+	"SUCCESS_PRODUCT_CATEGORY_FOUND": "Catégorie de produit trouvée avec succès",
+	"SUCCESS_PRODUCT_CATEGORY_UPDATE": "Catégorie de produit mise à jour avec succès",
+	"SUCCESS_PRODUCT_CATEGORY_DELETED": "Catégorie de produit supprimée avec succès",
+	"SUCCESS_PRODUCT_CATEGORY_RESTORED": "Catégorie de produit restaurée avec succès",
+	"SUCCESS_PRODUCT_CATEGORY_PURGED": "Catégorie de produit définitivement supprimée",
+	"SUCCESS_PRODUCT_CATEGORY_TRASH_LIST": "Corbeille récupérée avec succès",
+	"PRODUCT_CATEGORY_NOT_FOUND": "Catégorie de produit introuvable",
+	"PRODUCT_CATEGORY_SLUG_CONFLICT": "Une catégorie de produit avec ce slug existe déjà",
+	"PRODUCT_CATEGORY_INVALID_PARENT": "Une catégorie de produit ne peut pas être son propre ancêtre",
+	"PRODUCT_CATEGORY_PARENT_NOT_FOUND": "Catégorie de produit parente introuvable",
+	"PRODUCT_CATEGORY_HAS_CHILDREN": "Cette catégorie de produit a des catégories enfants et ne peut pas être définitivement supprimée"
+}

@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "계정이 성공적으로 생성되었습니다",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "로그인에 성공했습니다",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "성공적으로 로그아웃되었습니다",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "토큰이 갱신되었습니다",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "비밀번호가 재설정되었습니다. 새 비밀번호로 로그인해 주세요.",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "해당 이메일이 등록되어 있다면 곧 재설정 링크를 받게 됩니다."
+}

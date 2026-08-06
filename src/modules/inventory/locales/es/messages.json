@@ -1,0 +1,13 @@
+{
+	"SUCCESS_LOCATION_CREATE": "Ubicación creada exitosamente",
+	"SUCCESS_LOCATION_LIST": "Ubicaciones recuperadas exitosamente",
+	"SUCCESS_LOCATION_FOUND": "Ubicación encontrada exitosamente",
+	"SUCCESS_LOCATION_UPDATE": "Ubicación actualizada exitosamente",
+	"SUCCESS_LOCATION_DELETED": "Ubicación eliminada exitosamente",
+	"SUCCESS_LOCATION_RESTORED": "Ubicación restaurada exitosamente",
+	"SUCCESS_LOCATION_PURGED": "Ubicación eliminada permanentemente",
+	"SUCCESS_LOCATION_TRASH_LIST": "Papelera recuperada exitosamente",
+	"SUCCESS_STOCK_ADJUSTED": "Stock ajustado exitosamente",
+	"SUCCESS_STOCK_FOUND": "Stock recuperado exitosamente",
+	"LOCATION_NOT_FOUND": "Ubicación no encontrada"
+}

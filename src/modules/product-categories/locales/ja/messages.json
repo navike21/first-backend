@@ -1,0 +1,15 @@
+{
+	"SUCCESS_PRODUCT_CATEGORY_CREATE": "商品カテゴリーを作成しました",
+	"SUCCESS_PRODUCT_CATEGORY_LIST": "商品カテゴリーを取得しました",
+	"SUCCESS_PRODUCT_CATEGORY_FOUND": "商品カテゴリーが見つかりました",
+	"SUCCESS_PRODUCT_CATEGORY_UPDATE": "商品カテゴリーを更新しました",
+	"SUCCESS_PRODUCT_CATEGORY_DELETED": "商品カテゴリーを削除しました",
+	"SUCCESS_PRODUCT_CATEGORY_RESTORED": "商品カテゴリーを復元しました",
+	"SUCCESS_PRODUCT_CATEGORY_PURGED": "商品カテゴリーを完全に削除しました",
+	"SUCCESS_PRODUCT_CATEGORY_TRASH_LIST": "ゴミ箱を取得しました",
+	"PRODUCT_CATEGORY_NOT_FOUND": "商品カテゴリーが見つかりません",
+	"PRODUCT_CATEGORY_SLUG_CONFLICT": "このスラッグの商品カテゴリーは既に存在します",
+	"PRODUCT_CATEGORY_INVALID_PARENT": "商品カテゴリーは自分自身の祖先になれません",
+	"PRODUCT_CATEGORY_PARENT_NOT_FOUND": "親の商品カテゴリーが見つかりません",
+	"PRODUCT_CATEGORY_HAS_CHILDREN": "この商品カテゴリーには子カテゴリーがあるため完全に削除できません"
+}

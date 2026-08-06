@@ -1,0 +1,13 @@
+{
+	"SUCCESS_LOCATION_CREATE": "Локация успешно создана",
+	"SUCCESS_LOCATION_LIST": "Локации успешно получены",
+	"SUCCESS_LOCATION_FOUND": "Локация найдена",
+	"SUCCESS_LOCATION_UPDATE": "Локация успешно обновлена",
+	"SUCCESS_LOCATION_DELETED": "Локация успешно удалена",
+	"SUCCESS_LOCATION_RESTORED": "Локация успешно восстановлена",
+	"SUCCESS_LOCATION_PURGED": "Локация окончательно удалена",
+	"SUCCESS_LOCATION_TRASH_LIST": "Корзина успешно получена",
+	"SUCCESS_STOCK_ADJUSTED": "Остаток успешно скорректирован",
+	"SUCCESS_STOCK_FOUND": "Остаток успешно получен",
+	"LOCATION_NOT_FOUND": "Локация не найдена"
+}

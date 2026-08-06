@@ -1,0 +1,11 @@
+{
+	"SUCCESS_CUSTOMER_CREATE": "Customer created successfully",
+	"SUCCESS_CUSTOMER_LIST": "Customers retrieved successfully",
+	"SUCCESS_CUSTOMER_FOUND": "Customer found successfully",
+	"SUCCESS_CUSTOMER_UPDATE": "Customer updated successfully",
+	"SUCCESS_CUSTOMER_DELETED": "Customer deleted successfully",
+	"SUCCESS_CUSTOMER_RESTORED": "Customer restored successfully",
+	"SUCCESS_CUSTOMER_PURGED": "Customer permanently deleted",
+	"SUCCESS_CUSTOMER_TRASH_LIST": "Trash retrieved successfully",
+	"CUSTOMER_NOT_FOUND": "Customer not found"
+}

@@ -25,6 +25,11 @@ import '@Modules/geo/geo.openapi';
 import '@Modules/forms/forms.openapi';
 import '@Modules/translation-assist/translation-assist.openapi';
 import '@Modules/blog/blog.openapi';
+import '@Modules/ecommerce-settings/ecommerce-settings.openapi';
+import '@Modules/product-categories/product-categories.openapi';
+import '@Modules/customers/customers.openapi';
+import '@Modules/customer-auth/customer-auth.openapi';
+import '@Modules/inventory/inventory.openapi';
 
 export function buildOpenApiDocument() {
 	const generator = new OpenApiGeneratorV3(registry.definitions);
