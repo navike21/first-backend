@@ -183,6 +183,37 @@ text/textarea/email/phone/select/radio/checkbox/date) que arma un `z.object(shap
   `PATCH /users/me/preferences`; expuestas en login y `GET /users/me`.
   (`primaryColor` se quitó: el color del admin quedó bloqueado al Manual de
   Marca en el frontend, sin selección por usuario.)
+- **Permiso condicional por campo del body** (patrón usado por `translation-assist` y
+  por `site-config`): cuando una sola ruta debe aceptar dos niveles de permiso distintos
+  según **qué** trae el `PATCH`, un middleware propio (no `authorize()` fijo) decide el
+  permiso requerido inspeccionando `Object.keys(req.body)` antes de llamar a
+  `hasPermission`. Ver `authorizeSiteConfigUpdate` abajo como ejemplo completo.
+
+## `site-config` — alcance de idiomas de CONTENIDO (independiente del idioma de UI de First)
+
+`SiteConfigData.contentLanguages: SupportedLanguage[]` (default: los 10 idiomas) es un
+concepto **separado** del idioma de interfaz por-usuario (`User.preferences.language`,
+arriba) — restringe qué idiomas usa un negocio para su CONTENIDO (Services/Pages/
+Portfolio/Categories/Tags/Collaborators/Forms, y a futuro Ecommerce), sin afectar en qué
+idioma un editor usa el panel de First. Ej: una ferretería que solo publica en
+es/en, aunque quien redacte el blog use First en portugués.
+
+- **Cero cambios a los schemas Zod/Mongoose de los 7 módulos de contenido** — el alcance
+  es 100% una restricción de presentación en el frontend (qué pestañas de idioma se
+  muestran); `LocalizedStringSchema` sigue exigiendo las 10 claves tal cual (valores
+  pueden ser `''`).
+- **Permiso delegable propio** `site-config:languages` (`PERMISSIONS.SITE_CONFIG_LANGUAGES`),
+  separado de `site-config:update`/`manage` — entra gratis a `SUPER_ADMIN_PERMISSIONS`
+  (deriva de `Object.values(PERMISSIONS)`), sin tocar el seed de super-admin (`'*:*'`).
+- **`authorizeSiteConfigUpdate`** (`modules/site-config/middlewares/`) reemplaza el
+  `authorize(...)` fijo del `PATCH /site-config`: si el body **solo** trae
+  `contentLanguages`, exige `SITE_CONFIG_LANGUAGES` o `SITE_CONFIG_MANAGE`; si trae
+  cualquier otra clave (sola o junto con `contentLanguages`), exige `SITE_CONFIG_UPDATE`
+  o `SITE_CONFIG_MANAGE`. Así alguien con *solo* el permiso delegado puede guardar la
+  pestaña de idiomas sin poder tocar header/footer/social/maps.
+- **Multi-tenant/white-label (First School, First Logistics como productos separados)
+  es un hito futuro explícitamente distinto** — no confundir con este alcance de
+  idiomas de contenido, que es de un solo negocio/instancia.
 
 ## Emails = outbox durable + worker (módulo `notifications-email`)
 El envío es una **capacidad agnóstica centralizada dentro de first** (no un servicio
