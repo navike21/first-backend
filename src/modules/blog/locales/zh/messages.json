@@ -1,0 +1,7 @@
+{
+	"SUCCESS_BLOG_CREATE": "博客文章创建成功",
+	"SUCCESS_BLOG_LIST": "博客列表获取成功",
+	"SUCCESS_BLOG_FOUND": "找到博客文章",
+	"SUCCESS_BLOG_UPDATE": "博客文章更新成功",
+	"SUCCESS_BLOG_DELETED": "博客文章删除成功"
+}

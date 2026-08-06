@@ -1,0 +1,7 @@
+{
+	"SUCCESS_BLOG_CREATE": "Запись блога успешно создана",
+	"SUCCESS_BLOG_LIST": "Список блога успешно получен",
+	"SUCCESS_BLOG_FOUND": "Запись блога найдена",
+	"SUCCESS_BLOG_UPDATE": "Запись блога успешно обновлена",
+	"SUCCESS_BLOG_DELETED": "Запись блога успешно удалена"
+}
