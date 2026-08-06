@@ -30,9 +30,11 @@ import { blogDeleteController } from '../controllers/blog.delete';
 import { blogDeletePermanentController } from '../controllers/blog.deletePermanent';
 import { blogRestoreController } from '../controllers/blog.restore';
 import { blogTrashController } from '../controllers/blog.trash';
-import { deleteBlogPostsBulkController } from '../controllers/blog.deleteBulk';
-import { restoreBlogPostsBulkController } from '../controllers/blog.restoreBulk';
-import { purgeBlogPostsBulkController } from '../controllers/blog.purgeBulk';
+import {
+	deleteBlogPostsBulkController,
+	restoreBlogPostsBulkController,
+	purgeBlogPostsBulkController,
+} from '../controllers/blog.bulk';
 
 const acceptBlogMedia = () =>
 	acceptImageFields([{ name: 'cover' }, { name: 'ogImage' }]);
