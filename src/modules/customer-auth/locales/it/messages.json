@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "Account creato con successo",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "Accesso riuscito",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "Disconnessione riuscita",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "Token aggiornato",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "Password reimpostata con successo. Accedi con la tua nuova password.",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "Se questa email è registrata, riceverai a breve un link di reimpostazione."
+}

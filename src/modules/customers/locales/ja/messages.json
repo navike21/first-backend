@@ -1,0 +1,11 @@
+{
+	"SUCCESS_CUSTOMER_CREATE": "顧客を作成しました",
+	"SUCCESS_CUSTOMER_LIST": "顧客を取得しました",
+	"SUCCESS_CUSTOMER_FOUND": "顧客が見つかりました",
+	"SUCCESS_CUSTOMER_UPDATE": "顧客を更新しました",
+	"SUCCESS_CUSTOMER_DELETED": "顧客を削除しました",
+	"SUCCESS_CUSTOMER_RESTORED": "顧客を復元しました",
+	"SUCCESS_CUSTOMER_PURGED": "顧客を完全に削除しました",
+	"SUCCESS_CUSTOMER_TRASH_LIST": "ゴミ箱を取得しました",
+	"CUSTOMER_NOT_FOUND": "顧客が見つかりません"
+}

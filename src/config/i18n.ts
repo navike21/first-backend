@@ -17,6 +17,11 @@ import { tagsLocales } from '../modules/tags/locales';
 import { siteConfigLocales } from '../modules/site-config/locales';
 import { formsLocales } from '../modules/forms/locales';
 import { blogLocales } from '../modules/blog/locales';
+import { ecommerceSettingsLocales } from '../modules/ecommerce-settings/locales';
+import { productCategoriesLocales } from '../modules/product-categories/locales';
+import { customersLocales } from '../modules/customers/locales';
+import { customerAuthLocales } from '../modules/customer-auth/locales';
+import { inventoryLocales } from '../modules/inventory/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -41,6 +46,11 @@ export async function initI18n(): Promise<void> {
 				'site-config': siteConfigLocales[lang],
 				forms: formsLocales[lang],
 				blog: blogLocales[lang],
+				'ecommerce-settings': ecommerceSettingsLocales[lang],
+				'product-categories': productCategoriesLocales[lang],
+				customers: customersLocales[lang],
+				'customer-auth': customerAuthLocales[lang],
+				inventory: inventoryLocales[lang],
 			},
 		]),
 	);
@@ -70,6 +80,11 @@ export async function initI18n(): Promise<void> {
 			'site-config',
 			'forms',
 			'blog',
+			'ecommerce-settings',
+			'product-categories',
+			'customers',
+			'customer-auth',
+			'inventory',
 		],
 		defaultNS: 'errors',
 	});

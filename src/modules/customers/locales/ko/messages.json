@@ -1,0 +1,11 @@
+{
+	"SUCCESS_CUSTOMER_CREATE": "고객이 성공적으로 생성되었습니다",
+	"SUCCESS_CUSTOMER_LIST": "고객 목록을 성공적으로 조회했습니다",
+	"SUCCESS_CUSTOMER_FOUND": "고객을 찾았습니다",
+	"SUCCESS_CUSTOMER_UPDATE": "고객이 성공적으로 업데이트되었습니다",
+	"SUCCESS_CUSTOMER_DELETED": "고객이 성공적으로 삭제되었습니다",
+	"SUCCESS_CUSTOMER_RESTORED": "고객이 성공적으로 복원되었습니다",
+	"SUCCESS_CUSTOMER_PURGED": "고객이 영구적으로 삭제되었습니다",
+	"SUCCESS_CUSTOMER_TRASH_LIST": "휴지통을 성공적으로 조회했습니다",
+	"CUSTOMER_NOT_FOUND": "고객을 찾을 수 없습니다"
+}

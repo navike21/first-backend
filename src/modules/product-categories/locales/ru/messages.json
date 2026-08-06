@@ -1,0 +1,15 @@
+{
+	"SUCCESS_PRODUCT_CATEGORY_CREATE": "Категория товара успешно создана",
+	"SUCCESS_PRODUCT_CATEGORY_LIST": "Категории товаров успешно получены",
+	"SUCCESS_PRODUCT_CATEGORY_FOUND": "Категория товара найдена",
+	"SUCCESS_PRODUCT_CATEGORY_UPDATE": "Категория товара успешно обновлена",
+	"SUCCESS_PRODUCT_CATEGORY_DELETED": "Категория товара успешно удалена",
+	"SUCCESS_PRODUCT_CATEGORY_RESTORED": "Категория товара успешно восстановлена",
+	"SUCCESS_PRODUCT_CATEGORY_PURGED": "Категория товара окончательно удалена",
+	"SUCCESS_PRODUCT_CATEGORY_TRASH_LIST": "Корзина успешно получена",
+	"PRODUCT_CATEGORY_NOT_FOUND": "Категория товара не найдена",
+	"PRODUCT_CATEGORY_SLUG_CONFLICT": "Категория товара с таким слагом уже существует",
+	"PRODUCT_CATEGORY_INVALID_PARENT": "Категория товара не может быть своим собственным предком",
+	"PRODUCT_CATEGORY_PARENT_NOT_FOUND": "Родительская категория товара не найдена",
+	"PRODUCT_CATEGORY_HAS_CHILDREN": "У этой категории товара есть дочерние категории, её нельзя удалить окончательно"
+}

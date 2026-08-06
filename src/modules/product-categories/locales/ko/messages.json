@@ -1,0 +1,15 @@
+{
+	"SUCCESS_PRODUCT_CATEGORY_CREATE": "상품 카테고리가 성공적으로 생성되었습니다",
+	"SUCCESS_PRODUCT_CATEGORY_LIST": "상품 카테고리를 성공적으로 조회했습니다",
+	"SUCCESS_PRODUCT_CATEGORY_FOUND": "상품 카테고리를 찾았습니다",
+	"SUCCESS_PRODUCT_CATEGORY_UPDATE": "상품 카테고리가 성공적으로 업데이트되었습니다",
+	"SUCCESS_PRODUCT_CATEGORY_DELETED": "상품 카테고리가 성공적으로 삭제되었습니다",
+	"SUCCESS_PRODUCT_CATEGORY_RESTORED": "상품 카테고리가 성공적으로 복원되었습니다",
+	"SUCCESS_PRODUCT_CATEGORY_PURGED": "상품 카테고리가 영구적으로 삭제되었습니다",
+	"SUCCESS_PRODUCT_CATEGORY_TRASH_LIST": "휴지통을 성공적으로 조회했습니다",
+	"PRODUCT_CATEGORY_NOT_FOUND": "상품 카테고리를 찾을 수 없습니다",
+	"PRODUCT_CATEGORY_SLUG_CONFLICT": "이 슬러그를 가진 상품 카테고리가 이미 존재합니다",
+	"PRODUCT_CATEGORY_INVALID_PARENT": "상품 카테고리는 자기 자신의 상위가 될 수 없습니다",
+	"PRODUCT_CATEGORY_PARENT_NOT_FOUND": "상위 상품 카테고리를 찾을 수 없습니다",
+	"PRODUCT_CATEGORY_HAS_CHILDREN": "이 상품 카테고리에는 하위 카테고리가 있어 영구 삭제할 수 없습니다"
+}

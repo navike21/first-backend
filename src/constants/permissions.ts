@@ -117,6 +117,34 @@ export const PERMISSIONS = {
 	BLOG_PURGE: 'blog:purge',
 	BLOG_MANAGE: 'blog:manage',
 
+	// Ecommerce — singleton settings resource (mirrors SITE_CONFIG_*, no purge).
+	ECOMMERCE_SETTINGS_READ: 'ecommerce-settings:read',
+	ECOMMERCE_SETTINGS_UPDATE: 'ecommerce-settings:update',
+	ECOMMERCE_SETTINGS_MANAGE: 'ecommerce-settings:manage',
+
+	PRODUCT_CATEGORIES_READ: 'product-categories:read',
+	PRODUCT_CATEGORIES_CREATE: 'product-categories:create',
+	PRODUCT_CATEGORIES_UPDATE: 'product-categories:update',
+	PRODUCT_CATEGORIES_DELETE: 'product-categories:delete',
+	PRODUCT_CATEGORIES_PURGE: 'product-categories:purge',
+	PRODUCT_CATEGORIES_MANAGE: 'product-categories:manage',
+
+	CUSTOMERS_READ: 'customers:read',
+	CUSTOMERS_CREATE: 'customers:create',
+	CUSTOMERS_UPDATE: 'customers:update',
+	CUSTOMERS_DELETE: 'customers:delete',
+	CUSTOMERS_PURGE: 'customers:purge',
+	CUSTOMERS_MANAGE: 'customers:manage',
+
+	// Covers both Location CRUD and stock adjustment/read — one resource for
+	// the whole module, same granularity as every other content module.
+	INVENTORY_READ: 'inventory:read',
+	INVENTORY_CREATE: 'inventory:create',
+	INVENTORY_UPDATE: 'inventory:update',
+	INVENTORY_DELETE: 'inventory:delete',
+	INVENTORY_PURGE: 'inventory:purge',
+	INVENTORY_MANAGE: 'inventory:manage',
+
 	ALL: '*:*',
 } as const;
 

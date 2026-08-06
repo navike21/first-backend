@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "Compte créé avec succès",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "Connexion réussie",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "Déconnexion réussie",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "Jeton actualisé",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "Mot de passe réinitialisé avec succès. Connectez-vous avec votre nouveau mot de passe.",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "Si cet e-mail est enregistré, vous recevrez bientôt un lien de réinitialisation."
+}

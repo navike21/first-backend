@@ -23,6 +23,11 @@ import { formsApi } from '@Modules/forms';
 import { notificationsEmailApi } from '@Modules/notifications-email';
 import { translationAssistApi } from '@Modules/translation-assist';
 import { blogApi } from '@Modules/blog';
+import { ecommerceSettingsApi } from '@Modules/ecommerce-settings';
+import { productCategoriesApi } from '@Modules/product-categories';
+import { customersApi } from '@Modules/customers';
+import { customerAuthApi } from '@Modules/customer-auth';
+import { inventoryApi } from '@Modules/inventory';
 
 const router: Router = Router();
 
@@ -52,6 +57,11 @@ const mainRouter = () => {
 	notificationsEmailApi(v1Router);
 	translationAssistApi(v1Router);
 	blogApi(v1Router);
+	ecommerceSettingsApi(v1Router);
+	productCategoriesApi(v1Router);
+	customersApi(v1Router);
+	customerAuthApi(v1Router);
+	inventoryApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 
