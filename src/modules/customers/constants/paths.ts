@@ -1,0 +1,11 @@
+export const CUSTOMER_PATH_LIST = '/customers';
+export const CUSTOMER_PATH_CREATE = '/customers';
+export const CUSTOMER_PATH_GET_BY_ID = '/customers/:id';
+export const CUSTOMER_PATH_UPDATE = '/customers/:id';
+export const CUSTOMER_PATH_DELETE = '/customers/:id';
+export const CUSTOMER_PATH_DELETE_PERMANENT = '/customers/:id/permanent';
+export const CUSTOMER_PATH_TRASH = '/customers/trash';
+export const CUSTOMER_PATH_RESTORE = '/customers/:id/restore';
+export const CUSTOMER_PATH_BULK_DELETE = '/customers/bulk';
+export const CUSTOMER_PATH_BULK_RESTORE = '/customers/bulk/restore';
+export const CUSTOMER_PATH_BULK_PURGE = '/customers/bulk/permanent';

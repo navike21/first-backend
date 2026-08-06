@@ -1,0 +1,11 @@
+{
+	"SUCCESS_CUSTOMER_CREATE": "Cliente criado com sucesso",
+	"SUCCESS_CUSTOMER_LIST": "Clientes obtidos com sucesso",
+	"SUCCESS_CUSTOMER_FOUND": "Cliente encontrado com sucesso",
+	"SUCCESS_CUSTOMER_UPDATE": "Cliente atualizado com sucesso",
+	"SUCCESS_CUSTOMER_DELETED": "Cliente excluído com sucesso",
+	"SUCCESS_CUSTOMER_RESTORED": "Cliente restaurado com sucesso",
+	"SUCCESS_CUSTOMER_PURGED": "Cliente excluído permanentemente",
+	"SUCCESS_CUSTOMER_TRASH_LIST": "Lixeira obtida com sucesso",
+	"CUSTOMER_NOT_FOUND": "Cliente não encontrado"
+}

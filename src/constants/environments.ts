@@ -29,6 +29,22 @@ const EnvSchema = z.object({
 	JWT_EMAIL_EXPIRES: z.string().default('24h'),
 	JWT_RESET_EXPIRES: z.string().default('1h'),
 
+	// JWT — customer-auth realm (fully separate secrets from the staff ones
+	// above — a leaked customer token must never be replayable against staff
+	// endpoints, or vice versa).
+	JWT_CUSTOMER_ACCESS_SECRET: z
+		.string()
+		.default('dev_customer_access_secret_change_in_production'),
+	JWT_CUSTOMER_REFRESH_SECRET: z
+		.string()
+		.default('dev_customer_refresh_secret_change_in_production'),
+	JWT_CUSTOMER_EMAIL_SECRET: z
+		.string()
+		.default('dev_customer_email_secret_change_in_production'),
+	JWT_CUSTOMER_ACCESS_EXPIRES: z.string().default('8h'),
+	JWT_CUSTOMER_REFRESH_EXPIRES: z.string().default('30d'),
+	JWT_CUSTOMER_RESET_EXPIRES: z.string().default('1h'),
+
 	// Email (opcionales — en dev se usa Ethereal automáticamente)
 	EMAIL_HOST: z.string().optional(),
 	EMAIL_PORT: z.coerce.number().default(587),
@@ -118,10 +134,15 @@ if (ENV.NODE_ENV === 'production') {
 		'dev_access_secret_change_in_production',
 		'dev_refresh_secret_change_in_production',
 		'dev_email_secret_change_in_production',
+		'dev_customer_access_secret_change_in_production',
+		'dev_customer_refresh_secret_change_in_production',
+		'dev_customer_email_secret_change_in_production',
 	]);
 	if (
 		insecureDefaults.has(ENV.JWT_ACCESS_SECRET) ||
-		insecureDefaults.has(ENV.JWT_REFRESH_SECRET)
+		insecureDefaults.has(ENV.JWT_REFRESH_SECRET) ||
+		insecureDefaults.has(ENV.JWT_CUSTOMER_ACCESS_SECRET) ||
+		insecureDefaults.has(ENV.JWT_CUSTOMER_REFRESH_SECRET)
 	) {
 		// eslint-disable-next-line no-console
 		console.error('[ENV] FATAL: JWT secrets must be changed in production');

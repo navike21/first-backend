@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "アカウントが作成されました",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "ログインに成功しました",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "ログアウトしました",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "トークンを更新しました",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "パスワードをリセットしました。新しいパスワードでログインしてください。",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "そのメールアドレスが登録されている場合、まもなくリセット用のリンクが届きます。"
+}

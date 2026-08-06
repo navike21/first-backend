@@ -1,0 +1,15 @@
+{
+	"SUCCESS_PRODUCT_CATEGORY_CREATE": "Product category created successfully",
+	"SUCCESS_PRODUCT_CATEGORY_LIST": "Product categories retrieved successfully",
+	"SUCCESS_PRODUCT_CATEGORY_FOUND": "Product category found successfully",
+	"SUCCESS_PRODUCT_CATEGORY_UPDATE": "Product category updated successfully",
+	"SUCCESS_PRODUCT_CATEGORY_DELETED": "Product category deleted successfully",
+	"SUCCESS_PRODUCT_CATEGORY_RESTORED": "Product category restored successfully",
+	"SUCCESS_PRODUCT_CATEGORY_PURGED": "Product category permanently deleted",
+	"SUCCESS_PRODUCT_CATEGORY_TRASH_LIST": "Trash retrieved successfully",
+	"PRODUCT_CATEGORY_NOT_FOUND": "Product category not found",
+	"PRODUCT_CATEGORY_SLUG_CONFLICT": "A product category with this slug already exists",
+	"PRODUCT_CATEGORY_INVALID_PARENT": "A product category cannot be its own ancestor",
+	"PRODUCT_CATEGORY_PARENT_NOT_FOUND": "Parent product category not found",
+	"PRODUCT_CATEGORY_HAS_CHILDREN": "This product category has child categories and cannot be permanently deleted"
+}

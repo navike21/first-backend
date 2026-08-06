@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "Conta criada com sucesso",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "Login realizado com sucesso",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "Logout realizado com sucesso",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "Token atualizado",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "Senha redefinida com sucesso. Faça login com sua nova senha.",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "Se esse e-mail estiver cadastrado, você receberá um link de redefinição em breve."
+}

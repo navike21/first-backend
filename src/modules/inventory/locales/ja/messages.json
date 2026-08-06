@@ -1,0 +1,13 @@
+{
+	"SUCCESS_LOCATION_CREATE": "拠点を作成しました",
+	"SUCCESS_LOCATION_LIST": "拠点を取得しました",
+	"SUCCESS_LOCATION_FOUND": "拠点が見つかりました",
+	"SUCCESS_LOCATION_UPDATE": "拠点を更新しました",
+	"SUCCESS_LOCATION_DELETED": "拠点を削除しました",
+	"SUCCESS_LOCATION_RESTORED": "拠点を復元しました",
+	"SUCCESS_LOCATION_PURGED": "拠点を完全に削除しました",
+	"SUCCESS_LOCATION_TRASH_LIST": "ゴミ箱を取得しました",
+	"SUCCESS_STOCK_ADJUSTED": "在庫を調整しました",
+	"SUCCESS_STOCK_FOUND": "在庫を取得しました",
+	"LOCATION_NOT_FOUND": "拠点が見つかりません"
+}

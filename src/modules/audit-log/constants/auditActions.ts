@@ -141,6 +141,40 @@ export const AUDIT_ACTIONS = {
 	BLOG_BULK_SOFT_DELETED: 'blog:bulk_soft_deleted',
 	BLOG_BULK_RESTORED: 'blog:bulk_restored',
 	BLOG_BULK_PERMANENTLY_DELETED: 'blog:bulk_permanently_deleted',
+
+	ECOMMERCE_SETTINGS_UPDATED: 'ecommerce-settings:updated',
+
+	PRODUCT_CATEGORIES_CREATED: 'product-categories:created',
+	PRODUCT_CATEGORIES_UPDATED: 'product-categories:updated',
+	PRODUCT_CATEGORIES_SOFT_DELETED: 'product-categories:soft_deleted',
+	PRODUCT_CATEGORIES_PERMANENTLY_DELETED:
+		'product-categories:permanently_deleted',
+	PRODUCT_CATEGORIES_RESTORED: 'product-categories:restored',
+	PRODUCT_CATEGORIES_BULK_SOFT_DELETED:
+		'product-categories:bulk_soft_deleted',
+	PRODUCT_CATEGORIES_BULK_RESTORED: 'product-categories:bulk_restored',
+	PRODUCT_CATEGORIES_BULK_PERMANENTLY_DELETED:
+		'product-categories:bulk_permanently_deleted',
+
+	CUSTOMERS_CREATED: 'customers:created',
+	CUSTOMERS_UPDATED: 'customers:updated',
+	CUSTOMERS_SOFT_DELETED: 'customers:soft_deleted',
+	CUSTOMERS_PERMANENTLY_DELETED: 'customers:permanently_deleted',
+	CUSTOMERS_RESTORED: 'customers:restored',
+	CUSTOMERS_BULK_SOFT_DELETED: 'customers:bulk_soft_deleted',
+	CUSTOMERS_BULK_RESTORED: 'customers:bulk_restored',
+	CUSTOMERS_BULK_PERMANENTLY_DELETED: 'customers:bulk_permanently_deleted',
+
+	LOCATIONS_CREATED: 'inventory:location_created',
+	LOCATIONS_UPDATED: 'inventory:location_updated',
+	LOCATIONS_SOFT_DELETED: 'inventory:location_soft_deleted',
+	LOCATIONS_PERMANENTLY_DELETED: 'inventory:location_permanently_deleted',
+	LOCATIONS_RESTORED: 'inventory:location_restored',
+	LOCATIONS_BULK_SOFT_DELETED: 'inventory:location_bulk_soft_deleted',
+	LOCATIONS_BULK_RESTORED: 'inventory:location_bulk_restored',
+	LOCATIONS_BULK_PERMANENTLY_DELETED:
+		'inventory:location_bulk_permanently_deleted',
+	STOCK_ADJUSTED: 'inventory:stock_adjusted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

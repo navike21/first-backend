@@ -1,0 +1,13 @@
+{
+	"SUCCESS_LOCATION_CREATE": "Standort erfolgreich erstellt",
+	"SUCCESS_LOCATION_LIST": "Standorte erfolgreich abgerufen",
+	"SUCCESS_LOCATION_FOUND": "Standort erfolgreich gefunden",
+	"SUCCESS_LOCATION_UPDATE": "Standort erfolgreich aktualisiert",
+	"SUCCESS_LOCATION_DELETED": "Standort erfolgreich gelöscht",
+	"SUCCESS_LOCATION_RESTORED": "Standort erfolgreich wiederhergestellt",
+	"SUCCESS_LOCATION_PURGED": "Standort endgültig gelöscht",
+	"SUCCESS_LOCATION_TRASH_LIST": "Papierkorb erfolgreich abgerufen",
+	"SUCCESS_STOCK_ADJUSTED": "Bestand erfolgreich angepasst",
+	"SUCCESS_STOCK_FOUND": "Bestand erfolgreich abgerufen",
+	"LOCATION_NOT_FOUND": "Standort nicht gefunden"
+}

@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "Аккаунт успешно создан",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "Вход выполнен успешно",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "Выход выполнен успешно",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "Токен обновлён",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "Пароль успешно сброшен. Войдите с новым паролем.",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "Если этот email зарегистрирован, вы скоро получите ссылку для сброса пароля."
+}

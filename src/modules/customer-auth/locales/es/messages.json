@@ -1,0 +1,8 @@
+{
+	"CUSTOMER_AUTH_REGISTER_SUCCESS": "Cuenta creada exitosamente",
+	"CUSTOMER_AUTH_LOGIN_SUCCESS": "Inicio de sesión exitoso",
+	"CUSTOMER_AUTH_LOGOUT_SUCCESS": "Sesión cerrada exitosamente",
+	"CUSTOMER_AUTH_REFRESH_SUCCESS": "Token actualizado",
+	"CUSTOMER_AUTH_PASSWORD_RESET": "Contraseña restablecida exitosamente. Inicia sesión con tu nueva contraseña.",
+	"CUSTOMER_AUTH_FORGOT_PASSWORD_SENT": "Si ese correo está registrado, recibirás un enlace de restablecimiento en breve."
+}

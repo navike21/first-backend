@@ -1,0 +1,13 @@
+{
+	"SUCCESS_LOCATION_CREATE": "Location created successfully",
+	"SUCCESS_LOCATION_LIST": "Locations retrieved successfully",
+	"SUCCESS_LOCATION_FOUND": "Location found successfully",
+	"SUCCESS_LOCATION_UPDATE": "Location updated successfully",
+	"SUCCESS_LOCATION_DELETED": "Location deleted successfully",
+	"SUCCESS_LOCATION_RESTORED": "Location restored successfully",
+	"SUCCESS_LOCATION_PURGED": "Location permanently deleted",
+	"SUCCESS_LOCATION_TRASH_LIST": "Trash retrieved successfully",
+	"SUCCESS_STOCK_ADJUSTED": "Stock adjusted successfully",
+	"SUCCESS_STOCK_FOUND": "Stock retrieved successfully",
+	"LOCATION_NOT_FOUND": "Location not found"
+}
