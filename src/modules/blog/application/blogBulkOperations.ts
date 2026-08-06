@@ -10,7 +10,10 @@ interface BulkResult {
 }
 
 async function findAndPartition(ids: string[], filter: Record<string, unknown>) {
-	const items = await BlogModel.find({ id: { $in: ids }, ...filter }).lean();
+	const items = (await BlogModel.find({ id: { $in: ids }, ...filter }).lean()) as unknown as Record<
+		string,
+		unknown
+	>[];
 	const processedIds = items
 		.map((i) => i.id)
 		.filter((id): id is string => Boolean(id));
@@ -18,50 +21,53 @@ async function findAndPartition(ids: string[], filter: Record<string, unknown>) 
 	return { items, processedIds, notFoundIds };
 }
 
-export async function deleteBlogPostsBulk(ids: string[]): Promise<BulkResult> {
-	const { items, processedIds, notFoundIds } = await findAndPartition(ids, {
-		deletedAt: null,
-	});
+/** Shared shape for delete/restore/purge-bulk: find+partition ids, bail out
+ * early when nothing matched, otherwise run the caller's mutation and map
+ * the matched docs through `mapItem` for the response. */
+async function runBulkOperation(
+	ids: string[],
+	filter: Record<string, unknown>,
+	mutate: (processedIds: string[]) => Promise<void>,
+	mapItem: (item: Record<string, unknown>) => unknown = (i) => cleanMongoFields(i),
+): Promise<BulkResult> {
+	const { items, processedIds, notFoundIds } = await findAndPartition(ids, filter);
 	if (processedIds.length === 0) return { processed: [], processedIds: [], notFoundIds };
 
-	await BlogModel.updateMany(
-		{ id: { $in: processedIds }, deletedAt: null },
-		{ $set: { deletedAt: new Date() } },
-	);
+	await mutate(processedIds);
 
-	return { processed: items.map((i) => cleanMongoFields(i)), processedIds, notFoundIds };
+	return { processed: items.map(mapItem), processedIds, notFoundIds };
 }
 
-export async function restoreBlogPostsBulk(ids: string[]): Promise<BulkResult> {
-	const { items, processedIds, notFoundIds } = await findAndPartition(ids, {
-		deletedAt: { $ne: null },
+export function deleteBlogPostsBulk(ids: string[]): Promise<BulkResult> {
+	return runBulkOperation(ids, { deletedAt: null }, async (processedIds) => {
+		await BlogModel.updateMany(
+			{ id: { $in: processedIds }, deletedAt: null },
+			{ $set: { deletedAt: new Date() } },
+		);
 	});
-	if (processedIds.length === 0) return { processed: [], processedIds: [], notFoundIds };
-
-	await BlogModel.updateMany(
-		{ id: { $in: processedIds }, deletedAt: { $ne: null } },
-		{ $unset: { deletedAt: '' } },
-	);
-
-	return {
-		processed: items.map((i) => cleanMongoFields({ ...i, deletedAt: undefined })),
-		processedIds,
-		notFoundIds,
-	};
 }
 
-export async function purgeBlogPostsBulk(ids: string[]): Promise<BulkResult> {
-	const { items, processedIds, notFoundIds } = await findAndPartition(ids, {
-		deletedAt: { $ne: null },
-	});
-	if (processedIds.length === 0) return { processed: [], processedIds: [], notFoundIds };
-
-	await BlogModel.deleteMany({ id: { $in: processedIds } });
-	await Promise.all(
-		processedIds.map((id) =>
-			deleteEntityFiles(BLOG_ENTITY_TYPE, id).catch(() => {}),
-		),
+export function restoreBlogPostsBulk(ids: string[]): Promise<BulkResult> {
+	return runBulkOperation(
+		ids,
+		{ deletedAt: { $ne: null } },
+		async (processedIds) => {
+			await BlogModel.updateMany(
+				{ id: { $in: processedIds }, deletedAt: { $ne: null } },
+				{ $unset: { deletedAt: '' } },
+			);
+		},
+		(i) => cleanMongoFields({ ...i, deletedAt: undefined }),
 	);
+}
 
-	return { processed: items.map((i) => cleanMongoFields(i)), processedIds, notFoundIds };
+export function purgeBlogPostsBulk(ids: string[]): Promise<BulkResult> {
+	return runBulkOperation(ids, { deletedAt: { $ne: null } }, async (processedIds) => {
+		await BlogModel.deleteMany({ id: { $in: processedIds } });
+		await Promise.all(
+			processedIds.map((id) =>
+				deleteEntityFiles(BLOG_ENTITY_TYPE, id).catch(() => {}),
+			),
+		);
+	});
 }

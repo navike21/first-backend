@@ -1,9 +1,5 @@
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
-import {
-	uploadImageSafe,
-	deleteEntityFiles,
-	deleteStorageFilesByIds,
-} from '@Modules/storage';
+import { deleteEntityFiles, deleteStorageFilesByIds } from '@Modules/storage';
 import type { MutationResult, ResponseWarning } from '@Types/responseStructure';
 import {
 	BlogNotFoundError,
@@ -11,6 +7,7 @@ import {
 } from '../domain/errors/BlogErrors';
 import BlogModel from '../infrastructure/BlogModel';
 import { BLOG_ENTITY_TYPE } from '../constants/paths';
+import { uploadBlogImage } from './blogImageUpload';
 import type { UpdateBlogInput } from '../schemas/blog.schema';
 import type { BlogPostFiles } from './createBlogPost';
 
@@ -51,15 +48,7 @@ async function uploadProvidedFiles(
 		const file = files?.[field];
 		if (!file) continue;
 
-		const uploaded = await uploadImageSafe({
-			buffer: file.buffer,
-			originalName: file.originalName,
-			mimeType: file.mimeType,
-			entityType: BLOG_ENTITY_TYPE,
-			entityId: id,
-			field,
-			uploadedBy: updatedBy,
-		});
+		const uploaded = await uploadBlogImage(id, field, file, updatedBy);
 		if (uploaded.warning) warnings.push(uploaded.warning);
 		if (uploaded.url && uploaded.storageId) {
 			uploads.push({ field, url: uploaded.url, storageId: uploaded.storageId });

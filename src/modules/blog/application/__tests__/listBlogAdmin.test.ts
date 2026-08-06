@@ -15,6 +15,7 @@ const mockQB = (items: unknown[]) => ({
 	sort: vi.fn().mockReturnThis(),
 	skip: vi.fn().mockReturnThis(),
 	limit: vi.fn().mockReturnThis(),
+	select: vi.fn().mockReturnThis(),
 	lean: vi.fn().mockResolvedValue(items),
 });
 

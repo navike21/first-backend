@@ -2,7 +2,7 @@ import generateUUID from '@Helpers/uuid';
 import { cleanMongoFields } from '@Helpers/cleanMongoFields';
 import { generateSlug } from '@Helpers/generateSlug';
 import { AppError } from '@Shared/domain/AppError';
-import { uploadImageSafe, deleteEntityFiles } from '@Modules/storage';
+import { deleteEntityFiles } from '@Modules/storage';
 import { SUPPORTED_LANGUAGES } from '@Shared/types/localizedString';
 import type { LocalizedString } from '@Shared/types/localizedString';
 import type { IncomingFile } from '@Types/incomingFile';
@@ -10,6 +10,7 @@ import type { MutationResult, ResponseWarning } from '@Types/responseStructure';
 import { BlogSlugConflictError } from '../domain/errors/BlogErrors';
 import BlogModel from '../infrastructure/BlogModel';
 import { BLOG_ENTITY_TYPE } from '../constants/paths';
+import { uploadBlogImage } from './blogImageUpload';
 import type { CreateBlogInput } from '../schemas/blog.schema';
 
 export interface BlogPostFiles {
@@ -58,15 +59,7 @@ async function resolveCoverOrThrow(
 		AppError.unprocessable('BLOG_COVER_REQUIRED', 'A cover image is required');
 	}
 
-	const uploaded = await uploadImageSafe({
-		buffer: file.buffer,
-		originalName: file.originalName,
-		mimeType: file.mimeType,
-		entityType: BLOG_ENTITY_TYPE,
-		entityId: id,
-		field: 'cover',
-		uploadedBy,
-	});
+	const uploaded = await uploadBlogImage(id, 'cover', file, uploadedBy);
 	if (uploaded.url) return { coverImageUrl: uploaded.url, warning: uploaded.warning };
 
 	if (uploaded.warning) {
@@ -86,15 +79,7 @@ async function uploadOgImageIfProvided(
 	warnings: ResponseWarning[],
 ): Promise<string | undefined> {
 	if (!file) return undefined;
-	const uploaded = await uploadImageSafe({
-		buffer: file.buffer,
-		originalName: file.originalName,
-		mimeType: file.mimeType,
-		entityType: BLOG_ENTITY_TYPE,
-		entityId: id,
-		field: 'ogImage',
-		uploadedBy,
-	});
+	const uploaded = await uploadBlogImage(id, 'ogImage', file, uploadedBy);
 	if (uploaded.warning) warnings.push(uploaded.warning);
 	return uploaded.url;
 }

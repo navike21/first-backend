@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 
 vi.mock('@Constants/environments', () => ({
 	ENV: { NODE_ENV: 'test' },
@@ -16,14 +16,7 @@ vi.mock('@Modules/blog/application/getBlogPostById', () => ({
 import { blogGetByIdController } from '@Modules/blog/controllers/blog.getById';
 import { getBlogPostById } from '@Modules/blog/application/getBlogPostById';
 import { successResponse } from '@Helpers/responseStructure';
-
-function makeRes() {
-	return {
-		locals: {},
-		status: vi.fn().mockReturnThis(),
-		json: vi.fn().mockReturnThis(),
-	} as unknown as Response;
-}
+import { makeRes } from './testHelpers';
 
 describe('blogGetByIdController', () => {
 	it('returns post by id', async () => {

@@ -17,6 +17,18 @@ import {
 const bearerAuth = [{ bearerAuth: [] }];
 const localizedString = z.record(z.string(), z.string());
 
+// Shared response-shape fragments — every admin route needs 401/403, most
+// single-item admin routes also need 404; reused across registerPath calls
+// below instead of repeating the same literal object each time.
+const authErrors = {
+	401: commonErrorResponses[401],
+	403: commonErrorResponses[403],
+};
+const authErrorsWithNotFound = { ...authErrors, 404: commonErrorResponses[404] };
+const bulkIdsBody = {
+	body: { content: { 'application/json': { schema: bulkIdsRequestSchema } } },
+};
+
 const blogSeoResponseSchema = z.object({
 	metaTitle: localizedString.optional(),
 	metaDescription: localizedString.optional(),
@@ -45,20 +57,19 @@ const blogResponseSchema = registry.register(
 	}),
 );
 
+const blogListResponseSchema = z.object({
+	data: z.array(blogResponseSchema),
+	meta: paginationMetaSchema,
+});
+const blogBulkResultResponse = successResponse(bulkResultSchema(blogResponseSchema));
+
 registry.registerPath({
 	method: 'get',
 	path: '/blog',
 	summary: 'List published blog posts (public)',
 	tags: ['Blog'],
 	request: { query: ListBlogQuerySchema },
-	responses: {
-		200: successResponse(
-			z.object({
-				data: z.array(blogResponseSchema),
-				meta: paginationMetaSchema,
-			}),
-		),
-	},
+	responses: { 200: successResponse(blogListResponseSchema) },
 });
 
 registry.registerPath({
@@ -69,16 +80,7 @@ registry.registerPath({
 	tags: ['Blog'],
 	security: bearerAuth,
 	request: { query: ListBlogQuerySchema },
-	responses: {
-		200: successResponse(
-			z.object({
-				data: z.array(blogResponseSchema),
-				meta: paginationMetaSchema,
-			}),
-		),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-	},
+	responses: { 200: successResponse(blogListResponseSchema), ...authErrors },
 });
 
 registry.registerPath({
@@ -88,16 +90,7 @@ registry.registerPath({
 	description: 'Requires `blog:read` or `:manage`.',
 	tags: ['Blog'],
 	security: bearerAuth,
-	responses: {
-		200: successResponse(
-			z.object({
-				data: z.array(blogResponseSchema),
-				meta: paginationMetaSchema,
-			}),
-		),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-	},
+	responses: { 200: successResponse(blogListResponseSchema), ...authErrors },
 });
 
 registry.registerPath({
@@ -110,9 +103,7 @@ registry.registerPath({
 	request: { params: z.object({ id: z.uuid() }) },
 	responses: {
 		200: successResponse(blogResponseSchema),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-		404: commonErrorResponses[404],
+		...authErrorsWithNotFound,
 	},
 });
 
@@ -135,14 +126,8 @@ registry.registerPath({
 	description: 'Requires `blog:delete` or `:manage`.',
 	tags: ['Blog'],
 	security: bearerAuth,
-	request: {
-		body: { content: { 'application/json': { schema: bulkIdsRequestSchema } } },
-	},
-	responses: {
-		200: successResponse(bulkResultSchema(blogResponseSchema)),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-	},
+	request: bulkIdsBody,
+	responses: { 200: blogBulkResultResponse, ...authErrors },
 });
 
 registry.registerPath({
@@ -152,14 +137,8 @@ registry.registerPath({
 	description: 'Requires `blog:update` or `:manage`.',
 	tags: ['Blog'],
 	security: bearerAuth,
-	request: {
-		body: { content: { 'application/json': { schema: bulkIdsRequestSchema } } },
-	},
-	responses: {
-		200: successResponse(bulkResultSchema(blogResponseSchema)),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-	},
+	request: bulkIdsBody,
+	responses: { 200: blogBulkResultResponse, ...authErrors },
 });
 
 registry.registerPath({
@@ -169,14 +148,8 @@ registry.registerPath({
 	description: 'Requires `blog:purge` — `:manage` does NOT grant this.',
 	tags: ['Blog'],
 	security: bearerAuth,
-	request: {
-		body: { content: { 'application/json': { schema: bulkIdsRequestSchema } } },
-	},
-	responses: {
-		200: successResponse(bulkResultSchema(blogResponseSchema)),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-	},
+	request: bulkIdsBody,
+	responses: { 200: blogBulkResultResponse, ...authErrors },
 });
 
 registry.registerPath({
@@ -187,13 +160,10 @@ registry.registerPath({
 		'Requires `blog:create` or `:manage`. Multipart — `cover` file part (or `coverImageUrl` in `data`) required; optional `ogImage` file part.',
 	tags: ['Blog'],
 	security: bearerAuth,
-	request: {
-		body: multipartWithFile(CreateBlogSchema, ['cover', 'ogImage']),
-	},
+	request: { body: multipartWithFile(CreateBlogSchema, ['cover', 'ogImage']) },
 	responses: {
 		201: successResponse(blogResponseSchema, 'Blog post created'),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
+		...authErrors,
 		409: commonErrorResponses[409],
 		422: commonErrorResponses[422],
 	},
@@ -209,9 +179,7 @@ registry.registerPath({
 	request: { params: z.object({ id: z.uuid() }) },
 	responses: {
 		200: successResponse(blogResponseSchema),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-		404: commonErrorResponses[404],
+		...authErrorsWithNotFound,
 	},
 });
 
@@ -229,9 +197,7 @@ registry.registerPath({
 	},
 	responses: {
 		200: successResponse(blogResponseSchema),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-		404: commonErrorResponses[404],
+		...authErrorsWithNotFound,
 		422: commonErrorResponses[422],
 	},
 });
@@ -246,9 +212,7 @@ registry.registerPath({
 	request: { params: z.object({ id: z.uuid() }) },
 	responses: {
 		200: successResponse(blogResponseSchema),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-		404: commonErrorResponses[404],
+		...authErrorsWithNotFound,
 	},
 });
 
@@ -262,8 +226,6 @@ registry.registerPath({
 	request: { params: z.object({ id: z.uuid() }) },
 	responses: {
 		200: successResponse(blogResponseSchema),
-		401: commonErrorResponses[401],
-		403: commonErrorResponses[403],
-		404: commonErrorResponses[404],
+		...authErrorsWithNotFound,
 	},
 });
