@@ -24,6 +24,7 @@ import '@Modules/config/config.openapi';
 import '@Modules/geo/geo.openapi';
 import '@Modules/forms/forms.openapi';
 import '@Modules/translation-assist/translation-assist.openapi';
+import '@Modules/blog/blog.openapi';
 
 export function buildOpenApiDocument() {
 	const generator = new OpenApiGeneratorV3(registry.definitions);

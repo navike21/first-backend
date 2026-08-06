@@ -1,0 +1,7 @@
+{
+	"SUCCESS_BLOG_CREATE": "ブログ記事が正常に作成されました",
+	"SUCCESS_BLOG_LIST": "ブログ一覧を正常に取得しました",
+	"SUCCESS_BLOG_FOUND": "ブログ記事が見つかりました",
+	"SUCCESS_BLOG_UPDATE": "ブログ記事が正常に更新されました",
+	"SUCCESS_BLOG_DELETED": "ブログ記事が正常に削除されました"
+}

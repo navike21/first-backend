@@ -10,6 +10,7 @@ export const TRANSLATION_DOMAINS = [
 	'categories',
 	'tags',
 	'page-builder',
+	'blog',
 ] as const;
 
 export type TranslationDomain = (typeof TRANSLATION_DOMAINS)[number];
@@ -72,6 +73,14 @@ const TagsFieldsSchema = z.object({
 	name: z.string().trim().min(1).max(200),
 });
 
+// Same shape as Pages' primary/secondary split: `title` gates the button,
+// `excerpt` is allowed blank (it's optional in the real data model too).
+const BlogFieldsSchema = z.object({
+	title: z.string().trim().min(1).max(200),
+	excerpt: z.string().trim().max(500),
+	content: z.string().trim().min(1).max(20_000),
+});
+
 // Page Builder: an arbitrary bag of `elementId`-keyed (or
 // `elementId:itemId:field`-keyed) values — the frontend flattens a page's
 // entire translatable content into this shape (see
@@ -107,6 +116,7 @@ const FIELDS_SCHEMA_BY_DOMAIN = {
 	categories: CategoriesFieldsSchema,
 	tags: TagsFieldsSchema,
 	'page-builder': PageBuilderFieldsSchema,
+	blog: BlogFieldsSchema,
 } satisfies Record<TranslationDomain, z.ZodTypeAny>;
 
 // Both languages are always dynamic — the source is whatever language the
@@ -132,6 +142,7 @@ export const SuggestTranslationSchema = z
 		requestSchemaFor('categories'),
 		requestSchemaFor('tags'),
 		requestSchemaFor('page-builder'),
+		requestSchemaFor('blog'),
 	])
 	.refine((data) => data.sourceLanguage !== data.targetLanguage, {
 		message: 'TRANSLATION_SOURCE_EQUALS_TARGET',
@@ -181,6 +192,12 @@ const TagsTranslationResultSchema = z.object({
 	name: z.string(),
 });
 
+const BlogTranslationResultSchema = z.object({
+	title: z.string(),
+	excerpt: z.string(),
+	content: z.string(),
+});
+
 // `page-builder` is deliberately absent here — see `FixedShapeDomain` above.
 export const RESULT_SCHEMA_BY_DOMAIN = {
 	services: ServicesTranslationResultSchema,
@@ -190,6 +207,7 @@ export const RESULT_SCHEMA_BY_DOMAIN = {
 	forms: FormsTranslationResultSchema,
 	categories: CategoriesTranslationResultSchema,
 	tags: TagsTranslationResultSchema,
+	blog: BlogTranslationResultSchema,
 } satisfies Record<FixedShapeDomain, z.ZodTypeAny>;
 
 export type ServicesTranslationResult = z.infer<

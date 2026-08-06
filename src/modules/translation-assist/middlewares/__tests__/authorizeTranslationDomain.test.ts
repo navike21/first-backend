@@ -101,4 +101,20 @@ describe('authorizeTranslationDomain', () => {
 		await authorizeTranslationDomain(req, res, next);
 		expect(next).toHaveBeenCalledWith(expect.any(Error));
 	});
+
+	it('calls next for blog with blog:update', async () => {
+		const req = makeReq('blog');
+		const res = makeRes(['blog:update']);
+		const next = vi.fn();
+		await authorizeTranslationDomain(req, res, next);
+		expect(next).toHaveBeenCalledWith();
+	});
+
+	it('rejects blog when the user only has a different domain permission', async () => {
+		const req = makeReq('blog');
+		const res = makeRes(['pages:manage']);
+		const next = vi.fn();
+		await authorizeTranslationDomain(req, res, next);
+		expect(next).toHaveBeenCalledWith(expect.any(Error));
+	});
 });

@@ -1,0 +1,7 @@
+{
+	"SUCCESS_BLOG_CREATE": "블로그 게시물이 성공적으로 생성되었습니다",
+	"SUCCESS_BLOG_LIST": "블로그 목록을 성공적으로 조회했습니다",
+	"SUCCESS_BLOG_FOUND": "블로그 게시물을 찾았습니다",
+	"SUCCESS_BLOG_UPDATE": "블로그 게시물이 성공적으로 업데이트되었습니다",
+	"SUCCESS_BLOG_DELETED": "블로그 게시물이 성공적으로 삭제되었습니다"
+}

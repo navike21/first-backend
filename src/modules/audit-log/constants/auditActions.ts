@@ -132,6 +132,15 @@ export const AUDIT_ACTIONS = {
 	FORM_SUBMISSION_BULK_RESTORED: 'forms:submission_bulk_restored',
 	FORM_SUBMISSION_BULK_PERMANENTLY_DELETED:
 		'forms:submission_bulk_permanently_deleted',
+
+	BLOG_CREATED: 'blog:created',
+	BLOG_UPDATED: 'blog:updated',
+	BLOG_SOFT_DELETED: 'blog:soft_deleted',
+	BLOG_PERMANENTLY_DELETED: 'blog:permanently_deleted',
+	BLOG_RESTORED: 'blog:restored',
+	BLOG_BULK_SOFT_DELETED: 'blog:bulk_soft_deleted',
+	BLOG_BULK_RESTORED: 'blog:bulk_restored',
+	BLOG_BULK_PERMANENTLY_DELETED: 'blog:bulk_permanently_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

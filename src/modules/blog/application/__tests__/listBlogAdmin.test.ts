@@ -1,0 +1,57 @@
+import { describe, it, expect, vi } from 'vitest';
+
+vi.mock('@Constants/environments', () => ({
+	ENV: { NODE_ENV: 'test' },
+	ENVIRONMENT: 'test',
+}));
+vi.mock('@Modules/blog/infrastructure/BlogModel', () => ({
+	default: { find: vi.fn(), countDocuments: vi.fn() },
+}));
+
+import { listBlogAdmin } from '@Modules/blog/application/listBlogAdmin';
+import BlogModel from '@Modules/blog/infrastructure/BlogModel';
+
+const mockQB = (items: unknown[]) => ({
+	sort: vi.fn().mockReturnThis(),
+	skip: vi.fn().mockReturnThis(),
+	limit: vi.fn().mockReturnThis(),
+	lean: vi.fn().mockResolvedValue(items),
+});
+
+describe('listBlogAdmin', () => {
+	it('returns all non-deleted posts', async () => {
+		vi.mocked(BlogModel.find).mockReturnValue(
+			mockQB([{ id: '1', slug: 'post', _id: 'm1' }]) as never,
+		);
+		vi.mocked(BlogModel.countDocuments).mockResolvedValue(1);
+
+		const result = await listBlogAdmin({ page: 1, limit: 10 });
+
+		expect(result.data).toHaveLength(1);
+	});
+
+	it('filters by status/category/tag when provided', async () => {
+		vi.mocked(BlogModel.find).mockReturnValue(
+			mockQB([{ id: '1', _id: 'm1' }]) as never,
+		);
+		vi.mocked(BlogModel.countDocuments).mockResolvedValue(1);
+
+		const result = await listBlogAdmin({
+			page: 1,
+			limit: 10,
+			status: 'published',
+			categoryId: 'cat-1',
+			tagId: 'tag-1',
+		});
+		expect(result.data).toHaveLength(1);
+	});
+
+	it('returns empty list when no posts exist', async () => {
+		vi.mocked(BlogModel.find).mockReturnValue(mockQB([]) as never);
+		vi.mocked(BlogModel.countDocuments).mockResolvedValue(0);
+
+		const result = await listBlogAdmin({ page: 1, limit: 10 });
+		expect(result.data).toHaveLength(0);
+		expect(result.meta.total).toBe(0);
+	});
+});

@@ -1,0 +1,7 @@
+{
+	"SUCCESS_BLOG_CREATE": "Blog post created successfully",
+	"SUCCESS_BLOG_LIST": "Blog list retrieved successfully",
+	"SUCCESS_BLOG_FOUND": "Blog post found successfully",
+	"SUCCESS_BLOG_UPDATE": "Blog post updated successfully",
+	"SUCCESS_BLOG_DELETED": "Blog post deleted successfully"
+}
