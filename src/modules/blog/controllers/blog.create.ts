@@ -1,5 +1,4 @@
 import { asyncHandler } from '@Middlewares/asyncHandler';
-import { successResponse } from '@Helpers/responseStructure';
 import { validate } from '@Helpers/validate';
 import {
 	parseRequestData,
@@ -7,6 +6,7 @@ import {
 } from '@Helpers/multipartRequest';
 import { createBlogPost } from '../application/createBlogPost';
 import { CreateBlogSchema } from '../schemas/blog.schema';
+import { respondBlog } from './blogResponse';
 
 export const blogCreateController = asyncHandler(async (req, res) => {
 	const validated = validate(CreateBlogSchema, parseRequestData(req));
@@ -19,12 +19,7 @@ export const blogCreateController = asyncHandler(async (req, res) => {
 		},
 		res.locals.userId as string | undefined,
 	);
-	successResponse(res, {
-		statusCode: 201,
-		code: 'SUCCESS_BLOG_CREATE',
-		message: 'SUCCESS_BLOG_CREATE',
-		ns: 'blog',
-		data: result.data,
+	respondBlog(res, 201, 'SUCCESS_BLOG_CREATE', result.data, {
 		warnings: result.warnings,
 	});
 });
