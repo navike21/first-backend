@@ -187,7 +187,7 @@ modules/<name>/
 | `categories` / `tags` | Shared taxonomy for content (portfolio, services, pages) |
 | `forms` | Admin-defined public forms (8 field types: text/textarea/email/phone/select/radio/checkbox/date) + submissions inbox, email-notified per form |
 | `storage` | Cloud file storage abstraction (4 drivers), single/bulk upload, MIME validation by magic bytes, image variants |
-| `site-config` | Global site-wide presentation settings (header/footer/social/maps provider) — distinct from `app-settings` |
+| `site-config` | Global site-wide presentation settings (header/footer/social/maps provider) + `contentLanguages` (which of the 10 supported languages this business scopes its content to — independent of each admin user's own UI language) — distinct from `app-settings` |
 | `app-settings` | Organization-level config singleton (branding, notifications, appearance) |
 | `audit-log` | Append-only trail, auto-populated by middleware, filterable by user/action/resource/date; also records every 403 |
 | `notifications-email` | Agnostic `enqueueEmail()` + durable outbox + QStash-driven worker + Resend/SMTP transport. Any module sends mail through one function |
@@ -262,7 +262,7 @@ permanently destroy records.
 | `storage` | `read`, `upload`, `update`, `delete`, `purge`, `manage` |
 | `audit-logs` | `read`, `manage` |
 | `app-settings` | `read`, `update`, `manage` |
-| `site-config` | `read`, `update`, `manage` |
+| `site-config` | `read`, `update`, `manage`, `languages` — `languages` is a narrow, delegatable sub-permission for just `contentLanguages` (which languages the business publishes content in), distinct from full `update`/`manage` |
 | `clients` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
 | `services` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
 | `portfolio` | `read`, `create`, `update`, `delete`, `purge`, `manage` |
