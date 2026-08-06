@@ -306,9 +306,30 @@ de Test persistente (ver arriba), `main`→**Production** (proyecto
 - **Env vars (Vercel).** `MONGO_URI`+`MONGO_DATABASE` son las **únicas requeridas**
   (`environments.ts` hace `process.exit(1)` si faltan → `FUNCTION_INVOCATION_FAILED`). `NODE_ENV`
   sólo acepta `development|production|test` (un valor inválido **crashea** igual que si faltara).
-  Hoy **ni Preview ni Production tienen `NODE_ENV`** → default `development`. *(Prod
-  corre en modo dev: Ethereal en vez de SMTP real; si se quiere SMTP real + chequeo de JWT seguros,
-  setear `NODE_ENV=production` en Production.)*
+  ⚠️ **Corrección (2026-08-06): Production SÍ corre con `NODE_ENV=production`** (Vercel lo
+  inyecta como var de plataforma, no aparece en `vercel env ls` porque no es una var que el
+  usuario haya definido) — la nota anterior de este doc ("ni Preview ni Production tienen
+  NODE_ENV") estaba desactualizada/errada, confirmado en vivo cuando el fatal-check de
+  secretos JWT tumbó Production tras el merge de Milestone A de Ecommerce (ver gotcha abajo).
+  Asumir que **cualquier** deploy a Production corre en modo `production` real (SMTP real,
+  chequeo de secretos JWT inseguros activo) — no development.
+- **Gotcha real (ya resuelto, no reintroducir) — nuevo secreto JWT con fatal-check tumbó
+  Production al mergear**: al agregar el realm `customer-auth` (Milestone A de Ecommerce) se
+  extendió el fatal-check de `environments.ts` (`insecureDefaults`) para cubrir también
+  `JWT_CUSTOMER_ACCESS_SECRET`/`JWT_CUSTOMER_REFRESH_SECRET` — correcto en sí, mismo patrón que
+  los secretos de staff — pero **nadie había seteado valores reales para esas vars nuevas en
+  Vercel todavía** (no podían existir antes de que el código que las requiere existiera). Como
+  Production corre en `NODE_ENV=production` (ver arriba), el deploy nuevo crasheaba en cold
+  start con `FUNCTION_INVOCATION_FAILED` / `[ENV] FATAL: JWT secrets must be changed in
+  production` en **todo** endpoint, no solo los de customer-auth — un fatal-check a nivel de
+  módulo tumba el proceso completo. **Lección para futuros módulos**: si un nuevo módulo
+  agrega una var a `insecureDefaults`/el fatal-check de producción, generar y setear el
+  valor real en Vercel (`vercel env add NAME production --value "$(node -e "console.log(require('crypto').randomBytes(48).toString('hex'))")" --yes`,
+  y el mismo para `preview test` si el módulo también va a `test`) **antes o inmediatamente
+  después** de mergear a `main` — no asumir que el default de dev es inofensivo solo porque
+  Preview/Production "no tenían NODE_ENV" (falso, ver arriba). Arreglado seteando las 3 vars
+  (`JWT_CUSTOMER_ACCESS_SECRET`/`REFRESH`/`EMAIL_SECRET`) en Production y en Preview
+  (rama `test`) y redeployando ambos (`vercel deploy --prod` / push a `test`).
 - **Gotcha real (ya resuelto, no reintroducir) — CORS/`CLIENT_URL` desalineados con el
   puerto real del frontend local**: el `.env` local traía `WHITELISTED_DOMAINS`/`CLIENT_URL`
   apuntando a `http://localhost:3000`, pero el frontend (Vite) corre en el puerto **5176**
