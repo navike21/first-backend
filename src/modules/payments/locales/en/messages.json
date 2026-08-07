@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_LIST": "Payment providers retrieved successfully",
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_UPDATE": "Payment provider updated successfully",
+	"SUCCESS_PAYMENT_METHOD_CREATE": "Payment method created successfully",
+	"SUCCESS_PAYMENT_METHOD_LIST": "Payment methods retrieved successfully",
+	"SUCCESS_PAYMENT_METHOD_FOUND": "Payment method found successfully",
+	"SUCCESS_PAYMENT_METHOD_UPDATE": "Payment method updated successfully",
+	"SUCCESS_PAYMENT_METHOD_DELETED": "Payment method deleted successfully",
+	"SUCCESS_PAYMENT_METHOD_RESTORED": "Payment method restored successfully",
+	"SUCCESS_PAYMENT_METHOD_PURGED": "Payment method permanently deleted",
+	"SUCCESS_PAYMENT_METHOD_TRASH_LIST": "Trash retrieved successfully",
+	"PAYMENT_PROVIDER_UNKNOWN": "Unknown payment provider",
+	"PAYMENT_METHOD_NOT_FOUND": "Payment method not found"
+}

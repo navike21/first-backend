@@ -201,6 +201,16 @@ export const AUDIT_ACTIONS = {
 	SHIPPING_BULK_SOFT_DELETED: 'shipping:bulk_soft_deleted',
 	SHIPPING_BULK_RESTORED: 'shipping:bulk_restored',
 	SHIPPING_BULK_PERMANENTLY_DELETED: 'shipping:bulk_permanently_deleted',
+
+	PAYMENT_PROVIDER_CONFIG_UPDATED: 'payments:provider_config_updated',
+	PAYMENT_METHOD_CREATED: 'payments:method_created',
+	PAYMENT_METHOD_UPDATED: 'payments:method_updated',
+	PAYMENT_METHOD_SOFT_DELETED: 'payments:method_soft_deleted',
+	PAYMENT_METHOD_PERMANENTLY_DELETED: 'payments:method_permanently_deleted',
+	PAYMENT_METHOD_RESTORED: 'payments:method_restored',
+	PAYMENT_METHOD_BULK_SOFT_DELETED: 'payments:method_bulk_soft_deleted',
+	PAYMENT_METHOD_BULK_RESTORED: 'payments:method_bulk_restored',
+	PAYMENT_METHOD_BULK_PERMANENTLY_DELETED: 'payments:method_bulk_permanently_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

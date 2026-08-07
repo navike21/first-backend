@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_LIST": "Fournisseurs de paiement récupérés avec succès",
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_UPDATE": "Fournisseur de paiement mis à jour avec succès",
+	"SUCCESS_PAYMENT_METHOD_CREATE": "Moyen de paiement créé avec succès",
+	"SUCCESS_PAYMENT_METHOD_LIST": "Moyens de paiement récupérés avec succès",
+	"SUCCESS_PAYMENT_METHOD_FOUND": "Moyen de paiement trouvé avec succès",
+	"SUCCESS_PAYMENT_METHOD_UPDATE": "Moyen de paiement mis à jour avec succès",
+	"SUCCESS_PAYMENT_METHOD_DELETED": "Moyen de paiement supprimé avec succès",
+	"SUCCESS_PAYMENT_METHOD_RESTORED": "Moyen de paiement restauré avec succès",
+	"SUCCESS_PAYMENT_METHOD_PURGED": "Moyen de paiement définitivement supprimé",
+	"SUCCESS_PAYMENT_METHOD_TRASH_LIST": "Corbeille récupérée avec succès",
+	"PAYMENT_PROVIDER_UNKNOWN": "Fournisseur de paiement inconnu",
+	"PAYMENT_METHOD_NOT_FOUND": "Moyen de paiement introuvable"
+}
