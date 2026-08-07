@@ -166,6 +166,16 @@ export const PERMISSIONS = {
 	SHIPPING_PURGE: 'shipping:purge',
 	SHIPPING_MANAGE: 'shipping:manage',
 
+	// Covers both provider-config (enable/configure a known provider) and
+	// CustomerPaymentMethod CRUD — one resource for the whole module, same
+	// granularity as INVENTORY_* (Location + Stock).
+	PAYMENTS_READ: 'payments:read',
+	PAYMENTS_CREATE: 'payments:create',
+	PAYMENTS_UPDATE: 'payments:update',
+	PAYMENTS_DELETE: 'payments:delete',
+	PAYMENTS_PURGE: 'payments:purge',
+	PAYMENTS_MANAGE: 'payments:manage',
+
 	ALL: '*:*',
 } as const;
 

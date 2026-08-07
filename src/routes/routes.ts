@@ -33,6 +33,7 @@ import { cartApi } from '@Modules/cart';
 import { wishlistApi } from '@Modules/wishlist';
 import { couponsApi } from '@Modules/coupons';
 import { shippingApi } from '@Modules/shipping';
+import { paymentsApi } from '@Modules/payments';
 
 const router: Router = Router();
 
@@ -72,6 +73,7 @@ const mainRouter = () => {
 	wishlistApi(v1Router);
 	couponsApi(v1Router);
 	shippingApi(v1Router);
+	paymentsApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 

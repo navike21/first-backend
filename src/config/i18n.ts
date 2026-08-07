@@ -27,6 +27,7 @@ import { cartLocales } from '../modules/cart/locales';
 import { wishlistLocales } from '../modules/wishlist/locales';
 import { couponsLocales } from '../modules/coupons/locales';
 import { shippingLocales } from '../modules/shipping/locales';
+import { paymentsLocales } from '../modules/payments/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -61,6 +62,7 @@ export async function initI18n(): Promise<void> {
 				wishlist: wishlistLocales[lang],
 				coupons: couponsLocales[lang],
 				shipping: shippingLocales[lang],
+				payments: paymentsLocales[lang],
 			},
 		]),
 	);
@@ -100,6 +102,7 @@ export async function initI18n(): Promise<void> {
 			'wishlist',
 			'coupons',
 			'shipping',
+			'payments',
 		],
 		defaultNS: 'errors',
 	});
