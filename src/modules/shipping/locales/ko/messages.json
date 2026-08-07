@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "배송 규칙이 생성되었습니다",
+	"SUCCESS_SHIPPING_RULE_LIST": "배송 규칙 목록을 가져왔습니다",
+	"SUCCESS_SHIPPING_RULE_FOUND": "배송 규칙을 찾았습니다",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "배송 규칙이 수정되었습니다",
+	"SUCCESS_SHIPPING_RULE_DELETED": "배송 규칙이 삭제되었습니다",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "배송 규칙이 복원되었습니다",
+	"SUCCESS_SHIPPING_RULE_PURGED": "배송 규칙이 영구적으로 삭제되었습니다",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "휴지통 목록을 가져왔습니다",
+	"SHIPPING_RULE_NOT_FOUND": "배송 규칙을 찾을 수 없습니다",
+	"SHIPPING_NOT_AVAILABLE": "이 주소에 적용할 수 있는 활성 배송 규칙이 없습니다"
+}

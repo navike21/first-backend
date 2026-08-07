@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "Правило доставки успешно создано",
+	"SUCCESS_SHIPPING_RULE_LIST": "Правила доставки успешно получены",
+	"SUCCESS_SHIPPING_RULE_FOUND": "Правило доставки успешно найдено",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "Правило доставки успешно обновлено",
+	"SUCCESS_SHIPPING_RULE_DELETED": "Правило доставки успешно удалено",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "Правило доставки успешно восстановлено",
+	"SUCCESS_SHIPPING_RULE_PURGED": "Правило доставки удалено навсегда",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "Корзина успешно получена",
+	"SHIPPING_RULE_NOT_FOUND": "Правило доставки не найдено",
+	"SHIPPING_NOT_AVAILABLE": "Ни одно активное правило доставки не подходит для этого адреса"
+}

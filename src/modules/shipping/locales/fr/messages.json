@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "Règle de livraison créée avec succès",
+	"SUCCESS_SHIPPING_RULE_LIST": "Règles de livraison récupérées avec succès",
+	"SUCCESS_SHIPPING_RULE_FOUND": "Règle de livraison trouvée avec succès",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "Règle de livraison mise à jour avec succès",
+	"SUCCESS_SHIPPING_RULE_DELETED": "Règle de livraison supprimée avec succès",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "Règle de livraison restaurée avec succès",
+	"SUCCESS_SHIPPING_RULE_PURGED": "Règle de livraison définitivement supprimée",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "Corbeille récupérée avec succès",
+	"SHIPPING_RULE_NOT_FOUND": "Règle de livraison introuvable",
+	"SHIPPING_NOT_AVAILABLE": "Aucune règle de livraison active ne s'applique à cette adresse"
+}
