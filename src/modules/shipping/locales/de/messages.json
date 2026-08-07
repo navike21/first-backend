@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "Versandregel erfolgreich erstellt",
+	"SUCCESS_SHIPPING_RULE_LIST": "Versandregeln erfolgreich abgerufen",
+	"SUCCESS_SHIPPING_RULE_FOUND": "Versandregel erfolgreich gefunden",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "Versandregel erfolgreich aktualisiert",
+	"SUCCESS_SHIPPING_RULE_DELETED": "Versandregel erfolgreich gelöscht",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "Versandregel erfolgreich wiederhergestellt",
+	"SUCCESS_SHIPPING_RULE_PURGED": "Versandregel endgültig gelöscht",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "Papierkorb erfolgreich abgerufen",
+	"SHIPPING_RULE_NOT_FOUND": "Versandregel nicht gefunden",
+	"SHIPPING_NOT_AVAILABLE": "Für diese Adresse gilt keine aktive Versandregel"
+}

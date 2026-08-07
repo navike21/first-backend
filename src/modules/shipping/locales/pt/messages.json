@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "Regra de envio criada com sucesso",
+	"SUCCESS_SHIPPING_RULE_LIST": "Regras de envio obtidas com sucesso",
+	"SUCCESS_SHIPPING_RULE_FOUND": "Regra de envio encontrada com sucesso",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "Regra de envio atualizada com sucesso",
+	"SUCCESS_SHIPPING_RULE_DELETED": "Regra de envio excluída com sucesso",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "Regra de envio restaurada com sucesso",
+	"SUCCESS_SHIPPING_RULE_PURGED": "Regra de envio excluída permanentemente",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "Lixeira obtida com sucesso",
+	"SHIPPING_RULE_NOT_FOUND": "Regra de envio não encontrada",
+	"SHIPPING_NOT_AVAILABLE": "Nenhuma regra de envio ativa se aplica a este endereço"
+}

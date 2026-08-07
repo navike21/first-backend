@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "Shipping rule created successfully",
+	"SUCCESS_SHIPPING_RULE_LIST": "Shipping rules retrieved successfully",
+	"SUCCESS_SHIPPING_RULE_FOUND": "Shipping rule found successfully",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "Shipping rule updated successfully",
+	"SUCCESS_SHIPPING_RULE_DELETED": "Shipping rule deleted successfully",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "Shipping rule restored successfully",
+	"SUCCESS_SHIPPING_RULE_PURGED": "Shipping rule permanently deleted",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "Trash retrieved successfully",
+	"SHIPPING_RULE_NOT_FOUND": "Shipping rule not found",
+	"SHIPPING_NOT_AVAILABLE": "No active shipping rule applies to this address"
+}

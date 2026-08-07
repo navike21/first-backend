@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "配送ルールを作成しました",
+	"SUCCESS_SHIPPING_RULE_LIST": "配送ルールを取得しました",
+	"SUCCESS_SHIPPING_RULE_FOUND": "配送ルールが見つかりました",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "配送ルールを更新しました",
+	"SUCCESS_SHIPPING_RULE_DELETED": "配送ルールを削除しました",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "配送ルールを復元しました",
+	"SUCCESS_SHIPPING_RULE_PURGED": "配送ルールを完全に削除しました",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "ゴミ箱を取得しました",
+	"SHIPPING_RULE_NOT_FOUND": "配送ルールが見つかりません",
+	"SHIPPING_NOT_AVAILABLE": "この住所に適用できる有効な配送ルールがありません"
+}

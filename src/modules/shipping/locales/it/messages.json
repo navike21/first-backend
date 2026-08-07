@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "Regola di spedizione creata correttamente",
+	"SUCCESS_SHIPPING_RULE_LIST": "Regole di spedizione recuperate correttamente",
+	"SUCCESS_SHIPPING_RULE_FOUND": "Regola di spedizione trovata correttamente",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "Regola di spedizione aggiornata correttamente",
+	"SUCCESS_SHIPPING_RULE_DELETED": "Regola di spedizione eliminata correttamente",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "Regola di spedizione ripristinata correttamente",
+	"SUCCESS_SHIPPING_RULE_PURGED": "Regola di spedizione eliminata definitivamente",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "Cestino recuperato correttamente",
+	"SHIPPING_RULE_NOT_FOUND": "Regola di spedizione non trovata",
+	"SHIPPING_NOT_AVAILABLE": "Nessuna regola di spedizione attiva si applica a questo indirizzo"
+}
