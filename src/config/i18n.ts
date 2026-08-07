@@ -24,6 +24,7 @@ import { customerAuthLocales } from '../modules/customer-auth/locales';
 import { inventoryLocales } from '../modules/inventory/locales';
 import { productsLocales } from '../modules/products/locales';
 import { cartLocales } from '../modules/cart/locales';
+import { wishlistLocales } from '../modules/wishlist/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -55,6 +56,7 @@ export async function initI18n(): Promise<void> {
 				inventory: inventoryLocales[lang],
 				products: productsLocales[lang],
 				cart: cartLocales[lang],
+				wishlist: wishlistLocales[lang],
 			},
 		]),
 	);
@@ -91,6 +93,7 @@ export async function initI18n(): Promise<void> {
 			'inventory',
 			'products',
 			'cart',
+			'wishlist',
 		],
 		defaultNS: 'errors',
 	});

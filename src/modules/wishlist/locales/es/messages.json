@@ -1,0 +1,7 @@
+{
+	"SUCCESS_WISHLIST_FETCHED": "Lista de deseos obtenida correctamente",
+	"SUCCESS_WISHLIST_ITEM_ADDED": "Producto guardado en la lista de deseos",
+	"SUCCESS_WISHLIST_ITEM_REMOVED": "Producto eliminado de la lista de deseos",
+	"WISHLIST_PRODUCT_NOT_FOUND": "Producto no encontrado o no disponible",
+	"WISHLIST_ITEM_NOT_FOUND": "Este producto no está en la lista de deseos"
+}

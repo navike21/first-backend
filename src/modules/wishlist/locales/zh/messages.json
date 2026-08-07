@@ -1,0 +1,7 @@
+{
+	"SUCCESS_WISHLIST_FETCHED": "成功获取心愿单",
+	"SUCCESS_WISHLIST_ITEM_ADDED": "商品已保存到心愿单",
+	"SUCCESS_WISHLIST_ITEM_REMOVED": "商品已从心愿单中移除",
+	"WISHLIST_PRODUCT_NOT_FOUND": "未找到商品或商品不可用",
+	"WISHLIST_ITEM_NOT_FOUND": "心愿单中没有该商品"
+}
