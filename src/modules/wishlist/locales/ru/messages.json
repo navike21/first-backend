@@ -1,0 +1,7 @@
+{
+	"SUCCESS_WISHLIST_FETCHED": "Список желаний успешно получен",
+	"SUCCESS_WISHLIST_ITEM_ADDED": "Товар сохранён в список желаний",
+	"SUCCESS_WISHLIST_ITEM_REMOVED": "Товар удалён из списка желаний",
+	"WISHLIST_PRODUCT_NOT_FOUND": "Товар не найден или недоступен",
+	"WISHLIST_ITEM_NOT_FOUND": "Этого товара нет в списке желаний"
+}

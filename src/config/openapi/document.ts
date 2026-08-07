@@ -31,6 +31,8 @@ import '@Modules/customers/customers.openapi';
 import '@Modules/customer-auth/customer-auth.openapi';
 import '@Modules/inventory/inventory.openapi';
 import '@Modules/products/products.openapi';
+import '@Modules/cart/cart.openapi';
+import '@Modules/wishlist/wishlist.openapi';
 
 export function buildOpenApiDocument() {
 	const generator = new OpenApiGeneratorV3(registry.definitions);

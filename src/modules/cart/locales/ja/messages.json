@@ -1,0 +1,12 @@
+{
+	"SUCCESS_CART_FETCHED": "カートを取得しました",
+	"SUCCESS_CART_ITEM_ADDED": "商品をカートに追加しました",
+	"SUCCESS_CART_ITEM_UPDATED": "カート内の商品を更新しました",
+	"SUCCESS_CART_ITEM_REMOVED": "商品をカートから削除しました",
+	"SUCCESS_CART_CLEARED": "カートを空にしました",
+	"CART_PRODUCT_NOT_FOUND": "商品が見つからないか、利用できません",
+	"CART_VARIANT_NOT_FOUND": "このバリエーションは存在しません",
+	"CART_VARIANT_REQUIRED": "この商品はバリエーションの選択が必要です",
+	"CART_OUT_OF_STOCK": "リクエストされた数量の在庫が不足しています",
+	"CART_ITEM_NOT_FOUND": "この商品はカートに入っていません"
+}
