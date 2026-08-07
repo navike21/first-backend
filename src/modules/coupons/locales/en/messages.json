@@ -1,0 +1,17 @@
+{
+	"SUCCESS_COUPON_CREATE": "Coupon created successfully",
+	"SUCCESS_COUPON_LIST": "Coupons retrieved successfully",
+	"SUCCESS_COUPON_FOUND": "Coupon found successfully",
+	"SUCCESS_COUPON_UPDATE": "Coupon updated successfully",
+	"SUCCESS_COUPON_DELETED": "Coupon deleted successfully",
+	"SUCCESS_COUPON_RESTORED": "Coupon restored successfully",
+	"SUCCESS_COUPON_PURGED": "Coupon permanently deleted",
+	"SUCCESS_COUPON_TRASH_LIST": "Trash retrieved successfully",
+	"COUPON_NOT_FOUND": "Coupon not found",
+	"COUPON_INACTIVE": "This coupon is not active",
+	"COUPON_NOT_YET_VALID": "This coupon is not valid yet",
+	"COUPON_EXPIRED": "This coupon has expired",
+	"COUPON_USAGE_LIMIT_REACHED": "This coupon has reached its usage limit",
+	"COUPON_CUSTOMER_USAGE_LIMIT_REACHED": "You have already used this coupon the maximum number of times",
+	"COUPON_NOT_APPLICABLE": "This coupon does not apply to any item in the cart"
+}

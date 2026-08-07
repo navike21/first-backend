@@ -1,0 +1,17 @@
+{
+	"SUCCESS_COUPON_CREATE": "优惠券创建成功",
+	"SUCCESS_COUPON_LIST": "优惠券获取成功",
+	"SUCCESS_COUPON_FOUND": "优惠券查找成功",
+	"SUCCESS_COUPON_UPDATE": "优惠券更新成功",
+	"SUCCESS_COUPON_DELETED": "优惠券删除成功",
+	"SUCCESS_COUPON_RESTORED": "优惠券恢复成功",
+	"SUCCESS_COUPON_PURGED": "优惠券已永久删除",
+	"SUCCESS_COUPON_TRASH_LIST": "回收站获取成功",
+	"COUPON_NOT_FOUND": "未找到优惠券",
+	"COUPON_INACTIVE": "该优惠券未激活",
+	"COUPON_NOT_YET_VALID": "该优惠券尚未生效",
+	"COUPON_EXPIRED": "该优惠券已过期",
+	"COUPON_USAGE_LIMIT_REACHED": "该优惠券已达到使用次数上限",
+	"COUPON_CUSTOMER_USAGE_LIMIT_REACHED": "您已达到该优惠券的最大使用次数",
+	"COUPON_NOT_APPLICABLE": "该优惠券不适用于购物车中的任何商品"
+}
