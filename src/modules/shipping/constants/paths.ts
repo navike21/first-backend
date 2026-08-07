@@ -1,0 +1,11 @@
+export const SHIPPING_RULE_PATH_LIST = '/shipping/rules';
+export const SHIPPING_RULE_PATH_CREATE = '/shipping/rules';
+export const SHIPPING_RULE_PATH_GET_BY_ID = '/shipping/rules/:id';
+export const SHIPPING_RULE_PATH_UPDATE = '/shipping/rules/:id';
+export const SHIPPING_RULE_PATH_DELETE = '/shipping/rules/:id';
+export const SHIPPING_RULE_PATH_DELETE_PERMANENT = '/shipping/rules/:id/permanent';
+export const SHIPPING_RULE_PATH_TRASH = '/shipping/rules/trash';
+export const SHIPPING_RULE_PATH_RESTORE = '/shipping/rules/:id/restore';
+export const SHIPPING_RULE_PATH_BULK_DELETE = '/shipping/rules/bulk';
+export const SHIPPING_RULE_PATH_BULK_RESTORE = '/shipping/rules/bulk/restore';
+export const SHIPPING_RULE_PATH_BULK_PURGE = '/shipping/rules/bulk/permanent';

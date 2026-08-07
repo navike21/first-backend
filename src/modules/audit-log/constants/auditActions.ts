@@ -192,6 +192,15 @@ export const AUDIT_ACTIONS = {
 	COUPONS_BULK_SOFT_DELETED: 'coupons:bulk_soft_deleted',
 	COUPONS_BULK_RESTORED: 'coupons:bulk_restored',
 	COUPONS_BULK_PERMANENTLY_DELETED: 'coupons:bulk_permanently_deleted',
+
+	SHIPPING_CREATED: 'shipping:created',
+	SHIPPING_UPDATED: 'shipping:updated',
+	SHIPPING_SOFT_DELETED: 'shipping:soft_deleted',
+	SHIPPING_PERMANENTLY_DELETED: 'shipping:permanently_deleted',
+	SHIPPING_RESTORED: 'shipping:restored',
+	SHIPPING_BULK_SOFT_DELETED: 'shipping:bulk_soft_deleted',
+	SHIPPING_BULK_RESTORED: 'shipping:bulk_restored',
+	SHIPPING_BULK_PERMANENTLY_DELETED: 'shipping:bulk_permanently_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

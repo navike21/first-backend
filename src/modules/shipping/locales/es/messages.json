@@ -1,0 +1,12 @@
+{
+	"SUCCESS_SHIPPING_RULE_CREATE": "Regla de envío creada correctamente",
+	"SUCCESS_SHIPPING_RULE_LIST": "Reglas de envío obtenidas correctamente",
+	"SUCCESS_SHIPPING_RULE_FOUND": "Regla de envío encontrada correctamente",
+	"SUCCESS_SHIPPING_RULE_UPDATE": "Regla de envío actualizada correctamente",
+	"SUCCESS_SHIPPING_RULE_DELETED": "Regla de envío eliminada correctamente",
+	"SUCCESS_SHIPPING_RULE_RESTORED": "Regla de envío restaurada correctamente",
+	"SUCCESS_SHIPPING_RULE_PURGED": "Regla de envío eliminada permanentemente",
+	"SUCCESS_SHIPPING_RULE_TRASH_LIST": "Papelera obtenida correctamente",
+	"SHIPPING_RULE_NOT_FOUND": "Regla de envío no encontrada",
+	"SHIPPING_NOT_AVAILABLE": "Ninguna regla de envío activa aplica a esta dirección"
+}
