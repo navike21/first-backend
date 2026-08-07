@@ -1,0 +1,13 @@
+{
+	"SUCCESS_PRODUCT_CREATE": "Produto criado com sucesso",
+	"SUCCESS_PRODUCT_LIST": "Produtos recuperados com sucesso",
+	"SUCCESS_PRODUCT_FOUND": "Produto encontrado com sucesso",
+	"SUCCESS_PRODUCT_UPDATE": "Produto atualizado com sucesso",
+	"SUCCESS_PRODUCT_DELETED": "Produto excluído com sucesso",
+	"SUCCESS_PRODUCT_RESTORED": "Produto restaurado com sucesso",
+	"SUCCESS_PRODUCT_PERMANENTLY_DELETED": "Produto excluído permanentemente",
+	"SUCCESS_PRODUCT_TRASH_LIST": "Lixeira recuperada com sucesso",
+	"PRODUCT_NOT_FOUND": "Produto não encontrado",
+	"PRODUCT_SLUG_CONFLICT": "Já existe um produto com este slug",
+	"PRODUCT_SKU_CONFLICT": "Já existe um produto com este SKU"
+}

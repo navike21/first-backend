@@ -28,6 +28,7 @@ import { productCategoriesApi } from '@Modules/product-categories';
 import { customersApi } from '@Modules/customers';
 import { customerAuthApi } from '@Modules/customer-auth';
 import { inventoryApi } from '@Modules/inventory';
+import { productsApi } from '@Modules/products';
 
 const router: Router = Router();
 
@@ -62,6 +63,7 @@ const mainRouter = () => {
 	customersApi(v1Router);
 	customerAuthApi(v1Router);
 	inventoryApi(v1Router);
+	productsApi(v1Router);
 
 	router.use('/api/v1', v1Router);
 

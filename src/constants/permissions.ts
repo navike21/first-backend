@@ -145,6 +145,13 @@ export const PERMISSIONS = {
 	INVENTORY_PURGE: 'inventory:purge',
 	INVENTORY_MANAGE: 'inventory:manage',
 
+	PRODUCTS_READ: 'products:read',
+	PRODUCTS_CREATE: 'products:create',
+	PRODUCTS_UPDATE: 'products:update',
+	PRODUCTS_DELETE: 'products:delete',
+	PRODUCTS_PURGE: 'products:purge',
+	PRODUCTS_MANAGE: 'products:manage',
+
 	ALL: '*:*',
 } as const;
 

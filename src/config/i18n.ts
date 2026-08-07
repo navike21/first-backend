@@ -22,6 +22,7 @@ import { productCategoriesLocales } from '../modules/product-categories/locales'
 import { customersLocales } from '../modules/customers/locales';
 import { customerAuthLocales } from '../modules/customer-auth/locales';
 import { inventoryLocales } from '../modules/inventory/locales';
+import { productsLocales } from '../modules/products/locales';
 
 export async function initI18n(): Promise<void> {
 	const resources = Object.fromEntries(
@@ -51,6 +52,7 @@ export async function initI18n(): Promise<void> {
 				customers: customersLocales[lang],
 				'customer-auth': customerAuthLocales[lang],
 				inventory: inventoryLocales[lang],
+				products: productsLocales[lang],
 			},
 		]),
 	);
@@ -85,6 +87,7 @@ export async function initI18n(): Promise<void> {
 			'customers',
 			'customer-auth',
 			'inventory',
+			'products',
 		],
 		defaultNS: 'errors',
 	});

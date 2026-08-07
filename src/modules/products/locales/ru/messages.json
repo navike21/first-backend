@@ -1,0 +1,13 @@
+{
+	"SUCCESS_PRODUCT_CREATE": "Товар успешно создан",
+	"SUCCESS_PRODUCT_LIST": "Товары успешно получены",
+	"SUCCESS_PRODUCT_FOUND": "Товар успешно найден",
+	"SUCCESS_PRODUCT_UPDATE": "Товар успешно обновлен",
+	"SUCCESS_PRODUCT_DELETED": "Товар успешно удален",
+	"SUCCESS_PRODUCT_RESTORED": "Товар успешно восстановлен",
+	"SUCCESS_PRODUCT_PERMANENTLY_DELETED": "Товар удален навсегда",
+	"SUCCESS_PRODUCT_TRASH_LIST": "Корзина успешно получена",
+	"PRODUCT_NOT_FOUND": "Товар не найден",
+	"PRODUCT_SLUG_CONFLICT": "Товар с таким слагом уже существует",
+	"PRODUCT_SKU_CONFLICT": "Товар с таким SKU уже существует"
+}
