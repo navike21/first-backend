@@ -150,8 +150,7 @@ export const AUDIT_ACTIONS = {
 	PRODUCT_CATEGORIES_PERMANENTLY_DELETED:
 		'product-categories:permanently_deleted',
 	PRODUCT_CATEGORIES_RESTORED: 'product-categories:restored',
-	PRODUCT_CATEGORIES_BULK_SOFT_DELETED:
-		'product-categories:bulk_soft_deleted',
+	PRODUCT_CATEGORIES_BULK_SOFT_DELETED: 'product-categories:bulk_soft_deleted',
 	PRODUCT_CATEGORIES_BULK_RESTORED: 'product-categories:bulk_restored',
 	PRODUCT_CATEGORIES_BULK_PERMANENTLY_DELETED:
 		'product-categories:bulk_permanently_deleted',
@@ -175,6 +174,15 @@ export const AUDIT_ACTIONS = {
 	LOCATIONS_BULK_PERMANENTLY_DELETED:
 		'inventory:location_bulk_permanently_deleted',
 	STOCK_ADJUSTED: 'inventory:stock_adjusted',
+
+	PRODUCTS_CREATED: 'products:created',
+	PRODUCTS_UPDATED: 'products:updated',
+	PRODUCTS_SOFT_DELETED: 'products:soft_deleted',
+	PRODUCTS_PERMANENTLY_DELETED: 'products:permanently_deleted',
+	PRODUCTS_RESTORED: 'products:restored',
+	PRODUCTS_BULK_SOFT_DELETED: 'products:bulk_soft_deleted',
+	PRODUCTS_BULK_RESTORED: 'products:bulk_restored',
+	PRODUCTS_BULK_PERMANENTLY_DELETED: 'products:bulk_permanently_deleted',
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

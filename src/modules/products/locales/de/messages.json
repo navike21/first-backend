@@ -1,0 +1,13 @@
+{
+	"SUCCESS_PRODUCT_CREATE": "Produkt erfolgreich erstellt",
+	"SUCCESS_PRODUCT_LIST": "Produkte erfolgreich abgerufen",
+	"SUCCESS_PRODUCT_FOUND": "Produkt erfolgreich gefunden",
+	"SUCCESS_PRODUCT_UPDATE": "Produkt erfolgreich aktualisiert",
+	"SUCCESS_PRODUCT_DELETED": "Produkt erfolgreich gelöscht",
+	"SUCCESS_PRODUCT_RESTORED": "Produkt erfolgreich wiederhergestellt",
+	"SUCCESS_PRODUCT_PERMANENTLY_DELETED": "Produkt dauerhaft gelöscht",
+	"SUCCESS_PRODUCT_TRASH_LIST": "Papierkorb erfolgreich abgerufen",
+	"PRODUCT_NOT_FOUND": "Produkt nicht gefunden",
+	"PRODUCT_SLUG_CONFLICT": "Ein Produkt mit diesem Slug existiert bereits",
+	"PRODUCT_SKU_CONFLICT": "Ein Produkt mit dieser SKU existiert bereits"
+}
