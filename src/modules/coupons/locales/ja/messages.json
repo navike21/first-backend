@@ -1,0 +1,17 @@
+{
+	"SUCCESS_COUPON_CREATE": "クーポンを作成しました",
+	"SUCCESS_COUPON_LIST": "クーポンを取得しました",
+	"SUCCESS_COUPON_FOUND": "クーポンが見つかりました",
+	"SUCCESS_COUPON_UPDATE": "クーポンを更新しました",
+	"SUCCESS_COUPON_DELETED": "クーポンを削除しました",
+	"SUCCESS_COUPON_RESTORED": "クーポンを復元しました",
+	"SUCCESS_COUPON_PURGED": "クーポンを完全に削除しました",
+	"SUCCESS_COUPON_TRASH_LIST": "ゴミ箱を取得しました",
+	"COUPON_NOT_FOUND": "クーポンが見つかりません",
+	"COUPON_INACTIVE": "このクーポンは有効ではありません",
+	"COUPON_NOT_YET_VALID": "このクーポンはまだ有効ではありません",
+	"COUPON_EXPIRED": "このクーポンは期限切れです",
+	"COUPON_USAGE_LIMIT_REACHED": "このクーポンは利用上限に達しました",
+	"COUPON_CUSTOMER_USAGE_LIMIT_REACHED": "このクーポンはすでに上限回数まで使用されています",
+	"COUPON_NOT_APPLICABLE": "このクーポンはカート内のどの商品にも適用されません"
+}

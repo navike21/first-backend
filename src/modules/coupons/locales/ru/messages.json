@@ -1,0 +1,17 @@
+{
+	"SUCCESS_COUPON_CREATE": "Купон успешно создан",
+	"SUCCESS_COUPON_LIST": "Купоны успешно получены",
+	"SUCCESS_COUPON_FOUND": "Купон успешно найден",
+	"SUCCESS_COUPON_UPDATE": "Купон успешно обновлён",
+	"SUCCESS_COUPON_DELETED": "Купон успешно удалён",
+	"SUCCESS_COUPON_RESTORED": "Купон успешно восстановлен",
+	"SUCCESS_COUPON_PURGED": "Купон окончательно удалён",
+	"SUCCESS_COUPON_TRASH_LIST": "Корзина успешно получена",
+	"COUPON_NOT_FOUND": "Купон не найден",
+	"COUPON_INACTIVE": "Этот купон неактивен",
+	"COUPON_NOT_YET_VALID": "Этот купон ещё не действителен",
+	"COUPON_EXPIRED": "Срок действия этого купона истёк",
+	"COUPON_USAGE_LIMIT_REACHED": "Этот купон достиг лимита использования",
+	"COUPON_CUSTOMER_USAGE_LIMIT_REACHED": "Вы уже использовали этот купон максимальное количество раз",
+	"COUPON_NOT_APPLICABLE": "Этот купон не применим ни к одному товару в корзине"
+}

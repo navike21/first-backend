@@ -1,0 +1,17 @@
+{
+	"SUCCESS_COUPON_CREATE": "Gutschein erfolgreich erstellt",
+	"SUCCESS_COUPON_LIST": "Gutscheine erfolgreich abgerufen",
+	"SUCCESS_COUPON_FOUND": "Gutschein erfolgreich gefunden",
+	"SUCCESS_COUPON_UPDATE": "Gutschein erfolgreich aktualisiert",
+	"SUCCESS_COUPON_DELETED": "Gutschein erfolgreich gelöscht",
+	"SUCCESS_COUPON_RESTORED": "Gutschein erfolgreich wiederhergestellt",
+	"SUCCESS_COUPON_PURGED": "Gutschein endgültig gelöscht",
+	"SUCCESS_COUPON_TRASH_LIST": "Papierkorb erfolgreich abgerufen",
+	"COUPON_NOT_FOUND": "Gutschein nicht gefunden",
+	"COUPON_INACTIVE": "Dieser Gutschein ist nicht aktiv",
+	"COUPON_NOT_YET_VALID": "Dieser Gutschein ist noch nicht gültig",
+	"COUPON_EXPIRED": "Dieser Gutschein ist abgelaufen",
+	"COUPON_USAGE_LIMIT_REACHED": "Dieser Gutschein hat sein Nutzungslimit erreicht",
+	"COUPON_CUSTOMER_USAGE_LIMIT_REACHED": "Sie haben diesen Gutschein bereits maximal oft verwendet",
+	"COUPON_NOT_APPLICABLE": "Dieser Gutschein gilt für keinen Artikel im Warenkorb"
+}

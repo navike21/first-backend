@@ -33,6 +33,7 @@ import '@Modules/inventory/inventory.openapi';
 import '@Modules/products/products.openapi';
 import '@Modules/cart/cart.openapi';
 import '@Modules/wishlist/wishlist.openapi';
+import '@Modules/coupons/coupons.openapi';
 
 export function buildOpenApiDocument() {
 	const generator = new OpenApiGeneratorV3(registry.definitions);

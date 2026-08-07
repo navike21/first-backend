@@ -152,6 +152,13 @@ export const PERMISSIONS = {
 	PRODUCTS_PURGE: 'products:purge',
 	PRODUCTS_MANAGE: 'products:manage',
 
+	COUPONS_READ: 'coupons:read',
+	COUPONS_CREATE: 'coupons:create',
+	COUPONS_UPDATE: 'coupons:update',
+	COUPONS_DELETE: 'coupons:delete',
+	COUPONS_PURGE: 'coupons:purge',
+	COUPONS_MANAGE: 'coupons:manage',
+
 	ALL: '*:*',
 } as const;
 

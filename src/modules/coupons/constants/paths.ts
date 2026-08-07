@@ -1,0 +1,11 @@
+export const COUPON_PATH_LIST = '/coupons';
+export const COUPON_PATH_CREATE = '/coupons';
+export const COUPON_PATH_GET_BY_ID = '/coupons/:id';
+export const COUPON_PATH_UPDATE = '/coupons/:id';
+export const COUPON_PATH_DELETE = '/coupons/:id';
+export const COUPON_PATH_DELETE_PERMANENT = '/coupons/:id/permanent';
+export const COUPON_PATH_TRASH = '/coupons/trash';
+export const COUPON_PATH_RESTORE = '/coupons/:id/restore';
+export const COUPON_PATH_BULK_DELETE = '/coupons/bulk';
+export const COUPON_PATH_BULK_RESTORE = '/coupons/bulk/restore';
+export const COUPON_PATH_BULK_PURGE = '/coupons/bulk/permanent';
