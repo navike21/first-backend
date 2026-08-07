@@ -1,0 +1,17 @@
+{
+	"SUCCESS_COUPON_CREATE": "Cupón creado correctamente",
+	"SUCCESS_COUPON_LIST": "Cupones obtenidos correctamente",
+	"SUCCESS_COUPON_FOUND": "Cupón encontrado correctamente",
+	"SUCCESS_COUPON_UPDATE": "Cupón actualizado correctamente",
+	"SUCCESS_COUPON_DELETED": "Cupón eliminado correctamente",
+	"SUCCESS_COUPON_RESTORED": "Cupón restaurado correctamente",
+	"SUCCESS_COUPON_PURGED": "Cupón eliminado permanentemente",
+	"SUCCESS_COUPON_TRASH_LIST": "Papelera obtenida correctamente",
+	"COUPON_NOT_FOUND": "Cupón no encontrado",
+	"COUPON_INACTIVE": "Este cupón no está activo",
+	"COUPON_NOT_YET_VALID": "Este cupón todavía no es válido",
+	"COUPON_EXPIRED": "Este cupón ha vencido",
+	"COUPON_USAGE_LIMIT_REACHED": "Este cupón alcanzó su límite de usos",
+	"COUPON_CUSTOMER_USAGE_LIMIT_REACHED": "Ya utilizaste este cupón el máximo de veces permitido",
+	"COUPON_NOT_APPLICABLE": "Este cupón no aplica a ningún producto del carrito"
+}

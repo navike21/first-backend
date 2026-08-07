@@ -1,0 +1,17 @@
+{
+	"SUCCESS_COUPON_CREATE": "쿠폰이 생성되었습니다",
+	"SUCCESS_COUPON_LIST": "쿠폰을 성공적으로 조회했습니다",
+	"SUCCESS_COUPON_FOUND": "쿠폰을 찾았습니다",
+	"SUCCESS_COUPON_UPDATE": "쿠폰이 업데이트되었습니다",
+	"SUCCESS_COUPON_DELETED": "쿠폰이 삭제되었습니다",
+	"SUCCESS_COUPON_RESTORED": "쿠폰이 복원되었습니다",
+	"SUCCESS_COUPON_PURGED": "쿠폰이 영구적으로 삭제되었습니다",
+	"SUCCESS_COUPON_TRASH_LIST": "휴지통을 성공적으로 조회했습니다",
+	"COUPON_NOT_FOUND": "쿠폰을 찾을 수 없습니다",
+	"COUPON_INACTIVE": "이 쿠폰은 활성화되어 있지 않습니다",
+	"COUPON_NOT_YET_VALID": "이 쿠폰은 아직 유효하지 않습니다",
+	"COUPON_EXPIRED": "이 쿠폰은 만료되었습니다",
+	"COUPON_USAGE_LIMIT_REACHED": "이 쿠폰은 사용 한도에 도달했습니다",
+	"COUPON_CUSTOMER_USAGE_LIMIT_REACHED": "이 쿠폰은 이미 최대 횟수만큼 사용했습니다",
+	"COUPON_NOT_APPLICABLE": "이 쿠폰은 장바구니의 어떤 상품에도 적용되지 않습니다"
+}
