@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_LIST": "決済プロバイダーを取得しました",
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_UPDATE": "決済プロバイダーを更新しました",
+	"SUCCESS_PAYMENT_METHOD_CREATE": "支払い方法を作成しました",
+	"SUCCESS_PAYMENT_METHOD_LIST": "支払い方法を取得しました",
+	"SUCCESS_PAYMENT_METHOD_FOUND": "支払い方法が見つかりました",
+	"SUCCESS_PAYMENT_METHOD_UPDATE": "支払い方法を更新しました",
+	"SUCCESS_PAYMENT_METHOD_DELETED": "支払い方法を削除しました",
+	"SUCCESS_PAYMENT_METHOD_RESTORED": "支払い方法を復元しました",
+	"SUCCESS_PAYMENT_METHOD_PURGED": "支払い方法を完全に削除しました",
+	"SUCCESS_PAYMENT_METHOD_TRASH_LIST": "ゴミ箱を取得しました",
+	"PAYMENT_PROVIDER_UNKNOWN": "不明な決済プロバイダーです",
+	"PAYMENT_METHOD_NOT_FOUND": "支払い方法が見つかりません"
+}

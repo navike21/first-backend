@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_LIST": "Proveedores de pago obtenidos correctamente",
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_UPDATE": "Proveedor de pago actualizado correctamente",
+	"SUCCESS_PAYMENT_METHOD_CREATE": "Método de pago creado correctamente",
+	"SUCCESS_PAYMENT_METHOD_LIST": "Métodos de pago obtenidos correctamente",
+	"SUCCESS_PAYMENT_METHOD_FOUND": "Método de pago encontrado correctamente",
+	"SUCCESS_PAYMENT_METHOD_UPDATE": "Método de pago actualizado correctamente",
+	"SUCCESS_PAYMENT_METHOD_DELETED": "Método de pago eliminado correctamente",
+	"SUCCESS_PAYMENT_METHOD_RESTORED": "Método de pago restaurado correctamente",
+	"SUCCESS_PAYMENT_METHOD_PURGED": "Método de pago eliminado permanentemente",
+	"SUCCESS_PAYMENT_METHOD_TRASH_LIST": "Papelera obtenida correctamente",
+	"PAYMENT_PROVIDER_UNKNOWN": "Proveedor de pago desconocido",
+	"PAYMENT_METHOD_NOT_FOUND": "Método de pago no encontrado"
+}

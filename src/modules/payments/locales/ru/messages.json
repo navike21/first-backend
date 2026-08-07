@@ -1,0 +1,14 @@
+{
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_LIST": "Платёжные провайдеры успешно получены",
+	"SUCCESS_PAYMENT_PROVIDER_CONFIG_UPDATE": "Платёжный провайдер успешно обновлён",
+	"SUCCESS_PAYMENT_METHOD_CREATE": "Способ оплаты успешно создан",
+	"SUCCESS_PAYMENT_METHOD_LIST": "Способы оплаты успешно получены",
+	"SUCCESS_PAYMENT_METHOD_FOUND": "Способ оплаты успешно найден",
+	"SUCCESS_PAYMENT_METHOD_UPDATE": "Способ оплаты успешно обновлён",
+	"SUCCESS_PAYMENT_METHOD_DELETED": "Способ оплаты успешно удалён",
+	"SUCCESS_PAYMENT_METHOD_RESTORED": "Способ оплаты успешно восстановлен",
+	"SUCCESS_PAYMENT_METHOD_PURGED": "Способ оплаты удалён навсегда",
+	"SUCCESS_PAYMENT_METHOD_TRASH_LIST": "Корзина успешно получена",
+	"PAYMENT_PROVIDER_UNKNOWN": "Неизвестный платёжный провайдер",
+	"PAYMENT_METHOD_NOT_FOUND": "Способ оплаты не найден"
+}
