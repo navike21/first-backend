@@ -1,0 +1,13 @@
+{
+	"SUCCESS_PRODUCT_CREATE": "商品が正常に作成されました",
+	"SUCCESS_PRODUCT_LIST": "商品を正常に取得しました",
+	"SUCCESS_PRODUCT_FOUND": "商品が見つかりました",
+	"SUCCESS_PRODUCT_UPDATE": "商品が正常に更新されました",
+	"SUCCESS_PRODUCT_DELETED": "商品が正常に削除されました",
+	"SUCCESS_PRODUCT_RESTORED": "商品が正常に復元されました",
+	"SUCCESS_PRODUCT_PERMANENTLY_DELETED": "商品が完全に削除されました",
+	"SUCCESS_PRODUCT_TRASH_LIST": "ゴミ箱を正常に取得しました",
+	"PRODUCT_NOT_FOUND": "商品が見つかりません",
+	"PRODUCT_SLUG_CONFLICT": "このスラッグの商品は既に存在します",
+	"PRODUCT_SKU_CONFLICT": "このSKUの商品は既に存在します"
+}
