@@ -1,0 +1,7 @@
+{
+	"SUCCESS_WISHLIST_FETCHED": "ウィッシュリストを取得しました",
+	"SUCCESS_WISHLIST_ITEM_ADDED": "商品をウィッシュリストに保存しました",
+	"SUCCESS_WISHLIST_ITEM_REMOVED": "商品をウィッシュリストから削除しました",
+	"WISHLIST_PRODUCT_NOT_FOUND": "商品が見つからないか、利用できません",
+	"WISHLIST_ITEM_NOT_FOUND": "この商品はウィッシュリストに入っていません"
+}

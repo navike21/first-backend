@@ -1,0 +1,12 @@
+{
+	"SUCCESS_CART_FETCHED": "成功获取购物车",
+	"SUCCESS_CART_ITEM_ADDED": "商品已加入购物车",
+	"SUCCESS_CART_ITEM_UPDATED": "购物车商品已更新",
+	"SUCCESS_CART_ITEM_REMOVED": "商品已从购物车中移除",
+	"SUCCESS_CART_CLEARED": "购物车已清空",
+	"CART_PRODUCT_NOT_FOUND": "未找到商品或商品不可用",
+	"CART_VARIANT_NOT_FOUND": "该商品变体不存在",
+	"CART_VARIANT_REQUIRED": "该商品需要选择一个变体",
+	"CART_OUT_OF_STOCK": "库存不足，无法满足所需数量",
+	"CART_ITEM_NOT_FOUND": "购物车中没有该商品"
+}

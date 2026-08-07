@@ -1,0 +1,12 @@
+{
+	"SUCCESS_CART_FETCHED": "Carrito obtenido correctamente",
+	"SUCCESS_CART_ITEM_ADDED": "Producto agregado al carrito",
+	"SUCCESS_CART_ITEM_UPDATED": "Producto del carrito actualizado",
+	"SUCCESS_CART_ITEM_REMOVED": "Producto eliminado del carrito",
+	"SUCCESS_CART_CLEARED": "Carrito vaciado",
+	"CART_PRODUCT_NOT_FOUND": "Producto no encontrado o no disponible",
+	"CART_VARIANT_NOT_FOUND": "Esta variante del producto no existe",
+	"CART_VARIANT_REQUIRED": "Este producto requiere seleccionar una variante",
+	"CART_OUT_OF_STOCK": "No hay suficiente stock disponible para la cantidad solicitada",
+	"CART_ITEM_NOT_FOUND": "Este producto no está en el carrito"
+}
