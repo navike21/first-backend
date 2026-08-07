@@ -1,0 +1,12 @@
+{
+	"SUCCESS_CART_FETCHED": "Warenkorb erfolgreich abgerufen",
+	"SUCCESS_CART_ITEM_ADDED": "Artikel zum Warenkorb hinzugefügt",
+	"SUCCESS_CART_ITEM_UPDATED": "Warenkorbartikel aktualisiert",
+	"SUCCESS_CART_ITEM_REMOVED": "Artikel aus dem Warenkorb entfernt",
+	"SUCCESS_CART_CLEARED": "Warenkorb geleert",
+	"CART_PRODUCT_NOT_FOUND": "Produkt nicht gefunden oder nicht verfügbar",
+	"CART_VARIANT_NOT_FOUND": "Diese Produktvariante existiert nicht",
+	"CART_VARIANT_REQUIRED": "Für dieses Produkt muss eine Variante ausgewählt werden",
+	"CART_OUT_OF_STOCK": "Nicht genügend Bestand für die angeforderte Menge",
+	"CART_ITEM_NOT_FOUND": "Dieser Artikel befindet sich nicht im Warenkorb"
+}

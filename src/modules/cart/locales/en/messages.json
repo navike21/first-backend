@@ -1,0 +1,12 @@
+{
+	"SUCCESS_CART_FETCHED": "Cart retrieved successfully",
+	"SUCCESS_CART_ITEM_ADDED": "Item added to cart",
+	"SUCCESS_CART_ITEM_UPDATED": "Cart item updated",
+	"SUCCESS_CART_ITEM_REMOVED": "Item removed from cart",
+	"SUCCESS_CART_CLEARED": "Cart emptied",
+	"CART_PRODUCT_NOT_FOUND": "Product not found or not available",
+	"CART_VARIANT_NOT_FOUND": "This product variant does not exist",
+	"CART_VARIANT_REQUIRED": "This product requires a variant to be selected",
+	"CART_OUT_OF_STOCK": "Not enough stock available for the requested quantity",
+	"CART_ITEM_NOT_FOUND": "This item is not in the cart"
+}
